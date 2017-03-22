@@ -55,6 +55,7 @@ namespace NClass.DiagramEditor.ClassDiagram.ContextMenus
             mnuNewEnum = new ToolStripMenuItem( Strings.MenuEnum, Resources.Enum, mnuNewEnum_Click );
             mnuNewDelegate = new ToolStripMenuItem( Strings.MenuDelegate, Resources.Delegate, mnuNewDelegate_Click );
             mnuNewComment = new ToolStripMenuItem( Strings.MenuComment, Resources.Comment, mnuNewComment_Click );
+            mnuNewNamespace = new ToolStripMenuItem(Strings.MenuNewNamespace, Resources.Comment, mnuNewNamespace_Click );
             mnuNewAssociation = new ToolStripMenuItem( Strings.MenuAssociation, Resources.Association, mnuNewAssociation_Click );
             mnuNewComposition = new ToolStripMenuItem( Strings.MenuComposition, Resources.Composition, mnuNewComposition_Click );
             mnuNewAggregation = new ToolStripMenuItem( Strings.MenuAggregation, Resources.Aggregation, mnuNewAggregation_Click );
@@ -82,9 +83,15 @@ namespace NClass.DiagramEditor.ClassDiagram.ContextMenus
             mnuSaveAsImage = new ToolStripMenuItem( Strings.MenuSaveAsImage, Resources.Image, mnuSaveAsImage_Click );
             mnuSelectAll = new ToolStripMenuItem( Strings.MenuSelectAll, null, mnuSelectAll_Click );
 
-            mnuAddNewElement.DropDownItems.AddRange( new ToolStripItem[] {mnuNewClass, mnuNewStructure, mnuNewInterface, mnuNewEnum, mnuNewDelegate, mnuNewComment, new ToolStripSeparator( ), mnuNewAssociation, mnuNewComposition, mnuNewAggregation, mnuNewGeneralization, mnuNewRealization, mnuNewDependency, mnuNewNesting, mnuNewCommentRelationship} );
+            mnuAddNewElement.DropDownItems.AddRange( new ToolStripItem[] {mnuNewClass, mnuNewStructure, mnuNewInterface, mnuNewEnum, mnuNewDelegate, mnuNewComment, mnuNewNamespace, new ToolStripSeparator( ), mnuNewAssociation, mnuNewComposition, mnuNewAggregation, mnuNewGeneralization, mnuNewRealization, mnuNewDependency, mnuNewNesting, mnuNewCommentRelationship} );
             mnuMembersFormat.DropDownItems.AddRange( new ToolStripItem[] {mnuShowType, mnuShowParameters, mnuShowParameterNames, mnuShowInitialValue} );
             MenuList.AddRange( new ToolStripItem[] {mnuAddNewElement, mnuMembersFormat, new ToolStripSeparator( ), mnuPaste, mnuSaveAsImage, mnuSelectAll} );
+        }
+
+        private void mnuNewNamespace_Click( object sender, EventArgs e )
+        {
+            if ( Diagram != null )
+                Diagram.CreateShape(EntityType.Namespace);
         }
 
         private void mnuNewClass_Click( object sender, EventArgs e )
@@ -226,6 +233,7 @@ namespace NClass.DiagramEditor.ClassDiagram.ContextMenus
         private ToolStripMenuItem mnuNewEnum;
         private ToolStripMenuItem mnuNewDelegate;
         private ToolStripMenuItem mnuNewComment;
+        private ToolStripMenuItem mnuNewNamespace;
         private ToolStripMenuItem mnuNewAssociation;
         private ToolStripMenuItem mnuNewComposition;
         private ToolStripMenuItem mnuNewAggregation;

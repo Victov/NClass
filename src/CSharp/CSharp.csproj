@@ -71,6 +71,7 @@
     <Compile Include="CSharpDestructor.cs" />
     <Compile Include="CSharpDelegate.cs" />
     <Compile Include="CSharpProperty.cs" />
+    <Compile Include="CSharpNamespace.cs" />
     <Compile Include="CSharpStructure.cs" />
   </ItemGroup>
   <ItemGroup>

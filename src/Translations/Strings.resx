@@ -541,6 +541,9 @@
   <data name="MenuComment" xml:space="preserve">
     <value>Commen&amp;t</value>
   </data>
+  <data name="MenuNewNamespace" xml:space="preserve">
+    <value>Namespace</value>
+  </data>
   <data name="AddNewItem" xml:space="preserve">
     <value>Add new item:</value>
   </data>

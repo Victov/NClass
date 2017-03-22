@@ -493,7 +493,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             }
         }
 
-        internal sealed override void MousePressed( AbsoluteMouseEventArgs e )
+        internal override void MousePressed( AbsoluteMouseEventArgs e )
         {
             if ( !e.Handled )
             {

@@ -2107,6 +2107,15 @@ namespace NClass.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Namespace.
+        /// </summary>
+        public static string MenuNewNamespace {
+            get {
+                return ResourceManager.GetString("MenuNewNamespace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &amp;New Project.
         /// </summary>
         public static string MenuNewProject {

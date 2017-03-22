@@ -206,6 +206,11 @@ namespace NClass.Core
         protected internal abstract StructureType CreateStructure( );
 
         /// <exception cref="InvalidOperationException">
+        ///     The language does not support namespaces
+        /// </exception>
+        protected internal abstract Namespace CreateNamespace( );
+
+        /// <exception cref="InvalidOperationException">
         ///     The language does not support interfaces.
         /// </exception>
         protected internal abstract InterfaceType CreateInterface( );

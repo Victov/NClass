@@ -13,16 +13,15 @@
 // this program; if not, write to the Free Software Foundation, Inc., 
 // 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-namespace NClass.Core
+using System;
+using System.Text;
+using NClass.Core;
+using NClass.Translations;
+
+namespace NClass.CSharp
 {
-    public enum EntityType
+    internal sealed class CSharpNamespace : Namespace
     {
-        Class,
-        Structure,
-        Interface,
-        Enum,
-        Delegate,
-        Comment,
-        Namespace
+        public CSharpNamespace(  ) : base( "NewNamespace" ) {}
     }
 }

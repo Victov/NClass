@@ -393,6 +393,11 @@ namespace NClass.Java
             throw new InvalidOperationException( string.Format( Strings.ErrorCannotCreateStructure, Name ) );
         }
 
+        protected override Namespace CreateNamespace( )
+        {
+            throw new NotImplementedException( );
+        }
+
         protected override InterfaceType CreateInterface( )
         {
             return new JavaInterface( );

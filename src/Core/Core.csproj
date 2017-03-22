@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BadSyntaxException.cs" />
+    <Compile Include="Entities\Namespace.cs" />
     <Compile Include="Entities\EntityType.cs" />
     <Compile Include="Members\MemberType.cs" />
     <Compile Include="Parameters\ArgumentList.cs" />

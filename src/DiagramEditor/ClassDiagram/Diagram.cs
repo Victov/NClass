@@ -1388,6 +1388,7 @@ namespace NClass.DiagramEditor.ClassDiagram
                 case EntityType.Enum:
                 case EntityType.Interface:
                 case EntityType.Structure:
+                case EntityType.Namespace:
                     shapeOutline = TypeShape.GetOutline( Style.CurrentStyle );
                     break;
 
@@ -1426,13 +1427,21 @@ namespace NClass.DiagramEditor.ClassDiagram
                 case EntityType.Structure:
                     AddStructure( );
                     break;
-
+                case EntityType.Namespace:
+                    AddNamespace( );
+                    break;
                 default:
                     return null;
             }
 
             RecalculateSize( );
             return ShapeList.FirstValue;
+        }
+
+        protected override void AddNamespace( Namespace newNamespace )
+        {
+            base.AddNamespace( newNamespace );
+            AddShape( new NamespaceShape( newNamespace ) );
         }
 
         protected override void AddClass( ClassType newClass )

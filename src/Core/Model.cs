@@ -144,6 +144,11 @@ namespace NClass.Core
             AddEntity( newClass );
         }
 
+        protected virtual void AddNamespace( Namespace newNamespace )
+        {
+            AddEntity( newNamespace );
+        }
+
         public bool InsertClass( ClassType newClass )
         {
             if ( ( newClass != null ) && !entities.Contains( newClass ) && ( newClass.Language == Language ) )
@@ -162,6 +167,13 @@ namespace NClass.Core
             StructureType structure = Language.CreateStructure( );
             AddStructure( structure );
             return structure;
+        }
+
+        public Namespace AddNamespace( )
+        {
+            Namespace nspace = Language.CreateNamespace( );
+            AddNamespace( nspace );
+            return nspace;
         }
 
         protected virtual void AddStructure( StructureType structure )
@@ -265,6 +277,16 @@ namespace NClass.Core
             if ( ( comment != null ) && !entities.Contains( comment ) )
             {
                 AddComment( comment );
+                return true;
+            }
+            return false;
+        }
+
+        public bool InsertNamespace( Namespace nspace )
+        {
+            if ( nspace != null && !entities.Contains( nspace ) )
+            {
+                AddNamespace( nspace );
                 return true;
             }
             return false;
@@ -616,6 +638,9 @@ namespace NClass.Core
 
                 case "Comment":
                     return AddComment( );
+
+                case "Namespace":
+                    return AddNamespace( );
 
                 default:
                     throw new InvalidDataException( "Invalid entity type: " + type );

@@ -440,6 +440,11 @@ namespace NClass.CSharp
             return new CSharpStructure( );
         }
 
+        protected override Namespace CreateNamespace( )
+        {
+            return new CSharpNamespace( );
+        }
+
         protected override InterfaceType CreateInterface( )
         {
             return new CSharpInterface( );
