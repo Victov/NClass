@@ -217,7 +217,8 @@
             this.cboSolutionType.FormattingEnabled = true;
             this.cboSolutionType.Items.AddRange(new object[] {
             "Visual Studio 2005",
-            "Visual Studio 2008"});
+            "Visual Studio 2008",
+            "Visual Studio 2015"});
             this.cboSolutionType.Location = new System.Drawing.Point(6, 47);
             this.cboSolutionType.Name = "cboSolutionType";
             this.cboSolutionType.Size = new System.Drawing.Size(271, 21);
@@ -468,12 +469,6 @@
             // cboLanguage
             // 
             this.cboLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            /*
-            this.cboLanguage.Items.AddRange(new object[] {
-            "C#",
-            "Java",
-            "C# extended"});
-            */
             this.cboLanguage.Location = new System.Drawing.Point(12, 62);
             this.cboLanguage.Name = "cboLanguage";
             this.cboLanguage.Size = new System.Drawing.Size(96, 21);
