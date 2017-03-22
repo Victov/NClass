@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Xml;
 using NClass.Translations;
 
@@ -38,6 +39,13 @@ namespace NClass.Core
             Namespaces.Add( Name, this );
         }
 
+        public void SetName( string newname )
+        {
+            if (Namespaces.ContainsValue(this))
+                Namespaces.Remove(Name);
+            this.Name = newname;
+            Namespaces.Add( Name, this );
+        }
 
         public event SerializeEventHandler Serializing;
         public event SerializeEventHandler Deserializing;

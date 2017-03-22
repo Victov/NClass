@@ -98,23 +98,23 @@ namespace NClass.CodeGenerator
         private bool GenerateSourceFiles( string location, bool sort_using, bool generate_document_comment, string compagny_name, string copyright_header, string author )
         {
             bool success = true;
-            location = Path.Combine( location, ProjectName );
 
             FileNames.Clear( );
             foreach ( IEntity entity in Model.Entities )
             {
+                string nlocation = Path.Combine(location, ProjectName);
                 TypeBase type = entity as TypeBase;
                 
                 if ( ( type != null ) && !type.IsNested )
                 {
                     if (type.ParentNameSpace != null)
-                        location = Path.Combine(location, type.ParentNameSpace.Name);
+                        nlocation = Path.Combine(nlocation, type.ParentNameSpace.Name);
 
                     SourceFileGenerator sourceFile = CreateSourceFileGenerator( type, sort_using, generate_document_comment, compagny_name, copyright_header, author );
 
                     try
                     {
-                        string fileName = sourceFile.Generate( location );
+                        string fileName = sourceFile.Generate(nlocation);
                         FileNames.Add( fileName );
                     }
                     catch ( FileGenerationException )

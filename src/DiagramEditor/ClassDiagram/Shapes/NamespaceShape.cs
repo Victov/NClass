@@ -24,7 +24,10 @@ using NClass.DiagramEditor.Properties;
 namespace NClass.DiagramEditor.ClassDiagram.Shapes
 {
     internal sealed class NamespaceShape : Shape
-    {         
+    {
+        private bool editorShowed = false;
+       
+        NamespaceEditor editor = new NamespaceEditor(  );
 
         internal NamespaceShape(Namespace nspace) : base(nspace)
         {
@@ -36,7 +39,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         public override void Draw( IGraphics g, bool onScreen, Style style )
         {
             g.DrawString( this.Namespace.Name, style.NameFont, Brushes.DarkBlue, this.Location );
-            if(IsSelected)g.DrawString( "Drag here", style.NameFont, Brushes.DarkBlue, new PointF(this.Right - 100, this.Top));
+            if(IsSelected)g.DrawString( "Drag here", style.NameFont, Brushes.DarkBlue, new PointF(this.Right - 80, this.Top));
             g.DrawLine( new Pen( Color.DarkBlue, 1 ), this.Location.X, this.Location.Y + 15, this.Location.X + this.Size.Width, this.Location.Y + 15 );
             g.DrawRectangle( new Pen( Color.DarkBlue, 2 ), new Rectangle(Location, Size) );
         }
@@ -46,7 +49,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             if ( InEdges( e.Location, 10, 20 ) )
                 base.MousePressed( e );
             else
-                return;
+                HideEditor(  );
         }
 
         private bool InEdges( PointF point, float margin, float topMargin )
@@ -54,6 +57,49 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             return 
                 ( ( Math.Abs( point.X - this.Left ) < margin || Math.Abs( point.X - this.Right ) < margin ) ) ||
                 ( ( Math.Abs( point.Y - this.Top) < topMargin|| Math.Abs( point.Y - this.Bottom) < margin ) );
+        }
+
+        protected override void OnResize(ResizeEventArgs e)
+        {
+            base.OnResize(e);
+            if (editorShowed)
+            {
+                editor.Relocate(this);
+                if (!editor.Focused)
+                    editor.Focus();
+            }
+        }
+
+        protected override void OnDoubleClick(AbsoluteMouseEventArgs e)
+        {
+            if (InEdges(e.Location, 10,20) && (e.Button == MouseButtons.Left))
+                ShowEditor();
+        }
+
+        protected internal override void ShowEditor()
+        {
+            if (!editorShowed)
+            {
+                editor.Relocate(this);
+                editor.Init(this);
+                ShowWindow(editor);
+                editor.Focus();
+                editorShowed = true;
+            }
+        }
+
+        protected internal override void HideEditor()
+        {
+            if (editorShowed)
+            {
+                HideWindow(editor);
+                editorShowed = false;
+            }
+        }
+
+        protected internal override void MoveWindow()
+        {
+            HideEditor();
         }
 
         protected override Size DefaultSize
