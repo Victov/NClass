@@ -19,6 +19,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
+using NClass.Core;
 using NClass.DiagramEditor;
 using NClass.DiagramEditor.ClassDiagram;
 using NClass.GUI.Dialogs;
@@ -29,8 +30,8 @@ namespace NClass.GUI
     public sealed partial class MainForm : Form
     {
         private readonly DocumentManager docManager = new DocumentManager( );
-        private DynamicMenu dynamicMenu;
         private readonly List< Plugin > plugins = new List< Plugin >( );
+        private DynamicMenu dynamicMenu;
         private bool showModelExplorer = true;
         private bool showNavigator = true;
 
@@ -113,15 +114,15 @@ namespace NClass.GUI
         {
             try
             {
-                var pluginsPath = Path.Combine( Application.StartupPath, "Plugins" );
+                string pluginsPath = Path.Combine( Application.StartupPath, "Plugins" );
                 if ( !Directory.Exists( pluginsPath ) )
                     return;
 
-                var directory = new DirectoryInfo( pluginsPath );
+                DirectoryInfo directory = new DirectoryInfo( pluginsPath );
 
-                foreach ( var file in directory.GetFiles( "*.dll" ) )
+                foreach ( FileInfo file in directory.GetFiles( "*.dll" ) )
                 {
-                    var assembly = Assembly.LoadFile( file.FullName );
+                    Assembly assembly = Assembly.LoadFile( file.FullName );
                     LoadPlugin( assembly );
                 }
             }
@@ -134,7 +135,7 @@ namespace NClass.GUI
             {
                 mnuPlugins.Visible = true;
 
-                foreach ( var plugin in plugins )
+                foreach ( Plugin plugin in plugins )
                 {
                     mnuPlugins.DropDownItems.Add( plugin.MenuItem );
                     plugin.MenuItem.Tag = plugin;
@@ -146,15 +147,13 @@ namespace NClass.GUI
         {
             try
             {
-                foreach ( var type in assembly.GetTypes( ) )
-                {
+                foreach ( Type type in assembly.GetTypes( ) )
                     if ( type.IsSubclassOf( typeof( Plugin ) ) )
                     {
-                        var environment = new NClassEnvironment( Workspace.Default, docManager );
-                        var plugin = ( Plugin ) Activator.CreateInstance( type, environment );
+                        NClassEnvironment environment = new NClassEnvironment( Workspace.Default, docManager );
+                        Plugin plugin = ( Plugin ) Activator.CreateInstance( type, environment );
                         plugins.Add( plugin );
                     }
-                }
             }
             catch ( Exception ex )
             {
@@ -279,7 +278,7 @@ namespace NClass.GUI
         {
             if ( Workspace.Default.HasActiveProject )
             {
-                var projectName = Workspace.Default.ActiveProject.Name;
+                string projectName = Workspace.Default.ActiveProject.Name;
 
                 if ( Workspace.Default.ActiveProject.IsDirty )
                     Text = projectName + "* - NClass";
@@ -303,25 +302,21 @@ namespace NClass.GUI
             {
                 if ( dynamicMenu != null )
                 {
-                    foreach ( var menuItem in dynamicMenu )
-                    {
+                    foreach ( ToolStripMenuItem menuItem in dynamicMenu )
                         MainMenuStrip.Items.Remove( menuItem );
-                    }
-                    var toolStrip = dynamicMenu.GetToolStrip( );
+                    ToolStrip toolStrip = dynamicMenu.GetToolStrip( );
                     if ( toolStrip != null )
                         toolStripContainer.TopToolStripPanel.Controls.Remove( toolStrip );
                     dynamicMenu.SetReference( null );
                 }
                 if ( newMenu != null )
                 {
-                    var preferredIndex = newMenu.PreferredIndex;
+                    int preferredIndex = newMenu.PreferredIndex;
                     if ( preferredIndex < 0 )
                         preferredIndex = 3;
-                    foreach ( var menuItem in newMenu )
-                    {
+                    foreach ( ToolStripMenuItem menuItem in newMenu )
                         MainMenuStrip.Items.Insert( preferredIndex++, menuItem );
-                    }
-                    var toolStrip = newMenu.GetToolStrip( );
+                    ToolStrip toolStrip = newMenu.GetToolStrip( );
                     if ( toolStrip != null )
                     {
                         toolStrip.Top = standardToolStrip.Top;
@@ -349,7 +344,7 @@ namespace NClass.GUI
         {
             if ( docManager.HasDocument )
             {
-                var document = docManager.ActiveDocument;
+                IDocument document = docManager.ActiveDocument;
                 toolCut.Enabled = document.CanCutToClipboard;
                 toolCopy.Enabled = document.CanCopyToClipboard;
                 toolPaste.Enabled = document.CanPasteFromClipboard;
@@ -388,17 +383,15 @@ namespace NClass.GUI
         {
             if ( e.Data.GetDataPresent( DataFormats.FileDrop ) )
             {
-                var files = ( string[] ) e.Data.GetData( DataFormats.FileDrop );
-                foreach ( var fileName in files )
-                {
+                string[] files = ( string[] ) e.Data.GetData( DataFormats.FileDrop );
+                foreach ( string fileName in files )
                     Workspace.Default.OpenProject( fileName );
-                }
             }
         }
 
         private void MainForm_KeyDown( object sender, KeyEventArgs e )
         {
-            if ( e.Control && e.KeyCode == Keys.Tab )
+            if ( e.Control && ( e.KeyCode == Keys.Tab ) )
                 docManager.SwitchDocument( );
         }
 
@@ -410,10 +403,10 @@ namespace NClass.GUI
 
         private void OpenRecentFile_Click( object sender, EventArgs e )
         {
-            var index = ( int ) ( ( ToolStripItem ) sender ).Tag;
-            if ( index >= 0 && index < Settings.Default.RecentFiles.Count )
+            int index = ( int ) ( ( ToolStripItem ) sender ).Tag;
+            if ( ( index >= 0 ) && ( index < Settings.Default.RecentFiles.Count ) )
             {
-                var fileName = Settings.Default.RecentFiles[ index ];
+                string fileName = Settings.Default.RecentFiles[ index ];
                 Workspace.Default.OpenProject( fileName );
             }
         }
@@ -432,7 +425,7 @@ namespace NClass.GUI
                 Workspace.Default.ActiveProject = null;
             }
 
-            var oldDocument = e.Document;
+            IDocument oldDocument = e.Document;
             if ( oldDocument != null )
             {
                 oldDocument.Modified -= ActiveDocument_Modified;
@@ -478,7 +471,7 @@ namespace NClass.GUI
         {
             foreach ( ToolStripItem menuItem in mnuPlugins.DropDownItems )
             {
-                var plugin = menuItem.Tag as Plugin;
+                Plugin plugin = menuItem.Tag as Plugin;
                 menuItem.Enabled = plugin.IsAvailable;
             }
         }
@@ -491,7 +484,7 @@ namespace NClass.GUI
         {
             if ( Workspace.Default.HasActiveProject )
             {
-                var projectName = Workspace.Default.ActiveProject.Name;
+                string projectName = Workspace.Default.ActiveProject.Name;
                 mnuSave.Text = string.Format( Strings.MenuSaveProject, projectName );
                 mnuSaveAs.Text = string.Format( Strings.MenuSaveProjectAs, projectName );
                 mnuCloseProject.Text = string.Format( Strings.MenuClose, projectName );
@@ -530,15 +523,14 @@ namespace NClass.GUI
 
         private void mnuNewProject_Click( object sender, EventArgs e )
         {
-            var project = Workspace.Default.AddEmptyProject( );
+            Project project = Workspace.Default.AddEmptyProject( );
             Workspace.Default.ActiveProject = project;
         }
 
         private void mnuNewCodingLanguageDiagram_Click( object sender, EventArgs e )
         {
             if ( Workspace.Default.HasActiveProject )
-            {
-                using ( var dialog = new CodingLanguageDialog( ) )
+                using ( CodingLanguageDialog dialog = new CodingLanguageDialog( ) )
                 {
                     if ( dialog.ShowDialog( ) == DialogResult.OK )
                     {
@@ -546,12 +538,11 @@ namespace NClass.GUI
                             throw new NotSupportedException( "No Programming Language instance" );
 
                         ShowModelExplorer = true;
-                        var diagram = new Diagram( dialog.LanguageSelected );
+                        Diagram diagram = new Diagram( dialog.LanguageSelected );
                         Workspace.Default.ActiveProject.Add( diagram );
                         Settings.Default.DefaultLanguageName = dialog.LanguageSelected.AssemblyName;
                     }
                 }
-            }
         }
 
         private void mnuOpenFile_Click( object sender, EventArgs e )
@@ -562,10 +553,9 @@ namespace NClass.GUI
         private void mnuOpen_DropDownOpening( object sender, EventArgs e )
         {
             foreach ( ToolStripItem item in mnuOpen.DropDownItems )
-            {
                 if ( item.Tag is int )
                 {
-                    var index = ( int ) item.Tag;
+                    int index = ( int ) item.Tag;
 
                     if ( index < Settings.Default.RecentFiles.Count )
                     {
@@ -577,7 +567,6 @@ namespace NClass.GUI
                         item.Visible = false;
                     }
                 }
-            }
 
             sepOpenFile.Visible = Settings.Default.RecentFiles.Count > 0;
         }
@@ -629,7 +618,7 @@ namespace NClass.GUI
         {
             if ( docManager.HasDocument )
             {
-                var document = docManager.ActiveDocument;
+                IDocument document = docManager.ActiveDocument;
 
                 //UNDONE:
                 //mnuUndo.Enabled = document.CanUndo;
@@ -678,41 +667,31 @@ namespace NClass.GUI
         private void mnuCut_Click( object sender, EventArgs e )
         {
             if ( docManager.HasDocument )
-            {
                 docManager.ActiveDocument.Cut( );
-            }
         }
 
         private void mnuCopy_Click( object sender, EventArgs e )
         {
             if ( docManager.HasDocument )
-            {
                 docManager.ActiveDocument.Copy( );
-            }
         }
 
         private void mnuPaste_Click( object sender, EventArgs e )
         {
             if ( docManager.HasDocument )
-            {
                 docManager.ActiveDocument.Paste( );
-            }
         }
 
         private void mnuDelete_Click( object sender, EventArgs e )
         {
             if ( docManager.HasDocument )
-            {
                 docManager.ActiveDocument.DeleteSelectedElements( );
-            }
         }
 
         private void mnuSelectAll_Click( object sender, EventArgs e )
         {
             if ( docManager.HasDocument )
-            {
                 docManager.ActiveDocument.SelectAll( );
-            }
         }
 
         #endregion
@@ -786,7 +765,7 @@ namespace NClass.GUI
 
         private void mnuOptions_Click( object sender, EventArgs e )
         {
-            using ( var dialog = new OptionsDialog( ) )
+            using ( OptionsDialog dialog = new OptionsDialog( ) )
             {
                 dialog.StyleModified += dialog_StyleChanged;
                 dialog.ShowDialog( );
@@ -817,8 +796,10 @@ namespace NClass.GUI
 
         private void mnuAbout_Click( object sender, EventArgs e )
         {
-            using ( var dialog = new AboutDialog( ) )
+            using ( AboutDialog dialog = new AboutDialog( ) )
+            {
                 dialog.ShowDialog( );
+            }
         }
 
         #endregion
@@ -833,10 +814,9 @@ namespace NClass.GUI
         private void toolOpen_DropDownOpening( object sender, EventArgs e )
         {
             foreach ( ToolStripItem item in toolOpen.DropDownItems )
-            {
                 if ( item.Tag is int )
                 {
-                    var index = ( int ) item.Tag;
+                    int index = ( int ) item.Tag;
 
                     if ( index < Settings.Default.RecentFiles.Count )
                     {
@@ -848,31 +828,24 @@ namespace NClass.GUI
                         item.Visible = false;
                     }
                 }
-            }
         }
 
         private void toolCut_Click( object sender, EventArgs e )
         {
             if ( docManager.HasDocument )
-            {
                 docManager.ActiveDocument.Cut( );
-            }
         }
 
         private void toolCopy_Click( object sender, EventArgs e )
         {
             if ( docManager.HasDocument )
-            {
                 docManager.ActiveDocument.Copy( );
-            }
         }
 
         private void toolPaste_Click( object sender, EventArgs e )
         {
             if ( docManager.HasDocument )
-            {
                 docManager.ActiveDocument.Paste( );
-            }
         }
 
         private void toolZoomIn_Click( object sender, EventArgs e )

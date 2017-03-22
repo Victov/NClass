@@ -65,14 +65,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         {
             get
             {
-                if ( ActiveMemberIndex >= 0 && ActiveMemberIndex < CompositeType.FieldCount )
-                {
+                if ( ( ActiveMemberIndex >= 0 ) && ( ActiveMemberIndex < CompositeType.FieldCount ) )
                     return CompositeType.GetField( ActiveMemberIndex );
-                }
                 if ( ActiveMemberIndex >= CompositeType.FieldCount )
-                {
                     return CompositeType.GetOperation( ActiveMemberIndex - CompositeType.FieldCount );
-                }
                 return null;
             }
         }
@@ -82,7 +78,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             get { return base.ActiveMemberIndex; }
             set
             {
-                var oldMember = ActiveMember;
+                Member oldMember = ActiveMember;
 
                 if ( value < CompositeType.MemberCount )
                     base.ActiveMemberIndex = value;
@@ -96,18 +92,14 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         public override void MoveUp( )
         {
-            if ( ActiveMember != null && CompositeType.MoveUpItem( ActiveMember ) )
-            {
+            if ( ( ActiveMember != null ) && CompositeType.MoveUpItem( ActiveMember ) )
                 ActiveMemberIndex--;
-            }
         }
 
         public override void MoveDown( )
         {
-            if ( ActiveMember != null && CompositeType.MoveDownItem( ActiveMember ) )
-            {
+            if ( ( ActiveMember != null ) && CompositeType.MoveDownItem( ActiveMember ) )
                 ActiveMemberIndex++;
-            }
         }
 
         protected internal override void EditMembers( )
@@ -128,7 +120,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         protected internal sealed override bool DeleteSelectedMember( bool showConfirmation )
         {
-            if ( IsActive && ActiveMember != null )
+            if ( IsActive && ( ActiveMember != null ) )
             {
                 if ( !showConfirmation || ConfirmMemberDelete( ) )
                     DeleteActiveMember( );
@@ -145,13 +137,11 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         internal Rectangle GetMemberRectangle( int memberIndex )
         {
-            var record = new Rectangle( Left + MarginSize, Top + HeaderHeight + MarginSize, Width - MarginSize * 2, MemberHeight );
+            Rectangle record = new Rectangle( Left + MarginSize, Top + HeaderHeight + MarginSize, Width - MarginSize * 2, MemberHeight );
 
             record.Y += memberIndex * MemberHeight;
-            if ( CompositeType.SupportsFields && memberIndex >= CompositeType.FieldCount )
-            {
+            if ( CompositeType.SupportsFields && ( memberIndex >= CompositeType.FieldCount ) )
                 record.Y += MarginSize * 2;
-            }
             return record;
         }
 
@@ -160,8 +150,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             if ( Contains( location ) )
             {
                 int index;
-                var y = ( int ) location.Y;
-                var top = Top + HeaderHeight + MarginSize;
+                int y = ( int ) location.Y;
+                int top = Top + HeaderHeight + MarginSize;
 
                 if ( top <= y )
                 {
@@ -176,7 +166,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
                         top += MarginSize * 2;
                     }
 
-                    var operationTop = top + CompositeType.FieldCount * MemberHeight;
+                    int operationTop = top + CompositeType.FieldCount * MemberHeight;
                     if ( operationTop <= y )
                     {
                         index = ( y - top ) / MemberHeight;
@@ -196,21 +186,15 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             if ( ActiveMemberIndex >= 0 )
             {
                 int newIndex;
-                var fieldCount = CompositeType.FieldCount;
-                var memberCount = CompositeType.MemberCount;
+                int fieldCount = CompositeType.FieldCount;
+                int memberCount = CompositeType.MemberCount;
 
-                if ( ActiveMemberIndex == fieldCount - 1 && fieldCount >= 2 ) // Last field
-                {
+                if ( ( ActiveMemberIndex == fieldCount - 1 ) && ( fieldCount >= 2 ) ) // Last field
                     newIndex = fieldCount - 2;
-                }
                 else if ( ActiveMemberIndex == memberCount - 1 ) // Last member
-                {
                     newIndex = ActiveMemberIndex - 1;
-                }
                 else
-                {
                     newIndex = ActiveMemberIndex;
-                }
 
                 CompositeType.RemoveMember( ActiveMember );
                 ActiveMemberIndex = newIndex;
@@ -220,14 +204,14 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         internal void InsertNewMember( MemberType type )
         {
-            var fieldCount = CompositeType.FieldCount;
+            int fieldCount = CompositeType.FieldCount;
             switch ( type )
             {
                 case MemberType.Field:
                     if ( CompositeType.SupportsFields )
                     {
-                        var index = Math.Min( ActiveMemberIndex + 1, fieldCount );
-                        var changing = index == fieldCount && ActiveMember.MemberType != MemberType.Field;
+                        int index = Math.Min( ActiveMemberIndex + 1, fieldCount );
+                        bool changing = ( index == fieldCount ) && ( ActiveMember.MemberType != MemberType.Field );
 
                         CompositeType.InsertMember( MemberType.Field, index );
                         ActiveMemberIndex = index;
@@ -237,7 +221,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
                 case MemberType.Method:
                     if ( CompositeType.SupportsMethods )
                     {
-                        var index = Math.Max( ActiveMemberIndex + 1, fieldCount );
+                        int index = Math.Max( ActiveMemberIndex + 1, fieldCount );
                         CompositeType.InsertMember( MemberType.Method, index );
                         ActiveMemberIndex = index;
                     }
@@ -246,7 +230,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
                 case MemberType.Constructor:
                     if ( CompositeType.SupportsConstuctors )
                     {
-                        var index = Math.Max( ActiveMemberIndex + 1, fieldCount );
+                        int index = Math.Max( ActiveMemberIndex + 1, fieldCount );
                         CompositeType.InsertMember( MemberType.Constructor, index );
                         ActiveMemberIndex = index;
                     }
@@ -255,7 +239,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
                 case MemberType.Destructor:
                     if ( CompositeType.SupportsDestructors )
                     {
-                        var index = Math.Max( ActiveMemberIndex + 1, fieldCount );
+                        int index = Math.Max( ActiveMemberIndex + 1, fieldCount );
                         CompositeType.InsertMember( MemberType.Destructor, index );
                         ActiveMemberIndex = index;
                     }
@@ -264,7 +248,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
                 case MemberType.Property:
                     if ( CompositeType.SupportsProperties )
                     {
-                        var index = Math.Max( ActiveMemberIndex + 1, fieldCount );
+                        int index = Math.Max( ActiveMemberIndex + 1, fieldCount );
                         CompositeType.InsertMember( MemberType.Property, index );
                         ActiveMemberIndex = index;
                     }
@@ -273,7 +257,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
                 case MemberType.Event:
                     if ( CompositeType.SupportsEvents )
                     {
-                        var index = Math.Max( ActiveMemberIndex + 1, fieldCount );
+                        int index = Math.Max( ActiveMemberIndex + 1, fieldCount );
                         CompositeType.InsertMember( MemberType.Event, index );
                         ActiveMemberIndex = index;
                     }
@@ -310,24 +294,18 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         {
             Font memberFont;
             if ( member.IsStatic )
-            {
                 memberFont = style.StaticMemberFont;
-            }
             else if ( member is Operation && ( ( ( Operation ) member ).IsAbstract || member.Parent is InterfaceType ) )
-            {
                 memberFont = style.AbstractMemberFont;
-            }
             else
-            {
                 memberFont = GetFont( style );
-            }
 
             return memberFont;
         }
 
         private void DrawMember( IGraphics g, Member member, Rectangle record, Style style )
         {
-            var memberFont = GetMemberFont( member, style );
+            Font memberFont = GetMemberFont( member, style );
 
             if ( member is Field )
                 memberBrush.Color = style.AttributeColor;
@@ -336,18 +314,18 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
             if ( style.UseIcons )
             {
-                var icon = Icons.GetImage( member );
+                Image icon = Icons.GetImage( member );
                 g.DrawImage( icon, record.X, record.Y );
 
-                var textBounds = new Rectangle( record.X + IconSpacing, record.Y, record.Width - IconSpacing, record.Height );
+                Rectangle textBounds = new Rectangle( record.X + IconSpacing, record.Y, record.Width - IconSpacing, record.Height );
 
-                var memberString = GetMemberString( member );
+                string memberString = GetMemberString( member );
                 g.DrawString( memberString, memberFont, memberBrush, textBounds, memberFormat );
             }
             else
             {
-                var accessBounds = new Rectangle( record.X, record.Y, AccessSpacing, record.Height );
-                var textBounds = new Rectangle( record.X + AccessSpacing, record.Y, record.Width - AccessSpacing, record.Height );
+                Rectangle accessBounds = new Rectangle( record.X, record.Y, AccessSpacing, record.Height );
+                Rectangle textBounds = new Rectangle( record.X + AccessSpacing, record.Y, record.Width - AccessSpacing, record.Height );
 
                 g.DrawString( GetAccessString( member ), GetFont( style ), memberBrush, accessBounds, accessFormat );
                 g.DrawString( GetMemberString( member ), memberFont, memberBrush, textBounds, memberFormat );
@@ -359,9 +337,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             base.DrawSelectionLines( g, zoom, offset );
 
             // Draw selected member rectangle
-            if ( IsActive && ActiveMember != null )
+            if ( IsActive && ( ActiveMember != null ) )
             {
-                var record = GetMemberRectangle( ActiveMemberIndex );
+                Rectangle record = GetMemberRectangle( ActiveMemberIndex );
                 record = TransformRelativeToAbsolute( record, zoom, offset );
                 record.Inflate( 2, 0 );
                 g.DrawRectangle( Diagram.SelectionPen, record );
@@ -370,10 +348,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         protected override void DrawContent( IGraphics g, Style style )
         {
-            var record = new Rectangle( Left + MarginSize, Top + HeaderHeight + MarginSize, Width - MarginSize * 2, MemberHeight );
+            Rectangle record = new Rectangle( Left + MarginSize, Top + HeaderHeight + MarginSize, Width - MarginSize * 2, MemberHeight );
 
             // Draw fields
-            foreach ( var field in CompositeType.Fields )
+            foreach ( Field field in CompositeType.Fields )
             {
                 DrawMember( g, field, record, style );
                 record.Y += MemberHeight;
@@ -387,7 +365,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             }
 
             // Draw operations
-            foreach ( var operation in CompositeType.Operations )
+            foreach ( Operation operation in CompositeType.Operations )
             {
                 DrawMember( g, operation, record, style );
                 record.Y += MemberHeight;
@@ -398,14 +376,14 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         {
             float requiredWidth = 0;
 
-            foreach ( var field in CompositeType.Fields )
+            foreach ( Field field in CompositeType.Fields )
             {
-                var fieldWidth = g.MeasureString( GetMemberString( field ), GetMemberFont( field, style ), PointF.Empty, memberFormat ).Width;
+                float fieldWidth = g.MeasureString( GetMemberString( field ), GetMemberFont( field, style ), PointF.Empty, memberFormat ).Width;
                 requiredWidth = Math.Max( requiredWidth, fieldWidth );
             }
-            foreach ( var operation in CompositeType.Operations )
+            foreach ( Operation operation in CompositeType.Operations )
             {
-                var operationWidth = g.MeasureString( GetMemberString( operation ), GetMemberFont( operation, style ), PointF.Empty, memberFormat ).Width;
+                float operationWidth = g.MeasureString( GetMemberString( operation ), GetMemberFont( operation, style ), PointF.Empty, memberFormat ).Width;
                 requiredWidth = Math.Max( requiredWidth, operationWidth );
             }
             requiredWidth += style.UseIcons ? IconSpacing : AccessSpacing;
@@ -416,8 +394,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         protected override int GetRequiredHeight( )
         {
-            var memberCount = 0;
-            var spacingHeight = 0;
+            int memberCount = 0;
+            int spacingHeight = 0;
 
             if ( CompositeType.SupportsFields )
             {

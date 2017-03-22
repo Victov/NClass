@@ -24,7 +24,7 @@ using NReflect.NREntities;
 namespace NReflect
 {
     /// <summary>
-    /// Contains the reflection results of an assembly.
+    ///     Contains the reflection results of an assembly.
     /// </summary>
     [Serializable]
     public class NRAssembly : IVisitable, IAttributable, IEntityContainer
@@ -35,7 +35,7 @@ namespace NReflect
         #region === Con- / Destruction
 
         /// <summary>
-        /// Initializes a new instance of <see cref="NRAssembly"/>.
+        ///     Initializes a new instance of <see cref="NRAssembly" />.
         /// </summary>
         public NRAssembly( )
         {
@@ -51,58 +51,74 @@ namespace NReflect
         #endregion
 
         // ========================================================================
+        // Methods
+
+        #region === Methods
+
+        /// <summary>
+        ///     Accept an <see cref="IVisitor" /> instance on the implementing class and all its children.
+        /// </summary>
+        /// <param name="visitor">The <see cref="IVisitor" /> instance to accept.</param>
+        public void Accept( IVisitor visitor )
+        {
+            visitor.Visit( this );
+        }
+
+        #endregion
+
+        // ========================================================================
         // Properties
 
         #region === Properties
 
         /// <summary>
-        /// The full name of the assembly.
+        ///     The full name of the assembly.
         /// </summary>
         public string FullName { get; set; }
 
         /// <summary>
-        /// The source of the assembly. Possibly a file name.
+        ///     The source of the assembly. Possibly a file name.
         /// </summary>
         public string Source { get; set; }
 
         /// <summary>
-        /// Gets a list of reflected modules.
+        ///     Gets a list of reflected modules.
         /// </summary>
         public List< NRModule > Modules { get; private set; }
 
         /// <summary>
-        /// Gets a list of attributes.
+        ///     Gets a list of attributes.
         /// </summary>
-        public List< NRAttribute > Attributes { get; private set; }
+        public List< NRAttribute > Attributes { get; }
 
         /// <summary>
-        /// Gets a list of reflected classes.
+        ///     Gets a list of reflected classes.
         /// </summary>
-        public List< NRClass > Classes { get; private set; }
+        public List< NRClass > Classes { get; }
 
         /// <summary>
-        /// Gets a list of reflected interfaces.
+        ///     Gets a list of reflected interfaces.
         /// </summary>
-        public List< NRInterface > Interfaces { get; private set; }
+        public List< NRInterface > Interfaces { get; }
 
         /// <summary>
-        /// Gets a list of reflected structs.
+        ///     Gets a list of reflected structs.
         /// </summary>
-        public List< NRStruct > Structs { get; private set; }
+        public List< NRStruct > Structs { get; }
 
         /// <summary>
-        /// Gets a list of reflected enums.
+        ///     Gets a list of reflected enums.
         /// </summary>
-        public List< NREnum > Enums { get; private set; }
+        public List< NREnum > Enums { get; }
 
         /// <summary>
-        /// Gets a list of reflected delegates.
+        ///     Gets a list of reflected delegates.
         /// </summary>
-        public List< NRDelegate > Delegates { get; private set; }
+        public List< NRDelegate > Delegates { get; }
 
         /// <summary>
-        /// Gets an enumerator to access all types of the assembly in the following order:
-        /// interfaces, classes, structs, enums and delegates.
+        ///     Gets an enumerator to access all types of the assembly in the following order:
+        ///     interfaces, classes, structs, enums and delegates.
         /// </summary>
         /// <returns>An enumerator to go through all entities.</returns>
         public IEnumerable< NRTypeBase > Types
@@ -110,23 +126,17 @@ namespace NReflect
             get
             {
                 foreach ( NRCompositeType nrCompositeType in CompositTypes )
-                {
                     yield return nrCompositeType;
-                }
                 foreach ( NREnum nrEnum in Enums )
-                {
                     yield return nrEnum;
-                }
                 foreach ( NRDelegate nrDelegate in Delegates )
-                {
                     yield return nrDelegate;
-                }
             }
         }
 
         /// <summary>
-        /// Gets an enumerator to access all composit types of the assembly in the following order:
-        /// interfaces, classes, structs.
+        ///     Gets an enumerator to access all composit types of the assembly in the following order:
+        ///     interfaces, classes, structs.
         /// </summary>
         /// <returns>An enumerator to go through all entities.</returns>
         public IEnumerable< NRCompositeType > CompositTypes
@@ -134,19 +144,15 @@ namespace NReflect
             get
             {
                 foreach ( NRInterface nrInterface in Interfaces )
-                {
                     yield return nrInterface;
-                }
                 foreach ( NRSingleInheritanceType nrSingleInheritanceType in SingleInheritanceTypes )
-                {
                     yield return nrSingleInheritanceType;
-                }
             }
         }
 
         /// <summary>
-        /// Gets an enumerator to access all single inheritance types of the assembly in the following order:
-        /// classes, structs.
+        ///     Gets an enumerator to access all single inheritance types of the assembly in the following order:
+        ///     classes, structs.
         /// </summary>
         /// <returns>An enumerator to go through all entities.</returns>
         public IEnumerable< NRSingleInheritanceType > SingleInheritanceTypes
@@ -154,30 +160,10 @@ namespace NReflect
             get
             {
                 foreach ( NRClass nrClass in Classes )
-                {
                     yield return nrClass;
-                }
                 foreach ( NRStruct nrStruct in Structs )
-                {
                     yield return nrStruct;
-                }
             }
-        }
-
-        #endregion
-
-        // ========================================================================
-        // Methods
-
-        #region === Methods
-
-        /// <summary>
-        /// Accept an <see cref="IVisitor"/> instance on the implementing class and all its children.
-        /// </summary>
-        /// <param name="visitor">The <see cref="IVisitor"/> instance to accept.</param>
-        public void Accept( IVisitor visitor )
-        {
-            visitor.Visit( this );
         }
 
         #endregion

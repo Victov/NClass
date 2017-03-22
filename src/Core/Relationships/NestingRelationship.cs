@@ -49,7 +49,7 @@ namespace NClass.Core
 
         public NestingRelationship Clone( CompositeType parentType, TypeBase innerType )
         {
-            var nesting = new NestingRelationship( parentType, innerType );
+            NestingRelationship nesting = new NestingRelationship( parentType, innerType );
             nesting.CopyFrom( this );
             return nesting;
         }

@@ -24,15 +24,15 @@ namespace NClass.DiagramEditor.ClassDiagram.ContextMenus
 {
     internal sealed class AssociationContextMenu : DiagramContextMenu
     {
-        private ToolStripMenuItem mnuDirection;
-        private ToolStripMenuItem mnuUnidirectional;
+        private ToolStripMenuItem mnuAggregation;
+        private ToolStripMenuItem mnuAssociation;
         private ToolStripMenuItem mnuBidirectional;
+        private ToolStripMenuItem mnuComposition;
+        private ToolStripMenuItem mnuDirection;
         private ToolStripMenuItem mnuEdit;
         private ToolStripMenuItem mnuReverse;
         private ToolStripMenuItem mnuType;
-        private ToolStripMenuItem mnuAssociation;
-        private ToolStripMenuItem mnuComposition;
-        private ToolStripMenuItem mnuAggregation;
+        private ToolStripMenuItem mnuUnidirectional;
 
         private AssociationContextMenu( )
         {
@@ -83,55 +83,43 @@ namespace NClass.DiagramEditor.ClassDiagram.ContextMenus
         private void mnuUnidirectional_Click( object sender, EventArgs e )
         {
             if ( Diagram != null )
-            {
                 foreach ( Association association in Diagram.GetSelectedConnections( ) )
                     association.AssociationRelationship.Direction = Direction.Unidirectional;
-            }
         }
 
         private void mnuBidirectional_Click( object sender, EventArgs e )
         {
             if ( Diagram != null )
-            {
                 foreach ( Association association in Diagram.GetSelectedConnections( ) )
                     association.AssociationRelationship.Direction = Direction.Bidirectional;
-            }
         }
 
         private void mnuAssociation_Click( object sender, EventArgs e )
         {
             if ( Diagram != null )
-            {
                 foreach ( Association association in Diagram.GetSelectedConnections( ) )
-                {
                     association.AssociationRelationship.AssociationType = AssociationType.Association;
-                }
-            }
         }
 
         private void mnuComposition_Click( object sender, EventArgs e )
         {
             if ( Diagram != null )
-            {
                 foreach ( Association association in Diagram.GetSelectedConnections( ) )
                     association.AssociationRelationship.AssociationType = AssociationType.Composition;
-            }
         }
 
         private void mnuAggregation_Click( object sender, EventArgs e )
         {
             if ( Diagram != null )
-            {
                 foreach ( Association association in Diagram.GetSelectedConnections( ) )
                     association.AssociationRelationship.AssociationType = AssociationType.Aggregation;
-            }
         }
 
         private void mnuReverse_Click( object sender, EventArgs e )
         {
             if ( Diagram != null )
             {
-                var association = Diagram.TopSelectedElement as Association;
+                Association association = Diagram.TopSelectedElement as Association;
                 if ( association != null )
                     association.AssociationRelationship.Reverse( );
             }
@@ -141,7 +129,7 @@ namespace NClass.DiagramEditor.ClassDiagram.ContextMenus
         {
             if ( Diagram != null )
             {
-                var association = Diagram.TopSelectedElement as Association;
+                Association association = Diagram.TopSelectedElement as Association;
                 if ( association != null )
                     association.ShowEditDialog( );
             }

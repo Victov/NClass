@@ -22,12 +22,12 @@ namespace NClass.DiagramEditor
     {
         static MonoHelper( )
         {
-            var monoRuntime = Type.GetType( "Mono.Runtime" );
+            Type monoRuntime = Type.GetType( "Mono.Runtime" );
 
             if ( monoRuntime != null )
             {
                 IsRunningOnMono = true;
-                var method = monoRuntime.GetMethod( "GetDisplayName", BindingFlags.NonPublic | BindingFlags.Static );
+                MethodInfo method = monoRuntime.GetMethod( "GetDisplayName", BindingFlags.NonPublic | BindingFlags.Static );
 
                 if ( method != null )
                     Version = method.Invoke( null, null ) as string;

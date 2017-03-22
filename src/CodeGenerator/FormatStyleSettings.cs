@@ -13,7 +13,7 @@ namespace NClass.CodeGenerator
             // http://msdn.microsoft.com/en-us/library/aa302326.aspx
 
             // Create the AppSettings class and display it in the PropertyGrid.
-            var formatStyle = FormattingOptionsFactoryUI.CreateEmpty( );
+            CSharpFormattingOptionsUI formatStyle = FormattingOptionsFactoryUI.CreateEmpty( );
             propertyGridFormatStyle.SelectedObject = formatStyle;
         }
 

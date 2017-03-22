@@ -99,37 +99,27 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         private void ChangeType( )
         {
             if ( modifiedType == AssociationType.Association )
-            {
                 modifiedType = AssociationType.Aggregation;
-            }
             else if ( modifiedType == AssociationType.Aggregation )
-            {
                 modifiedType = AssociationType.Composition;
-            }
             else
-            {
                 modifiedType = AssociationType.Association;
-            }
         }
 
         private void ChangeHead( )
         {
             if ( modifiedDirection == Direction.Bidirectional )
-            {
                 modifiedDirection = Direction.Unidirectional;
-            }
             else
-            {
                 modifiedDirection = Direction.Bidirectional;
-            }
         }
 
         private void picArrow_Paint( object sender, PaintEventArgs e )
         {
-            var g = e.Graphics;
+            Graphics g = e.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
-            var center = picArrow.Height / 2;
-            var width = picArrow.Width;
+            int center = picArrow.Height / 2;
+            int width = picArrow.Width;
 
             // Draw line
             g.DrawLine( Pens.Black, 0, center, width, center );
@@ -161,9 +151,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         private void btnOK_Click( object sender, EventArgs e )
         {
             if ( association != null )
-            {
                 ModifyRelationship( );
-            }
         }
     }
 }

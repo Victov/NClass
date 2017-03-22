@@ -58,7 +58,7 @@ namespace NClass.Core
 
         public CommentRelationship Clone( Comment comment, IEntity entity )
         {
-            var relationship = new CommentRelationship( comment, entity );
+            CommentRelationship relationship = new CommentRelationship( comment, entity );
             relationship.CopyFrom( this );
             return relationship;
         }

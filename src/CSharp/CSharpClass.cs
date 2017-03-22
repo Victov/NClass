@@ -37,10 +37,8 @@ namespace NClass.CSharp
             get { return base.AccessModifier; }
             set
             {
-                if ( IsNested || value == AccessModifier.Default || value == AccessModifier.Internal || value == AccessModifier.Public )
-                {
+                if ( IsNested || ( value == AccessModifier.Default ) || ( value == AccessModifier.Internal ) || ( value == AccessModifier.Public ) )
                     base.AccessModifier = value;
-                }
             }
         }
 
@@ -53,7 +51,7 @@ namespace NClass.CSharp
         {
             get
             {
-                if ( base.BaseClass == null && this != CSharpLanguage.ObjectClass )
+                if ( ( base.BaseClass == null ) && ( this != CSharpLanguage.ObjectClass ) )
                     return CSharpLanguage.ObjectClass;
                 return base.BaseClass;
             }
@@ -98,7 +96,7 @@ namespace NClass.CSharp
                     RaiseChangedEvent = false;
 
                     base.NestingParent = value;
-                    if ( NestingParent == null && Access != AccessModifier.Public )
+                    if ( ( NestingParent == null ) && ( Access != AccessModifier.Public ) )
                         AccessModifier = AccessModifier.Internal;
                 }
                 finally
@@ -204,7 +202,7 @@ namespace NClass.CSharp
 
         public override string GetDeclaration( )
         {
-            var builder = new StringBuilder( );
+            StringBuilder builder = new StringBuilder( );
 
             if ( AccessModifier != AccessModifier.Default )
             {
@@ -218,7 +216,7 @@ namespace NClass.CSharp
             }
             builder.AppendFormat( "class {0}", Name );
 
-            if ( HasExplicitBase || InterfaceList.Count > 0 )
+            if ( HasExplicitBase || ( InterfaceList.Count > 0 ) )
             {
                 builder.Append( " : " );
                 if ( HasExplicitBase )
@@ -227,7 +225,7 @@ namespace NClass.CSharp
                     if ( InterfaceList.Count > 0 )
                         builder.Append( ", " );
                 }
-                for ( var i = 0; i < InterfaceList.Count; i++ )
+                for ( int i = 0; i < InterfaceList.Count; i++ )
                 {
                     builder.Append( InterfaceList[ i ].Name );
                     if ( i < InterfaceList.Count - 1 )
@@ -240,7 +238,7 @@ namespace NClass.CSharp
 
         public override ClassType Clone( )
         {
-            var newClass = new CSharpClass( );
+            CSharpClass newClass = new CSharpClass( );
             newClass.CopyFrom( this );
             return newClass;
         }

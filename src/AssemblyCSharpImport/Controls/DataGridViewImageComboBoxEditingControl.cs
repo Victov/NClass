@@ -32,11 +32,9 @@ namespace NClass.AssemblyCSharpImport.Controls
             get { return GetEditingControlFormattedValue( DataGridViewDataErrorContexts.Formatting ); }
             set
             {
-                var item = value as ImageComboBoxItem;
+                ImageComboBoxItem item = value as ImageComboBoxItem;
                 if ( item != null )
-                {
                     SelectedItem = item;
-                }
             }
         }
 
@@ -117,10 +115,8 @@ namespace NClass.AssemblyCSharpImport.Controls
         /// </param>
         public bool EditingControlWantsInputKey( Keys keyData, bool dataGridViewWantsInputKey )
         {
-            if ( ( keyData & Keys.KeyCode ) == Keys.Down || ( keyData & Keys.KeyCode ) == Keys.Up || DroppedDown && ( ( keyData & Keys.KeyCode ) == Keys.Escape ) || ( keyData & Keys.KeyCode ) == Keys.Enter )
-            {
+            if ( ( ( keyData & Keys.KeyCode ) == Keys.Down ) || ( ( keyData & Keys.KeyCode ) == Keys.Up ) || ( DroppedDown && ( ( keyData & Keys.KeyCode ) == Keys.Escape ) ) || ( ( keyData & Keys.KeyCode ) == Keys.Enter ) )
                 return true;
-            }
             return !dataGridViewWantsInputKey;
         }
 

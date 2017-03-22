@@ -39,10 +39,8 @@ namespace NClass.CodeGenerator
             get { return version; }
             set
             {
-                if ( value == SolutionType.VisualStudio2005 || value == SolutionType.VisualStudio2008 || value == SolutionType.VisualStudio2015 )
-                {
+                if ( ( value == SolutionType.VisualStudio2005 ) || ( value == SolutionType.VisualStudio2008 ) || ( value == SolutionType.VisualStudio2015 ) )
                     version = value;
-                }
             }
         }
 
@@ -75,7 +73,7 @@ namespace NClass.CodeGenerator
         /// </exception>
         protected override ProjectGenerator CreateProjectGenerator( Model model )
         {
-            var language = model.Language;
+            Language language = model.Language;
 
             if ( language == CSharpLanguage.Instance )
                 return new CSharpProjectGenerator( model, Version );
@@ -89,19 +87,19 @@ namespace NClass.CodeGenerator
         {
             try
             {
-                var templateDir = Path.Combine( Application.StartupPath, "Templates" );
-                var templatePath = Path.Combine( templateDir, "sln.template" );
-                var solutionDir = Path.Combine( location, SolutionName );
-                var solutionPath = Path.Combine( solutionDir, SolutionName + ".sln" );
+                string templateDir = Path.Combine( Application.StartupPath, "Templates" );
+                string templatePath = Path.Combine( templateDir, "sln.template" );
+                string solutionDir = Path.Combine( location, SolutionName );
+                string solutionPath = Path.Combine( solutionDir, SolutionName + ".sln" );
 
-                using ( var reader = new StreamReader( templatePath ) )
-                    using ( var writer = new StreamWriter( solutionPath, false, reader.CurrentEncoding ) )
+                using ( StreamReader reader = new StreamReader( templatePath ) )
+                {
+                    using ( StreamWriter writer = new StreamWriter( solutionPath, false, reader.CurrentEncoding ) )
                     {
                         while ( !reader.EndOfStream )
-                        {
                             CopyLine( reader, writer );
-                        }
                     }
+                }
                 return true;
             }
             catch
@@ -112,17 +110,17 @@ namespace NClass.CodeGenerator
 
         private void CopyLine( StreamReader reader, StreamWriter writer )
         {
-            var line = reader.ReadLine( );
+            string line = reader.ReadLine( );
 
             line = line.Replace( "${VersionNumber}", VersionNumber );
             line = line.Replace( "${VersionString}", VersionString );
 
             if ( line.Contains( "${ProjectFile}" ) )
             {
-                var nextLine = reader.ReadLine( );
-                foreach ( var generator in ProjectGenerators )
+                string nextLine = reader.ReadLine( );
+                foreach ( ProjectGenerator generator in ProjectGenerators )
                 {
-                    var newLine = line.Replace( "${ProjectFile}", generator.RelativeProjectFileName );
+                    string newLine = line.Replace( "${ProjectFile}", generator.RelativeProjectFileName );
                     newLine = newLine.Replace( "${ProjectName}", generator.ProjectName );
 
                     writer.WriteLine( newLine );

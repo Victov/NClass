@@ -76,11 +76,11 @@ namespace NClass.CodeGenerator
                 if ( !Directory.Exists( directory ) )
                     Directory.CreateDirectory( directory );
 
-                var fileName = Type.Name + Extension;
+                string fileName = Type.Name + Extension;
                 fileName = Regex.Replace( fileName, @"\<(?<type>.+)\>", @"[${type}]" );
-                var path = Path.Combine( directory, fileName );
+                string path = Path.Combine( directory, fileName );
 
-                using ( var writer = new StreamWriter( path, false ) )
+                using ( StreamWriter writer = new StreamWriter( path, false ) )
                 {
                     WriteFileContent( fileName, writer );
                 }

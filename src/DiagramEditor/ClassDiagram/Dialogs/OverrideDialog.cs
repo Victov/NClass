@@ -29,7 +29,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
 
         private TreeNode CreateClassNode( string className )
         {
-            var node = OperationTree.Nodes.Add( className );
+            TreeNode node = OperationTree.Nodes.Add( className );
             node.SelectedImageIndex = Icons.ClassImageIndex;
             node.ImageIndex = Icons.ClassImageIndex;
 
@@ -41,28 +41,24 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             if ( operation == null )
                 return;
 
-            for ( var i = 0; i < OperationTree.Nodes.Count; i++ )
-            {
-                for ( var j = 0; j < OperationTree.Nodes[ i ].Nodes.Count; j++ )
-                {
+            for ( int i = 0; i < OperationTree.Nodes.Count; i++ )
+                for ( int j = 0; j < OperationTree.Nodes[ i ].Nodes.Count; j++ )
                     if ( operation.HasSameSignatureAs( OperationTree.Nodes[ i ].Nodes[ j ].Tag as Operation ) )
                     {
                         OperationTree.Nodes[ i ].Nodes.RemoveAt( j );
                         break;
                     }
-                }
-            }
         }
 
         private void AddOperations( SingleInharitanceType derivedClass, SingleInharitanceType baseClass )
         {
-            if ( derivedClass == null || baseClass == null )
+            if ( ( derivedClass == null ) || ( baseClass == null ) )
                 return;
 
             AddOperations( derivedClass, baseClass.Base );
 
-            var node = CreateClassNode( baseClass.Name );
-            foreach ( var operation in baseClass.OverridableOperations )
+            TreeNode node = CreateClassNode( baseClass.Name );
+            foreach ( Operation operation in baseClass.OverridableOperations )
             {
                 if ( derivedClass.GetDefinedOperation( operation ) != null )
                     continue;

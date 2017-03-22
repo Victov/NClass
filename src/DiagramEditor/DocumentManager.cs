@@ -20,9 +20,9 @@ namespace NClass.DiagramEditor
 {
     public class DocumentManager
     {
-        private IDocument activeDocument;
         private readonly OrderedList< IDocument > documentHistory = new OrderedList< IDocument >( );
         private readonly List< IDocument > documents = new List< IDocument >( );
+        private IDocument activeDocument;
         private LinkedListNode< IDocument > switchingNode;
 
         public IEnumerable< IDocument > Documents
@@ -50,9 +50,9 @@ namespace NClass.DiagramEditor
             get { return activeDocument; }
             set
             {
-                if ( activeDocument != value && documents.Contains( value ) )
+                if ( ( activeDocument != value ) && documents.Contains( value ) )
                 {
-                    var oldDocument = activeDocument;
+                    IDocument oldDocument = activeDocument;
                     if ( !SwitchingTabs )
                         documentHistory.ShiftToFirstPlace( value );
                     activeDocument = value;
@@ -73,7 +73,7 @@ namespace NClass.DiagramEditor
 
         private void document_Closing( object sender, EventArgs e )
         {
-            var document = ( IDocument ) sender;
+            IDocument document = ( IDocument ) sender;
             Close( document );
         }
 
@@ -87,7 +87,7 @@ namespace NClass.DiagramEditor
 
             EndSwitching( );
 
-            var oldDocument = activeDocument;
+            IDocument oldDocument = activeDocument;
             if ( documents.Contains( document ) )
             {
                 if ( activeDocument != document )
@@ -110,27 +110,23 @@ namespace NClass.DiagramEditor
 
         public void MoveDocument( IDocument document, int places )
         {
-            var index = documents.IndexOf( document );
+            int index = documents.IndexOf( document );
 
-            if ( index >= 0 && places != 0 )
+            if ( ( index >= 0 ) && ( places != 0 ) )
             {
-                var position = index;
+                int position = index;
                 if ( places > 0 )
-                {
-                    while ( position < index + places && position < DocumentCount - 1 )
+                    while ( ( position < index + places ) && ( position < DocumentCount - 1 ) )
                     {
                         documents[ position ] = documents[ position + 1 ];
                         position++;
                     }
-                }
                 else // places < 0
-                {
-                    while ( position > index + places && position > 0 )
+                    while ( ( position > index + places ) && ( position > 0 ) )
                     {
                         documents[ position ] = documents[ position - 1 ];
                         position--;
                     }
-                }
 
                 documents[ position ] = document;
                 OnDocumentMoved( new DocumentMovedEventArgs( document, index, position ) );
@@ -148,7 +144,7 @@ namespace NClass.DiagramEditor
                 OnDocumentRemoved( new DocumentEventArgs( document ) );
                 if ( activeDocument == document )
                 {
-                    var oldDocument = activeDocument;
+                    IDocument oldDocument = activeDocument;
                     if ( HasDocument )
                         activeDocument = documentHistory.FirstValue;
                     else
@@ -168,7 +164,7 @@ namespace NClass.DiagramEditor
             {
                 while ( documents.Count > 0 )
                 {
-                    var document = documents[ documents.Count - 1 ];
+                    IDocument document = documents[ documents.Count - 1 ];
                     documents.RemoveAt( documents.Count - 1 );
                     document.Closing -= document_Closing;
                     OnDocumentRemoved( new DocumentEventArgs( document ) );
@@ -178,7 +174,7 @@ namespace NClass.DiagramEditor
 
                 if ( activeDocument != null )
                 {
-                    var oldDocument = activeDocument;
+                    IDocument oldDocument = activeDocument;
                     activeDocument = null;
                     OnActiveDocumentChanged( new DocumentEventArgs( oldDocument ) );
                 }
@@ -189,11 +185,11 @@ namespace NClass.DiagramEditor
         {
             EndSwitching( );
 
-            if ( HasDocument && documents.Count >= 2 )
+            if ( HasDocument && ( documents.Count >= 2 ) )
             {
                 while ( documents.Count >= 2 )
                 {
-                    var document = documents[ documents.Count - 1 ];
+                    IDocument document = documents[ documents.Count - 1 ];
                     if ( document != exception )
                     {
                         documents.RemoveAt( documents.Count - 1 );
@@ -212,7 +208,7 @@ namespace NClass.DiagramEditor
 
                 if ( activeDocument != exception )
                 {
-                    var oldDocument = activeDocument;
+                    IDocument oldDocument = activeDocument;
                     activeDocument = exception;
                     OnActiveDocumentChanged( new DocumentEventArgs( oldDocument ) );
                 }

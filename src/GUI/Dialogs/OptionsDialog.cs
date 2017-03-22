@@ -66,7 +66,7 @@ namespace NClass.GUI.Dialogs
         private void LoadStyles( )
         {
             cboStyles.Items.Clear( );
-            foreach ( var style in Style.AvaiableStyles )
+            foreach ( Style style in Style.AvaiableStyles )
             {
                 cboStyles.Items.Add( style );
                 if ( style.Equals( Style.CurrentStyle ) )
@@ -77,10 +77,8 @@ namespace NClass.GUI.Dialogs
         private void FillLanguages( )
         {
             cboLanguage.Items.Clear( );
-            foreach ( var language in UILanguage.AvalilableCultures )
-            {
+            foreach ( UILanguage language in UILanguage.AvalilableCultures )
                 cboLanguage.Items.Add( language );
-            }
         }
 
         private void LoadSettings( )
@@ -175,7 +173,7 @@ namespace NClass.GUI.Dialogs
 
         private void cboStyles_SelectedIndexChanged( object sender, EventArgs e )
         {
-            var style = cboStyles.SelectedItem as Style;
+            Style style = cboStyles.SelectedItem as Style;
             if ( style != null )
                 ChangeCurrentStyle( style );
         }
@@ -196,14 +194,14 @@ namespace NClass.GUI.Dialogs
 
         private void btnLoad_Click( object sender, EventArgs e )
         {
-            using ( var dialog = new OpenFileDialog( ) )
+            using ( OpenFileDialog dialog = new OpenFileDialog( ) )
             {
                 dialog.Filter = Strings.DiagramStyle + " (*.dst)|*.dst";
                 dialog.InitialDirectory = Style.StylesDirectory;
 
                 if ( dialog.ShowDialog( ) == DialogResult.OK )
                 {
-                    var style = Style.Load( dialog.FileName );
+                    Style style = Style.Load( dialog.FileName );
 
                     if ( style == null )
                     {
@@ -220,7 +218,7 @@ namespace NClass.GUI.Dialogs
 
         private void btnSave_Click( object sender, EventArgs e )
         {
-            using ( var dialog = new SaveFileDialog( ) )
+            using ( SaveFileDialog dialog = new SaveFileDialog( ) )
             {
                 dialog.FileName = Style.CurrentStyle.Name;
                 dialog.InitialDirectory = Style.StylesDirectory;
@@ -229,18 +227,12 @@ namespace NClass.GUI.Dialogs
                 if ( dialog.ShowDialog( ) == DialogResult.OK )
                 {
                     if ( Style.CurrentStyle.IsUntitled )
-                    {
                         Style.CurrentStyle.Name = Path.GetFileNameWithoutExtension( dialog.FileName );
-                    }
 
                     if ( !Style.CurrentStyle.Save( dialog.FileName ) )
-                    {
                         MessageBox.Show( Strings.ErrorCouldNotSaveFile, Strings.Save, MessageBoxButtons.OK, MessageBoxIcon.Error );
-                    }
                     else
-                    {
                         LoadStyles( );
-                    }
                 }
             }
         }

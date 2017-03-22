@@ -33,10 +33,8 @@ namespace NClass.CSharp
             get { return base.AccessModifier; }
             set
             {
-                if ( IsNested || value == AccessModifier.Default || value == AccessModifier.Internal || value == AccessModifier.Public )
-                {
+                if ( IsNested || ( value == AccessModifier.Default ) || ( value == AccessModifier.Internal ) || ( value == AccessModifier.Public ) )
                     base.AccessModifier = value;
-                }
             }
         }
 
@@ -63,7 +61,7 @@ namespace NClass.CSharp
                     RaiseChangedEvent = false;
 
                     base.NestingParent = value;
-                    if ( NestingParent == null && Access != AccessModifier.Public )
+                    if ( ( NestingParent == null ) && ( Access != AccessModifier.Public ) )
                         AccessModifier = AccessModifier.Internal;
                 }
                 finally
@@ -104,7 +102,7 @@ namespace NClass.CSharp
 
         public override string GetDeclaration( )
         {
-            var builder = new StringBuilder( );
+            StringBuilder builder = new StringBuilder( );
 
             if ( AccessModifier != AccessModifier.Default )
             {
@@ -118,7 +116,7 @@ namespace NClass.CSharp
 
         public override EnumType Clone( )
         {
-            var newEnum = new CSharpEnum( );
+            CSharpEnum newEnum = new CSharpEnum( );
             newEnum.CopyFrom( this );
             return newEnum;
         }

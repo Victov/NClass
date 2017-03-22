@@ -29,6 +29,9 @@ namespace NClass.GUI
         private const int LeftMargin = 3;
         private const int TopMargin = 3;
         private const int ClosingSignSize = 8;
+
+        private readonly StringFormat stringFormat;
+        private readonly List< Tab > tabs = new List< Tab >( );
         private bool activeCloseButton;
         private Tab activeTab;
         private Font activeTabFont;
@@ -38,9 +41,6 @@ namespace NClass.GUI
         private Tab grabbedTab;
         private int maxTabWidth = 200;
         private int originalPosition;
-
-        private readonly StringFormat stringFormat;
-        private readonly List< Tab > tabs = new List< Tab >( );
 
         public TabBar( )
         {
@@ -93,10 +93,8 @@ namespace NClass.GUI
         {
             get
             {
-                if ( Parent != null && !DesignMode && ( docManager == null || !docManager.HasDocument ) )
-                {
+                if ( ( Parent != null ) && !DesignMode && ( ( docManager == null ) || !docManager.HasDocument ) )
                     return Parent.BackColor;
-                }
                 return base.BackColor;
             }
             set { base.BackColor = value; }
@@ -137,9 +135,9 @@ namespace NClass.GUI
 
         private void CreateTabs( )
         {
-            foreach ( var doc in docManager.Documents )
+            foreach ( IDocument doc in docManager.Documents )
             {
-                var tab = new Tab( doc, this );
+                Tab tab = new Tab( doc, this );
                 tabs.Add( tab );
                 if ( doc == docManager.ActiveDocument )
                     activeTab = tab;
@@ -148,7 +146,7 @@ namespace NClass.GUI
 
         private void ClearTabs( )
         {
-            foreach ( var tab in tabs )
+            foreach ( Tab tab in tabs )
                 tab.Detached( );
             tabs.Clear( );
             activeTab = null;
@@ -156,50 +154,42 @@ namespace NClass.GUI
 
         private void docManager_ActiveDocumentChanged( object sender, DocumentEventArgs e )
         {
-            foreach ( var tab in tabs )
-            {
+            foreach ( Tab tab in tabs )
                 if ( tab.Document == docManager.ActiveDocument )
                 {
                     activeTab = tab;
                     break;
                 }
-            }
             Invalidate( );
         }
 
         private void docManager_DocumentAdded( object sender, DocumentEventArgs e )
         {
-            var tab = new Tab( e.Document, this );
+            Tab tab = new Tab( e.Document, this );
             tabs.Add( tab );
         }
 
         private void docManager_DocumentRemoved( object sender, DocumentEventArgs e )
         {
-            for ( var index = 0; index < tabs.Count; index++ )
-            {
+            for ( int index = 0; index < tabs.Count; index++ )
                 if ( tabs[ index ].Document == e.Document )
                 {
                     tabs.RemoveAt( index );
                     Invalidate( );
                     return;
                 }
-            }
         }
 
         private void docManager_DocumentMoved( object sender, DocumentMovedEventArgs e )
         {
-            var tab = tabs[ e.OldPostion ];
+            Tab tab = tabs[ e.OldPostion ];
 
             if ( e.NewPosition > e.OldPostion )
-            {
-                for ( var i = e.OldPostion; i < e.NewPosition; i++ )
+                for ( int i = e.OldPostion; i < e.NewPosition; i++ )
                     tabs[ i ] = tabs[ i + 1 ];
-            }
             else // e.NewPosition < e.OldPostion
-            {
-                for ( var i = e.OldPostion; i > e.NewPosition; i-- )
+                for ( int i = e.OldPostion; i > e.NewPosition; i-- )
                     tabs[ i ] = tabs[ i - 1 ];
-            }
             tabs[ e.NewPosition ] = tab;
             Invalidate( );
         }
@@ -208,9 +198,8 @@ namespace NClass.GUI
         {
             base.OnMouseDown( e );
 
-            var selectedTab = PickTab( e.Location );
+            Tab selectedTab = PickTab( e.Location );
             if ( selectedTab != null )
-            {
                 if ( e.Button == MouseButtons.Middle )
                 {
                     docManager.Close( selectedTab.Document );
@@ -221,34 +210,27 @@ namespace NClass.GUI
                     grabbedTab = selectedTab;
                     originalPosition = e.X;
                 }
-            }
             else if ( docManager.HasDocument && IsOverClosingSign( e.Location ) )
-            {
                 docManager.Close( docManager.ActiveDocument );
-            }
         }
 
         protected override void OnMouseDoubleClick( MouseEventArgs e )
         {
             base.OnMouseDoubleClick( e );
 
-            var selectedTab = PickTab( e.Location );
-            if ( selectedTab != null && e.Button == MouseButtons.Left )
-            {
+            Tab selectedTab = PickTab( e.Location );
+            if ( ( selectedTab != null ) && ( e.Button == MouseButtons.Left ) )
                 docManager.Close( selectedTab.Document );
-            }
         }
 
         protected override void OnMouseMove( MouseEventArgs e )
         {
             base.OnMouseMove( e );
 
-            if ( e.Button == MouseButtons.Left && grabbedTab != null )
-            {
+            if ( ( e.Button == MouseButtons.Left ) && ( grabbedTab != null ) )
                 MoveTab( grabbedTab, e.Location );
-            }
 
-            var overClosingSign = IsOverClosingSign( e.Location );
+            bool overClosingSign = IsOverClosingSign( e.Location );
             if ( activeCloseButton != overClosingSign )
             {
                 activeCloseButton = overClosingSign;
@@ -258,10 +240,10 @@ namespace NClass.GUI
 
         private bool IsOverClosingSign( Point location )
         {
-            var margin = ( Height - ClosingSignSize ) / 2;
-            var left = Width - margin - ClosingSignSize;
+            int margin = ( Height - ClosingSignSize ) / 2;
+            int left = Width - margin - ClosingSignSize;
 
-            return location.X >= left && location.X <= left + ClosingSignSize && location.Y >= margin && location.Y <= margin + ClosingSignSize;
+            return ( location.X >= left ) && ( location.X <= left + ClosingSignSize ) && ( location.Y >= margin ) && ( location.Y <= margin + ClosingSignSize );
         }
 
         protected override void OnMouseUp( MouseEventArgs e )
@@ -301,11 +283,11 @@ namespace NClass.GUI
 
         private Tab PickTab( Point point )
         {
-            var x = LeftMargin;
+            int x = LeftMargin;
 
-            foreach ( var tab in tabs )
+            foreach ( Tab tab in tabs )
             {
-                if ( point.X >= x && point.X < x + tab.Width )
+                if ( ( point.X >= x ) && ( point.X < x + tab.Width ) )
                     return tab;
                 x += tab.Width;
             }
@@ -314,7 +296,7 @@ namespace NClass.GUI
 
         private void MoveTab( Tab grabbedTab, Point destination )
         {
-            var newNeighbourTab = PickTab( destination );
+            Tab newNeighbourTab = PickTab( destination );
 
             if ( newNeighbourTab == grabbedTab )
             {
@@ -322,8 +304,8 @@ namespace NClass.GUI
             }
             else if ( newNeighbourTab != null )
             {
-                var oldIndex = tabs.IndexOf( grabbedTab );
-                var newIndex = tabs.IndexOf( newNeighbourTab );
+                int oldIndex = tabs.IndexOf( grabbedTab );
+                int newIndex = tabs.IndexOf( newNeighbourTab );
 
                 if ( newIndex > oldIndex ) // Moving right
                 {
@@ -340,11 +322,11 @@ namespace NClass.GUI
 
         private void DrawTabs( Graphics g )
         {
-            var borderPen = new Pen( BorderColor );
+            Pen borderPen = new Pen( BorderColor );
             Brush activeTabBrush = new SolidBrush( ActiveTabColor );
             Brush inactiveTabBrush = new LinearGradientBrush( new Rectangle( 0, 5, Width, Height - 1 ), ActiveTabColor, SystemColors.ControlLight, LinearGradientMode.Vertical );
             Brush textBrush;
-            var left = LeftMargin;
+            int left = LeftMargin;
 
             if ( ForeColor.IsKnownColor )
                 textBrush = SystemBrushes.FromSystemColor( ForeColor );
@@ -352,13 +334,13 @@ namespace NClass.GUI
                 textBrush = new SolidBrush( ForeColor );
 
             g.DrawLine( borderPen, 0, Height - 1, left, Height - 1 );
-            foreach ( var tab in tabs )
+            foreach ( Tab tab in tabs )
             {
                 //TODO: szépíteni
-                var isActiveTab = tab == activeTab;
-                var top = isActiveTab ? TopMargin : TopMargin + 2;
-                var tabBrush = isActiveTab ? activeTabBrush : inactiveTabBrush;
-                var tabRectangle = new Rectangle( left, top, tab.Width, Height - top );
+                bool isActiveTab = tab == activeTab;
+                int top = isActiveTab ? TopMargin : TopMargin + 2;
+                Brush tabBrush = isActiveTab ? activeTabBrush : inactiveTabBrush;
+                Rectangle tabRectangle = new Rectangle( left, top, tab.Width, Height - top );
 
                 // To display bottom line for inactive tabs
                 if ( !isActiveTab )
@@ -366,7 +348,7 @@ namespace NClass.GUI
 
                 g.FillRectangle( tabBrush, tabRectangle ); // Draw background
                 g.DrawRectangle( borderPen, tabRectangle ); // Draw border
-                var font = isActiveTab ? activeTabFont : Font;
+                Font font = isActiveTab ? activeTabFont : Font;
                 g.DrawString( tab.Text, font, textBrush, tabRectangle, stringFormat );
 
                 left += tab.Width;
@@ -382,10 +364,10 @@ namespace NClass.GUI
 
         private void DrawCloseIcon( Graphics g )
         {
-            var lineColor = activeCloseButton ? SystemColors.ControlText : SystemColors.ControlDark;
-            var margin = ( Height - ClosingSignSize ) / 2;
-            var left = Width - margin - ClosingSignSize;
-            var linePen = new Pen( lineColor, 2 );
+            Color lineColor = activeCloseButton ? SystemColors.ControlText : SystemColors.ControlDark;
+            int margin = ( Height - ClosingSignSize ) / 2;
+            int left = Width - margin - ClosingSignSize;
+            Pen linePen = new Pen( lineColor, 2 );
 
             g.DrawLine( linePen, left, margin, left + ClosingSignSize, margin + ClosingSignSize );
             g.DrawLine( linePen, left, margin + ClosingSignSize, left + ClosingSignSize, margin );
@@ -394,18 +376,14 @@ namespace NClass.GUI
 
         private void contextMenu_Opening( object sender, CancelEventArgs e )
         {
-            if ( docManager == null || !docManager.HasDocument )
-            {
+            if ( ( docManager == null ) || !docManager.HasDocument )
                 e.Cancel = true;
-            }
         }
 
         private void mnuClose_Click( object sender, EventArgs e )
         {
-            if ( docManager != null && activeTab != null )
-            {
+            if ( ( docManager != null ) && ( activeTab != null ) )
                 docManager.Close( activeTab.Document );
-            }
         }
 
         private void mnuCloseAll_Click( object sender, EventArgs e )
@@ -416,10 +394,8 @@ namespace NClass.GUI
 
         private void mnuCloseAllButThis_Click( object sender, EventArgs e )
         {
-            if ( docManager != null && activeTab != null )
-            {
+            if ( ( docManager != null ) && ( activeTab != null ) )
                 docManager.CloseAllOthers( activeTab.Document );
-            }
         }
 
         private class Tab
@@ -479,9 +455,9 @@ namespace NClass.GUI
 
             private float MeasureWidth( string text )
             {
-                var g = parent.CreateGraphics( );
+                Graphics g = parent.CreateGraphics( );
 
-                var textSize = g.MeasureString( text, parent.activeTabFont, parent.MaxTabWidth, parent.stringFormat );
+                SizeF textSize = g.MeasureString( text, parent.activeTabFont, parent.MaxTabWidth, parent.stringFormat );
                 g.Dispose( );
 
                 return textSize.Width;

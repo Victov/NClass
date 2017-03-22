@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using NClass.Core;
 
 namespace NClass.CodeGenerator
@@ -52,17 +53,17 @@ namespace NClass.CodeGenerator
 
         private void WriteUsings( )
         {
-            var importList = Settings.Default.CSharpImportList;
+            StringCollection importList = Settings.Default.CSharpImportList;
 
-            var str = new List< string >( );
-            foreach ( var usingElement in importList )
+            List< string > str = new List< string >( );
+            foreach ( string usingElement in importList )
                 str.Add( usingElement );
 
             // Sort using
             if ( sort_using )
                 str.Sort( );
 
-            foreach ( var usingElement in str )
+            foreach ( string usingElement in str )
                 WriteLine( "using " + usingElement + ";" );
 
             if ( importList.Count > 0 )
@@ -100,23 +101,19 @@ namespace NClass.CodeGenerator
             IndentLevel++;
 
             if ( type is ClassType )
-            {
-                foreach ( var nestedType in ( ( ClassType ) type ).NestedChilds )
+                foreach ( TypeBase nestedType in ( ( ClassType ) type ).NestedChilds )
                 {
                     WriteType( nestedType );
                     AddBlankLine( );
                 }
-            }
 
             if ( type.SupportsFields )
-            {
-                foreach ( var field in type.Fields )
+                foreach ( Field field in type.Fields )
                     WriteField( field );
-            }
 
-            var needBlankLine = type.FieldCount > 0 && type.OperationCount > 0;
+            bool needBlankLine = ( type.FieldCount > 0 ) && ( type.OperationCount > 0 );
 
-            foreach ( var operation in type.Operations )
+            foreach ( Operation operation in type.Operations )
             {
                 if ( needBlankLine )
                     AddBlankLine( );
@@ -137,14 +134,12 @@ namespace NClass.CodeGenerator
             WriteLine( "{" );
             IndentLevel++;
 
-            var valuesRemained = _enum.ValueCount;
-            foreach ( var value in _enum.Values )
-            {
+            int valuesRemained = _enum.ValueCount;
+            foreach ( EnumValue value in _enum.Values )
                 if ( --valuesRemained > 0 )
                     WriteLine( value.GetDeclaration( ) + "," );
                 else
                     WriteLine( value.GetDeclaration( ) );
-            }
 
             // Writing closing bracket of the type block
             IndentLevel--;
@@ -166,11 +161,8 @@ namespace NClass.CodeGenerator
             WriteLine( operation.GetDeclaration( ) );
 
             if ( operation is Property )
-            {
                 WriteProperty( ( Property ) operation );
-            }
             else if ( operation.HasBody )
-            {
                 if ( operation is Event )
                 {
                     WriteLine( "{" );
@@ -188,7 +180,6 @@ namespace NClass.CodeGenerator
                     IndentLevel--;
                     WriteLine( "}" );
                 }
-            }
         }
 
         private void WriteProperty( Property property )
@@ -197,7 +188,6 @@ namespace NClass.CodeGenerator
             IndentLevel++;
 
             if ( !property.IsWriteonly )
-            {
                 if ( property.HasImplementation )
                 {
                     WriteLine( "get" );
@@ -211,9 +201,7 @@ namespace NClass.CodeGenerator
                 {
                     WriteLine( "get;" );
                 }
-            }
             if ( !property.IsReadonly )
-            {
                 if ( property.HasImplementation )
                 {
                     WriteLine( "set" );
@@ -227,7 +215,6 @@ namespace NClass.CodeGenerator
                 {
                     WriteLine( "set;" );
                 }
-            }
 
             IndentLevel--;
             WriteLine( "}" );
@@ -236,16 +223,12 @@ namespace NClass.CodeGenerator
         private void WriteNotImplementedString( )
         {
             if ( Settings.Default.UseNotImplementedExceptions )
-            {
                 if ( Settings.Default.CSharpImportList.Contains( "System" ) )
                     WriteLine( "throw new NotImplementedException();" );
                 else
                     WriteLine( "throw new System.NotImplementedException();" );
-            }
             else
-            {
                 AddBlankLine( true );
-            }
         }
     }
 }

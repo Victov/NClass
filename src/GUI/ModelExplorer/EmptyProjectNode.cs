@@ -60,10 +60,10 @@ namespace NClass.GUI.ModelExplorer
 
         private void AddEmptyDiagram( )
         {
-            var parent = Parent;
+            TreeNode parent = Parent;
 
             Delete( );
-            var diagram = new Diagram( Settings.Default.GetDefaultLanguage( ) );
+            Diagram diagram = new Diagram( Settings.Default.GetDefaultLanguage( ) );
             project.Add( diagram );
         }
 

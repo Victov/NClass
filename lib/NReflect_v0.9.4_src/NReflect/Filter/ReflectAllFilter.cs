@@ -24,7 +24,7 @@ using NReflect.NRMembers;
 namespace NReflect.Filter
 {
     /// <summary>
-    /// A filter which will import every type and member.
+    ///     A filter which will import every type and member.
     /// </summary>
     [Serializable]
     public class ReflectAllFilter : IFilter
@@ -35,7 +35,7 @@ namespace NReflect.Filter
         #region === Methods
 
         /// <summary>
-        /// Determines if a class will be reflected.
+        ///     Determines if a class will be reflected.
         /// </summary>
         /// <param name="nrClass">The class to test.</param>
         /// <returns><c>True</c> if the class should be reflected.</returns>
@@ -45,7 +45,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if an interface will be reflected.
+        ///     Determines if an interface will be reflected.
         /// </summary>
         /// <param name="nrInterface">The interface to test.</param>
         /// <returns><c>True</c> if the interface should be reflected.</returns>
@@ -55,7 +55,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if a struct will be reflected.
+        ///     Determines if a struct will be reflected.
         /// </summary>
         /// <param name="nrStruct">The struct to test.</param>
         /// <returns><c>True</c> if the struct should be reflected.</returns>
@@ -65,7 +65,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if a delegate will be reflected.
+        ///     Determines if a delegate will be reflected.
         /// </summary>
         /// <param name="nrDelegate">The delegate to test.</param>
         /// <returns><c>True</c> if the delegate should be reflected.</returns>
@@ -75,7 +75,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if a enum will be reflected.
+        ///     Determines if a enum will be reflected.
         /// </summary>
         /// <param name="nrEnum">The enum to test.</param>
         /// <returns><c>True</c> if the enum should be reflected.</returns>
@@ -85,7 +85,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if a enum value will be reflected.
+        ///     Determines if a enum value will be reflected.
         /// </summary>
         /// <param name="nrEnumValue">The enum value to test.</param>
         /// <returns><c>True</c> if the enum value should be reflected.</returns>
@@ -95,7 +95,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if a method will be reflected.
+        ///     Determines if a method will be reflected.
         /// </summary>
         /// <param name="nrMethod">The method to test.</param>
         /// <returns><c>True</c>, so the method will be reflected.</returns>
@@ -105,7 +105,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if an operator will be reflected.
+        ///     Determines if an operator will be reflected.
         /// </summary>
         /// <param name="nrOperator">The operator to test.</param>
         /// <returns><c>True</c> if the operator should be reflected.</returns>
@@ -115,7 +115,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if an event will be reflected.
+        ///     Determines if an event will be reflected.
         /// </summary>
         /// <param name="nrEvent">The event to test.</param>
         /// <returns><c>False</c> if the event should not be reflected.</returns>
@@ -125,7 +125,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if a field will be reflected.
+        ///     Determines if a field will be reflected.
         /// </summary>
         /// <param name="nrField">The field to test.</param>
         /// <returns><c>False</c> if the field should not be reflected.</returns>
@@ -135,7 +135,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if a method will be reflected.
+        ///     Determines if a method will be reflected.
         /// </summary>
         /// <param name="nrConstructor">The method to test.</param>
         /// <returns><c>False</c> if the method should not be reflected.</returns>
@@ -145,7 +145,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if a property will be reflected.
+        ///     Determines if a property will be reflected.
         /// </summary>
         /// <param name="nrProperty">The property to test.</param>
         /// <returns><c>False</c> if the property should not be reflected.</returns>
@@ -155,7 +155,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if an attribute will be reflected.
+        ///     Determines if an attribute will be reflected.
         /// </summary>
         /// <param name="nrAttribute">The attribute to test.</param>
         /// <returns><c>True</c> if the attribute should be reflected.</returns>
@@ -165,7 +165,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if a module will be reflected.
+        ///     Determines if a module will be reflected.
         /// </summary>
         /// <param name="nrModule">The module to test.</param>
         /// <returns><c>True</c> if the module should be reflected.</returns>

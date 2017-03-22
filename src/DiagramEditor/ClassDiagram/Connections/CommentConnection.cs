@@ -45,10 +45,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         protected override bool CloneRelationship( Diagram diagram, Shape first, Shape second )
         {
-            var comment = first.Entity as Comment;
+            Comment comment = first.Entity as Comment;
             if ( comment != null )
             {
-                var clone = CommentRelationship.Clone( comment, second.Entity );
+                CommentRelationship clone = CommentRelationship.Clone( comment, second.Entity );
                 return diagram.InsertCommentRelationship( clone );
             }
             return false;

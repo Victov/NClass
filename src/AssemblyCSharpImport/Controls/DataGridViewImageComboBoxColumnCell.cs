@@ -155,10 +155,10 @@ namespace NClass.AssemblyCSharpImport.Controls
             base.Paint( graphics, clipBounds, cellBounds, rowIndex, elementState, value, null, errorText, cellStyle, advancedBorderStyle, paintParts );
 
             //Now we will draw the current content of the box.
-            var column = ( DataGridViewImageComboBoxColumn ) OwningColumn;
-            if ( ( paintParts & DataGridViewPaintParts.Background ) != 0 || ( paintParts & DataGridViewPaintParts.All ) != 0 )
+            DataGridViewImageComboBoxColumn column = ( DataGridViewImageComboBoxColumn ) OwningColumn;
+            if ( ( ( paintParts & DataGridViewPaintParts.Background ) != 0 ) || ( ( paintParts & DataGridViewPaintParts.All ) != 0 ) )
             {
-                var rect = new Rectangle( cellBounds.X + 4, cellBounds.Y, cellBounds.Width - 4, cellBounds.Height - 1 );
+                Rectangle rect = new Rectangle( cellBounds.X + 4, cellBounds.Y, cellBounds.Width - 4, cellBounds.Height - 1 );
                 ControlDrawHelper.DrawImageComboBoxItem( graphics, value, column.ImageList, column.ImageSize, rect, cellStyle.Font, cellStyle.ForeColor );
             }
         }
@@ -176,9 +176,9 @@ namespace NClass.AssemblyCSharpImport.Controls
         {
             base.InitializeEditingControl( rowIndex, initialFormattedValue, dataGridViewCellStyle );
 
-            var control = DataGridView.EditingControl as DataGridViewImageComboBoxEditingControl;
-            var column = OwningColumn as DataGridViewImageComboBoxColumn;
-            if ( control != null && column != null )
+            DataGridViewImageComboBoxEditingControl control = DataGridView.EditingControl as DataGridViewImageComboBoxEditingControl;
+            DataGridViewImageComboBoxColumn column = OwningColumn as DataGridViewImageComboBoxColumn;
+            if ( ( control != null ) && ( column != null ) )
             {
                 control.ImageList = column.ImageList;
                 control.ImageSize = column.ImageSize;

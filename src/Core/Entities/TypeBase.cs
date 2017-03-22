@@ -80,17 +80,11 @@ namespace NClass.Core
                 if ( nestingParent != value )
                 {
                     if ( value == this )
-                    {
                         throw new RelationshipException( Strings.ErrorRecursiveNesting );
-                    }
-                    if ( value != null && !value.SupportsNesting )
-                    {
+                    if ( ( value != null ) && !value.SupportsNesting )
                         throw new RelationshipException( Strings.ErrorNestingNotSupported );
-                    }
-                    if ( value != null && value.IsNestedAncestor( this ) )
-                    {
+                    if ( ( value != null ) && value.IsNestedAncestor( this ) )
                         throw new RelationshipException( Strings.ErrorCyclicNesting );
-                    }
 
                     if ( nestingParent != null )
                         nestingParent.RemoveNestedChild( this );
@@ -124,7 +118,7 @@ namespace NClass.Core
             get { return name; }
             set
             {
-                var newName = Language.GetValidName( value, true );
+                string newName = Language.GetValidName( value, true );
 
                 if ( newName != name )
                 {
@@ -148,7 +142,7 @@ namespace NClass.Core
 
         private bool IsNestedAncestor( TypeBase type )
         {
-            if ( NestingParent != null && NestingParent.IsNestedAncestor( type ) )
+            if ( ( NestingParent != null ) && NestingParent.IsNestedAncestor( type ) )
                 return true;
             return type == this;
         }
@@ -162,10 +156,10 @@ namespace NClass.Core
             if ( item == null )
                 return false;
 
-            var index = list.IndexOf( item );
+            int index = list.IndexOf( item );
             if ( index > 0 )
             {
-                var temp = list[ index - 1 ];
+                object temp = list[ index - 1 ];
                 list[ index - 1 ] = list[ index ];
                 list[ index ] = temp;
                 return true;
@@ -178,10 +172,10 @@ namespace NClass.Core
             if ( item == null )
                 return false;
 
-            var index = list.IndexOf( item );
-            if ( index >= 0 && index < list.Count - 1 )
+            int index = list.IndexOf( item );
+            if ( ( index >= 0 ) && ( index < list.Count - 1 ) )
             {
-                var temp = list[ index + 1 ];
+                object temp = list[ index + 1 ];
                 list[ index + 1 ] = list[ index ];
                 list[ index ] = temp;
                 return true;
@@ -231,11 +225,11 @@ namespace NClass.Core
                 throw new ArgumentNullException( "node" );
 
             RaiseChangedEvent = false;
-            var nameChild = node[ "Name" ];
+            XmlElement nameChild = node[ "Name" ];
             if ( nameChild != null )
                 Name = nameChild.InnerText;
 
-            var accessChild = node[ "Access" ];
+            XmlElement accessChild = node[ "Access" ];
             if ( accessChild != null )
                 AccessModifier = Language.TryParseAccessModifier( accessChild.InnerText );
 

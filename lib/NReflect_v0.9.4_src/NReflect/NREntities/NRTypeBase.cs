@@ -24,7 +24,7 @@ using NReflect.NRAttributes;
 namespace NReflect.NREntities
 {
     /// <summary>
-    /// Represents the base of all types which are reflected by NReflect.
+    ///     Represents the base of all types which are reflected by NReflect.
     /// </summary>
     [Serializable]
     public abstract class NRTypeBase : IVisitable, IAttributable
@@ -35,7 +35,7 @@ namespace NReflect.NREntities
         #region === Con- / Destruction
 
         /// <summary>
-        /// Initializes a new instance of <see cref="NRTypeBase"/>.
+        ///     Initializes a new instance of <see cref="NRTypeBase" />.
         /// </summary>
         protected NRTypeBase( )
         {
@@ -45,52 +45,52 @@ namespace NReflect.NREntities
         #endregion
 
         // ========================================================================
-        // Properties
-
-        #region === Properties
-
-        /// <summary>
-        /// Gets or sets the name of this type.
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets the namespace of this type.
-        /// </summary>
-        public string Namespace { get; set; }
-
-        /// <summary>
-        /// Gets or sets the full name of this type.
-        /// </summary>
-        public string FullName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the access modifier for this type.
-        /// </summary>
-        public AccessModifier AccessModifier { get; set; }
-
-        /// <summary>
-        /// Gets or sets the full full name of the type in which this type is nested.
-        /// </summary>
-        public string DeclaringTypeFullName { get; set; }
-
-        /// <summary>
-        /// Gets a list of attributes of the type.
-        /// </summary>
-        public List< NRAttribute > Attributes { get; private set; }
-
-        #endregion
-
-        // ========================================================================
         // Methods
 
         #region === Methods
 
         /// <summary>
-        /// Accept an <see cref="IVisitor"/> instance on the implementing class and all its children.
+        ///     Accept an <see cref="IVisitor" /> instance on the implementing class and all its children.
         /// </summary>
-        /// <param name="visitor">The <see cref="IVisitor"/> instance to accept.</param>
+        /// <param name="visitor">The <see cref="IVisitor" /> instance to accept.</param>
         public abstract void Accept( IVisitor visitor );
+
+        #endregion
+
+        // ========================================================================
+        // Properties
+
+        #region === Properties
+
+        /// <summary>
+        ///     Gets or sets the name of this type.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the namespace of this type.
+        /// </summary>
+        public string Namespace { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the full name of this type.
+        /// </summary>
+        public string FullName { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the access modifier for this type.
+        /// </summary>
+        public AccessModifier AccessModifier { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the full full name of the type in which this type is nested.
+        /// </summary>
+        public string DeclaringTypeFullName { get; set; }
+
+        /// <summary>
+        ///     Gets a list of attributes of the type.
+        /// </summary>
+        public List< NRAttribute > Attributes { get; }
 
         #endregion
     }

@@ -77,7 +77,7 @@ namespace NClass.Core
             get { return name; }
             set
             {
-                var newName = Language.GetValidName( value, true );
+                string newName = Language.GetValidName( value, true );
 
                 if ( newName != name )
                 {
@@ -112,7 +112,7 @@ namespace NClass.Core
             get { return type; }
             set
             {
-                var newType = Language.GetValidTypeName( value );
+                string newType = Language.GetValidTypeName( value );
 
                 if ( newType != type )
                 {

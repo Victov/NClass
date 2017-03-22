@@ -58,11 +58,9 @@ namespace NClass.Core
             if ( interfaceType == null )
                 throw new ArgumentNullException( "interfaceType" );
 
-            foreach ( var implementedInterface in InterfaceList )
-            {
+            foreach ( InterfaceType implementedInterface in InterfaceList )
                 if ( interfaceType == implementedInterface )
                     throw new RelationshipException( Strings.ErrorCannotAddSameInterface );
-            }
 
             InterfaceList.Add( interfaceType );
             Changed( );
@@ -89,16 +87,12 @@ namespace NClass.Core
                 throw new ArgumentException( Strings.ErrorLanguagesDoNotEqual );
 
             if ( !( operation.Parent is InterfaceType ) )
-            {
                 throw new ArgumentException( "The operation is not a member of an interface." );
-            }
 
             if ( explicitly && !operation.Language.SupportsExplicitImplementation )
-            {
                 throw new ArgumentException( Strings.ErrorExplicitImplementation, "explicitly" );
-            }
 
-            var newOperation = Language.Implement( operation, this, explicitly );
+            Operation newOperation = Language.Implement( operation, this, explicitly );
             newOperation.Parent = this;
 
             AddOperation( newOperation );
@@ -120,7 +114,7 @@ namespace NClass.Core
             if ( operation.Language != Language )
                 throw new ArgumentException( Strings.ErrorLanguagesDoNotEqual );
 
-            var newOperation = Language.Override( operation, this );
+            Operation newOperation = Language.Override( operation, this );
 
             AddOperation( newOperation );
             return newOperation;

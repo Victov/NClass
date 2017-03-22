@@ -55,7 +55,7 @@ namespace NClass.Core
             get { return name; }
             set
             {
-                if ( name != value && value != null && value.Length > 0 )
+                if ( ( name != value ) && ( value != null ) && ( value.Length > 0 ) )
                 {
                     name = value;
                     IsUntitled = false;
@@ -83,9 +83,9 @@ namespace NClass.Core
                 {
                     try
                     {
-                        var file = new FileInfo( value );
+                        FileInfo file = new FileInfo( value );
 
-                        if ( projectFile == null || projectFile.FullName != file.FullName )
+                        if ( ( projectFile == null ) || ( projectFile.FullName != file.FullName ) )
                         {
                             projectFile = file;
                             OnFileStateChanged( EventArgs.Empty );
@@ -139,10 +139,8 @@ namespace NClass.Core
 
         public void Clean( )
         {
-            foreach ( var item in Items )
-            {
+            foreach ( IProjectItem item in Items )
                 item.Clean( );
-            }
             if ( IsDirty )
             {
                 IsDirty = false;
@@ -157,10 +155,8 @@ namespace NClass.Core
 
         public void CloseItems( )
         {
-            foreach ( var item in Items )
-            {
+            foreach ( IProjectItem item in Items )
                 item.Close( );
-            }
         }
 
         /// <exception cref="ArgumentException">
@@ -232,7 +228,7 @@ namespace NClass.Core
             if ( !File.Exists( fileName ) )
                 throw new FileNotFoundException( Strings.ErrorFileNotFound );
 
-            var document = new XmlDocument( );
+            XmlDocument document = new XmlDocument( );
             try
             {
                 document.Load( fileName );
@@ -242,22 +238,20 @@ namespace NClass.Core
                 throw new IOException( Strings.ErrorCouldNotLoadFile, ex );
             }
 
-            var root = document[ "Project" ];
+            XmlElement root = document[ "Project" ];
             if ( root == null )
             {
                 root = document[ "ClassProject" ]; // Old file format
                 if ( root == null )
-                {
                     throw new InvalidDataException( Strings.ErrorCorruptSaveFile );
-                }
-                var oldProject = LoadWithPreviousFormat( root );
+                Project oldProject = LoadWithPreviousFormat( root );
                 oldProject.FilePath = fileName;
                 oldProject.name = Path.GetFileNameWithoutExtension( fileName );
                 oldProject.IsUntitled = false;
                 return oldProject;
             }
 
-            var project = new Project( );
+            Project project = new Project( );
             project.loading = true;
             try
             {
@@ -276,11 +270,11 @@ namespace NClass.Core
 
         private static Project LoadWithPreviousFormat( XmlElement root )
         {
-            var project = new Project( );
+            Project project = new Project( );
             project.loading = true;
 
-            var assembly = Assembly.Load( "NClass.DiagramEditor" );
-            var projectItem = ( IProjectItem ) assembly.CreateInstance( "NClass.DiagramEditor.ClassDiagram.Diagram", false, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, null, null, null );
+            Assembly assembly = Assembly.Load( "NClass.DiagramEditor" );
+            IProjectItem projectItem = ( IProjectItem ) assembly.CreateInstance( "NClass.DiagramEditor.ClassDiagram.Diagram", false, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, null, null, null );
 
             try
             {
@@ -321,8 +315,8 @@ namespace NClass.Core
             if ( string.IsNullOrEmpty( fileName ) )
                 throw new ArgumentException( Strings.ErrorBlankFilename, "fileName" );
 
-            var document = new XmlDocument( );
-            var root = document.CreateElement( "Project" );
+            XmlDocument document = new XmlDocument( );
+            XmlElement root = document.CreateElement( "Project" );
             document.AppendChild( root );
 
             Serialize( root );
@@ -342,21 +336,21 @@ namespace NClass.Core
 
         private void Serialize( XmlElement node )
         {
-            var nameElement = node.OwnerDocument.CreateElement( "Name" );
+            XmlElement nameElement = node.OwnerDocument.CreateElement( "Name" );
             nameElement.InnerText = Name;
             node.AppendChild( nameElement );
 
-            foreach ( var item in Items )
+            foreach ( IProjectItem item in Items )
             {
-                var itemElement = node.OwnerDocument.CreateElement( "ProjectItem" );
+                XmlElement itemElement = node.OwnerDocument.CreateElement( "ProjectItem" );
                 item.Serialize( itemElement );
 
-                var type = item.GetType( );
-                var typeAttribute = node.OwnerDocument.CreateAttribute( "type" );
+                Type type = item.GetType( );
+                XmlAttribute typeAttribute = node.OwnerDocument.CreateAttribute( "type" );
                 typeAttribute.InnerText = type.FullName;
                 itemElement.Attributes.Append( typeAttribute );
 
-                var assemblyAttribute = node.OwnerDocument.CreateAttribute( "assembly" );
+                XmlAttribute assemblyAttribute = node.OwnerDocument.CreateAttribute( "assembly" );
                 assemblyAttribute.InnerText = type.Assembly.FullName;
                 itemElement.Attributes.Append( assemblyAttribute );
 
@@ -371,26 +365,26 @@ namespace NClass.Core
         {
             IsUntitled = false;
 
-            var nameElement = node[ "Name" ];
-            if ( nameElement == null || nameElement.InnerText == "" )
+            XmlElement nameElement = node[ "Name" ];
+            if ( ( nameElement == null ) || ( nameElement.InnerText == "" ) )
                 throw new InvalidDataException( "Project's name cannot be empty." );
             name = nameElement.InnerText;
 
             foreach ( XmlElement itemElement in node.GetElementsByTagName( "ProjectItem" ) )
             {
-                var typeAttribute = itemElement.Attributes[ "type" ];
-                var assemblyAttribute = itemElement.Attributes[ "assembly" ];
+                XmlAttribute typeAttribute = itemElement.Attributes[ "type" ];
+                XmlAttribute assemblyAttribute = itemElement.Attributes[ "assembly" ];
 
-                if ( typeAttribute == null || assemblyAttribute == null )
+                if ( ( typeAttribute == null ) || ( assemblyAttribute == null ) )
                     throw new InvalidDataException( "ProjectItem's type or assembly name is missing." );
 
-                var typeName = typeAttribute.InnerText;
-                var assemblyName = assemblyAttribute.InnerText;
+                string typeName = typeAttribute.InnerText;
+                string assemblyName = assemblyAttribute.InnerText;
 
                 try
                 {
-                    var assembly = Assembly.Load( assemblyName );
-                    var projectItem = ( IProjectItem ) assembly.CreateInstance( typeName, false, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, null, null, null );
+                    Assembly assembly = Assembly.Load( assemblyName );
+                    IProjectItem projectItem = ( IProjectItem ) assembly.CreateInstance( typeName, false, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, null, null, null );
 
                     projectItem.Deserialize( itemElement );
                     projectItem.Clean( );
@@ -449,12 +443,12 @@ namespace NClass.Core
             if ( GetType( ) != obj.GetType( ) )
                 return false;
 
-            var project = ( Project ) obj;
+            Project project = ( Project ) obj;
 
-            if ( projectFile == null && project.projectFile == null )
+            if ( ( projectFile == null ) && ( project.projectFile == null ) )
                 return ReferenceEquals( this, obj );
 
-            return projectFile != null && project.projectFile != null && projectFile.FullName == project.projectFile.FullName;
+            return ( projectFile != null ) && ( project.projectFile != null ) && ( projectFile.FullName == project.projectFile.FullName );
         }
 
         public override int GetHashCode( )

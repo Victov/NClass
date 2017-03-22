@@ -16,15 +16,15 @@ namespace NClass.AssemblyCSharpImport
             const int Margin = Connection.Spacing * 2;
             const int DiagramPadding = Shape.SelectionMargin;
 
-            var shapeCount = diagram.ShapeCount;
-            var columns = ( int ) Math.Ceiling( Math.Sqrt( shapeCount * 2 ) );
-            var shapeIndex = 0;
-            var top = Shape.SelectionMargin;
-            var maxHeight = 0;
+            int shapeCount = diagram.ShapeCount;
+            int columns = ( int ) Math.Ceiling( Math.Sqrt( shapeCount * 2 ) );
+            int shapeIndex = 0;
+            int top = Shape.SelectionMargin;
+            int maxHeight = 0;
 
-            foreach ( var shape in diagram.Shapes )
+            foreach ( Shape shape in diagram.Shapes )
             {
-                var column = shapeIndex % columns;
+                int column = shapeIndex % columns;
 
                 shape.Location = new Point( ( TypeShape.DefaultWidth + Margin ) * column + DiagramPadding, top );
 

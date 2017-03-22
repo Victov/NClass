@@ -31,7 +31,7 @@ namespace NClass.Core
 
         IEnumerator< Parameter > IEnumerable< Parameter >.GetEnumerator( )
         {
-            for ( var i = 0; i < InnerList.Count; i++ )
+            for ( int i = 0; i < InnerList.Count; i++ )
                 yield return ( Parameter ) InnerList[ i ];
         }
 
@@ -47,11 +47,9 @@ namespace NClass.Core
 
         protected bool IsReservedName( string name, int index )
         {
-            for ( var i = 0; i < Count; i++ )
-            {
-                if ( ( ( Parameter ) InnerList[ i ] ).Name == name && i != index )
+            for ( int i = 0; i < Count; i++ )
+                if ( ( ( ( Parameter ) InnerList[ i ] ).Name == name ) && ( i != index ) )
                     return true;
-            }
             return false;
         }
 

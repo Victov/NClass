@@ -31,9 +31,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
         private static readonly Color lightEndColor = Color.FromArgb( 255, 178, 178 );
         private static readonly Pen squarePen = new Pen( Color.Black );
         private static readonly SolidBrush squareBrush = new SolidBrush( Color.Black );
-        private Size relativePosition = Size.Empty;
 
         private readonly Shape relativeShape;
+        private Size relativePosition = Size.Empty;
 
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="relativeShape" /> is null.
@@ -76,7 +76,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
             get { return relativeShape.Location + relativePosition; }
             set
             {
-                if ( value.X > relativeShape.Left - Spacing && value.X < relativeShape.Right + Spacing && value.Y > relativeShape.Top - Spacing && value.Y < relativeShape.Bottom + Spacing )
+                if ( ( value.X > relativeShape.Left - Spacing ) && ( value.X < relativeShape.Right + Spacing ) && ( value.Y > relativeShape.Top - Spacing ) && ( value.Y < relativeShape.Bottom + Spacing ) )
                 {
                     if ( X <= relativeShape.Left - Spacing )
                     {
@@ -114,9 +114,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         internal void Draw( Graphics g, bool onScreen, float zoom, Point offset )
         {
-            var x = ( int ) ( X * zoom ) - SquareSize / 2 - offset.X;
-            var y = ( int ) ( Y * zoom ) - SquareSize / 2 - offset.Y;
-            var square = new Rectangle( x, y, SquareSize, SquareSize );
+            int x = ( int ) ( X * zoom ) - SquareSize / 2 - offset.X;
+            int y = ( int ) ( Y * zoom ) - SquareSize / 2 - offset.Y;
+            Rectangle square = new Rectangle( x, y, SquareSize, SquareSize );
 
             if ( AutoPosition )
             {
@@ -135,43 +135,43 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         internal bool Contains( PointF point, float zoom )
         {
-            var halfSize = SquareSize / zoom / 2;
+            float halfSize = SquareSize / zoom / 2;
 
-            return point.X >= X - halfSize && point.X <= X + halfSize && point.Y >= Y - halfSize && point.Y <= Y + halfSize;
+            return ( point.X >= X - halfSize ) && ( point.X <= X + halfSize ) && ( point.Y >= Y - halfSize ) && ( point.Y <= Y + halfSize );
         }
 
         internal void ShapeResized( Size size )
         {
-            if ( X >= relativeShape.Left && X <= relativeShape.Right && Y > relativeShape.Top )
+            if ( ( X >= relativeShape.Left ) && ( X <= relativeShape.Right ) && ( Y > relativeShape.Top ) )
                 Y += size.Height;
 
-            if ( Y >= relativeShape.Top && Y <= relativeShape.Bottom && X > relativeShape.Left )
+            if ( ( Y >= relativeShape.Top ) && ( Y <= relativeShape.Bottom ) && ( X > relativeShape.Left ) )
                 X += size.Width;
         }
 
         internal void Serialize( XmlElement node )
         {
-            var document = node.OwnerDocument;
+            XmlDocument document = node.OwnerDocument;
 
-            var xNode = document.CreateElement( "X" );
+            XmlElement xNode = document.CreateElement( "X" );
             xNode.InnerText = X.ToString( );
             node.AppendChild( xNode );
 
-            var yNode = document.CreateElement( "Y" );
+            XmlElement yNode = document.CreateElement( "Y" );
             yNode.InnerText = Y.ToString( );
             node.AppendChild( yNode );
         }
 
         internal void Deserialize( XmlElement node )
         {
-            var xNode = node[ "X" ];
+            XmlElement xNode = node[ "X" ];
             if ( xNode != null )
             {
                 int x;
                 int.TryParse( xNode.InnerText, out x );
                 X = x;
             }
-            var yNode = node[ "Y" ];
+            XmlElement yNode = node[ "Y" ];
             if ( yNode != null )
             {
                 int y;

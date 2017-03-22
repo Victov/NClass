@@ -53,11 +53,11 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         {
             if ( item != null )
             {
-                var index = item.Index;
+                int index = item.Index;
 
                 if ( index > 0 )
                 {
-                    var item2 = lstItems.Items[ index - 1 ];
+                    ListViewItem item2 = lstItems.Items[ index - 1 ];
 
                     SwapListItems( item, item2 );
                     item2.Focused = true;
@@ -71,11 +71,11 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         {
             if ( item != null )
             {
-                var index = item.Index;
+                int index = item.Index;
 
                 if ( index < lstItems.Items.Count - 1 )
                 {
-                    var item2 = lstItems.Items[ index + 1 ];
+                    ListViewItem item2 = lstItems.Items[ index + 1 ];
 
                     SwapListItems( item, item2 );
                     item2.Focused = true;
@@ -93,11 +93,11 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
 
         private void SwapListItems( ListViewItem item1, ListViewItem item2 )
         {
-            var text = item1.Text;
+            string text = item1.Text;
             item1.Text = item2.Text;
             item2.Text = text;
 
-            var tag = item1.Tag;
+            object tag = item1.Tag;
             item1.Tag = item2.Tag;
             item2.Tag = tag;
 
@@ -150,11 +150,11 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         {
             if ( lstItems.SelectedItems.Count > 0 )
             {
-                var index = lstItems.SelectedItems[ 0 ].Index;
+                int index = lstItems.SelectedItems[ 0 ].Index;
 
                 Remove( lstItems.SelectedItems[ 0 ] );
 
-                var count = lstItems.Items.Count;
+                int count = lstItems.Items.Count;
                 if ( count > 0 )
                 {
                     if ( index >= count )

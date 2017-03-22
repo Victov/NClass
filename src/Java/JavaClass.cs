@@ -37,10 +37,8 @@ namespace NClass.Java
             get { return base.AccessModifier; }
             set
             {
-                if ( IsNested || value == AccessModifier.Default || value == AccessModifier.Public )
-                {
+                if ( IsNested || ( value == AccessModifier.Default ) || ( value == AccessModifier.Public ) )
                     base.AccessModifier = value;
-                }
             }
         }
 
@@ -48,7 +46,7 @@ namespace NClass.Java
         {
             get
             {
-                if ( base.BaseClass == null && this != JavaLanguage.ObjectClass )
+                if ( ( base.BaseClass == null ) && ( this != JavaLanguage.ObjectClass ) )
                     return JavaLanguage.ObjectClass;
                 return base.BaseClass;
             }
@@ -72,7 +70,7 @@ namespace NClass.Java
 
         public override bool SupportsConstuctors
         {
-            get { return base.SupportsConstuctors && Modifier != ClassModifier.Static; }
+            get { return base.SupportsConstuctors && ( Modifier != ClassModifier.Static ); }
         }
 
         public override bool SupportsDestructors
@@ -98,7 +96,7 @@ namespace NClass.Java
                     RaiseChangedEvent = false;
 
                     base.NestingParent = value;
-                    if ( NestingParent == null && Access != AccessModifier.Public )
+                    if ( ( NestingParent == null ) && ( Access != AccessModifier.Public ) )
                         AccessModifier = AccessModifier.Internal;
                 }
                 finally
@@ -123,9 +121,7 @@ namespace NClass.Java
         public override void AddInterface( InterfaceType interfaceType )
         {
             if ( !( interfaceType is JavaInterface ) )
-            {
                 throw new RelationshipException( string.Format( Strings.ErrorInterfaceLanguage, "Java" ) );
-            }
 
             base.AddInterface( interfaceType );
         }
@@ -195,18 +191,16 @@ namespace NClass.Java
 
         public override string GetDeclaration( )
         {
-            var builder = new StringBuilder( );
+            StringBuilder builder = new StringBuilder( );
 
             if ( AccessModifier != AccessModifier.Default )
             {
                 builder.Append( Language.GetAccessString( AccessModifier, true ) );
                 builder.Append( " " );
             }
-            if ( IsNested || Modifier == ClassModifier.Static )
-            {
+            if ( IsNested || ( Modifier == ClassModifier.Static ) )
                 builder.Append( "static " );
-            }
-            if ( Modifier != ClassModifier.None && Modifier != ClassModifier.Static )
+            if ( ( Modifier != ClassModifier.None ) && ( Modifier != ClassModifier.Static ) )
             {
                 builder.Append( Language.GetClassModifierString( Modifier, true ) );
                 builder.Append( " " );
@@ -222,7 +216,7 @@ namespace NClass.Java
             if ( InterfaceList.Count > 0 )
             {
                 builder.Append( " implements " );
-                for ( var i = 0; i < InterfaceList.Count; i++ )
+                for ( int i = 0; i < InterfaceList.Count; i++ )
                 {
                     builder.Append( InterfaceList[ i ].Name );
                     if ( i < InterfaceList.Count - 1 )
@@ -235,7 +229,7 @@ namespace NClass.Java
 
         public override ClassType Clone( )
         {
-            var newClass = new JavaClass( );
+            JavaClass newClass = new JavaClass( );
             newClass.CopyFrom( this );
             return newClass;
         }

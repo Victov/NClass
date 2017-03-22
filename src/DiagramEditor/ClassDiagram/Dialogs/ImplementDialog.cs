@@ -46,7 +46,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
 
         private TreeNode CreateInterfaceNode( string interfaceName )
         {
-            var node = OperationTree.Nodes.Add( interfaceName );
+            TreeNode node = OperationTree.Nodes.Add( interfaceName );
             node.SelectedImageIndex = Icons.InterfaceImageIndex;
             node.ImageIndex = Icons.InterfaceImageIndex;
 
@@ -55,23 +55,23 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
 
         private void AddOperations( IInterfaceImplementer implementer, InterfaceType _interface, TreeNode node )
         {
-            if ( implementer == null || _interface == null || node == null )
+            if ( ( implementer == null ) || ( _interface == null ) || ( node == null ) )
                 return;
 
-            foreach ( var baseInterface in _interface.Bases )
+            foreach ( InterfaceType baseInterface in _interface.Bases )
                 AddOperations( implementer, baseInterface, node );
 
-            foreach ( var operation in _interface.Operations )
+            foreach ( Operation operation in _interface.Operations )
             {
-                var defined = implementer.GetDefinedOperation( operation );
+                Operation defined = implementer.GetDefinedOperation( operation );
 
                 if ( defined == null )
                 {
                     CreateOperationNode( node, operation );
                 }
-                else if ( defined.Type != operation.Type && _interface.Language.SupportsExplicitImplementation )
+                else if ( ( defined.Type != operation.Type ) && _interface.Language.SupportsExplicitImplementation )
                 {
-                    var operationNode = CreateOperationNode( node, operation );
+                    TreeNode operationNode = CreateOperationNode( node, operation );
                     operationNode.ForeColor = Color.Gray;
                 }
             }
@@ -79,10 +79,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
 
         private void AddInterface( IInterfaceImplementer implementer, InterfaceType _interface )
         {
-            if ( implementer == null || _interface == null )
+            if ( ( implementer == null ) || ( _interface == null ) )
                 return;
 
-            var node = CreateInterfaceNode( _interface.Name );
+            TreeNode node = CreateInterfaceNode( _interface.Name );
             AddOperations( implementer, _interface, node );
         }
 
@@ -95,7 +95,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             chkImplementExplicitly.Visible = implementer.Language.SupportsExplicitImplementation;
 
             OperationTree.Nodes.Clear( );
-            foreach ( var _interface in implementer.Interfaces )
+            foreach ( InterfaceType _interface in implementer.Interfaces )
                 AddInterface( implementer, _interface );
             RemoveEmptyNodes( );
 

@@ -26,9 +26,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         protected override void FillList( )
         {
             lstItems.Items.Clear( );
-            foreach ( var value in parent.Values )
+            foreach ( EnumValue value in parent.Values )
             {
-                var item = lstItems.Items.Add( value.ToString( ) );
+                ListViewItem item = lstItems.Items.Add( value.ToString( ) );
 
                 item.Tag = value;
                 item.ImageIndex = Icons.EnumItemImageIndex;
@@ -43,8 +43,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         /// </exception>
         protected override void AddToList( string text )
         {
-            var value = parent.AddValue( text );
-            var item = lstItems.Items.Add( value.ToString( ) );
+            EnumValue value = parent.AddValue( text );
+            ListViewItem item = lstItems.Items.Add( value.ToString( ) );
 
             item.Tag = value;
             item.ImageIndex = Icons.EnumItemImageIndex;
@@ -60,7 +60,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         {
             if ( item.Tag is EnumValue )
             {
-                var enumItem = parent.ModifyValue( ( EnumValue ) item.Tag, text );
+                EnumValue enumItem = parent.ModifyValue( ( EnumValue ) item.Tag, text );
                 item.Tag = enumItem;
                 item.Text = enumItem.ToString( );
             }
@@ -82,7 +82,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
 
         protected override void Remove( ListViewItem item )
         {
-            if ( item != null && item.Tag is EnumValue )
+            if ( ( item != null ) && item.Tag is EnumValue )
                 parent.RemoveValue( ( EnumValue ) item.Tag );
             base.Remove( item );
         }

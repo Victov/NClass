@@ -44,7 +44,7 @@ namespace NClass.CSharp
             get { return GetNameWithoutGeneric( Parent.Name ); }
             set
             {
-                if ( value != null && value != GetNameWithoutGeneric( Parent.Name ) )
+                if ( ( value != null ) && ( value != GetNameWithoutGeneric( Parent.Name ) ) )
                     throw new BadSyntaxException( Strings.ErrorConstructorName );
             }
         }
@@ -121,7 +121,7 @@ namespace NClass.CSharp
         /// </exception>
         public override void InitFromString( string declaration )
         {
-            var match = constructorRegex.Match( declaration );
+            Match match = constructorRegex.Match( declaration );
             RaiseChangedEvent = false;
 
             try
@@ -129,10 +129,10 @@ namespace NClass.CSharp
                 if ( match.Success )
                 {
                     ClearModifiers( );
-                    var nameGroup = match.Groups[ "name" ];
-                    var accessGroup = match.Groups[ "access" ];
-                    var staticGroup = match.Groups[ "static" ];
-                    var argsGroup = match.Groups[ "args" ];
+                    Group nameGroup = match.Groups[ "name" ];
+                    Group accessGroup = match.Groups[ "access" ];
+                    Group staticGroup = match.Groups[ "static" ];
+                    Group argsGroup = match.Groups[ "args" ];
 
                     ValidName = nameGroup.Value;
                     AccessModifier = Language.TryParseAccessModifier( accessGroup.Value );
@@ -152,7 +152,7 @@ namespace NClass.CSharp
 
         public override string GetDeclaration( )
         {
-            var builder = new StringBuilder( 50 );
+            StringBuilder builder = new StringBuilder( 50 );
 
             if ( AccessModifier != AccessModifier.Default )
             {
@@ -160,13 +160,11 @@ namespace NClass.CSharp
                 builder.Append( " " );
             }
             if ( IsStatic )
-            {
                 builder.Append( "static " );
-            }
 
             builder.AppendFormat( "{0}(", Name );
 
-            for ( var i = 0; i < ArgumentList.Count; i++ )
+            for ( int i = 0; i < ArgumentList.Count; i++ )
             {
                 builder.Append( ArgumentList[ i ] );
                 if ( i < ArgumentList.Count - 1 )
@@ -180,7 +178,7 @@ namespace NClass.CSharp
 
         public override Operation Clone( CompositeType newParent )
         {
-            var constructor = new CSharpConstructor( newParent );
+            CSharpConstructor constructor = new CSharpConstructor( newParent );
             constructor.CopyFrom( this );
             return constructor;
         }

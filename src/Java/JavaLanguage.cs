@@ -45,7 +45,7 @@ namespace NClass.Java
             string[] objectMethods = {"protected Object clone()", "public boolean equals(Object obj)", "protected void finalize()", "public final Class getClass()", "public int hashCode()", "public final void notify()", "public final void notifyAll()", "public String toString()", "public final void wait()", "public final void wait(long timeout)", "public final void wait(long timeout, int nanos)"};
             ObjectClass = new JavaClass( "Object" );
             ObjectClass.AddConstructor( );
-            foreach ( var methodDeclaration in objectMethods )
+            foreach ( string methodDeclaration in objectMethods )
                 ObjectClass.AddMethod( ).InitFromString( methodDeclaration );
 
             // validAccessModifiers initialization
@@ -166,17 +166,17 @@ namespace NClass.Java
 
         public override bool IsValidModifier( AccessModifier modifier )
         {
-            return modifier == AccessModifier.Public || modifier == AccessModifier.Protected || modifier == AccessModifier.Default || modifier == AccessModifier.Private;
+            return ( modifier == AccessModifier.Public ) || ( modifier == AccessModifier.Protected ) || ( modifier == AccessModifier.Default ) || ( modifier == AccessModifier.Private );
         }
 
         public override bool IsValidModifier( FieldModifier modifier )
         {
-            return modifier == FieldModifier.Static || modifier == FieldModifier.Readonly || modifier == FieldModifier.Volatile;
+            return ( modifier == FieldModifier.Static ) || ( modifier == FieldModifier.Readonly ) || ( modifier == FieldModifier.Volatile );
         }
 
         public override bool IsValidModifier( OperationModifier modifier )
         {
-            return modifier == OperationModifier.Static || modifier == OperationModifier.Abstract || modifier == OperationModifier.Sealed;
+            return ( modifier == OperationModifier.Static ) || ( modifier == OperationModifier.Abstract ) || ( modifier == OperationModifier.Sealed );
         }
 
         /// <exception cref="BadSyntaxException">
@@ -187,23 +187,17 @@ namespace NClass.Java
             if ( operation.IsAbstract )
             {
                 if ( operation.IsStatic )
-                {
                     throw new BadSyntaxException( string.Format( Strings.ErrorInvalidModifierCombination, "abstract", "static" ) );
-                }
                 if ( operation.IsSealed )
-                {
                     throw new BadSyntaxException( string.Format( Strings.ErrorInvalidModifierCombination, "sealed", "abstract" ) );
-                }
             }
 
-            if ( operation.Access == AccessModifier.Private && operation.IsAbstract )
-            {
+            if ( ( operation.Access == AccessModifier.Private ) && operation.IsAbstract )
                 throw new BadSyntaxException( string.Format( Strings.ErrorInvalidModifierCombination, "private", "abstract" ) );
-            }
 
             if ( operation.IsAbstract )
             {
-                var parent = operation.Parent as ClassType;
+                ClassType parent = operation.Parent as ClassType;
                 if ( parent == null )
                     throw new BadSyntaxException( Strings.ErrorInvalidModifier );
                 parent.Modifier = ClassModifier.Abstract;
@@ -216,9 +210,7 @@ namespace NClass.Java
         protected override void ValidateField( Field field )
         {
             if ( field.IsReadonly && field.IsVolatile )
-            {
                 throw new BadSyntaxException( string.Format( Strings.ErrorInvalidModifierCombination, "volatile", "readonly" ) );
-            }
         }
 
         /// <exception cref="ArgumentException">
@@ -236,11 +228,9 @@ namespace NClass.Java
                 throw new ArgumentNullException( "newParent" );
 
             if ( explicitly )
-            {
                 throw new ArgumentException( "Java does not support explicit" + "interface implementation.", "explicitly" );
-            }
 
-            var newOperation = operation.Clone( newParent );
+            Operation newOperation = operation.Clone( newParent );
 
             newOperation.AccessModifier = AccessModifier.Default;
             newOperation.ClearModifiers( );
@@ -261,11 +251,9 @@ namespace NClass.Java
                 throw new ArgumentNullException( "operation" );
 
             if ( operation.Modifier == OperationModifier.Sealed )
-            {
                 throw new ArgumentException( Strings.ErrorCannotOverride, "operation" );
-            }
 
-            var newOperation = operation.Clone( newParent );
+            Operation newOperation = operation.Clone( newParent );
             newOperation.ClearModifiers( );
 
             return newOperation;
@@ -276,11 +264,11 @@ namespace NClass.Java
         /// </exception>
         public override string GetValidName( string name, bool isGenericName )
         {
-            var match = isGenericName ? nameRegex.Match( name ) : genericNameRegex.Match( name );
+            Match match = isGenericName ? nameRegex.Match( name ) : genericNameRegex.Match( name );
 
             if ( match.Success )
             {
-                var validName = match.Groups[ "name" ].Value;
+                string validName = match.Groups[ "name" ].Value;
                 return base.GetValidName( validName, isGenericName );
             }
             throw new BadSyntaxException( Strings.ErrorInvalidName );
@@ -291,11 +279,11 @@ namespace NClass.Java
         /// </exception>
         public override string GetValidTypeName( string name )
         {
-            var match = typeRegex.Match( name );
+            Match match = typeRegex.Match( name );
 
             if ( match.Success )
             {
-                var validName = match.Groups[ "type" ].Value;
+                string validName = match.Groups[ "type" ].Value;
                 return base.GetValidTypeName( validName );
             }
             throw new BadSyntaxException( Strings.ErrorInvalidTypeName );
@@ -338,7 +326,7 @@ namespace NClass.Java
                 return "None";
             }
 
-            var builder = new StringBuilder( 20 );
+            StringBuilder builder = new StringBuilder( 20 );
             if ( ( modifier & FieldModifier.Static ) != 0 )
                 builder.Append( forCode ? "static " : "Static, " );
             if ( ( modifier & FieldModifier.Readonly ) != 0 )
@@ -363,7 +351,7 @@ namespace NClass.Java
                 return "None";
             }
 
-            var builder = new StringBuilder( 20 );
+            StringBuilder builder = new StringBuilder( 20 );
             if ( ( modifier & OperationModifier.Static ) != 0 )
                 builder.Append( forCode ? "static " : "Static, " );
             if ( ( modifier & OperationModifier.Sealed ) != 0 )

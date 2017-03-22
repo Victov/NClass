@@ -30,27 +30,7 @@ namespace NClass.GUI.ModelExplorer
 
         static ProjectNode( )
         {
-            contextMenu.Items.AddRange( new ToolStripItem[]
-            {
-                new ToolStripMenuItem( Strings.MenuAddNew, Resources.NewDocument, 
-                    new ToolStripMenuItem( Strings.MenuCodingLanguageDiagram, null, mnuNewCodingLanguageDiagram_Click ),
-                    new ToolStripMenuItem( Strings.MenuEmptyDiagram, null, AddItemEmptyDiagramOnClick)),
-                new ToolStripSeparator( ),
-                new ToolStripMenuItem( Strings.MenuSave, Resources.Save, save_Click ),
-                new ToolStripMenuItem( Strings.MenuSaveAs, null, saveAs_Click ),
-                new ToolStripMenuItem( Strings.MenuRename, null, rename_Click, Keys.F2 ),
-                new ToolStripSeparator( ),
-                new ToolStripMenuItem( Strings.MenuCloseProject, null, close_Click )
-            } );
-        }
-
-        private static void AddItemEmptyDiagramOnClick( object sender, EventArgs eventArgs )
-        {
-            var menuItem = (ToolStripItem)sender;
-            var project = ((ProjectNode)menuItem.OwnerItem.Owner.Tag).Project;
-
-            project.Add( new Diagram( Settings.Default.GetDefaultLanguage(  ) ) );
-            
+            contextMenu.Items.AddRange( new ToolStripItem[] {new ToolStripMenuItem( Strings.MenuAddNew, Resources.NewDocument, new ToolStripMenuItem( Strings.MenuCodingLanguageDiagram, null, mnuNewCodingLanguageDiagram_Click ), new ToolStripMenuItem( Strings.MenuEmptyDiagram, null, AddItemEmptyDiagramOnClick ) ), new ToolStripSeparator( ), new ToolStripMenuItem( Strings.MenuSave, Resources.Save, save_Click ), new ToolStripMenuItem( Strings.MenuSaveAs, null, saveAs_Click ), new ToolStripMenuItem( Strings.MenuRename, null, rename_Click, Keys.F2 ), new ToolStripSeparator( ), new ToolStripMenuItem( Strings.MenuCloseProject, null, close_Click )} );
         }
 
         /// <exception cref="ArgumentNullException">
@@ -84,6 +64,14 @@ namespace NClass.GUI.ModelExplorer
             set { base.ContextMenuStrip = value; }
         }
 
+        private static void AddItemEmptyDiagramOnClick( object sender, EventArgs eventArgs )
+        {
+            ToolStripItem menuItem = ( ToolStripItem ) sender;
+            Project project = ( ( ProjectNode ) menuItem.OwnerItem.Owner.Tag ).Project;
+
+            project.Add( new Diagram( Settings.Default.GetDefaultLanguage( ) ) );
+        }
+
         private void AddProjectItemNodes( Project project )
         {
             if ( project.IsEmpty )
@@ -95,10 +83,8 @@ namespace NClass.GUI.ModelExplorer
             }
             else
             {
-                foreach ( var projectItem in project.Items )
-                {
+                foreach ( IProjectItem projectItem in project.Items )
                     AddProjectItemNode( projectItem );
-                }
             }
         }
 
@@ -108,7 +94,7 @@ namespace NClass.GUI.ModelExplorer
 
             if ( projectItem is Diagram )
             {
-                var diagram = ( Diagram ) projectItem;
+                Diagram diagram = ( Diagram ) projectItem;
                 node = new DiagramNode( diagram );
                 if ( TreeView != null )
                     ModelView.OnDocumentOpening( new DocumentEventArgs( diagram ) );
@@ -124,22 +110,18 @@ namespace NClass.GUI.ModelExplorer
                     TreeView.SelectedNode = node;
                 }
                 if ( projectItem.IsUntitled )
-                {
                     node.EditLabel( );
-                }
             }
         }
 
         private void RemoveProjectItemNode( IProjectItem projectItem )
         {
             foreach ( ProjectItemNode node in Nodes )
-            {
                 if ( node.ProjectItem == projectItem )
                 {
                     node.Delete( );
                     return;
                 }
-            }
         }
 
         public override void LabelModified( NodeLabelEditEventArgs e )
@@ -182,17 +164,17 @@ namespace NClass.GUI.ModelExplorer
 
         private static void mnuNewCodingLanguageDiagram_Click( object sender, EventArgs e )
         {
-            using ( var dialog = new CodingLanguageDialog( ) )
+            using ( CodingLanguageDialog dialog = new CodingLanguageDialog( ) )
             {
                 if ( dialog.ShowDialog( ) == DialogResult.OK )
                 {
                     if ( dialog.LanguageSelected == null )
                         throw new NotSupportedException( "No Programming Language instance" );
 
-                    var menuItem = ( ToolStripItem ) sender;
-                    var project = ( ( ProjectNode ) menuItem.OwnerItem.Owner.Tag ).Project;
+                    ToolStripItem menuItem = ( ToolStripItem ) sender;
+                    Project project = ( ( ProjectNode ) menuItem.OwnerItem.Owner.Tag ).Project;
 
-                    var diagram = new Diagram( dialog.LanguageSelected );
+                    Diagram diagram = new Diagram( dialog.LanguageSelected );
                     project.Add( diagram );
                     Settings.Default.DefaultLanguageName = dialog.LanguageSelected.AssemblyName;
                 }
@@ -201,32 +183,32 @@ namespace NClass.GUI.ModelExplorer
 
         private static void rename_Click( object sender, EventArgs e )
         {
-            var menuItem = ( ToolStripItem ) sender;
-            var node = ( ProjectNode ) menuItem.Owner.Tag;
+            ToolStripItem menuItem = ( ToolStripItem ) sender;
+            ProjectNode node = ( ProjectNode ) menuItem.Owner.Tag;
 
             node.EditLabel( );
         }
 
         private static void save_Click( object sender, EventArgs e )
         {
-            var menuItem = ( ToolStripItem ) sender;
-            var project = ( ( ProjectNode ) menuItem.Owner.Tag ).Project;
+            ToolStripItem menuItem = ( ToolStripItem ) sender;
+            Project project = ( ( ProjectNode ) menuItem.Owner.Tag ).Project;
 
             Workspace.Default.SaveProject( project );
         }
 
         private static void saveAs_Click( object sender, EventArgs e )
         {
-            var menuItem = ( ToolStripItem ) sender;
-            var project = ( ( ProjectNode ) menuItem.Owner.Tag ).Project;
+            ToolStripItem menuItem = ( ToolStripItem ) sender;
+            Project project = ( ( ProjectNode ) menuItem.Owner.Tag ).Project;
 
             Workspace.Default.SaveProjectAs( project );
         }
 
         private static void close_Click( object sender, EventArgs e )
         {
-            var menuItem = ( ToolStripItem ) sender;
-            var project = ( ( ProjectNode ) menuItem.Owner.Tag ).Project;
+            ToolStripItem menuItem = ( ToolStripItem ) sender;
+            Project project = ( ( ProjectNode ) menuItem.Owner.Tag ).Project;
 
             Workspace.Default.RemoveProject( project );
         }

@@ -31,7 +31,7 @@ namespace NClass.DiagramEditor
             {
                 if ( Parent != null )
                 {
-                    var client = Parent.ClientRectangle;
+                    Rectangle client = Parent.ClientRectangle;
 
                     if ( value.X < ClientMargin )
                         value.X = ClientMargin;
@@ -51,7 +51,7 @@ namespace NClass.DiagramEditor
             get { return parentLocation; }
             set
             {
-                var offset = new Size( value.X - parentLocation.X, value.Y - parentLocation.Y );
+                Size offset = new Size( value.X - parentLocation.X, value.Y - parentLocation.Y );
                 parentLocation = value;
                 Location += offset;
             }

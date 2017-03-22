@@ -27,11 +27,11 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
         internal void Relocate( TypeShape shape )
         {
-            var diagram = shape.Diagram;
+            Diagram diagram = shape.Diagram;
             if ( diagram != null )
             {
-                var absolute = new Point( shape.Right, shape.Top );
-                var relative = new Size( ( int ) ( absolute.X * diagram.Zoom ) - diagram.Offset.X + MarginSize, ( int ) ( absolute.Y * diagram.Zoom ) - diagram.Offset.Y );
+                Point absolute = new Point( shape.Right, shape.Top );
+                Size relative = new Size( ( int ) ( absolute.X * diagram.Zoom ) - diagram.Offset.X + MarginSize, ( int ) ( absolute.Y * diagram.Zoom ) - diagram.Offset.Y );
 
                 Location = ParentLocation + relative;
             }

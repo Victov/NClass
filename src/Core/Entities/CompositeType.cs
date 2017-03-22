@@ -144,37 +144,37 @@ namespace NClass.Core
             switch ( type )
             {
                 case MemberType.Field:
-                    var field = AddField( );
+                    Field field = AddField( );
                     FieldList.RemoveAt( FieldCount - 1 );
                     FieldList.Insert( index, field );
                     break;
 
                 case MemberType.Method:
-                    var method = AddMethod( );
+                    Method method = AddMethod( );
                     OperationList.RemoveAt( OperationCount - 1 );
                     OperationList.Insert( index, method );
                     break;
 
                 case MemberType.Constructor:
-                    var constructor = AddConstructor( );
+                    Constructor constructor = AddConstructor( );
                     OperationList.RemoveAt( OperationCount - 1 );
                     OperationList.Insert( index, constructor );
                     break;
 
                 case MemberType.Destructor:
-                    var destructor = AddDestructor( );
+                    Destructor destructor = AddDestructor( );
                     OperationList.RemoveAt( OperationCount - 1 );
                     OperationList.Insert( index, destructor );
                     break;
 
                 case MemberType.Property:
-                    var property = AddProperty( );
+                    Property property = AddProperty( );
                     OperationList.RemoveAt( OperationCount - 1 );
                     OperationList.Insert( index, property );
                     break;
 
                 case MemberType.Event:
-                    var _event = AddEvent( );
+                    Event _event = AddEvent( );
                     OperationList.RemoveAt( OperationCount - 1 );
                     OperationList.Insert( index, _event );
                     break;
@@ -183,7 +183,7 @@ namespace NClass.Core
 
         protected void AddField( Field field )
         {
-            if ( field != null && !FieldList.Contains( field ) )
+            if ( ( field != null ) && !FieldList.Contains( field ) )
             {
                 FieldList.Add( field );
                 field.Modified += delegate { Changed( ); };
@@ -193,7 +193,7 @@ namespace NClass.Core
 
         protected void AddOperation( Operation operation )
         {
-            if ( operation != null && !OperationList.Contains( operation ) )
+            if ( ( operation != null ) && !OperationList.Contains( operation ) )
             {
                 OperationList.Add( operation );
                 operation.Modified += delegate { Changed( ); };
@@ -203,14 +203,14 @@ namespace NClass.Core
 
         public Field GetField( int index )
         {
-            if ( index >= 0 && index < FieldList.Count )
+            if ( ( index >= 0 ) && ( index < FieldList.Count ) )
                 return FieldList[ index ];
             return null;
         }
 
         public Operation GetOperation( int index )
         {
-            if ( index >= 0 && index < OperationList.Count )
+            if ( ( index >= 0 ) && ( index < OperationList.Count ) )
                 return OperationList[ index ];
             return null;
         }
@@ -231,7 +231,7 @@ namespace NClass.Core
 
         internal void AddNestedChild( TypeBase type )
         {
-            if ( type != null && !nestedChilds.Contains( type ) )
+            if ( ( type != null ) && !nestedChilds.Contains( type ) )
             {
                 nestedChilds.Add( type );
                 Changed( );
@@ -240,7 +240,7 @@ namespace NClass.Core
 
         internal void RemoveNestedChild( TypeBase type )
         {
-            if ( type != null && nestedChilds.Remove( type ) )
+            if ( ( type != null ) && nestedChilds.Remove( type ) )
                 Changed( );
         }
 
@@ -249,11 +249,9 @@ namespace NClass.Core
             if ( operation == null )
                 return null;
 
-            for ( var i = 0; i < OperationList.Count; i++ )
-            {
+            for ( int i = 0; i < OperationList.Count; i++ )
                 if ( OperationList[ i ].HasSameSignatureAs( operation ) )
                     return OperationList[ i ];
-            }
 
             return null;
         }
@@ -331,8 +329,8 @@ namespace NClass.Core
 
         private static int MemberComparisonByAccess( Member member1, Member member2 )
         {
-            var access1 = ( int ) member1.Access;
-            var access2 = ( int ) member2.Access;
+            int access1 = ( int ) member1.Access;
+            int access2 = ( int ) member2.Access;
 
             if ( access1 == access2 )
                 return MemberComparisonByKind( member1, member2 );
@@ -341,7 +339,7 @@ namespace NClass.Core
 
         private static int MemberComparisonByKind( Member member1, Member member2 )
         {
-            var ret = GetMemberOrdinal( member1 ) - GetMemberOrdinal( member2 );
+            int ret = GetMemberOrdinal( member1 ) - GetMemberOrdinal( member2 );
 
             if ( ret == 0 )
                 return MemberComparisonByName( member1, member2 );
@@ -359,7 +357,7 @@ namespace NClass.Core
             }
             if ( member is Property )
             {
-                var property = ( Property ) member;
+                Property property = ( Property ) member;
 
                 if ( property.IsReadonly )
                     return 2;
@@ -386,20 +384,16 @@ namespace NClass.Core
         {
             base.CopyFrom( type );
 
-            var compositeType = ( CompositeType ) type;
+            CompositeType compositeType = ( CompositeType ) type;
             FieldList.Clear( );
             FieldList.Capacity = compositeType.FieldList.Capacity;
             OperationList.Clear( );
             OperationList.Capacity = compositeType.OperationList.Capacity;
 
-            foreach ( var field in compositeType.FieldList )
-            {
+            foreach ( Field field in compositeType.FieldList )
                 AddField( field.Clone( this ) );
-            }
-            foreach ( var operation in compositeType.OperationList )
-            {
+            foreach ( Operation operation in compositeType.OperationList )
                 AddOperation( operation.Clone( this ) );
-            }
         }
 
         /// <exception cref="ArgumentNullException">
@@ -409,16 +403,16 @@ namespace NClass.Core
         {
             base.Serialize( node );
 
-            foreach ( var field in FieldList )
+            foreach ( Field field in FieldList )
             {
-                var child = node.OwnerDocument.CreateElement( "Member" );
+                XmlElement child = node.OwnerDocument.CreateElement( "Member" );
                 child.SetAttribute( "type", field.MemberType.ToString( ) );
                 child.InnerText = field.ToString( );
                 node.AppendChild( child );
             }
-            foreach ( var operation in OperationList )
+            foreach ( Operation operation in OperationList )
             {
-                var child = node.OwnerDocument.CreateElement( "Member" );
+                XmlElement child = node.OwnerDocument.CreateElement( "Member" );
                 child.SetAttribute( "type", operation.MemberType.ToString( ) );
                 child.InnerText = operation.ToString( );
                 node.AppendChild( child );
@@ -440,21 +434,19 @@ namespace NClass.Core
 
             foreach ( XmlElement childNode in node.SelectNodes( "Member|Field|Operation" ) ) // old file format
             {
-                var type = childNode.GetAttribute( "type" );
+                string type = childNode.GetAttribute( "type" );
 
-                if ( type == "Field" || type == "CSharpField" || type == "JavaField" )
+                if ( ( type == "Field" ) || ( type == "CSharpField" ) || ( type == "JavaField" ) )
                 {
-                    var field = AddField( );
+                    Field field = AddField( );
                     field.InitFromString( childNode.InnerText );
                 }
                 else
                 {
-                    var operation = GetOperation( type );
+                    Operation operation = GetOperation( type );
 
                     if ( operation == null )
-                    {
                         throw new InvalidDataException( Strings.ErrorCorruptSaveFormat );
-                    }
                     operation.InitFromString( childNode.InnerText );
                 }
             }

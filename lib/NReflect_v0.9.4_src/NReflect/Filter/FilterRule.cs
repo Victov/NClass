@@ -21,7 +21,7 @@ using System;
 namespace NReflect.Filter
 {
     /// <summary>
-    /// A combination of a modifier and an element.
+    ///     A combination of a modifier and an element.
     /// </summary>
     [Serializable]
     public struct FilterRule
@@ -29,7 +29,7 @@ namespace NReflect.Filter
         #region === Construction
 
         /// <summary>
-        /// Creates a new FilterRule with the given values.
+        ///     Creates a new FilterRule with the given values.
         /// </summary>
         /// <param name="modifier">The Modifier for this rule.</param>
         /// <param name="element">The element for this rule</param>
@@ -44,12 +44,12 @@ namespace NReflect.Filter
         #region === Properties
 
         /// <summary>
-        /// Gets or sets the modifier for this rule.
+        ///     Gets or sets the modifier for this rule.
         /// </summary>
         public FilterModifiers Modifier { get; set; }
 
         /// <summary>
-        /// Gets or sets the element for this rule.
+        ///     Gets or sets the element for this rule.
         /// </summary>
         public FilterElements Element { get; set; }
 

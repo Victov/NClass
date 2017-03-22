@@ -50,7 +50,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
         {
             toolOverrideList.Visible = shape.CompositeType is SingleInharitanceType;
 
-            var implementer = shape.CompositeType as IInterfaceImplementer;
+            IInterfaceImplementer implementer = shape.CompositeType as IInterfaceImplementer;
             if ( implementer != null )
             {
                 toolImplementList.Visible = true;
@@ -79,18 +79,18 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
         private void RefreshValues( )
         {
-            var type = shape.CompositeType;
-            var language = type.Language;
+            CompositeType type = shape.CompositeType;
+            Language language = type.Language;
             SuspendLayout( );
 
-            var cursorPosition = txtName.SelectionStart;
+            int cursorPosition = txtName.SelectionStart;
             txtName.Text = type.Name;
             txtName.SelectionStart = cursorPosition;
 
             SetError( null );
             needValidation = false;
 
-            var hasMember = type.MemberCount > 0;
+            bool hasMember = type.MemberCount > 0;
             toolSortByAccess.Enabled = hasMember;
             toolSortByKind.Enabled = hasMember;
             toolSortByName.Enabled = hasMember;
@@ -104,8 +104,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
         private void RefreshVisibility( )
         {
-            var language = shape.CompositeType.Language;
-            var type = shape.CompositeType;
+            Language language = shape.CompositeType.Language;
+            CompositeType type = shape.CompositeType;
 
             toolVisibility.Image = Icons.GetImage( type );
             toolVisibility.Text = language.ValidAccessModifiers[ type.AccessModifier ];
@@ -180,9 +180,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
         private void RefreshModifiers( )
         {
-            var language = shape.CompositeType.Language;
+            Language language = shape.CompositeType.Language;
 
-            var classType = shape.CompositeType as ClassType;
+            ClassType classType = shape.CompositeType as ClassType;
             if ( classType != null )
             {
                 toolModifier.Visible = true;
@@ -230,7 +230,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
         private void RefreshNewMembers( )
         {
-            var valid = false;
+            bool valid = false;
             switch ( NewMemberType )
             {
                 case MemberType.Field:
@@ -312,7 +312,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
         private bool ValidateName( )
         {
             if ( needValidation )
-            {
                 try
                 {
                     shape.CompositeType.Name = txtName.Text;
@@ -323,7 +322,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                     SetError( ex.Message );
                     return false;
                 }
-            }
             return true;
         }
 
@@ -338,7 +336,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
         private void ChangeAccess( AccessModifier access )
         {
             if ( ValidateName( ) )
-            {
                 try
                 {
                     shape.CompositeType.AccessModifier = access;
@@ -349,16 +346,14 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                     RefreshValues( );
                     SetError( ex.Message );
                 }
-            }
         }
 
         private void ChangeModifier( ClassModifier modifier )
         {
             if ( ValidateName( ) )
             {
-                var classType = shape.CompositeType as ClassType;
+                ClassType classType = shape.CompositeType as ClassType;
                 if ( classType != null )
-                {
                     try
                     {
                         classType.Modifier = modifier;
@@ -369,7 +364,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                         RefreshValues( );
                         SetError( ex.Message );
                     }
-                }
             }
         }
 
@@ -378,7 +372,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
             switch ( e.KeyCode )
             {
                 case Keys.Enter:
-                    if ( e.Modifiers == Keys.Control || e.Modifiers == Keys.Shift )
+                    if ( ( e.Modifiers == Keys.Control ) || ( e.Modifiers == Keys.Shift ) )
                         OpenNewMemberDropDown( );
                     else
                         ValidateName( );
@@ -398,7 +392,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
             }
 
             if ( e.Modifiers == ( Keys.Control | Keys.Shift ) )
-            {
                 switch ( e.KeyCode )
                 {
                     case Keys.A:
@@ -429,7 +422,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                         AddNewMember( MemberType.Event );
                         break;
                 }
-            }
         }
 
         private void OpenNewMemberDropDown( )
@@ -625,48 +617,34 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
         private void toolOverrideList_Click( object sender, EventArgs e )
         {
-            var type = shape.CompositeType as SingleInharitanceType;
+            SingleInharitanceType type = shape.CompositeType as SingleInharitanceType;
             if ( type != null )
-            {
-                using ( var dialog = new OverrideDialog( ) )
+                using ( OverrideDialog dialog = new OverrideDialog( ) )
                 {
                     if ( dialog.ShowDialog( type ) == DialogResult.OK )
-                    {
-                        foreach ( var operation in dialog.GetSelectedOperations( ) )
-                        {
+                        foreach ( Operation operation in dialog.GetSelectedOperations( ) )
                             type.Override( operation );
-                        }
-                    }
                 }
-            }
         }
 
         private void toolImplementList_Click( object sender, EventArgs e )
         {
-            var type = shape.CompositeType as IInterfaceImplementer;
+            IInterfaceImplementer type = shape.CompositeType as IInterfaceImplementer;
             if ( type != null )
-            {
-                using ( var dialog = new ImplementDialog( ) )
+                using ( ImplementDialog dialog = new ImplementDialog( ) )
                 {
                     if ( dialog.ShowDialog( type ) == DialogResult.OK )
-                    {
-                        foreach ( var operation in dialog.GetSelectedOperations( ) )
+                        foreach ( Operation operation in dialog.GetSelectedOperations( ) )
                         {
-                            var defined = type.GetDefinedOperation( operation );
-                            var implementExplicitly = dialog.ImplementExplicitly && type.Language.SupportsExplicitImplementation;
+                            Operation defined = type.GetDefinedOperation( operation );
+                            bool implementExplicitly = dialog.ImplementExplicitly && type.Language.SupportsExplicitImplementation;
 
                             if ( defined == null )
-                            {
                                 type.Implement( operation, implementExplicitly );
-                            }
                             else if ( defined.Type != operation.Type )
-                            {
                                 type.Implement( operation, true );
-                            }
                         }
-                    }
                 }
-            }
         }
 
         private void toolSortByKind_Click( object sender, EventArgs e )

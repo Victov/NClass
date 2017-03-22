@@ -26,9 +26,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         protected override void FillList( )
         {
             lstItems.Items.Clear( );
-            foreach ( var value in parent.Arguments )
+            foreach ( Parameter value in parent.Arguments )
             {
-                var item = lstItems.Items.Add( value.ToString( ) );
+                ListViewItem item = lstItems.Items.Add( value.ToString( ) );
 
                 item.Tag = value;
                 item.ImageIndex = Icons.ParameterImageIndex;
@@ -43,8 +43,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         /// </exception>
         protected override void AddToList( string text )
         {
-            var value = parent.AddParameter( text );
-            var item = lstItems.Items.Add( value.ToString( ) );
+            Parameter value = parent.AddParameter( text );
+            ListViewItem item = lstItems.Items.Add( value.ToString( ) );
 
             item.Tag = value;
             item.ImageIndex = Icons.ParameterImageIndex;
@@ -60,7 +60,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         {
             if ( item.Tag is Parameter )
             {
-                var parameter = parent.ModifyParameter( ( Parameter ) item.Tag, text );
+                Parameter parameter = parent.ModifyParameter( ( Parameter ) item.Tag, text );
                 item.Tag = parameter;
                 item.Text = parameter.ToString( );
             }
@@ -82,7 +82,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
 
         protected override void Remove( ListViewItem item )
         {
-            if ( item != null && item.Tag is Parameter )
+            if ( ( item != null ) && item.Tag is Parameter )
                 parent.RemoveParameter( ( Parameter ) item.Tag );
             base.Remove( item );
         }

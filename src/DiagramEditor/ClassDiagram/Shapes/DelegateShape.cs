@@ -60,7 +60,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             get { return base.ActiveMemberIndex; }
             set
             {
-                var oldParameter = ActiveParameter;
+                Parameter oldParameter = ActiveParameter;
 
                 if ( value < DelegateType.ArgumentCount )
                     base.ActiveMemberIndex = value;
@@ -91,7 +91,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         protected internal override bool DeleteSelectedMember( bool showConfirmation )
         {
-            if ( IsActive && ActiveParameter != null )
+            if ( IsActive && ( ActiveParameter != null ) )
             {
                 if ( !showConfirmation || ConfirmMemberDelete( ) )
                     DeleteActiveParameter( );
@@ -142,18 +142,14 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         public override void MoveUp( )
         {
-            if ( ActiveParameter != null && DelegateType.MoveUpItem( ActiveParameter ) )
-            {
+            if ( ( ActiveParameter != null ) && DelegateType.MoveUpItem( ActiveParameter ) )
                 ActiveMemberIndex--;
-            }
         }
 
         public override void MoveDown( )
         {
-            if ( ActiveParameter != null && DelegateType.MoveDownItem( ActiveParameter ) )
-            {
+            if ( ( ActiveParameter != null ) && DelegateType.MoveDownItem( ActiveParameter ) )
                 ActiveMemberIndex++;
-            }
         }
 
         protected internal override void EditMembers( )
@@ -172,8 +168,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             if ( Contains( location ) )
             {
                 int index;
-                var y = ( int ) location.Y;
-                var top = Top + HeaderHeight + MarginSize;
+                int y = ( int ) location.Y;
+                int top = Top + HeaderHeight + MarginSize;
 
                 if ( top <= y )
                 {
@@ -194,13 +190,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             {
                 int newIndex;
                 if ( ActiveMemberIndex == DelegateType.ArgumentCount - 1 ) // Last parameter
-                {
                     newIndex = ActiveMemberIndex - 1;
-                }
                 else
-                {
                     newIndex = ActiveMemberIndex;
-                }
 
                 DelegateType.RemoveParameter( ActiveParameter );
                 ActiveMemberIndex = newIndex;
@@ -215,8 +207,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         private void DrawItem( IGraphics g, Parameter parameter, Rectangle record, Style style )
         {
-            var font = GetFont( style );
-            var memberString = parameter.ToString( );
+            Font font = GetFont( style );
+            string memberString = parameter.ToString( );
             parameterBrush.Color = style.EnumItemColor;
 
             if ( style.UseIcons )
@@ -224,7 +216,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
                 Image icon = Resources.Parameter;
                 g.DrawImage( icon, record.X, record.Y );
 
-                var textBounds = new Rectangle( record.X + IconSpacing, record.Y, record.Width - IconSpacing, record.Height );
+                Rectangle textBounds = new Rectangle( record.X + IconSpacing, record.Y, record.Width - IconSpacing, record.Height );
 
                 g.DrawString( memberString, font, parameterBrush, textBounds, memberFormat );
             }
@@ -239,9 +231,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             base.DrawSelectionLines( g, zoom, offset );
 
             // Draw selected parameter rectangle
-            if ( IsActive && ActiveParameter != null )
+            if ( IsActive && ( ActiveParameter != null ) )
             {
-                var record = GetMemberRectangle( ActiveMemberIndex );
+                Rectangle record = GetMemberRectangle( ActiveMemberIndex );
                 record = TransformRelativeToAbsolute( record, zoom, offset );
                 record.Inflate( 2, 0 );
                 g.DrawRectangle( Diagram.SelectionPen, record );
@@ -250,9 +242,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         protected override void DrawContent( IGraphics g, Style style )
         {
-            var record = new Rectangle( Left + MarginSize, Top + HeaderHeight + MarginSize, Width - MarginSize * 2, MemberHeight );
+            Rectangle record = new Rectangle( Left + MarginSize, Top + HeaderHeight + MarginSize, Width - MarginSize * 2, MemberHeight );
 
-            foreach ( var parameter in DelegateType.Arguments )
+            foreach ( Parameter parameter in DelegateType.Arguments )
             {
                 DrawItem( g, parameter, record, style );
                 record.Y += MemberHeight;
@@ -263,10 +255,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         {
             float requiredWidth = 0;
 
-            var font = GetFont( style );
-            foreach ( var parameter in DelegateType.Arguments )
+            Font font = GetFont( style );
+            foreach ( Parameter parameter in DelegateType.Arguments )
             {
-                var itemWidth = g.MeasureString( parameter.ToString( ), font, PointF.Empty, memberFormat ).Width;
+                float itemWidth = g.MeasureString( parameter.ToString( ), font, PointF.Empty, memberFormat ).Width;
                 requiredWidth = Math.Max( requiredWidth, itemWidth );
             }
 

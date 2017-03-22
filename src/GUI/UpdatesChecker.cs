@@ -38,16 +38,16 @@ namespace NClass.GUI
         {
             try
             {
-                var document = new XmlDocument( );
+                XmlDocument document = new XmlDocument( );
                 document.Load( VersionUrl );
-                var root = document.DocumentElement;
+                XmlElement root = document.DocumentElement;
 
                 // Get main version information
-                var versionElement = root[ "Version" ];
-                var version = versionElement.InnerText;
+                XmlElement versionElement = root[ "Version" ];
+                string version = versionElement.InnerText;
 
                 // Get translation version information
-                var translationElements = root.SelectNodes( "TranslationVersions/" + Strings.TranslationName );
+                XmlNodeList translationElements = root.SelectNodes( "TranslationVersions/" + Strings.TranslationName );
                 string translationVersion;
                 if ( translationElements.Count == 0 )
                     translationVersion = Strings.TranslationVersion;
@@ -55,9 +55,9 @@ namespace NClass.GUI
                     translationVersion = translationElements[ 0 ].InnerText;
 
                 // Get other informations
-                var name = root[ "VersionName" ].InnerText;
-                var url = root[ "DownloadPageUrl" ].InnerText;
-                var notes = root[ "Notes" ].InnerText.Trim( );
+                string name = root[ "VersionName" ].InnerText;
+                string url = root[ "DownloadPageUrl" ].InnerText;
+                string notes = root[ "Notes" ].InnerText.Trim( );
 
                 return new VersionInfo( version, translationVersion, name, url, notes );
             }
@@ -80,7 +80,7 @@ namespace NClass.GUI
         {
             try
             {
-                var info = GetVersionManifestInfo( );
+                VersionInfo info = GetVersionManifestInfo( );
                 ShowNewVersionInfo( info );
             }
             catch ( WebException )
@@ -97,10 +97,10 @@ namespace NClass.GUI
         {
             if ( info.IsUpdated )
             {
-                var text = GetVersionDescription( info );
-                var caption = Strings.CheckingForUpdates;
+                string text = GetVersionDescription( info );
+                string caption = Strings.CheckingForUpdates;
 
-                var result = MessageBox.Show( text, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Information );
+                DialogResult result = MessageBox.Show( text, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Information );
 
                 if ( result == DialogResult.Yes )
                     OpenUrl( info.DownloadPageUrl );
@@ -113,7 +113,7 @@ namespace NClass.GUI
 
         private static string GetVersionDescription( VersionInfo info )
         {
-            var builder = new StringBuilder( 512 );
+            StringBuilder builder = new StringBuilder( 512 );
 
             if ( info.IsMainProgramUpdated )
             {
@@ -196,7 +196,7 @@ namespace NClass.GUI
             {
                 get
                 {
-                    var currentTranslationVersion = Strings.TranslationVersion;
+                    string currentTranslationVersion = Strings.TranslationVersion;
                     return TranslationVersion.CompareTo( currentTranslationVersion ) > 0;
                 }
             }

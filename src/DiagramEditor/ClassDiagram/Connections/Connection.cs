@@ -142,8 +142,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
             }
             else
             {
-                var hDiff = Math.Max( StartShape.Left - EndShape.Right, EndShape.Left - StartShape.Right );
-                var vDiff = Math.Max( StartShape.Top - EndShape.Bottom, EndShape.Top - StartShape.Bottom );
+                int hDiff = Math.Max( StartShape.Left - EndShape.Right, EndShape.Left - StartShape.Right );
+                int vDiff = Math.Max( StartShape.Top - EndShape.Bottom, EndShape.Top - StartShape.Bottom );
 
                 if ( vDiff >= Spacing * 2 )
                 {
@@ -167,7 +167,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
         {
             RectangleF area = GetRouteArea( );
 
-            var lineSize = ( float ) style.RelationshipWidth / 2;
+            float lineSize = ( float ) style.RelationshipWidth / 2;
             if ( IsSelected && !printing )
                 lineSize = Math.Max( lineSize, ( float ) BendPoint.SquareSize / 2 / zoom );
             area.Inflate( lineSize, lineSize );
@@ -186,14 +186,12 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         private RectangleF GetStartCapArea( )
         {
-            var area = new RectangleF( RouteCache[ 0 ], StartCapSize );
-            var angle = GetAngle( RouteCache[ 0 ], RouteCache[ 1 ] );
+            RectangleF area = new RectangleF( RouteCache[ 0 ], StartCapSize );
+            float angle = GetAngle( RouteCache[ 0 ], RouteCache[ 1 ] );
 
-            if ( angle == 0 || angle == 180 ) // Vertical direction
-            {
+            if ( ( angle == 0 ) || ( angle == 180 ) ) // Vertical direction
                 area.X -= ( float ) StartCapSize.Width / 2;
-            }
-            if ( angle == 90 || angle == 270 ) // Horizontal direction
+            if ( ( angle == 90 ) || ( angle == 270 ) ) // Horizontal direction
             {
                 area.Y -= ( float ) StartCapSize.Width / 2;
                 area.Width = StartCapSize.Height;
@@ -201,28 +199,22 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
             }
 
             if ( angle == 90 ) // Left
-            {
                 area.X -= StartCapSize.Height;
-            }
             else if ( angle == 180 ) // Up
-            {
                 area.Y -= StartCapSize.Height;
-            }
 
             return area;
         }
 
         private RectangleF GetEndCapArea( )
         {
-            var lastIndex = RouteCache.Count - 1;
-            var area = new RectangleF( RouteCache[ lastIndex ], EndCapSize );
-            var angle = GetAngle( RouteCache[ lastIndex ], RouteCache[ lastIndex - 1 ] );
+            int lastIndex = RouteCache.Count - 1;
+            RectangleF area = new RectangleF( RouteCache[ lastIndex ], EndCapSize );
+            float angle = GetAngle( RouteCache[ lastIndex ], RouteCache[ lastIndex - 1 ] );
 
-            if ( angle == 0 || angle == 180 ) // Up-down direction
-            {
+            if ( ( angle == 0 ) || ( angle == 180 ) ) // Up-down direction
                 area.X -= ( float ) EndCapSize.Width / 2;
-            }
-            if ( angle == 90 || angle == 270 ) // Left-right direction
+            if ( ( angle == 90 ) || ( angle == 270 ) ) // Left-right direction
             {
                 area.Y -= ( float ) EndCapSize.Width / 2;
                 area.Width = EndCapSize.Height;
@@ -230,13 +222,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
             }
 
             if ( angle == 90 ) // Left
-            {
                 area.X -= EndCapSize.Height;
-            }
             else if ( angle == 180 ) // Up
-            {
                 area.Y -= EndCapSize.Height;
-            }
 
             return area;
         }
@@ -244,9 +232,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
         private RectangleF GetLabelArea( Style style )
         {
             bool horizontal;
-            var center = GetLineCenter( out horizontal );
+            PointF center = GetLineCenter( out horizontal );
 
-            var size = Graphics.MeasureString( Relationship.Label, style.RelationshipTextFont, PointF.Empty, stringFormat );
+            SizeF size = Graphics.MeasureString( Relationship.Label, style.RelationshipTextFont, PointF.Empty, stringFormat );
 
             if ( horizontal )
             {
@@ -264,10 +252,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         private Rectangle GetRouteArea( )
         {
-            var topLeft = RouteCache[ 0 ];
-            var bottomRight = RouteCache[ 0 ];
+            Point topLeft = RouteCache[ 0 ];
+            Point bottomRight = RouteCache[ 0 ];
 
-            for ( var i = 1; i < RouteCache.Count; i++ )
+            for ( int i = 1; i < RouteCache.Count; i++ )
             {
                 if ( topLeft.X > RouteCache[ i ].X )
                     topLeft.X = RouteCache[ i ].X;
@@ -291,7 +279,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         private void StartShapeResizing( object sender, ResizeEventArgs e )
         {
-            foreach ( var bendPoint in bendPoints )
+            foreach ( BendPoint bendPoint in bendPoints )
             {
                 if ( !bendPoint.RelativeToStartShape )
                     break;
@@ -305,7 +293,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         private void EndShapeResizing( object sender, ResizeEventArgs e )
         {
-            foreach ( var bendPoint in bendPoints.GetReversedList( ) )
+            foreach ( BendPoint bendPoint in bendPoints.GetReversedList( ) )
             {
                 if ( bendPoint.RelativeToStartShape )
                     break;
@@ -330,8 +318,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         private void ClearBendPoints( )
         {
-            var startPoint = FirstBendPoint;
-            var endPoint = LastBendPoint;
+            BendPoint startPoint = FirstBendPoint;
+            BendPoint endPoint = LastBendPoint;
 
             bendPoints.Clear( );
             bendPoints.Add( startPoint );
@@ -342,20 +330,18 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         protected void Reverse( )
         {
-            var shape = StartShape;
+            Shape shape = StartShape;
             StartShape = EndShape;
             EndShape = shape;
 
-            var orientation = startOrientation;
+            LineOrientation orientation = startOrientation;
             startOrientation = endOrientation;
             endOrientation = orientation;
 
             bendPoints.Reverse( );
             RouteCache.Reverse( );
-            foreach ( var point in BendPoints )
-            {
+            foreach ( BendPoint point in BendPoints )
                 point.RelativeToStartShape = !point.RelativeToStartShape;
-            }
 
             NeedsRedraw = true;
         }
@@ -402,13 +388,13 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         private void DrawCaps( IGraphics g, bool onScreen, Style style )
         {
-            var transformState = g.Transform;
+            Matrix transformState = g.Transform;
             g.TranslateTransform( RouteCache[ 0 ].X, RouteCache[ 0 ].Y );
             g.RotateTransform( GetAngle( RouteCache[ 0 ], RouteCache[ 1 ] ) );
             DrawStartCap( g, onScreen, style );
             g.Transform = transformState;
 
-            var last = RouteCache.Count - 1;
+            int last = RouteCache.Count - 1;
             g.TranslateTransform( RouteCache[ last ].X, RouteCache[ last ].Y );
             g.RotateTransform( GetAngle( RouteCache[ last ], RouteCache[ last - 1 ] ) );
             DrawEndCap( g, onScreen, style );
@@ -418,13 +404,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
         protected float GetAngle( Point point1, Point point2 )
         {
             if ( point1.X == point2.X )
-            {
                 return point1.Y < point2.Y ? 0 : 180;
-            }
             if ( point1.Y == point2.Y )
-            {
                 return point1.X < point2.X ? 270 : 90;
-            }
             return ( float ) ( Math.Atan2( point2.Y - point1.Y, point2.X - point1.X ) * ( 180 / Math.PI ) ) - 90;
         }
 
@@ -437,7 +419,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
             if ( Relationship.Label != null )
             {
                 bool horizontal;
-                var center = GetLineCenter( out horizontal );
+                PointF center = GetLineCenter( out horizontal );
 
                 textBrush.Color = style.RelationshipTextColor;
                 if ( horizontal )
@@ -458,17 +440,15 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         private PointF GetLineCenter( out bool horizontal )
         {
-            var lineLength = 0;
-            for ( var i = 0; i < RouteCache.Count - 1; i++ )
-            {
+            int lineLength = 0;
+            for ( int i = 0; i < RouteCache.Count - 1; i++ )
                 if ( RouteCache[ i ].X == RouteCache[ i + 1 ].X )
                     lineLength += Math.Abs( RouteCache[ i ].Y - RouteCache[ i + 1 ].Y );
                 else
                     lineLength += Math.Abs( RouteCache[ i ].X - RouteCache[ i + 1 ].X );
-            }
 
-            var distance = lineLength / 2;
-            var index = 0;
+            int distance = lineLength / 2;
+            int index = 0;
             horizontal = true;
             while ( distance >= 0 )
             {
@@ -492,16 +472,16 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
         {
             if ( IsSelected )
             {
-                var route = RouteCache.ToArray( );
-                var length = route.Length;
-                for ( var i = 0; i < route.Length; i++ )
+                Point[] route = RouteCache.ToArray( );
+                int length = route.Length;
+                for ( int i = 0; i < route.Length; i++ )
                 {
                     route[ i ].X = ( int ) ( route[ i ].X * zoom ) - offset.X;
                     route[ i ].Y = ( int ) ( route[ i ].Y * zoom ) - offset.Y;
                 }
 
                 // Cut the line's start section
-                var startOffset = ( int ) ( StartSelectionOffset * zoom );
+                int startOffset = ( int ) ( StartSelectionOffset * zoom );
                 if ( route[ 0 ].X == route[ 1 ].X )
                 {
                     if ( route[ 0 ].Y < route[ 1 ].Y )
@@ -517,7 +497,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                         route[ 0 ].X -= startOffset;
                 }
                 // Cut the line's end section
-                var endOffset = ( int ) ( EndSelectionOffset * zoom );
+                int endOffset = ( int ) ( EndSelectionOffset * zoom );
                 if ( route[ length - 1 ].X == route[ length - 2 ].X )
                 {
                     if ( route[ length - 1 ].Y < route[ length - 2 ].Y )
@@ -536,10 +516,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                 g.DrawLines( Diagram.SelectionPen, route );
 
                 if ( zoom > UndreadableZoom )
-                {
-                    foreach ( var point in bendPoints )
+                    foreach ( BendPoint point in bendPoints )
                         point.Draw( g, true, zoom, offset );
-                }
             }
         }
 
@@ -553,40 +531,28 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
         private void RecalculateOrientations( )
         {
             if ( !FirstBendPoint.AutoPosition )
-            {
-                if ( FirstBendPoint.X >= StartShape.Left && FirstBendPoint.X <= StartShape.Right )
-                {
+                if ( ( FirstBendPoint.X >= StartShape.Left ) && ( FirstBendPoint.X <= StartShape.Right ) )
                     startOrientation = LineOrientation.Vertical;
-                }
-                else if ( FirstBendPoint.Y >= StartShape.Top && FirstBendPoint.Y <= StartShape.Bottom )
-                {
+                else if ( ( FirstBendPoint.Y >= StartShape.Top ) && ( FirstBendPoint.Y <= StartShape.Bottom ) )
                     startOrientation = LineOrientation.Horizontal;
-                }
-            }
             if ( !LastBendPoint.AutoPosition )
-            {
-                if ( LastBendPoint.X >= EndShape.Left && LastBendPoint.X <= EndShape.Right )
-                {
+                if ( ( LastBendPoint.X >= EndShape.Left ) && ( LastBendPoint.X <= EndShape.Right ) )
                     endOrientation = LineOrientation.Vertical;
-                }
-                else if ( LastBendPoint.Y >= EndShape.Top && LastBendPoint.Y <= EndShape.Bottom )
-                {
+                else if ( ( LastBendPoint.Y >= EndShape.Top ) && ( LastBendPoint.Y <= EndShape.Bottom ) )
                     endOrientation = LineOrientation.Horizontal;
-                }
-            }
         }
 
         private void RelocateAutoBendPoints( )
         {
             if ( FirstBendPoint.AutoPosition && LastBendPoint.AutoPosition )
             {
-                if ( startOrientation == endOrientation && StartShape == EndShape )
+                if ( ( startOrientation == endOrientation ) && ( StartShape == EndShape ) )
                 {
                     startOrientation = LineOrientation.Horizontal;
                     endOrientation = LineOrientation.Vertical;
                 }
 
-                if ( startOrientation == LineOrientation.Horizontal && endOrientation == LineOrientation.Horizontal )
+                if ( ( startOrientation == LineOrientation.Horizontal ) && ( endOrientation == LineOrientation.Horizontal ) )
                 {
                     if ( StartShape.Right <= EndShape.Left - 2 * Spacing )
                     {
@@ -624,9 +590,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                         biggerShape = StartShape;
                     }
 
-                    if ( biggerShape.Top <= smallerShape.VerticalCenter && biggerShape.Bottom >= smallerShape.VerticalCenter )
+                    if ( ( biggerShape.Top <= smallerShape.VerticalCenter ) && ( biggerShape.Bottom >= smallerShape.VerticalCenter ) )
                     {
-                        var center = ( Math.Max( StartShape.Top, EndShape.Top ) + Math.Min( StartShape.Bottom, EndShape.Bottom ) ) / 2;
+                        int center = ( Math.Max( StartShape.Top, EndShape.Top ) + Math.Min( StartShape.Bottom, EndShape.Bottom ) ) / 2;
 
                         FirstBendPoint.Y = center;
                         LastBendPoint.Y = center;
@@ -637,7 +603,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                         LastBendPoint.Y = EndShape.VerticalCenter;
                     }
                 }
-                else if ( startOrientation == LineOrientation.Vertical && endOrientation == LineOrientation.Vertical )
+                else if ( ( startOrientation == LineOrientation.Vertical ) && ( endOrientation == LineOrientation.Vertical ) )
                 {
                     if ( StartShape.Bottom <= EndShape.Top - 2 * Spacing )
                     {
@@ -675,9 +641,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                         biggerShape = StartShape;
                     }
 
-                    if ( biggerShape.Left <= smallerShape.HorizontalCenter && biggerShape.Right >= smallerShape.HorizontalCenter )
+                    if ( ( biggerShape.Left <= smallerShape.HorizontalCenter ) && ( biggerShape.Right >= smallerShape.HorizontalCenter ) )
                     {
-                        var center = ( Math.Max( StartShape.Left, EndShape.Left ) + Math.Min( StartShape.Right, EndShape.Right ) ) / 2;
+                        int center = ( Math.Max( StartShape.Left, EndShape.Left ) + Math.Min( StartShape.Right, EndShape.Right ) ) / 2;
 
                         FirstBendPoint.X = center;
                         LastBendPoint.X = center;
@@ -731,14 +697,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                     else
                         FirstBendPoint.X = StartShape.Right + Spacing;
 
-                    if ( bendPoints.SecondValue.Y >= StartShape.Top && bendPoints.SecondValue.Y <= StartShape.Bottom )
-                    {
+                    if ( ( bendPoints.SecondValue.Y >= StartShape.Top ) && ( bendPoints.SecondValue.Y <= StartShape.Bottom ) )
                         FirstBendPoint.Y = bendPoints.SecondValue.Y;
-                    }
                     else
-                    {
                         FirstBendPoint.Y = StartShape.VerticalCenter;
-                    }
                 }
                 else
                 {
@@ -747,14 +709,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                     else
                         FirstBendPoint.Y = StartShape.Bottom + Spacing;
 
-                    if ( bendPoints.SecondValue.X >= StartShape.Left && bendPoints.SecondValue.X <= StartShape.Right )
-                    {
+                    if ( ( bendPoints.SecondValue.X >= StartShape.Left ) && ( bendPoints.SecondValue.X <= StartShape.Right ) )
                         FirstBendPoint.X = bendPoints.SecondValue.X;
-                    }
                     else
-                    {
                         FirstBendPoint.X = StartShape.HorizontalCenter;
-                    }
                 }
             }
             else if ( LastBendPoint.AutoPosition )
@@ -766,14 +724,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                     else
                         LastBendPoint.X = EndShape.Right + Spacing;
 
-                    if ( bendPoints.SecondLastValue.Y >= EndShape.Top && bendPoints.SecondLastValue.Y <= EndShape.Bottom )
-                    {
+                    if ( ( bendPoints.SecondLastValue.Y >= EndShape.Top ) && ( bendPoints.SecondLastValue.Y <= EndShape.Bottom ) )
                         LastBendPoint.Y = bendPoints.SecondLastValue.Y;
-                    }
                     else
-                    {
                         LastBendPoint.Y = EndShape.VerticalCenter;
-                    }
                 }
                 else
                 {
@@ -782,14 +736,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                     else
                         LastBendPoint.Y = EndShape.Bottom + Spacing;
 
-                    if ( bendPoints.SecondLastValue.X >= EndShape.Left && bendPoints.SecondLastValue.X <= EndShape.Right )
-                    {
+                    if ( ( bendPoints.SecondLastValue.X >= EndShape.Left ) && ( bendPoints.SecondLastValue.X <= EndShape.Right ) )
                         LastBendPoint.X = bendPoints.SecondLastValue.X;
-                    }
                     else
-                    {
                         LastBendPoint.X = EndShape.HorizontalCenter;
-                    }
                 }
             }
         }
@@ -798,9 +748,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
         {
             RouteCache.Clear( );
 
-            var direction = AddStartSegment( );
+            FlowDirection direction = AddStartSegment( );
 
-            var current = bendPoints.First;
+            LinkedListNode< BendPoint > current = bendPoints.First;
             while ( current != bendPoints.Last )
             {
                 direction = AddInnerSegment( current, direction );
@@ -815,8 +765,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         private FlowDirection AddInnerSegment( LinkedListNode< BendPoint > current, FlowDirection direction )
         {
-            var activePoint = current.Value;
-            var nextPoint = current.Next.Value;
+            BendPoint activePoint = current.Value;
+            BendPoint nextPoint = current.Next.Value;
 
             if ( nextPoint.X == activePoint.X )
             {
@@ -843,11 +793,11 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                     RouteCache.Add( nextPoint.Location );
                     return FlowDirection.BottomUp;
                 }
-                var nextNextPoint = GetNextNextPoint( current );
+                Point nextNextPoint = GetNextNextPoint( current );
 
-                if ( current.Next.Next == null && nextNextPoint.X == nextPoint.X && nextNextPoint.Y >= nextPoint.Y )
+                if ( ( current.Next.Next == null ) && ( nextNextPoint.X == nextPoint.X ) && ( nextNextPoint.Y >= nextPoint.Y ) )
                 {
-                    var center = ( nextPoint.Y + activePoint.Y ) / 2;
+                    int center = ( nextPoint.Y + activePoint.Y ) / 2;
                     RouteCache.Add( new Point( activePoint.X, center ) );
                     RouteCache.Add( new Point( nextPoint.X, center ) );
                     RouteCache.Add( nextPoint.Location );
@@ -855,7 +805,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                 }
                 if ( nextPoint.X < activePoint.X )
                 {
-                    if ( nextNextPoint.X >= activePoint.X || ( nextNextPoint.Y >= nextPoint.Y && nextNextPoint.X > nextPoint.X ) )
+                    if ( ( nextNextPoint.X >= activePoint.X ) || ( ( nextNextPoint.Y >= nextPoint.Y ) && ( nextNextPoint.X > nextPoint.X ) ) )
                     {
                         RouteCache.Add( new Point( nextPoint.X, activePoint.Y ) );
                         RouteCache.Add( nextPoint.Location );
@@ -865,7 +815,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                     RouteCache.Add( nextPoint.Location );
                     return FlowDirection.RightToLeft;
                 }
-                if ( nextNextPoint.X <= activePoint.X || ( nextNextPoint.Y >= nextPoint.Y && nextNextPoint.X < nextPoint.X ) )
+                if ( ( nextNextPoint.X <= activePoint.X ) || ( ( nextNextPoint.Y >= nextPoint.Y ) && ( nextNextPoint.X < nextPoint.X ) ) )
                 {
                     RouteCache.Add( new Point( nextPoint.X, activePoint.Y ) );
                     RouteCache.Add( nextPoint.Location );
@@ -883,11 +833,11 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                     RouteCache.Add( nextPoint.Location );
                     return FlowDirection.TopDown;
                 }
-                var nextNextPoint = GetNextNextPoint( current );
+                Point nextNextPoint = GetNextNextPoint( current );
 
-                if ( current.Next.Next == null && nextNextPoint.X == nextPoint.X && nextNextPoint.Y <= nextPoint.Y )
+                if ( ( current.Next.Next == null ) && ( nextNextPoint.X == nextPoint.X ) && ( nextNextPoint.Y <= nextPoint.Y ) )
                 {
-                    var center = ( nextPoint.Y + activePoint.Y ) / 2;
+                    int center = ( nextPoint.Y + activePoint.Y ) / 2;
                     RouteCache.Add( new Point( activePoint.X, center ) );
                     RouteCache.Add( new Point( nextPoint.X, center ) );
                     RouteCache.Add( nextPoint.Location );
@@ -895,7 +845,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                 }
                 if ( nextPoint.X > activePoint.X )
                 {
-                    if ( nextNextPoint.X <= activePoint.X || ( nextNextPoint.Y <= nextPoint.Y && nextNextPoint.X < nextPoint.X ) )
+                    if ( ( nextNextPoint.X <= activePoint.X ) || ( ( nextNextPoint.Y <= nextPoint.Y ) && ( nextNextPoint.X < nextPoint.X ) ) )
                     {
                         RouteCache.Add( new Point( nextPoint.X, activePoint.Y ) );
                         RouteCache.Add( nextPoint.Location );
@@ -905,7 +855,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                     RouteCache.Add( nextPoint.Location );
                     return FlowDirection.LeftToRight;
                 }
-                if ( nextNextPoint.X >= activePoint.X || ( nextNextPoint.Y <= nextPoint.Y && nextNextPoint.X > nextPoint.X ) )
+                if ( ( nextNextPoint.X >= activePoint.X ) || ( ( nextNextPoint.Y <= nextPoint.Y ) && ( nextNextPoint.X > nextPoint.X ) ) )
                 {
                     RouteCache.Add( new Point( nextPoint.X, activePoint.Y ) );
                     RouteCache.Add( nextPoint.Location );
@@ -923,11 +873,11 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                     RouteCache.Add( nextPoint.Location );
                     return FlowDirection.RightToLeft;
                 }
-                var nextNextPoint = GetNextNextPoint( current );
+                Point nextNextPoint = GetNextNextPoint( current );
 
-                if ( current.Next.Next == null && nextNextPoint.Y == nextPoint.Y && nextNextPoint.X >= nextPoint.X )
+                if ( ( current.Next.Next == null ) && ( nextNextPoint.Y == nextPoint.Y ) && ( nextNextPoint.X >= nextPoint.X ) )
                 {
-                    var center = ( nextPoint.X + activePoint.X ) / 2;
+                    int center = ( nextPoint.X + activePoint.X ) / 2;
                     RouteCache.Add( new Point( center, activePoint.Y ) );
                     RouteCache.Add( new Point( center, nextPoint.Y ) );
                     RouteCache.Add( nextPoint.Location );
@@ -935,7 +885,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                 }
                 if ( nextPoint.Y > activePoint.Y )
                 {
-                    if ( nextNextPoint.Y <= activePoint.Y || ( nextNextPoint.X >= nextPoint.X && nextNextPoint.Y < nextPoint.Y ) )
+                    if ( ( nextNextPoint.Y <= activePoint.Y ) || ( ( nextNextPoint.X >= nextPoint.X ) && ( nextNextPoint.Y < nextPoint.Y ) ) )
                     {
                         RouteCache.Add( new Point( activePoint.X, nextPoint.Y ) );
                         RouteCache.Add( nextPoint.Location );
@@ -945,7 +895,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                     RouteCache.Add( nextPoint.Location );
                     return FlowDirection.TopDown;
                 }
-                if ( nextNextPoint.Y >= activePoint.Y || ( nextNextPoint.X >= nextPoint.X && nextNextPoint.Y > nextPoint.Y ) )
+                if ( ( nextNextPoint.Y >= activePoint.Y ) || ( ( nextNextPoint.X >= nextPoint.X ) && ( nextNextPoint.Y > nextPoint.Y ) ) )
                 {
                     RouteCache.Add( new Point( activePoint.X, nextPoint.Y ) );
                     RouteCache.Add( nextPoint.Location );
@@ -963,11 +913,11 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                     RouteCache.Add( nextPoint.Location );
                     return FlowDirection.LeftToRight;
                 }
-                var nextNextPoint = GetNextNextPoint( current );
+                Point nextNextPoint = GetNextNextPoint( current );
 
-                if ( current.Next.Next == null && nextNextPoint.Y == nextPoint.Y && nextNextPoint.X <= nextPoint.X )
+                if ( ( current.Next.Next == null ) && ( nextNextPoint.Y == nextPoint.Y ) && ( nextNextPoint.X <= nextPoint.X ) )
                 {
-                    var center = ( nextPoint.X + activePoint.X ) / 2;
+                    int center = ( nextPoint.X + activePoint.X ) / 2;
                     RouteCache.Add( new Point( center, activePoint.Y ) );
                     RouteCache.Add( new Point( center, nextPoint.Y ) );
                     RouteCache.Add( nextPoint.Location );
@@ -975,7 +925,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                 }
                 if ( nextPoint.Y < activePoint.Y )
                 {
-                    if ( nextNextPoint.Y >= activePoint.Y || ( nextNextPoint.X <= nextPoint.X && nextNextPoint.Y > nextPoint.Y ) )
+                    if ( ( nextNextPoint.Y >= activePoint.Y ) || ( ( nextNextPoint.X <= nextPoint.X ) && ( nextNextPoint.Y > nextPoint.Y ) ) )
                     {
                         RouteCache.Add( new Point( activePoint.X, nextPoint.Y ) );
                         RouteCache.Add( nextPoint.Location );
@@ -985,7 +935,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                     RouteCache.Add( nextPoint.Location );
                     return FlowDirection.BottomUp;
                 }
-                if ( nextNextPoint.Y <= activePoint.Y || ( nextNextPoint.X <= nextPoint.X && nextNextPoint.Y < nextPoint.Y ) )
+                if ( ( nextNextPoint.Y <= activePoint.Y ) || ( ( nextNextPoint.X <= nextPoint.X ) && ( nextNextPoint.Y < nextPoint.Y ) ) )
                 {
                     RouteCache.Add( new Point( activePoint.X, nextPoint.Y ) );
                     RouteCache.Add( nextPoint.Location );
@@ -1001,14 +951,12 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         private Point GetNextNextPoint( LinkedListNode< BendPoint > current )
         {
-            var next = current.Next;
-            var nextNext = next.Next;
+            LinkedListNode< BendPoint > next = current.Next;
+            LinkedListNode< BendPoint > nextNext = next.Next;
 
             if ( nextNext != null )
-            {
                 return nextNext.Value.Location;
-            }
-            var nextNextPoint = next.Value.Location;
+            Point nextNextPoint = next.Value.Location;
 
             if ( nextNextPoint.X < EndShape.Left )
                 nextNextPoint.X = EndShape.Left;
@@ -1033,7 +981,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                 else
                     startX = StartShape.Right;
 
-                if ( FirstBendPoint.Y >= StartShape.Top && FirstBendPoint.Y <= StartShape.Bottom )
+                if ( ( FirstBendPoint.Y >= StartShape.Top ) && ( FirstBendPoint.Y <= StartShape.Bottom ) )
                 {
                     startY = FirstBendPoint.Y;
                     RouteCache.Add( new Point( startX, startY ) );
@@ -1061,7 +1009,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                 else
                     startY = StartShape.Bottom;
 
-                if ( FirstBendPoint.X >= StartShape.Left && FirstBendPoint.X <= StartShape.Right )
+                if ( ( FirstBendPoint.X >= StartShape.Left ) && ( FirstBendPoint.X <= StartShape.Right ) )
                 {
                     startX = FirstBendPoint.X;
                     RouteCache.Add( new Point( startX, startY ) );
@@ -1093,7 +1041,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                 else
                     endX = EndShape.Right;
 
-                if ( LastBendPoint.Y >= EndShape.Top && LastBendPoint.Y <= EndShape.Bottom )
+                if ( ( LastBendPoint.Y >= EndShape.Top ) && ( LastBendPoint.Y <= EndShape.Bottom ) )
                 {
                     endY = LastBendPoint.Y;
                 }
@@ -1113,7 +1061,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
                 else
                     endY = EndShape.Bottom;
 
-                if ( LastBendPoint.X >= EndShape.Left && LastBendPoint.X <= EndShape.Right )
+                if ( ( LastBendPoint.X >= EndShape.Left ) && ( LastBendPoint.X <= EndShape.Right ) )
                 {
                     endX = LastBendPoint.X;
                 }
@@ -1146,18 +1094,16 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
             if ( !IsSelected && !StartShape.IsSelected && !EndShape.IsSelected )
                 return offset;
 
-            foreach ( var bendPoint in bendPoints )
-            {
+            foreach ( BendPoint bendPoint in bendPoints )
                 if ( IsSelected || ( bendPoint.RelativeToStartShape && StartShape.IsSelected ) || ( !bendPoint.RelativeToStartShape && EndShape.IsSelected ) )
                 {
-                    var newLocation = bendPoint.Location + offset;
+                    Point newLocation = bendPoint.Location + offset;
 
                     if ( newLocation.X < padding )
                         offset.Width += padding - newLocation.X;
                     if ( newLocation.Y < padding )
                         offset.Height += padding - newLocation.Y;
                 }
-            }
             return offset;
         }
 
@@ -1178,17 +1124,15 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
             if ( e.Zoom <= UndreadableZoom )
                 return null;
 
-            foreach ( var point in bendPoints )
-            {
+            foreach ( BendPoint point in bendPoints )
                 if ( point.Contains( e.Location, e.Zoom ) )
                     return point;
-            }
             return null;
         }
 
         private bool BendPointPressed( AbsoluteMouseEventArgs e )
         {
-            var point = GetBendPoint( e );
+            BendPoint point = GetBendPoint( e );
 
             selectedBendPoint = point;
             if ( point != null )
@@ -1207,20 +1151,16 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         private bool BendPointDoubleClicked( AbsoluteMouseEventArgs e )
         {
-            var point = GetBendPoint( e );
+            BendPoint point = GetBendPoint( e );
 
             if ( point != null )
             {
                 if ( !point.AutoPosition )
                 {
-                    if ( point == FirstBendPoint && !bendPoints.SecondValue.RelativeToStartShape || point == LastBendPoint && bendPoints.SecondLastValue.RelativeToStartShape )
-                    {
+                    if ( ( ( point == FirstBendPoint ) && !bendPoints.SecondValue.RelativeToStartShape ) || ( ( point == LastBendPoint ) && bendPoints.SecondLastValue.RelativeToStartShape ) )
                         point.AutoPosition = true;
-                    }
                     else
-                    {
                         bendPoints.Remove( point );
-                    }
                     Reroute( );
                     OnRouteChanged( EventArgs.Empty );
                     OnModified( EventArgs.Empty );
@@ -1233,12 +1173,12 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         private bool Picked( PointF mouseLocation, float zoom )
         {
-            var tolerance = PickTolerance / zoom;
+            float tolerance = PickTolerance / zoom;
 
-            for ( var i = 0; i < RouteCache.Count - 1; i++ )
+            for ( int i = 0; i < RouteCache.Count - 1; i++ )
             {
-                var x = mouseLocation.X;
-                var y = mouseLocation.Y;
+                float x = mouseLocation.X;
+                float y = mouseLocation.Y;
                 float x1 = RouteCache[ i ].X;
                 float y1 = RouteCache[ i ].Y;
                 float x2 = RouteCache[ i + 1 ].X;
@@ -1246,17 +1186,13 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
                 if ( x1 == x2 )
                 {
-                    if ( ( x >= x1 - tolerance ) && ( x <= x1 + tolerance ) && ( y >= y1 && y <= y2 || y >= y2 && y <= y1 ) )
-                    {
+                    if ( ( x >= x1 - tolerance ) && ( x <= x1 + tolerance ) && ( ( ( y >= y1 ) && ( y <= y2 ) ) || ( ( y >= y2 ) && ( y <= y1 ) ) ) )
                         return true;
-                    }
                 }
                 else // y1 == y2
                 {
-                    if ( ( y >= y1 - tolerance ) && ( y <= y1 + tolerance ) && ( x >= x1 && x <= x2 || x >= x2 && x <= x1 ) )
-                    {
+                    if ( ( y >= y1 - tolerance ) && ( y <= y1 + tolerance ) && ( ( ( x >= x1 ) && ( x <= x2 ) ) || ( ( x >= x2 ) && ( x <= x1 ) ) ) )
                         return true;
-                    }
                 }
             }
 
@@ -1265,7 +1201,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         private bool Picked( RectangleF rectangle )
         {
-            for ( var i = 0; i < RouteCache.Count - 1; i++ )
+            for ( int i = 0; i < RouteCache.Count - 1; i++ )
             {
                 if ( rectangle.Contains( RouteCache[ i ] ) || rectangle.Contains( RouteCache[ i + 1 ] ) )
                     return true;
@@ -1277,17 +1213,13 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
                 if ( x1 == x2 )
                 {
-                    if ( x1 >= rectangle.Left && x1 <= rectangle.Right && ( y1 < rectangle.Top && y2 > rectangle.Bottom || y2 < rectangle.Top && y1 > rectangle.Bottom ) )
-                    {
+                    if ( ( x1 >= rectangle.Left ) && ( x1 <= rectangle.Right ) && ( ( ( y1 < rectangle.Top ) && ( y2 > rectangle.Bottom ) ) || ( ( y2 < rectangle.Top ) && ( y1 > rectangle.Bottom ) ) ) )
                         return true;
-                    }
                 }
                 else // y1 == y2
                 {
-                    if ( y1 >= rectangle.Top && y1 <= rectangle.Bottom && ( x1 < rectangle.Left && x2 > rectangle.Right || x2 < rectangle.Left && x1 > rectangle.Right ) )
-                    {
+                    if ( ( y1 >= rectangle.Top ) && ( y1 <= rectangle.Bottom ) && ( ( ( x1 < rectangle.Left ) && ( x2 > rectangle.Right ) ) || ( ( x2 < rectangle.Left ) && ( x1 > rectangle.Right ) ) ) )
                         return true;
-                    }
                 }
             }
 
@@ -1298,7 +1230,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
         {
             if ( !e.Handled )
             {
-                var pressed = Picked( e.Location, e.Zoom );
+                bool pressed = Picked( e.Location, e.Zoom );
 
                 if ( e.Button == MouseButtons.Left )
                     pressed |= IsSelected && BendPointPressed( e );
@@ -1315,7 +1247,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
         {
             if ( !e.Handled )
             {
-                var moved = IsMousePressed;
+                bool moved = IsMousePressed;
 
                 if ( moved )
                 {
@@ -1329,7 +1261,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
         {
             if ( !e.Handled )
             {
-                var upped = IsMousePressed;
+                bool upped = IsMousePressed;
 
                 if ( upped )
                 {
@@ -1341,7 +1273,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         internal override void DoubleClicked( AbsoluteMouseEventArgs e )
         {
-            var doubleClicked = Picked( e.Location, e.Zoom );
+            bool doubleClicked = Picked( e.Location, e.Zoom );
 
             if ( e.Button == MouseButtons.Left )
                 doubleClicked |= IsSelected && BendPointDoubleClicked( e );
@@ -1356,9 +1288,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
         protected override void OnMouseDown( AbsoluteMouseEventArgs e )
         {
             if ( e.Button == MouseButtons.Left )
-            {
                 IsActive = true;
-            }
             base.OnMouseDown( e );
             copied = false;
         }
@@ -1368,15 +1298,15 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
             base.OnMouseMove( e );
 
             //TODO: szebb lenne külön eljárásba tenni
-            if ( e.Button == MouseButtons.Left && selectedBendPoint != null )
+            if ( ( e.Button == MouseButtons.Left ) && ( selectedBendPoint != null ) )
             {
-                var newLocation = Point.Truncate( e.Location );
+                Point newLocation = Point.Truncate( e.Location );
 
                 if ( selectedBendPoint.Location != newLocation )
                 {
-                    if ( !copied && Control.ModifierKeys == Keys.Control )
+                    if ( !copied && ( Control.ModifierKeys == Keys.Control ) )
                     {
-                        var newPoint = ( BendPoint ) selectedBendPoint.Clone( );
+                        BendPoint newPoint = ( BendPoint ) selectedBendPoint.Clone( );
                         newPoint.Location = newLocation;
                         if ( selectedBendPoint.RelativeToStartShape )
                             bendPoints.AddAfter( bendPoints.Find( selectedBendPoint ), newPoint );
@@ -1401,12 +1331,12 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         public void ValidatePosition( int padding )
         {
-            var bendPoint = bendPoints.First;
-            var index = 0;
+            LinkedListNode< BendPoint > bendPoint = bendPoints.First;
+            int index = 0;
 
-            while ( bendPoint != null && index < RouteCache.Count - 1 )
+            while ( ( bendPoint != null ) && ( index < RouteCache.Count - 1 ) )
             {
-                var point = bendPoint.Value;
+                BendPoint point = bendPoint.Value;
                 while ( point.Location != RouteCache[ index ] )
                     index++;
 
@@ -1435,16 +1365,16 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
         {
             if ( CloneRelationship( diagram, first, second ) )
             {
-                var connection = diagram.ConnectionList.FirstValue;
+                Connection connection = diagram.ConnectionList.FirstValue;
                 connection.IsSelected = true;
 
                 connection.startOrientation = startOrientation;
                 connection.endOrientation = endOrientation;
                 connection.bendPoints.Clear( );
-                foreach ( var point in bendPoints )
+                foreach ( BendPoint point in bendPoints )
                 {
-                    var relativeShape = point.RelativeToStartShape ? first : second;
-                    var newPoint = new BendPoint( relativeShape, point.RelativeToStartShape, point.AutoPosition );
+                    Shape relativeShape = point.RelativeToStartShape ? first : second;
+                    BendPoint newPoint = new BendPoint( relativeShape, point.RelativeToStartShape, point.AutoPosition );
                     newPoint.Location = point.Location + offset;
                     connection.bendPoints.Add( newPoint );
                 }
@@ -1482,34 +1412,32 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         protected virtual void OnSerializing( SerializeEventArgs e )
         {
-            var document = e.Node.OwnerDocument;
+            XmlDocument document = e.Node.OwnerDocument;
 
-            var startNode = document.CreateElement( "StartOrientation" );
+            XmlElement startNode = document.CreateElement( "StartOrientation" );
             startNode.InnerText = startOrientation.ToString( );
             e.Node.AppendChild( startNode );
 
-            var endNode = document.CreateElement( "EndOrientation" );
+            XmlElement endNode = document.CreateElement( "EndOrientation" );
             endNode.InnerText = endOrientation.ToString( );
             e.Node.AppendChild( endNode );
 
-            foreach ( var point in bendPoints )
-            {
+            foreach ( BendPoint point in bendPoints )
                 if ( !point.AutoPosition )
                 {
-                    var node = document.CreateElement( "BendPoint" );
+                    XmlElement node = document.CreateElement( "BendPoint" );
                     node.SetAttribute( "relativeToStartShape", point.RelativeToStartShape.ToString( ) );
                     point.Serialize( node );
                     e.Node.AppendChild( node );
                 }
-            }
         }
 
         protected virtual void OnDeserializing( SerializeEventArgs e )
         {
             // Old file format
-            var oldStartNode = e.Node[ "StartNode" ];
-            var oldEndNode = e.Node[ "EndNode" ];
-            if ( oldStartNode != null && oldEndNode != null )
+            XmlElement oldStartNode = e.Node[ "StartNode" ];
+            XmlElement oldEndNode = e.Node[ "EndNode" ];
+            if ( ( oldStartNode != null ) && ( oldEndNode != null ) )
             {
                 bool isHorizontal;
                 bool.TryParse( oldStartNode.GetAttribute( "isHorizontal" ), out isHorizontal );
@@ -1539,39 +1467,35 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
             else
             {
                 // New file format
-                var startNode = e.Node[ "StartOrientation" ];
+                XmlElement startNode = e.Node[ "StartOrientation" ];
                 if ( startNode != null )
-                {
                     if ( startNode.InnerText == "Horizontal" )
                         startOrientation = LineOrientation.Horizontal;
                     else
                         startOrientation = LineOrientation.Vertical;
-                }
-                var endNode = e.Node[ "EndOrientation" ];
+                XmlElement endNode = e.Node[ "EndOrientation" ];
                 if ( endNode != null )
-                {
                     if ( endNode.InnerText == "Horizontal" )
                         endOrientation = LineOrientation.Horizontal;
                     else
                         endOrientation = LineOrientation.Vertical;
-                }
 
-                if ( startNode != null && endNode != null ) // To be sure it's the new file format
+                if ( ( startNode != null ) && ( endNode != null ) ) // To be sure it's the new file format
                 {
                     bendPoints.Clear( );
 
-                    var nodes = e.Node.SelectNodes( "child::BendPoint" );
+                    XmlNodeList nodes = e.Node.SelectNodes( "child::BendPoint" );
                     foreach ( XmlElement node in nodes )
                     {
                         bool relativeToStartShape;
                         bool.TryParse( node.GetAttribute( "relativeToStartShape" ), out relativeToStartShape );
-                        var relativeShape = relativeToStartShape ? StartShape : EndShape;
+                        Shape relativeShape = relativeToStartShape ? StartShape : EndShape;
 
-                        var point = new BendPoint( relativeShape, relativeToStartShape, false );
+                        BendPoint point = new BendPoint( relativeShape, relativeToStartShape, false );
                         point.Deserialize( node );
                         bendPoints.Add( point );
                     }
-                    if ( bendPoints.Count == 0 || !FirstBendPoint.RelativeToStartShape )
+                    if ( ( bendPoints.Count == 0 ) || !FirstBendPoint.RelativeToStartShape )
                         bendPoints.AddFirst( new BendPoint( StartShape, true ) );
                     if ( LastBendPoint.RelativeToStartShape )
                         bendPoints.Add( new BendPoint( EndShape, false ) );

@@ -51,12 +51,10 @@ namespace NClass.Core
         protected void Changed( )
         {
             if ( !Initializing )
-            {
                 if ( RaiseChangedEvent )
                     OnModified( EventArgs.Empty );
                 else
                     IsDirty = true;
-            }
         }
 
         private void OnModified( EventArgs e )

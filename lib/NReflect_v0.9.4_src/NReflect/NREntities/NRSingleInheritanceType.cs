@@ -23,7 +23,7 @@ using NReflect.NRMembers;
 namespace NReflect.NREntities
 {
     /// <summary>
-    /// Represents a type which can only have one parent type which is reflected by NReflect.
+    ///     Represents a type which can only have one parent type which is reflected by NReflect.
     /// </summary>
     [Serializable]
     public abstract class NRSingleInheritanceType : NRCompositeType, IFieldContainer
@@ -34,7 +34,7 @@ namespace NReflect.NREntities
         #region === Con- / Destruction
 
         /// <summary>
-        /// Initializes a new instance of <see cref="NRSingleInheritanceType"/>.
+        ///     Initializes a new instance of <see cref="NRSingleInheritanceType" />.
         /// </summary>
         protected NRSingleInheritanceType( )
         {
@@ -51,24 +51,24 @@ namespace NReflect.NREntities
         #region === Properties
 
         /// <summary>
-        /// Gets or sets the full name of the base type of this type.
+        ///     Gets or sets the full name of the base type of this type.
         /// </summary>
         public NRTypeUsage BaseType { get; set; }
 
         /// <summary>
-        /// Gets a list of constructors.
+        ///     Gets a list of constructors.
         /// </summary>
         public List< NRConstructor > Constructors { get; private set; }
 
         /// <summary>
-        /// Gets a list of operators of this type.
+        ///     Gets a list of operators of this type.
         /// </summary>
         public List< NROperator > Operators { get; private set; }
 
         /// <summary>
-        /// Gets a list of fields of this type.
+        ///     Gets a list of fields of this type.
         /// </summary>
-        public List< NRField > Fields { get; private set; }
+        public List< NRField > Fields { get; }
 
         #endregion
     }

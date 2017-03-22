@@ -23,7 +23,7 @@ using NReflect.NRMembers;
 namespace NReflect.NREntities
 {
     /// <summary>
-    /// Represents a type which can contain fields and methods which is reflected by NReflect.
+    ///     Represents a type which can contain fields and methods which is reflected by NReflect.
     /// </summary>
     [Serializable]
     public abstract class NRCompositeType : NRGenericType, IMethodContainer
@@ -34,7 +34,7 @@ namespace NReflect.NREntities
         #region === Con- / Destruction
 
         /// <summary>
-        /// Initializes a new instance of <see cref="NRCompositeType"/>.
+        ///     Initializes a new instance of <see cref="NRCompositeType" />.
         /// </summary>
         protected NRCompositeType( )
         {
@@ -52,24 +52,24 @@ namespace NReflect.NREntities
         #region === Properties
 
         /// <summary>
-        /// Gets a list which contains the full names of all implemented interfaces.
+        ///     Gets a list which contains the full names of all implemented interfaces.
         /// </summary>
         public List< NRTypeUsage > ImplementedInterfaces { get; private set; }
 
         /// <summary>
-        /// Gets a list of properties of this type.
+        ///     Gets a list of properties of this type.
         /// </summary>
         public List< NRProperty > Properties { get; private set; }
 
         /// <summary>
-        /// Gets a list of events of this type.
+        ///     Gets a list of events of this type.
         /// </summary>
         public List< NREvent > Events { get; private set; }
 
         /// <summary>
-        /// Gets a list of methods of this type.
+        ///     Gets a list of methods of this type.
         /// </summary>
-        public List< NRMethod > Methods { get; private set; }
+        public List< NRMethod > Methods { get; }
 
         #endregion
     }

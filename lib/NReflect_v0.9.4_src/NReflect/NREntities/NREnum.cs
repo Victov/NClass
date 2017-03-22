@@ -23,7 +23,7 @@ using NReflect.NRMembers;
 namespace NReflect.NREntities
 {
     /// <summary>
-    /// Represents an enum which is reflected by NReflect.
+    ///     Represents an enum which is reflected by NReflect.
     /// </summary>
     [Serializable]
     public class NREnum : NRTypeBase
@@ -34,11 +34,27 @@ namespace NReflect.NREntities
         #region === Con- / Destruction
 
         /// <summary>
-        /// Initializes a new instance of <see cref="NREnum"/>.
+        ///     Initializes a new instance of <see cref="NREnum" />.
         /// </summary>
         public NREnum( )
         {
             Values = new List< NREnumValue >( );
+        }
+
+        #endregion
+
+        // ========================================================================
+        // Methods
+
+        #region === Methods
+
+        /// <summary>
+        ///     Accept an <see cref="IVisitor" /> instance on the implementing class and all its children.
+        /// </summary>
+        /// <param name="visitor">The <see cref="IVisitor" /> instance to accept.</param>
+        public override void Accept( IVisitor visitor )
+        {
+            visitor.Visit( this );
         }
 
         #endregion
@@ -49,30 +65,14 @@ namespace NReflect.NREntities
         #region === Properties
 
         /// <summary>
-        /// Gets a list of values of this enum.
+        ///     Gets a list of values of this enum.
         /// </summary>
         public List< NREnumValue > Values { get; private set; }
 
         /// <summary>
-        /// Gets or sets the underlying type of the enum.
+        ///     Gets or sets the underlying type of the enum.
         /// </summary>
         public string UnderlyingType { get; set; }
-
-        #endregion
-
-        // ========================================================================
-        // Methods
-
-        #region === Methods
-
-        /// <summary>
-        /// Accept an <see cref="IVisitor"/> instance on the implementing class and all its children.
-        /// </summary>
-        /// <param name="visitor">The <see cref="IVisitor"/> instance to accept.</param>
-        public override void Accept( IVisitor visitor )
-        {
-            visitor.Visit( this );
-        }
 
         #endregion
     }

@@ -110,20 +110,15 @@ namespace NClass.AssemblyCSharpImport
         {
             if ( Workspace.HasActiveProject )
             {
-                var settings = new ImportSettings( );
-                using ( var settingsForm = new ImportSettingsForm( settings ) )
+                ImportSettings settings = new ImportSettings( );
+                using ( ImportSettingsForm settingsForm = new ImportSettingsForm( settings ) )
                 {
                     if ( settingsForm.ShowDialog( ) == DialogResult.OK )
                     {
-                        var diagram = new Diagram( CSharpLanguage.Instance );
+                        Diagram diagram = new Diagram( CSharpLanguage.Instance );
 
                         // Is it a file or a folder?
-                        foreach ( var item in settings.Items )
-                        {
-                            // Analyse items to know if it is :
-                            // a C# source file
-                            // a folder
-                            // a .NET assembly
+                        foreach ( string item in settings.Items )
                             if ( Path.HasExtension( item ) )
                             {
                                 switch ( Path.GetExtension( item ) )
@@ -175,7 +170,6 @@ namespace NClass.AssemblyCSharpImport
                                 if ( Directory.Exists( item ) )
                                     ImportFolder( diagram, settings, item );
                             }
-                        }
                     }
                 }
             }
@@ -186,7 +180,7 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         private void ImportCSharpFile( Diagram diagram, ImportSettings settings, string fileName )
         {
-            var importer = new CSharpImport( diagram, settings );
+            CSharpImport importer = new CSharpImport( diagram, settings );
 
             if ( importer.ImportSourceCode( fileName ) )
                 Workspace.ActiveProject.Add( diagram );
@@ -198,11 +192,11 @@ namespace NClass.AssemblyCSharpImport
         private void ImportFolder( Diagram diagram, ImportSettings settings, string folderName )
         {
             // All C# code source file in this directory 
-            foreach ( var file in Directory.EnumerateFiles( folderName, "*.cs" ) )
+            foreach ( string file in Directory.EnumerateFiles( folderName, "*.cs" ) )
                 ImportCSharpFile( diagram, settings, file );
 
             // All subfolders in this directory 
-            foreach ( var folder in Directory.EnumerateDirectories( folderName ) )
+            foreach ( string folder in Directory.EnumerateDirectories( folderName ) )
                 ImportCSharpFile( diagram, settings, folder );
         }
 
@@ -211,12 +205,10 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         private void ImportAssembly( Diagram diagram, ImportSettings settings, string fileName )
         {
-            var importer = new NETImport( diagram, settings );
+            NETImport importer = new NETImport( diagram, settings );
 
             if ( importer.ImportAssembly( fileName ) )
-            {
                 Workspace.ActiveProject.Add( diagram );
-            }
         }
 
         /// <summary>

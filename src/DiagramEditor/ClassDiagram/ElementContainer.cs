@@ -25,43 +25,41 @@ namespace NClass.DiagramEditor.ClassDiagram
     {
         private const int BaseOffset = 20;
         private readonly List< Connection > connections = new List< Connection >( );
-        private int currentOffset;
         private readonly Dictionary< Shape, Shape > pastedShapes = new Dictionary< Shape, Shape >( );
 
         private readonly List< Shape > shapes = new List< Shape >( );
+        private int currentOffset;
 
         void IClipboardItem.Paste( IDocument document )
         {
-            var diagram = ( Diagram ) document;
+            Diagram diagram = ( Diagram ) document;
             if ( diagram != null )
             {
-                var success = false;
+                bool success = false;
 
                 currentOffset += BaseOffset;
-                var offset = new Size( ( int ) ( ( diagram.Offset.X + currentOffset ) / diagram.Zoom ), ( int ) ( ( diagram.Offset.Y + currentOffset ) / diagram.Zoom ) );
+                Size offset = new Size( ( int ) ( ( diagram.Offset.X + currentOffset ) / diagram.Zoom ), ( int ) ( ( diagram.Offset.Y + currentOffset ) / diagram.Zoom ) );
 
-                foreach ( var shape in shapes )
+                foreach ( Shape shape in shapes )
                 {
-                    var pasted = shape.Paste( diagram, offset );
+                    Shape pasted = shape.Paste( diagram, offset );
                     pastedShapes[ shape ] = pasted;
                     success |= pasted != null;
                 }
-                foreach ( var connection in connections )
+                foreach ( Connection connection in connections )
                 {
-                    var first = GetShape( connection.Relationship.First );
-                    var second = GetShape( connection.Relationship.Second );
+                    Shape first = GetShape( connection.Relationship.First );
+                    Shape second = GetShape( connection.Relationship.Second );
 
-                    if ( first != null && pastedShapes[ first ] != null && second != null && pastedShapes[ second ] != null )
+                    if ( ( first != null ) && ( pastedShapes[ first ] != null ) && ( second != null ) && ( pastedShapes[ second ] != null ) )
                     {
-                        var pasted = connection.Paste( diagram, offset, pastedShapes[ first ], pastedShapes[ second ] );
+                        Connection pasted = connection.Paste( diagram, offset, pastedShapes[ first ], pastedShapes[ second ] );
                         success |= pasted != null;
                     }
                 }
 
                 if ( success )
-                {
                     Clipboard.Clear( );
-                }
             }
         }
 
@@ -79,11 +77,9 @@ namespace NClass.DiagramEditor.ClassDiagram
         //TODO: legyenek inkább hivatkozások a shape-ekhez
         public Shape GetShape( IEntity entity )
         {
-            foreach ( var shape in shapes )
-            {
+            foreach ( Shape shape in shapes )
                 if ( shape.Entity == entity )
                     return shape;
-            }
             return null;
         }
     }

@@ -19,87 +19,87 @@
 namespace NReflect.Filter
 {
     /// <summary>
-    /// A collection of possible elements.
+    ///     A collection of possible elements.
     /// </summary>
     public enum FilterElements
     {
         /// <summary>
-        /// Means "all ellements"
+        ///     Means "all ellements"
         /// </summary>
         AllElements,
 
         /// <summary>
-        /// Type class
+        ///     Type class
         /// </summary>
         Class,
 
         /// <summary>
-        /// Type struct
+        ///     Type struct
         /// </summary>
         Struct,
 
         /// <summary>
-        /// Type interface
+        ///     Type interface
         /// </summary>
         Interface,
 
         /// <summary>
-        /// Type enum
+        ///     Type enum
         /// </summary>
         Enum,
 
         /// <summary>
-        /// Member enum value
+        ///     Member enum value
         /// </summary>
         EnumValue,
 
         /// <summary>
-        /// Type delegate
+        ///     Type delegate
         /// </summary>
         Delegate,
 
         /// <summary>
-        /// Member field
+        ///     Member field
         /// </summary>
         Field,
 
         /// <summary>
-        /// Member constant
+        ///     Member constant
         /// </summary>
         Constant,
 
         /// <summary>
-        /// Member property
+        ///     Member property
         /// </summary>
         Property,
 
         /// <summary>
-        /// Member constructor
+        ///     Member constructor
         /// </summary>
         Constructor,
 
         /// <summary>
-        /// Member method
+        ///     Member method
         /// </summary>
         Method,
 
         /// <summary>
-        /// Member operator
+        ///     Member operator
         /// </summary>
         Operator,
 
         /// <summary>
-        /// Member event
+        ///     Member event
         /// </summary>
         Event,
 
         /// <summary>
-        /// Attribute
+        ///     Attribute
         /// </summary>
         Attribute,
 
         /// <summary>
-        /// Module
+        ///     Module
         /// </summary>
         Module
     }

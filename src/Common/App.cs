@@ -19,7 +19,7 @@ namespace NClass.Common
 
         public App( )
         {
-            var LngMg = new LanguageManager( );
+            LanguageManager LngMg = new LanguageManager( );
         }
 
         public bool ArgumentLog( int i, int length, string nextArg )
@@ -37,7 +37,7 @@ namespace NClass.Common
         public void Start( )
         {
             // Get log4net config 
-            var configFile = Directory.GetCurrentDirectory( ) + config_log_file;
+            string configFile = Directory.GetCurrentDirectory( ) + config_log_file;
 
             // Load the log4net config file
             XmlConfigurator.Configure( new FileInfo( configFile ) );
@@ -52,7 +52,7 @@ namespace NClass.Common
         {
             if ( currentIndex + 1 >= length )
             {
-                var errMsg = string.Format( Strings.MissingArgument, arg );
+                string errMsg = string.Format( Strings.MissingArgument, arg );
                 Logger.Error( errMsg );
                 return errMsg;
             }
@@ -60,7 +60,7 @@ namespace NClass.Common
             // Check if the folder exists
             if ( File.Exists( value ) == false )
             {
-                var errMsg = string.Format( Strings.FileDoesntExist, value );
+                string errMsg = string.Format( Strings.FileDoesntExist, value );
                 Logger.Error( errMsg );
                 return errMsg;
             }

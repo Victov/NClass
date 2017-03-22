@@ -35,17 +35,13 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
 
         public IEnumerable< Operation > GetSelectedOperations( )
         {
-            for ( var parent = 0; parent < OperationTree.Nodes.Count; parent++ )
+            for ( int parent = 0; parent < OperationTree.Nodes.Count; parent++ )
             {
-                var parentNode = OperationTree.Nodes[ parent ];
+                TreeNode parentNode = OperationTree.Nodes[ parent ];
 
-                for ( var child = 0; child < parentNode.Nodes.Count; child++ )
-                {
+                for ( int child = 0; child < parentNode.Nodes.Count; child++ )
                     if ( parentNode.Nodes[ child ].Tag is Operation && parentNode.Nodes[ child ].Checked )
-                    {
                         yield return ( Operation ) parentNode.Nodes[ child ].Tag;
-                    }
-                }
             }
         }
 
@@ -60,8 +56,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             if ( operation == null )
                 throw new ArgumentNullException( "operation" );
 
-            var child = parentNode.Nodes.Add( operation.GetUmlDescription( ) );
-            var imageIndex = Icons.GetImageIndex( operation );
+            TreeNode child = parentNode.Nodes.Add( operation.GetUmlDescription( ) );
+            int imageIndex = Icons.GetImageIndex( operation );
 
             child.Tag = operation;
             child.ImageIndex = imageIndex;
@@ -73,11 +69,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
 
         protected void RemoveEmptyNodes( )
         {
-            for ( var i = 0; i < OperationTree.Nodes.Count; i++ )
-            {
+            for ( int i = 0; i < OperationTree.Nodes.Count; i++ )
                 if ( OperationTree.Nodes[ i ].Nodes.Count == 0 )
                     OperationTree.Nodes.RemoveAt( i-- );
-            }
         }
 
         protected virtual void UpdateTexts( )
@@ -98,30 +92,26 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             {
                 checkingLocked = true;
 
-                var node = e.Node;
-                var parentNode = e.Node.Parent;
+                TreeNode node = e.Node;
+                TreeNode parentNode = e.Node.Parent;
 
                 if ( parentNode != null )
-                {
                     if ( !node.Checked )
                     {
                         parentNode.Checked = false;
                     }
                     else
                     {
-                        var allChecked = true;
+                        bool allChecked = true;
 
                         foreach ( TreeNode neighbour in parentNode.Nodes )
-                        {
                             if ( !neighbour.Checked )
                             {
                                 allChecked = false;
                                 break;
                             }
-                        }
                         parentNode.Checked = allChecked;
                     }
-                }
 
                 foreach ( TreeNode child in node.Nodes )
                     child.Checked = node.Checked;

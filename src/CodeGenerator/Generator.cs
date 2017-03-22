@@ -43,7 +43,7 @@ namespace NClass.CodeGenerator
         /// </exception>
         public GenerationResult Generate( string location, bool sort_using, bool generate_document_comment, string compagny_name, string copyright_header, string author )
         {
-            var result = solutionGenerator.Generate( location, sort_using, generate_document_comment, compagny_name, copyright_header, author );
+            GenerationResult result = solutionGenerator.Generate( location, sort_using, generate_document_comment, compagny_name, copyright_header, author );
             SourceFileGenerator.FinishWork( );
 
             return result;

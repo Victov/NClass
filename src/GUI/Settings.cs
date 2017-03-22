@@ -30,7 +30,7 @@ namespace NClass.GUI
 
 			return defaultLanguage ?? CSharpLanguage.Instance;
             */
-            var defaultLanguage = Language.GetLanguage( DefaultLanguageName );
+            Language defaultLanguage = Language.GetLanguage( DefaultLanguageName );
 
             if ( defaultLanguage == null )
                 // TO DO: Select a default language available!
@@ -44,21 +44,21 @@ namespace NClass.GUI
             if ( !File.Exists( recentFile ) )
                 return;
 
-            var index = RecentFiles.IndexOf( recentFile );
+            int index = RecentFiles.IndexOf( recentFile );
 
             if ( index < 0 )
             {
                 if ( RecentFiles.Count < MaxRecentFileCount )
                     RecentFiles.Add( string.Empty );
 
-                for ( var i = RecentFiles.Count - 2; i >= 0; i-- )
+                for ( int i = RecentFiles.Count - 2; i >= 0; i-- )
                     RecentFiles[ i + 1 ] = RecentFiles[ i ];
                 RecentFiles[ 0 ] = recentFile;
             }
             else if ( index > 0 )
             {
-                var temp = RecentFiles[ index ];
-                for ( var i = index; i > 0; i-- )
+                string temp = RecentFiles[ index ];
+                for ( int i = index; i > 0; i-- )
                     RecentFiles[ i ] = RecentFiles[ i - 1 ];
                 RecentFiles[ 0 ] = temp;
             }

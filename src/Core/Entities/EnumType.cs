@@ -68,11 +68,9 @@ namespace NClass.Core
         {
             if ( newValue != null )
             {
-                foreach ( var value in Values )
-                {
+                foreach ( EnumValue value in Values )
                     if ( value.Name == newValue.Name )
                         throw new ReservedNameException( newValue.Name );
-                }
 
                 values.Add( newValue );
                 newValue.Modified += delegate { Changed( ); };
@@ -82,7 +80,7 @@ namespace NClass.Core
 
         public EnumValue GetValue( int index )
         {
-            if ( index >= 0 && index < values.Count )
+            if ( ( index >= 0 ) && ( index < values.Count ) )
                 return values[ index ];
             return null;
         }
@@ -100,22 +98,18 @@ namespace NClass.Core
         /// </exception>
         protected bool ChangeValue( EnumValue oldValue, EnumValue newValue )
         {
-            if ( oldValue == null || newValue == null )
+            if ( ( oldValue == null ) || ( newValue == null ) )
                 return false;
 
-            var index = -1;
-            for ( var i = 0; i < values.Count; i++ )
-            {
+            int index = -1;
+            for ( int i = 0; i < values.Count; i++ )
                 if ( values[ i ] == oldValue )
                     index = i;
                 else if ( values[ i ].Name == newValue.Name )
                     throw new ReservedNameException( newValue.Name );
-            }
 
             if ( index == -1 )
-            {
                 return false;
-            }
             values[ index ] = newValue;
             Changed( );
             return true;
@@ -151,13 +145,11 @@ namespace NClass.Core
         {
             base.CopyFrom( type );
 
-            var enumType = ( EnumType ) type;
+            EnumType enumType = ( EnumType ) type;
             values.Clear( );
             values.Capacity = enumType.values.Capacity;
-            foreach ( var value in enumType.values )
-            {
+            foreach ( EnumValue value in enumType.values )
                 values.Add( value.Clone( ) );
-            }
         }
 
         public abstract EnumType Clone( );
@@ -169,9 +161,9 @@ namespace NClass.Core
         {
             base.Serialize( node );
 
-            foreach ( var value in values )
+            foreach ( EnumValue value in values )
             {
-                var child = node.OwnerDocument.CreateElement( "Value" );
+                XmlElement child = node.OwnerDocument.CreateElement( "Value" );
                 child.InnerText = value.ToString( );
                 node.AppendChild( child );
             }
@@ -190,7 +182,7 @@ namespace NClass.Core
         {
             RaiseChangedEvent = false;
 
-            var nodeList = node.SelectNodes( "Value" );
+            XmlNodeList nodeList = node.SelectNodes( "Value" );
             foreach ( XmlNode valueNode in nodeList )
                 AddValue( valueNode.InnerText );
 

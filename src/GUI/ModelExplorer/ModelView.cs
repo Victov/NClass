@@ -62,7 +62,7 @@ namespace NClass.GUI.ModelExplorer
                         workspace.ProjectRemoved += workspace_ProjectRemoved;
                         LoadProjects( );
                     }
-                    lblAddProject.Visible = workspace != null && !workspace.HasProject;
+                    lblAddProject.Visible = ( workspace != null ) && !workspace.HasProject;
                 }
             }
         }
@@ -91,30 +91,24 @@ namespace NClass.GUI.ModelExplorer
             lblAddProject.Visible = false;
 
             if ( project.ItemCount == 1 )
-            {
-                foreach ( var item in project.Items )
+                foreach ( IProjectItem item in project.Items )
                 {
-                    var document = item as IDocument;
+                    IDocument document = item as IDocument;
                     if ( document != null )
                         OnDocumentOpening( new DocumentEventArgs( document ) );
                 }
-            }
             if ( project.IsUntitled )
-            {
                 projectNode.EditLabel( );
-            }
         }
 
         private void RemoveProject( Project project )
         {
             foreach ( ProjectNode projectNode in Nodes )
-            {
                 if ( projectNode.Project == project )
                 {
                     projectNode.Delete( );
                     break;
                 }
-            }
             if ( !workspace.HasProject )
                 lblAddProject.Visible = true;
         }
@@ -122,19 +116,15 @@ namespace NClass.GUI.ModelExplorer
         private void RemoveProjects( )
         {
             foreach ( ModelNode node in Nodes )
-            {
                 node.BeforeDelete( );
-            }
             Nodes.Clear( );
             lblAddProject.Visible = true;
         }
 
         private void LoadProjects( )
         {
-            foreach ( var project in workspace.Projects )
-            {
+            foreach ( Project project in workspace.Projects )
                 AddProject( project );
-            }
         }
 
         private void workspace_ActiveProjectChanged( object sender, EventArgs e )
@@ -164,16 +154,14 @@ namespace NClass.GUI.ModelExplorer
 
         private void lblAddProject_DoubleClick( object sender, EventArgs e )
         {
-            if ( workspace != null && !workspace.HasProject )
-            {
+            if ( ( workspace != null ) && !workspace.HasProject )
                 workspace.AddEmptyProject( );
-            }
         }
 
         protected override void OnNodeMouseDoubleClick( TreeNodeMouseClickEventArgs e )
         {
             base.OnNodeMouseDoubleClick( e );
-            var node = ( ModelNode ) e.Node;
+            ModelNode node = ( ModelNode ) e.Node;
             node.DoubleClick( );
         }
 
@@ -183,13 +171,13 @@ namespace NClass.GUI.ModelExplorer
 
             if ( e.KeyCode == Keys.Enter )
             {
-                var selectedNode = SelectedNode as ModelNode;
+                ModelNode selectedNode = SelectedNode as ModelNode;
                 if ( selectedNode != null )
                     selectedNode.EnterPressed( );
             }
             else if ( e.KeyCode == Keys.F2 )
             {
-                var selectedNode = SelectedNode as ModelNode;
+                ModelNode selectedNode = SelectedNode as ModelNode;
                 if ( selectedNode != null )
                     selectedNode.EditLabel( );
             }
@@ -208,7 +196,7 @@ namespace NClass.GUI.ModelExplorer
         {
             base.OnBeforeLabelEdit( e );
 
-            var node = ( ModelNode ) e.Node;
+            ModelNode node = ( ModelNode ) e.Node;
             if ( !node.EditingLabel )
                 e.CancelEdit = true;
         }
@@ -217,12 +205,10 @@ namespace NClass.GUI.ModelExplorer
         {
             base.OnAfterLabelEdit( e );
 
-            var node = ( ModelNode ) e.Node;
+            ModelNode node = ( ModelNode ) e.Node;
             node.LabelEdited( );
-            if ( !e.CancelEdit && e.Label != null )
-            {
+            if ( !e.CancelEdit && ( e.Label != null ) )
                 node.LabelModified( e );
-            }
         }
 
         //TODO: ez így nem szép! nem kéne internal!
@@ -260,17 +246,16 @@ namespace NClass.GUI.ModelExplorer
 
         private void mnuNewProject_Click( object sender, EventArgs e )
         {
-            var project = Workspace.Default.AddEmptyProject( );
+            Project project = Workspace.Default.AddEmptyProject( );
             Workspace.Default.ActiveProject = project;
         }
 
         private void mnuOpen_DropDownOpening( object sender, EventArgs e )
         {
             foreach ( ToolStripItem item in mnuOpen.DropDownItems )
-            {
                 if ( item.Tag is int )
                 {
-                    var index = ( int ) item.Tag;
+                    int index = ( int ) item.Tag;
 
                     if ( index < Settings.Default.RecentFiles.Count )
                     {
@@ -282,7 +267,6 @@ namespace NClass.GUI.ModelExplorer
                         item.Visible = false;
                     }
                 }
-            }
 
             mnuSepOpenFile.Visible = Settings.Default.RecentFiles.Count > 0;
         }
@@ -294,10 +278,10 @@ namespace NClass.GUI.ModelExplorer
 
         private void OpenRecentFile_Click( object sender, EventArgs e )
         {
-            var index = ( int ) ( ( ToolStripItem ) sender ).Tag;
-            if ( index >= 0 && index < Settings.Default.RecentFiles.Count )
+            int index = ( int ) ( ( ToolStripItem ) sender ).Tag;
+            if ( ( index >= 0 ) && ( index < Settings.Default.RecentFiles.Count ) )
             {
-                var fileName = Settings.Default.RecentFiles[ index ];
+                string fileName = Settings.Default.RecentFiles[ index ];
                 Workspace.Default.OpenProject( fileName );
             }
         }

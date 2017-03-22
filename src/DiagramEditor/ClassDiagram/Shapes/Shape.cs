@@ -80,7 +80,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             {
                 if ( location != value )
                 {
-                    var offset = new Size( value.X - X, value.Y - Y );
+                    Size offset = new Size( value.X - X, value.Y - Y );
                     mouseDownLocation += offset;
                     location = value;
                     OnMove( new MoveEventArgs( offset ) );
@@ -96,7 +96,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             {
                 if ( location.X != value )
                 {
-                    var offset = new Size( value - X, 0 );
+                    Size offset = new Size( value - X, 0 );
                     mouseDownLocation.X += offset.Width;
                     location.X = value;
                     OnMove( new MoveEventArgs( offset ) );
@@ -112,7 +112,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             {
                 if ( location.Y != value )
                 {
-                    var offset = new Size( 0, value - Y );
+                    Size offset = new Size( 0, value - Y );
                     mouseDownLocation.Y += offset.Height;
                     location.Y = value;
                     OnMove( new MoveEventArgs( offset ) );
@@ -133,7 +133,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
                 if ( size != value )
                 {
-                    var change = new Size( value.Width - Width, value.Height - Height );
+                    Size change = new Size( value.Width - Width, value.Height - Height );
                     if ( IsResizing ) //TODO: ez kell?
                         mouseDownLocation += change;
                     size = value;
@@ -153,7 +153,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
                 if ( size.Width != value )
                 {
-                    var change = new Size( value - Width, 0 );
+                    Size change = new Size( value - Width, 0 );
                     if ( IsResizing ) //TODO: ez kell?
                         mouseDownLocation.X += change.Width;
                     size.Width = value;
@@ -173,7 +173,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
                 if ( size.Height != value )
                 {
-                    var change = new Size( 0, value - Height );
+                    Size change = new Size( 0, value - Height );
                     if ( IsResizing ) //TODO: ez kell?
                         mouseDownLocation.Y += change.Height;
                     size.Height = value;
@@ -245,7 +245,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
             if ( printing || !IsSelected )
             {
-                var borderSize = ( float ) GetBorderWidth( style ) / 2;
+                float borderSize = ( float ) GetBorderWidth( style ) / 2;
                 area.Inflate( borderSize, borderSize );
 
                 if ( style.ShadowOffset.Width > borderSize )
@@ -257,9 +257,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             }
             else
             {
-                var borderSize = ( float ) GetBorderWidth( style ) / 2;
-                var selectionSize = SelectionMargin / zoom;
-                var inflation = Math.Max( borderSize, selectionSize );
+                float borderSize = ( float ) GetBorderWidth( style ) / 2;
+                float selectionSize = SelectionMargin / zoom;
+                float inflation = Math.Max( borderSize, selectionSize );
 
                 area.Inflate( inflation, inflation );
                 return area;
@@ -275,17 +275,17 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             if ( e.Zoom <= UndreadableZoom )
                 return ResizeMode.None;
 
-            var mode = ResizeMode.None;
-            var squareSize = SelectionMargin / e.Zoom;
-            var horCenter = HorizontalCenter;
-            var verCenter = VerticalCenter;
+            ResizeMode mode = ResizeMode.None;
+            float squareSize = SelectionMargin / e.Zoom;
+            int horCenter = HorizontalCenter;
+            int verCenter = VerticalCenter;
 
-            var left = e.X >= Left - squareSize && e.X < Left;
-            var top = e.Y >= Top - squareSize && e.Y < Top;
-            var right = e.X > Right && e.X < Right + squareSize;
-            var bottom = e.Y > Bottom && e.Y < Bottom + squareSize;
-            var center = e.X >= horCenter - squareSize / 2 && e.X < horCenter + squareSize / 2;
-            var middle = e.Y >= verCenter - squareSize / 2 && e.Y < verCenter + squareSize / 2;
+            bool left = ( e.X >= Left - squareSize ) && ( e.X < Left );
+            bool top = ( e.Y >= Top - squareSize ) && ( e.Y < Top );
+            bool right = ( e.X > Right ) && ( e.X < Right + squareSize );
+            bool bottom = ( e.Y > Bottom ) && ( e.Y < Bottom + squareSize );
+            bool center = ( e.X >= horCenter - squareSize / 2 ) && ( e.X < horCenter + squareSize / 2 );
+            bool middle = ( e.Y >= verCenter - squareSize / 2 ) && ( e.Y < verCenter + squareSize / 2 );
 
             if ( right && ( top || middle || bottom ) )
                 mode |= ResizeMode.Right;
@@ -298,7 +298,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         public Cursor GetCursor( AbsoluteMouseEventArgs e )
         {
-            var mode = GetResizeMode( e );
+            ResizeMode mode = GetResizeMode( e );
 
             switch ( mode )
             {
@@ -332,12 +332,11 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         protected internal override void DrawSelectionLines( Graphics g, float zoom, Point offset )
         {
             if ( IsSelected )
-            {
                 if ( zoom > UndreadableZoom )
                 {
                     // Draw selection border and resizing squares
-                    var frame = TransformRelativeToAbsolute( BorderRectangle, zoom, offset );
-                    var borderOffset = SelectionMargin / 2;
+                    Rectangle frame = TransformRelativeToAbsolute( BorderRectangle, zoom, offset );
+                    int borderOffset = SelectionMargin / 2;
                     frame.Inflate( borderOffset, borderOffset );
 
                     g.DrawRectangle( Diagram.SelectionPen, frame );
@@ -347,32 +346,27 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
                 {
                     // Draw only selection border
                     const int BorderOffset = 2;
-                    var frame = TransformRelativeToAbsolute( BorderRectangle, zoom, offset );
+                    Rectangle frame = TransformRelativeToAbsolute( BorderRectangle, zoom, offset );
                     frame.Inflate( BorderOffset, BorderOffset );
 
                     g.DrawRectangle( Diagram.SelectionPen, frame );
                 }
-            }
         }
 
         private void DrawResizingSquares( Graphics g, Rectangle frame )
         {
-            var squareSize = SelectionMargin - 4;
+            int squareSize = SelectionMargin - 4;
 
-            for ( var row = 0; row < 3; row++ )
-            {
-                for ( var column = 0; column < 3; column++ )
-                {
-                    if ( row != 1 || column != 1 ) // It's not the center point
+            for ( int row = 0; row < 3; row++ )
+                for ( int column = 0; column < 3; column++ )
+                    if ( ( row != 1 ) || ( column != 1 ) ) // It's not the center point
                     {
-                        var x = frame.X + frame.Width * column / 2 - squareSize / 2;
-                        var y = frame.Y + frame.Height * row / 2 - squareSize / 2;
+                        int x = frame.X + frame.Width * column / 2 - squareSize / 2;
+                        int y = frame.Y + frame.Height * row / 2 - squareSize / 2;
 
                         g.FillRectangle( Brushes.White, x, y, squareSize, squareSize );
                         g.DrawRectangle( selectionSquarePen, x, y, squareSize, squareSize );
                     }
-                }
-            }
         }
 
         protected internal sealed override bool TrySelect( RectangleF frame )
@@ -394,7 +388,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         {
             if ( IsSelected )
             {
-                var newPosition = BorderRectangle;
+                Rectangle newPosition = BorderRectangle;
                 newPosition.Offset( offset.Width, offset.Height );
 
                 if ( newPosition.Left < padding )
@@ -407,7 +401,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         protected internal bool Contains( PointF point )
         {
-            return point.X >= Left && point.X <= Right && point.Y >= Top && point.Y <= Bottom;
+            return ( point.X >= Left ) && ( point.X <= Right ) && ( point.Y >= Top ) && ( point.Y <= Bottom );
         }
 
         internal void AutoWidth( )
@@ -440,7 +434,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         {
             if ( CloneEntity( diagram ) )
             {
-                var shape = diagram.ShapeList.FirstValue;
+                Shape shape = diagram.ShapeList.FirstValue;
                 shape.Location = Location + offset;
                 shape.Size = Size;
                 shape.IsSelected = true;
@@ -465,12 +459,12 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         protected virtual void OnSerializing( SerializeEventArgs e )
         {
-            var locationNode = e.Node.OwnerDocument.CreateElement( "Location" );
+            XmlElement locationNode = e.Node.OwnerDocument.CreateElement( "Location" );
             locationNode.SetAttribute( "left", Left.ToString( ) );
             locationNode.SetAttribute( "top", Top.ToString( ) );
             e.Node.AppendChild( locationNode );
 
-            var sizeNode = e.Node.OwnerDocument.CreateElement( "Size" );
+            XmlElement sizeNode = e.Node.OwnerDocument.CreateElement( "Size" );
             sizeNode.SetAttribute( "width", Width.ToString( ) );
             sizeNode.SetAttribute( "height", Height.ToString( ) );
             e.Node.AppendChild( sizeNode );
@@ -478,7 +472,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         protected virtual void OnDeserializing( SerializeEventArgs e )
         {
-            var locationNode = e.Node[ "Location" ];
+            XmlElement locationNode = e.Node[ "Location" ];
             if ( locationNode != null )
             {
                 int left, top;
@@ -488,7 +482,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
                 Location = new Point( left, top );
             }
 
-            var sizeNode = e.Node[ "Size" ];
+            XmlElement sizeNode = e.Node[ "Size" ];
             if ( sizeNode != null )
             {
                 int width, height;
@@ -503,10 +497,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         {
             if ( !e.Handled )
             {
-                var pressed = Contains( e.Location );
+                bool pressed = Contains( e.Location );
 
                 if ( e.Button == MouseButtons.Left )
-                    pressed |= IsSelected && GetResizeMode( e ) != ResizeMode.None;
+                    pressed |= IsSelected && ( GetResizeMode( e ) != ResizeMode.None );
 
                 if ( pressed )
                 {
@@ -522,7 +516,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         {
             if ( !e.Handled )
             {
-                var contains = IsResizing;
+                bool contains = IsResizing;
 
                 if ( !IsResizing )
                 {
@@ -533,7 +527,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
                     else if ( !Contains( e.Location ) && !mouseLeaved )
                         OnMouseLeave( EventArgs.Empty );
 
-                    contains |= IsSelected && GetResizeMode( e ) != ResizeMode.None;
+                    contains |= IsSelected && ( GetResizeMode( e ) != ResizeMode.None );
                 }
 
                 if ( IsMousePressed || contains )
@@ -562,7 +556,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         {
             if ( !e.Handled )
             {
-                var upped = IsMousePressed;
+                bool upped = IsMousePressed;
 
                 if ( upped )
                 {
@@ -576,10 +570,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         {
             if ( !e.Handled )
             {
-                var doubleClicked = Contains( e.Location );
+                bool doubleClicked = Contains( e.Location );
 
                 if ( e.Button == MouseButtons.Left )
-                    doubleClicked |= IsSelected && GetResizeMode( e ) != ResizeMode.None;
+                    doubleClicked |= IsSelected && ( GetResizeMode( e ) != ResizeMode.None );
 
                 if ( doubleClicked )
                 {
@@ -591,20 +585,20 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         private void PerformResize( PointF mouseLocation )
         {
-            var change = Size.Empty;
+            Size change = Size.Empty;
 
             if ( ( resizeMode & ResizeMode.Right ) != 0 )
             {
-                var offset = ( int ) ( mouseLocation.X - mouseDownLocation.X );
+                int offset = ( int ) ( mouseLocation.X - mouseDownLocation.X );
                 change.Width += offset;
             }
             if ( ( resizeMode & ResizeMode.Bottom ) != 0 )
             {
-                var offset = ( int ) ( mouseLocation.Y - mouseDownLocation.Y );
+                int offset = ( int ) ( mouseLocation.Y - mouseDownLocation.Y );
                 change.Height += offset;
             }
 
-            var e = new ResizeEventArgs( change );
+            ResizeEventArgs e = new ResizeEventArgs( change );
             OnResizing( e );
             Size += e.Change;
         }
@@ -635,9 +629,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             {
                 PerformResize( e.Location );
             }
-            else if ( IsMousePressed && e.Button == MouseButtons.Left )
+            else if ( IsMousePressed && ( e.Button == MouseButtons.Left ) )
             {
-                var offset = new Size( ( int ) ( e.X - mouseDownLocation.X ), ( int ) ( e.Y - mouseDownLocation.Y ) );
+                Size offset = new Size( ( int ) ( e.X - mouseDownLocation.X ), ( int ) ( e.Y - mouseDownLocation.Y ) );
 
                 OnDragging( new MoveEventArgs( offset ) );
             }
@@ -652,7 +646,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         protected override void OnDoubleClick( AbsoluteMouseEventArgs e )
         {
             base.OnDoubleClick( e );
-            var resizeMode = GetResizeMode( e );
+            ResizeMode resizeMode = GetResizeMode( e );
 
             if ( ( resizeMode & ResizeMode.Right ) != 0 )
                 AutoWidth( );

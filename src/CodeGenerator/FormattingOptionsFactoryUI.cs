@@ -28,7 +28,7 @@ namespace NClass.CodeGenerator
         /// </summary>
         public static CSharpFormattingOptionsUI CreateSharpDevelop( )
         {
-            var baseOptions = CreateKRStyle( );
+            CSharpFormattingOptionsUI baseOptions = CreateKRStyle( );
             return baseOptions;
         }
 
@@ -46,7 +46,7 @@ namespace NClass.CodeGenerator
         /// </summary>
         public static CSharpFormattingOptionsUI CreateAllman( )
         {
-            var baseOptions = CreateKRStyle( );
+            CSharpFormattingOptionsUI baseOptions = CreateKRStyle( );
             baseOptions.AnonymousMethodBraceStyle = BraceStyle.NextLine;
             baseOptions.PropertyBraceStyle = BraceStyle.NextLine;
             baseOptions.PropertyGetBraceStyle = BraceStyle.NextLine;
@@ -76,7 +76,7 @@ namespace NClass.CodeGenerator
         /// </summary>
         public static CSharpFormattingOptionsUI CreateWhitesmiths( )
         {
-            var baseOptions = CreateKRStyle( );
+            CSharpFormattingOptionsUI baseOptions = CreateKRStyle( );
 
             baseOptions.NamespaceBraceStyle = BraceStyle.NextLineShifted;
             baseOptions.ClassBraceStyle = BraceStyle.NextLineShifted;
@@ -112,7 +112,7 @@ namespace NClass.CodeGenerator
         /// </summary>
         public static CSharpFormattingOptionsUI CreateGNU( )
         {
-            var baseOptions = CreateAllman( );
+            CSharpFormattingOptionsUI baseOptions = CreateAllman( );
             baseOptions.StatementBraceStyle = BraceStyle.NextLineShifted2;
             return baseOptions;
         }

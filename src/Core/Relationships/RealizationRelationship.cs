@@ -51,7 +51,7 @@ namespace NClass.Core
 
         public RealizationRelationship Clone( TypeBase implementer, InterfaceType baseType )
         {
-            var realization = new RealizationRelationship( implementer, baseType );
+            RealizationRelationship realization = new RealizationRelationship( implementer, baseType );
             realization.CopyFrom( this );
             return realization;
         }

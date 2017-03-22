@@ -22,7 +22,7 @@ using System.Collections.Generic;
 namespace NReflect.NRAttributes
 {
     /// <summary>
-    /// Represents an attribute which is reflected by NReflect.
+    ///     Represents an attribute which is reflected by NReflect.
     /// </summary>
     [Serializable]
     public class NRAttribute : IVisitable
@@ -33,7 +33,7 @@ namespace NReflect.NRAttributes
         #region === Con- / Destruction
 
         /// <summary>
-        /// Initializes a new instance of <see cref="NRAttribute"/>.
+        ///     Initializes a new instance of <see cref="NRAttribute" />.
         /// </summary>
         public NRAttribute( )
         {
@@ -44,45 +44,45 @@ namespace NReflect.NRAttributes
         #endregion
 
         // ========================================================================
-        // Properties
-
-        #region === Properties
-
-        /// <summary>
-        /// Gets or sets the name of the attribute.
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets the namespace of the attribute.
-        /// </summary>
-        public string Namespace { get; set; }
-
-        /// <summary>
-        /// Gets a list containing all positional values used to create the attribute.
-        /// </summary>
-        public List< NRAttributeValue > Values { get; private set; }
-
-        /// <summary>
-        /// Gets a list containing all named values used to create the attribute.
-        /// </summary>
-        public Dictionary< string, NRAttributeValue > NamedValues { get; private set; }
-
-        #endregion
-
-        // ========================================================================
         // Methods
 
         #region === Methods
 
         /// <summary>
-        /// Accept an <see cref="IVisitor"/> instance on the implementing class and all its children.
+        ///     Accept an <see cref="IVisitor" /> instance on the implementing class and all its children.
         /// </summary>
-        /// <param name="visitor">The <see cref="IVisitor"/> instance to accept.</param>
+        /// <param name="visitor">The <see cref="IVisitor" /> instance to accept.</param>
         public void Accept( IVisitor visitor )
         {
             visitor.Visit( this );
         }
+
+        #endregion
+
+        // ========================================================================
+        // Properties
+
+        #region === Properties
+
+        /// <summary>
+        ///     Gets or sets the name of the attribute.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the namespace of the attribute.
+        /// </summary>
+        public string Namespace { get; set; }
+
+        /// <summary>
+        ///     Gets a list containing all positional values used to create the attribute.
+        /// </summary>
+        public List< NRAttributeValue > Values { get; private set; }
+
+        /// <summary>
+        ///     Gets a list containing all named values used to create the attribute.
+        /// </summary>
+        public Dictionary< string, NRAttributeValue > NamedValues { get; private set; }
 
         #endregion
     }

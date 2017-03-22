@@ -15,6 +15,7 @@
 
 using System;
 using System.Windows.Forms;
+using NClass.DiagramEditor.ClassDiagram.Connections;
 using NClass.Translations;
 
 namespace NClass.DiagramEditor.ClassDiagram.ContextMenus
@@ -52,10 +53,8 @@ namespace NClass.DiagramEditor.ClassDiagram.ContextMenus
         private void mnuAutoRouting_Click( object sender, EventArgs e )
         {
             if ( Diagram != null )
-            {
-                foreach ( var connection in Diagram.GetSelectedConnections( ) )
+                foreach ( Connection connection in Diagram.GetSelectedConnections( ) )
                     connection.AutoRoute( );
-            }
         }
     }
 }

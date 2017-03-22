@@ -245,10 +245,8 @@ namespace PDFExport
         /// <param name="region">A region which is used for clipping.</param>
         private void ApplyClip( Region region )
         {
-            foreach ( var rect in region.GetRegionScans( new Matrix( ) ) )
-            {
+            foreach ( RectangleF rect in region.GetRegionScans( new Matrix( ) ) )
                 graphics.IntersectClip( rect );
-            }
         }
 
         /// <summary>
@@ -339,24 +337,24 @@ namespace PDFExport
 
         public void DrawString( string s, Font font, Brush brush, RectangleF layoutRectangle, StringFormat format )
         {
-            var xFormat = StringFormatToXStringFormat( format );
-            var xFont = FontToXFont( font );
-            var xBrush = BrushToXBrush( brush );
+            XStringFormat xFormat = StringFormatToXStringFormat( format );
+            XFont xFont = FontToXFont( font );
+            XBrush xBrush = BrushToXBrush( brush );
             if ( format.FormatFlags == StringFormatFlags.NoWrap )
             {
                 //Single line
-                var line = TrimString( s, layoutRectangle.Width, xFont, format.Trimming );
+                string line = TrimString( s, layoutRectangle.Width, xFont, format.Trimming );
                 graphics.DrawString( line, xFont, xBrush, layoutRectangle, xFormat );
             }
             else
             {
                 //Multiline
-                var lineHeight = xFont.Height;
-                var lines = SetText( s, layoutRectangle.Width, ( int ) ( layoutRectangle.Height / lineHeight ), xFont );
+                int lineHeight = xFont.Height;
+                List< string > lines = SetText( s, layoutRectangle.Width, ( int ) ( layoutRectangle.Height / lineHeight ), xFont );
 
-                for ( var i = 0; i < lines.Count; i++ )
+                for ( int i = 0; i < lines.Count; i++ )
                 {
-                    var rect = new RectangleF( layoutRectangle.X, layoutRectangle.Y + i * lineHeight, layoutRectangle.Width, lineHeight );
+                    RectangleF rect = new RectangleF( layoutRectangle.X, layoutRectangle.Y + i * lineHeight, layoutRectangle.Width, lineHeight );
                     graphics.DrawString( lines[ i ], xFont, xBrush, rect, xFormat );
                 }
             }
@@ -372,7 +370,7 @@ namespace PDFExport
             //What, if the ScaleImage isn't the pixel to dot scaling? That will fail.
             graphics.Save( );
             graphics.ScaleTransform( ScaleImage, ScaleImage );
-            var point2 = new PointF( point.X / ScaleImage, point.Y / ScaleImage );
+            PointF point2 = new PointF( point.X / ScaleImage, point.Y / ScaleImage );
             graphics.DrawImage( ImageToXImage( image ), point2 );
             graphics.Restore( );
         }
@@ -523,8 +521,8 @@ namespace PDFExport
                 //Create a "line" (start and end point) through the rectangle at the half of
                 //the heigth. The two points are p1 and p2. Transform these points with the
                 //matrix. The transformed points are located on the border of the rectangle.
-                var p1 = new PointF( lgBrush.Rectangle.Left, lgBrush.Rectangle.Top + lgBrush.Rectangle.Height / 2.0f );
-                var p2 = new PointF( lgBrush.Rectangle.Right, lgBrush.Rectangle.Top + lgBrush.Rectangle.Height / 2.0f );
+                PointF p1 = new PointF( lgBrush.Rectangle.Left, lgBrush.Rectangle.Top + lgBrush.Rectangle.Height / 2.0f );
+                PointF p2 = new PointF( lgBrush.Rectangle.Right, lgBrush.Rectangle.Top + lgBrush.Rectangle.Height / 2.0f );
                 PointF[] points = {p1, p2};
                 lgBrush.Transform.TransformPoints( points );
                 p1 = points[ 0 ];
@@ -563,9 +561,7 @@ namespace PDFExport
         private static XFontStyle FontStyleToXFontStyle( FontStyle fontStyle )
         {
             if ( fontStyle == ( FontStyle.Bold | FontStyle.Italic ) )
-            {
                 return XFontStyle.BoldItalic;
-            }
             switch ( fontStyle )
             {
                 case FontStyle.Regular:
@@ -594,7 +590,7 @@ namespace PDFExport
         private static XImage ImageToXImage( Image image )
         {
             Image image2 = new Bitmap( image.Width, image.Height );
-            var gfx = Graphics.FromImage( image2 );
+            Graphics gfx = Graphics.FromImage( image2 );
             gfx.FillRectangle( new SolidBrush( Color.White ), 0, 0, image2.Width, image2.Height );
             gfx.DrawImageUnscaled( image, 0, 0 );
 
@@ -626,12 +622,10 @@ namespace PDFExport
         /// <returns>The converted PDF-XPen.</returns>
         private static XPen PenToXPen( Pen pen )
         {
-            var xPen = new XPen( pen.Color, pen.Width ) {DashOffset = pen.DashOffset, DashStyle = DashStyleToXDashStyle( pen.DashStyle ), LineCap = LineCapToXLineCap( pen.StartCap ), LineJoin = LineJoinToXLineJoin( pen.LineJoin ), MiterLimit = pen.MiterLimit};
+            XPen xPen = new XPen( pen.Color, pen.Width ) {DashOffset = pen.DashOffset, DashStyle = DashStyleToXDashStyle( pen.DashStyle ), LineCap = LineCapToXLineCap( pen.StartCap ), LineJoin = LineJoinToXLineJoin( pen.LineJoin ), MiterLimit = pen.MiterLimit};
 
             if ( pen.DashStyle == DashStyle.Custom )
-            {
                 xPen.DashPattern = FloatArrayToDoubleArray( pen.DashPattern );
-            }
 
             return xPen;
         }
@@ -643,11 +637,9 @@ namespace PDFExport
         /// <returns>The converted array of doubles.</returns>
         private static double[] FloatArrayToDoubleArray( float[] floats )
         {
-            var doubles = new double[floats.Length];
-            for ( var i = 0; i < floats.Length; i++ )
-            {
+            double[] doubles = new double[floats.Length];
+            for ( int i = 0; i < floats.Length; i++ )
                 doubles[ i ] = floats[ i ];
-            }
 
             return doubles;
         }
@@ -819,15 +811,15 @@ namespace PDFExport
         /// <returns>A list of strings. One item per line.</returns>
         private List< string > SetText( string text, float width, int maxLines, XFont xFont )
         {
-            var tokens = TokenizeString( text, "\r\n|\n\r|\n|\r|\t| " );
-            var lines = new List< string >( );
-            var line = new StringBuilder( );
-            var wordCount = 0;
-            for ( var i = 0; i < tokens.Count; i += 2 )
+            List< string > tokens = TokenizeString( text, "\r\n|\n\r|\n|\r|\t| " );
+            List< string > lines = new List< string >( );
+            StringBuilder line = new StringBuilder( );
+            int wordCount = 0;
+            for ( int i = 0; i < tokens.Count; i += 2 )
             {
                 line.Append( tokens[ i ] );
                 wordCount++;
-                var lineWidth = graphics.MeasureString( line.ToString( ), xFont ).Width;
+                double lineWidth = graphics.MeasureString( line.ToString( ), xFont ).Width;
                 if ( lineWidth > width )
                 {
                     //too long => wrap
@@ -841,7 +833,7 @@ namespace PDFExport
                     if ( wordCount == 1 )
                     {
                         //single word too long => while too long: new line
-                        var charsSet = 0;
+                        int charsSet = 0;
                         while ( lineWidth > width )
                         {
                             if ( lines.Count == maxLines - 1 )
@@ -855,13 +847,9 @@ namespace PDFExport
                             {
                                 line.Length--;
                                 lineWidth = graphics.MeasureString( line.ToString( ), xFont ).Width;
-                            } while ( lineWidth > width && line.Length > 0 );
+                            } while ( ( lineWidth > width ) && ( line.Length > 0 ) );
                             if ( line.Length == 0 )
-                            {
-                                //This can happen if the width is to small for one singel char. We set the char
-                                //in this case even if it doesn't realy fit.
                                 line.Append( tokens[ i ][ charsSet ] );
-                            }
                             lines.Add( line.ToString( ) );
                             charsSet += line.Length;
                             //The next line starts with the rest of the word
@@ -880,11 +868,10 @@ namespace PDFExport
                     }
                 }
                 if ( lineWidth <= width )
-                {
                     if ( i + 1 < tokens.Count )
                     {
-                        var token = tokens[ i + 1 ];
-                        var regex = new Regex( "\r\n|\n\r|\n|\r" );
+                        string token = tokens[ i + 1 ];
+                        Regex regex = new Regex( "\r\n|\n\r|\n|\r" );
                         if ( regex.IsMatch( token ) )
                         {
                             // A new line
@@ -904,7 +891,6 @@ namespace PDFExport
                             line.Append( token );
                         }
                     }
-                }
             }
             lines.Add( line.ToString( ) );
             return lines;
@@ -931,10 +917,10 @@ namespace PDFExport
         /// <returns>A list of tokens.</returns>
         private static List< string > TokenizeString( string text, string separator )
         {
-            var regex = new Regex( separator );
-            var matches = regex.Matches( text );
-            var result = new List< string >( );
-            var pos = 0;
+            Regex regex = new Regex( separator );
+            MatchCollection matches = regex.Matches( text );
+            List< string > result = new List< string >( );
+            int pos = 0;
             foreach ( Match match in matches )
             {
                 result.Add( text.Substring( pos, match.Index - pos ) );
@@ -959,20 +945,18 @@ namespace PDFExport
         /// <returns>The (possible) trimmed string.</returns>
         private string TrimString( string s, float width, XFont font, StringTrimming stringTrimming )
         {
-            if ( graphics.MeasureString( s, font ).Width <= width || stringTrimming == StringTrimming.None )
-            {
+            if ( ( graphics.MeasureString( s, font ).Width <= width ) || ( stringTrimming == StringTrimming.None ) )
                 return s;
-            }
 
-            var ellipsis = stringTrimming == StringTrimming.EllipsisCharacter || stringTrimming == StringTrimming.EllipsisWord || stringTrimming == StringTrimming.EllipsisPath;
-            var word = stringTrimming == StringTrimming.Word || stringTrimming == StringTrimming.EllipsisWord;
+            bool ellipsis = ( stringTrimming == StringTrimming.EllipsisCharacter ) || ( stringTrimming == StringTrimming.EllipsisWord ) || ( stringTrimming == StringTrimming.EllipsisPath );
+            bool word = ( stringTrimming == StringTrimming.Word ) || ( stringTrimming == StringTrimming.EllipsisWord );
 
-            var result = ellipsis ? s + "..." : s;
+            string result = ellipsis ? s + "..." : s;
             do
             {
                 if ( word )
                 {
-                    var pos = result.LastIndexOf( ' ' );
+                    int pos = result.LastIndexOf( ' ' );
                     result = pos <= 0 ? "" : result.Substring( 0, pos );
                 }
                 else
@@ -980,7 +964,7 @@ namespace PDFExport
                     result = result.Substring( 0, ellipsis ? result.Length - 4 : result.Length - 1 );
                 }
                 result = ellipsis ? result + "..." : result;
-            } while ( graphics.MeasureString( result, font ).Width > width || s.Length <= 0 );
+            } while ( ( graphics.MeasureString( result, font ).Width > width ) || ( s.Length <= 0 ) );
 
             return result;
         }

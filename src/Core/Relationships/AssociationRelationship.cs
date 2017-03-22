@@ -24,10 +24,10 @@ namespace NClass.Core
     {
         private AssociationType associationType = AssociationType.Association;
         private Direction direction = Direction.Unidirectional;
-        private string startMultiplicity;
         private string endMultiplicity;
-        private string startRole;
         private string endRole;
+        private string startMultiplicity;
+        private string startRole;
 
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="first" /> or <paramref name="second" /> is null.
@@ -162,7 +162,7 @@ namespace NClass.Core
         public void Reverse( )
         {
             //TODO: ne az õsosztályon kereszül érje el, egyszerûbb lenne saját taggal
-            var first = First;
+            IEntity first = First;
             First = Second;
             Second = first;
 
@@ -174,7 +174,7 @@ namespace NClass.Core
         {
             base.CopyFrom( relationship );
 
-            var association = ( AssociationRelationship ) relationship;
+            AssociationRelationship association = ( AssociationRelationship ) relationship;
             associationType = association.associationType;
             direction = association.direction;
             startRole = association.startRole;
@@ -185,7 +185,7 @@ namespace NClass.Core
 
         public AssociationRelationship Clone( TypeBase first, TypeBase second )
         {
-            var association = new AssociationRelationship( first, second );
+            AssociationRelationship association = new AssociationRelationship( first, second );
             association.CopyFrom( this );
             return association;
         }
@@ -197,35 +197,35 @@ namespace NClass.Core
         {
             base.Serialize( node );
 
-            var directionNode = node.OwnerDocument.CreateElement( "Direction" );
+            XmlElement directionNode = node.OwnerDocument.CreateElement( "Direction" );
             directionNode.InnerText = Direction.ToString( );
             node.AppendChild( directionNode );
 
-            var aggregationNode = node.OwnerDocument.CreateElement( "AssociationType" );
+            XmlElement aggregationNode = node.OwnerDocument.CreateElement( "AssociationType" );
             aggregationNode.InnerText = AssociationType.ToString( );
             node.AppendChild( aggregationNode );
 
             if ( StartRole != null )
             {
-                var roleNode = node.OwnerDocument.CreateElement( "StartRole" );
+                XmlElement roleNode = node.OwnerDocument.CreateElement( "StartRole" );
                 roleNode.InnerText = StartRole;
                 node.AppendChild( roleNode );
             }
             if ( EndRole != null )
             {
-                var roleNode = node.OwnerDocument.CreateElement( "EndRole" );
+                XmlElement roleNode = node.OwnerDocument.CreateElement( "EndRole" );
                 roleNode.InnerText = EndRole;
                 node.AppendChild( roleNode );
             }
             if ( StartMultiplicity != null )
             {
-                var multiplicityNode = node.OwnerDocument.CreateElement( "StartMultiplicity" );
+                XmlElement multiplicityNode = node.OwnerDocument.CreateElement( "StartMultiplicity" );
                 multiplicityNode.InnerText = StartMultiplicity;
                 node.AppendChild( multiplicityNode );
             }
             if ( EndMultiplicity != null )
             {
-                var multiplicityNode = node.OwnerDocument.CreateElement( "EndMultiplicity" );
+                XmlElement multiplicityNode = node.OwnerDocument.CreateElement( "EndMultiplicity" );
                 multiplicityNode.InnerText = EndMultiplicity;
                 node.AppendChild( multiplicityNode );
             }
@@ -238,41 +238,36 @@ namespace NClass.Core
         {
             base.Deserialize( node );
 
-            var child = node[ "Direction" ];
+            XmlElement child = node[ "Direction" ];
 
             RaiseChangedEvent = false;
             if ( child != null )
-            {
-                // Old file format
-                if ( child.InnerText == "Unidirectional" || child.InnerText == "SourceDestination" )
+                if ( ( child.InnerText == "Unidirectional" ) || ( child.InnerText == "SourceDestination" ) )
                     Direction = Direction.Unidirectional;
                 else
                     Direction = Direction.Bidirectional;
-            }
 
             try
             {
                 // Old file format
                 {
                     child = node[ "IsAggregation" ];
-                    if ( child != null && bool.Parse( child.InnerText ) )
+                    if ( ( child != null ) && bool.Parse( child.InnerText ) )
                         associationType = AssociationType.Aggregation;
 
                     child = node[ "IsComposition" ];
-                    if ( child != null && bool.Parse( child.InnerText ) )
+                    if ( ( child != null ) && bool.Parse( child.InnerText ) )
                         associationType = AssociationType.Composition;
                 }
 
                 child = node[ "AssociationType" ];
                 if ( child != null )
-                {
                     if ( child.InnerText == "Aggregation" )
                         associationType = AssociationType.Aggregation;
                     else if ( child.InnerText == "Composition" )
                         associationType = AssociationType.Composition;
                     else
                         associationType = AssociationType.Association;
-                }
 
                 child = node[ "StartRole" ];
                 if ( child != null )
@@ -305,7 +300,7 @@ namespace NClass.Core
 
         public override string ToString( )
         {
-            var builder = new StringBuilder( 50 );
+            StringBuilder builder = new StringBuilder( 50 );
 
             if ( IsAggregation )
                 builder.Append( Strings.Aggregation );

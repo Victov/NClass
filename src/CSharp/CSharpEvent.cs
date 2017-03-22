@@ -57,10 +57,9 @@ namespace NClass.CSharp
             get { return base.Name; }
             set
             {
-                var match = nameRegex.Match( value );
+                Match match = nameRegex.Match( value );
 
                 if ( match.Success )
-                {
                     try
                     {
                         RaiseChangedEvent = false;
@@ -71,11 +70,8 @@ namespace NClass.CSharp
                     {
                         RaiseChangedEvent = true;
                     }
-                }
                 else
-                {
                     throw new BadSyntaxException( Strings.ErrorInvalidName );
-                }
             }
         }
 
@@ -92,14 +88,10 @@ namespace NClass.CSharp
             get { return base.AccessModifier; }
             set
             {
-                if ( value != AccessModifier.Default && IsExplicitImplementation )
-                {
+                if ( ( value != AccessModifier.Default ) && IsExplicitImplementation )
                     throw new BadSyntaxException( Strings.ErrorExplicitImplementationAccess );
-                }
-                if ( value != AccessModifier.Default && Parent is InterfaceType )
-                {
+                if ( ( value != AccessModifier.Default ) && Parent is InterfaceType )
                     throw new BadSyntaxException( Strings.ErrorInterfaceMemberAccess );
-                }
 
                 base.AccessModifier = value;
             }
@@ -116,7 +108,6 @@ namespace NClass.CSharp
             private set
             {
                 if ( isExplicitImplementation != value )
-                {
                     try
                     {
                         RaiseChangedEvent = false;
@@ -130,7 +121,6 @@ namespace NClass.CSharp
                     {
                         RaiseChangedEvent = true;
                     }
-                }
             }
         }
 
@@ -149,7 +139,7 @@ namespace NClass.CSharp
         /// </exception>
         public override void InitFromString( string declaration )
         {
-            var match = eventRegex.Match( declaration );
+            Match match = eventRegex.Match( declaration );
             RaiseChangedEvent = false;
 
             try
@@ -157,11 +147,11 @@ namespace NClass.CSharp
                 if ( match.Success )
                 {
                     ClearModifiers( );
-                    var nameGroup = match.Groups[ "name" ];
-                    var typeGroup = match.Groups[ "type" ];
-                    var accessGroup = match.Groups[ "access" ];
-                    var modifierGroup = match.Groups[ "modifier" ];
-                    var nameDotGroup = match.Groups[ "namedot" ];
+                    Group nameGroup = match.Groups[ "name" ];
+                    Group typeGroup = match.Groups[ "type" ];
+                    Group accessGroup = match.Groups[ "access" ];
+                    Group modifierGroup = match.Groups[ "modifier" ];
+                    Group nameDotGroup = match.Groups[ "namedot" ];
 
                     if ( CSharpLanguage.Instance.IsForbiddenName( nameGroup.Value ) )
                         throw new BadSyntaxException( Strings.ErrorInvalidName );
@@ -202,13 +192,13 @@ namespace NClass.CSharp
 
         public override string GetDeclaration( )
         {
-            var needsSemicolon = !IsExplicitImplementation;
+            bool needsSemicolon = !IsExplicitImplementation;
             return GetDeclarationLine( needsSemicolon );
         }
 
         public string GetDeclarationLine( bool withSemicolon )
         {
-            var builder = new StringBuilder( 50 );
+            StringBuilder builder = new StringBuilder( 50 );
 
             if ( AccessModifier != AccessModifier.Default )
             {
@@ -239,7 +229,7 @@ namespace NClass.CSharp
 
         public override Operation Clone( CompositeType newParent )
         {
-            var newEvent = new CSharpEvent( newParent );
+            CSharpEvent newEvent = new CSharpEvent( newParent );
             newEvent.CopyFrom( this );
             return newEvent;
         }

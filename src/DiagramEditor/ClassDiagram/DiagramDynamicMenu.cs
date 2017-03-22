@@ -24,9 +24,8 @@ namespace NClass.DiagramEditor.ClassDiagram
 {
     public sealed partial class DiagramDynamicMenu : DynamicMenu
     {
-        private Diagram diagram;
-
         private readonly ToolStripMenuItem[] menuItems;
+        private Diagram diagram;
 
         private DiagramDynamicMenu( )
         {
@@ -51,9 +50,7 @@ namespace NClass.DiagramEditor.ClassDiagram
         public override void SetReference( IDocument document )
         {
             if ( diagram != null )
-            {
                 diagram.SelectionChanged -= diagram_SelectionChanged;
-            }
 
             if ( document == null )
             {
@@ -74,7 +71,7 @@ namespace NClass.DiagramEditor.ClassDiagram
 
         private void diagram_SelectionChanged( object sender, EventArgs e )
         {
-            toolDelete.Enabled = diagram != null && diagram.HasSelectedElement;
+            toolDelete.Enabled = ( diagram != null ) && diagram.HasSelectedElement;
         }
 
         private void UpdateTexts( )
@@ -145,7 +142,7 @@ namespace NClass.DiagramEditor.ClassDiagram
 
         private void mnuDiagram_DropDownOpening( object sender, EventArgs e )
         {
-            var hasContent = diagram != null && !diagram.IsEmpty;
+            bool hasContent = ( diagram != null ) && !diagram.IsEmpty;
             mnuGenerateCode.Enabled = hasContent;
             mnuSaveAsImage.Enabled = hasContent;
         }
@@ -272,9 +269,8 @@ namespace NClass.DiagramEditor.ClassDiagram
 
         private void mnuGenerateCode_Click( object sender, EventArgs e )
         {
-            if ( diagram != null && diagram.Project != null )
-            {
-                using ( var dialog = new Dialog( ) )
+            if ( ( diagram != null ) && ( diagram.Project != null ) )
+                using ( Dialog dialog = new Dialog( ) )
                 {
                     try
                     {
@@ -285,19 +281,18 @@ namespace NClass.DiagramEditor.ClassDiagram
                         MessageBox.Show( ex.Message, Strings.UnknownError, MessageBoxButtons.OK, MessageBoxIcon.Error );
                     }
                 }
-            }
         }
 
         private void mnuSaveAsImage_Click( object sender, EventArgs e )
         {
-            if ( diagram != null && !diagram.IsEmpty )
+            if ( ( diagram != null ) && !diagram.IsEmpty )
                 diagram.SaveAsImage( );
         }
 
         private void mnuFormat_DropDownOpening( object sender, EventArgs e )
         {
-            var shapeSelected = diagram != null && diagram.SelectedShapeCount >= 1;
-            var multiselection = diagram != null && diagram.SelectedShapeCount >= 2;
+            bool shapeSelected = ( diagram != null ) && ( diagram.SelectedShapeCount >= 1 );
+            bool multiselection = ( diagram != null ) && ( diagram.SelectedShapeCount >= 2 );
 
             mnuAutoWidth.Enabled = shapeSelected;
             mnuAutoHeight.Enabled = shapeSelected;

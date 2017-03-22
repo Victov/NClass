@@ -23,16 +23,16 @@ namespace NClass.DiagramEditor.ClassDiagram.ContextMenus
     internal sealed class ShapeContextMenu : DiagramContextMenu
     {
         private ToolStripMenuItem mnuAlign;
-        private ToolStripMenuItem mnuAlignHorizontal;
-        private ToolStripMenuItem mnuAlignVertical;
-        private ToolStripMenuItem mnuAlignTop;
-        private ToolStripMenuItem mnuAlignLeft;
         private ToolStripMenuItem mnuAlignBottom;
+        private ToolStripMenuItem mnuAlignHorizontal;
+        private ToolStripMenuItem mnuAlignLeft;
         private ToolStripMenuItem mnuAlignRight;
+        private ToolStripMenuItem mnuAlignTop;
+        private ToolStripMenuItem mnuAlignVertical;
         private ToolStripMenuItem mnuMakeSameSize;
-        private ToolStripMenuItem mnuSameWidth;
         private ToolStripMenuItem mnuSameHeight;
         private ToolStripMenuItem mnuSameSize;
+        private ToolStripMenuItem mnuSameWidth;
 
         private ShapeContextMenu( )
         {
@@ -61,7 +61,7 @@ namespace NClass.DiagramEditor.ClassDiagram.ContextMenus
             base.ValidateMenuItems( diagram );
             GeneralContextMenu.Default.ValidateMenuItems( diagram );
 
-            var multiSelection = diagram.SelectedElementCount >= 2;
+            bool multiSelection = diagram.SelectedElementCount >= 2;
             mnuAlign.Enabled = multiSelection;
             mnuAlignTop.Enabled = multiSelection;
             mnuAlignLeft.Enabled = multiSelection;

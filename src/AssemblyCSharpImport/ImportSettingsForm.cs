@@ -64,15 +64,11 @@ namespace NClass.AssemblyCSharpImport
 
             //Build reverse maps for easy access while loading a template.
             reverseElementNameMap.Clear( );
-            foreach ( var comboBoxItem in colFilterElement.Items )
-            {
+            foreach ( ImageComboBoxItem comboBoxItem in colFilterElement.Items )
                 reverseElementNameMap.Add( ( FilterElements ) comboBoxItem.Tag, comboBoxItem );
-            }
             reverseModifierNameMap.Clear( );
-            foreach ( var comboBoxItem in colFilterModifier.Items )
-            {
+            foreach ( ImageComboBoxItem comboBoxItem in colFilterModifier.Items )
                 reverseModifierNameMap.Add( ( FilterModifiers ) comboBoxItem.Tag, comboBoxItem );
-            }
 
             importSettings = settings;
 
@@ -81,13 +77,11 @@ namespace NClass.AssemblyCSharpImport
             if ( Settings.Default.ImportSettingsTemplates == null )
             {
                 Settings.Default.ImportSettingsTemplates = new TemplateList( );
-                var newSettings = new ImportSettings {Name = Strings.Settings_Template_LastUsed, CreateAssociations = true, CreateGeneralizations = true, CreateNestings = true, CreateRealizations = true, CreateRelationships = true, LabelAggregations = true};
+                ImportSettings newSettings = new ImportSettings {Name = Strings.Settings_Template_LastUsed, CreateAssociations = true, CreateGeneralizations = true, CreateNestings = true, CreateRealizations = true, CreateRelationships = true, LabelAggregations = true};
                 Settings.Default.ImportSettingsTemplates.Add( newSettings );
             }
-            foreach ( var xTemplate in Settings.Default.ImportSettingsTemplates )
-            {
+            foreach ( object xTemplate in Settings.Default.ImportSettingsTemplates )
                 cboTemplate.Items.Add( xTemplate );
-            }
             cboTemplate.SelectedItem = cboTemplate.Items[ 0 ];
             DisplaySettings( ( ImportSettings ) cboTemplate.Items[ 0 ] );
 
@@ -240,7 +234,7 @@ namespace NClass.AssemblyCSharpImport
                 MessageBox.Show( Strings.Settings_Error_AngleBracketNotAllowed, Strings.Error_MessageBoxTitle, MessageBoxButtons.OK, MessageBoxIcon.Error );
                 return;
             }
-            var settings = ( ImportSettings ) cboTemplate.SelectedItem ?? new ImportSettings( );
+            ImportSettings settings = ( ImportSettings ) cboTemplate.SelectedItem ?? new ImportSettings( );
             StoreSettings( settings );
             settings.Name = cboTemplate.Text;
             if ( cboTemplate.SelectedItem == null )
@@ -309,25 +303,17 @@ namespace NClass.AssemblyCSharpImport
         /// <param name="e">Information about the event.</param>
         private void dgvFilter_CellValueChanged( object sender, DataGridViewCellEventArgs e )
         {
-            if ( e.RowIndex < 0 || e.ColumnIndex < 0 )
-            {
+            if ( ( e.RowIndex < 0 ) || ( e.ColumnIndex < 0 ) )
                 return;
-            }
-            var row = dgvFilter.Rows[ e.RowIndex ];
-            var modifier = row.Cells[ 0 ].Value as ImageComboBoxItem;
-            var element = row.Cells[ 1 ].Value as ImageComboBoxItem;
-            if ( modifier != null && element != null )
+            DataGridViewRow row = dgvFilter.Rows[ e.RowIndex ];
+            ImageComboBoxItem modifier = row.Cells[ 0 ].Value as ImageComboBoxItem;
+            ImageComboBoxItem element = row.Cells[ 1 ].Value as ImageComboBoxItem;
+            if ( ( modifier != null ) && ( element != null ) )
             {
                 if ( element.Tag == null )
-                {
-                    // A modifier was just selected...
                     row.Cells[ 1 ].Value = colFilterElement.Items[ 0 ];
-                }
                 if ( modifier.Tag == null )
-                {
-                    // An element was just selected...
                     row.Cells[ 0 ].Value = colFilterModifier.Items[ 0 ];
-                }
             }
         }
 
@@ -349,11 +335,8 @@ namespace NClass.AssemblyCSharpImport
         private void cmdAddFiles_Click( object sender, EventArgs e )
         {
             if ( openFileDialogAssemblies.ShowDialog( ) == DialogResult.OK )
-            {
-                // Add entries into the list
-                foreach ( var file in openFileDialogAssemblies.FileNames )
+                foreach ( string file in openFileDialogAssemblies.FileNames )
                     AddFile( file );
-            }
         }
 
         /// <summary>
@@ -377,11 +360,11 @@ namespace NClass.AssemblyCSharpImport
             if ( lbEntries.SelectedIndex == -1 )
                 return;
 
-            var selectedItems = new ListBox.SelectedObjectCollection( lbEntries );
+            ListBox.SelectedObjectCollection selectedItems = new ListBox.SelectedObjectCollection( lbEntries );
             selectedItems = lbEntries.SelectedItems;
 
             // Delete all items selected
-            for ( var i = selectedItems.Count - 1; i >= 0; i-- )
+            for ( int i = selectedItems.Count - 1; i >= 0; i-- )
                 lbEntries.Items.Remove( selectedItems[ i ] );
         }
 
@@ -398,10 +381,9 @@ namespace NClass.AssemblyCSharpImport
             lbEntries.Items.Clear( );
 
             if ( settings.Items != null )
-            {
                 if ( settings.Items.Count != 0 )
                 {
-                    foreach ( var item in settings.Items )
+                    foreach ( string item in settings.Items )
                     {
                         // Check entries
                         AddFile( item );
@@ -410,7 +392,6 @@ namespace NClass.AssemblyCSharpImport
 
                     CopyItemsFromListToSettings( ref settings );
                 }
-            }
 
             chkNewDiagram.Checked = settings.NewDiagram;
 
@@ -419,12 +400,8 @@ namespace NClass.AssemblyCSharpImport
             rdoWhiteList.Checked = settings.UseAsWhiteList;
             rdoBlackList.Checked = !settings.UseAsWhiteList;
             if ( settings.FilterRules != null )
-            {
-                foreach ( var filterRule in settings.FilterRules )
-                {
+                foreach ( FilterRule filterRule in settings.FilterRules )
                     dgvFilter.Rows.Add( reverseModifierNameMap[ filterRule.Modifier ], reverseElementNameMap[ filterRule.Element ] );
-                }
-            }
 
             chkCreateRelationships.Checked = settings.CreateRelationships;
             chkCreateAssociations.Checked = settings.CreateAssociations;
@@ -446,18 +423,14 @@ namespace NClass.AssemblyCSharpImport
             settings.NewDiagram = chkNewDiagram.Checked;
 
             settings.UseAsWhiteList = rdoWhiteList.Checked;
-            var filterRules = new List< FilterRule >( dgvFilter.Rows.Count );
+            List< FilterRule > filterRules = new List< FilterRule >( dgvFilter.Rows.Count );
             foreach ( DataGridViewRow row in dgvFilter.Rows )
             {
-                var modifier = row.Cells[ 0 ].Value as ImageComboBoxItem;
-                var element = row.Cells[ 1 ].Value as ImageComboBoxItem;
-                if ( modifier != null && element != null )
-                {
+                ImageComboBoxItem modifier = row.Cells[ 0 ].Value as ImageComboBoxItem;
+                ImageComboBoxItem element = row.Cells[ 1 ].Value as ImageComboBoxItem;
+                if ( ( modifier != null ) && ( element != null ) )
                     if ( modifier.Tag is FilterModifiers && element.Tag is FilterElements )
-                    {
                         filterRules.Add( new FilterRule( ( FilterModifiers ) modifier.Tag, ( FilterElements ) element.Tag ) );
-                    }
-                }
             }
             settings.FilterRules = filterRules;
 
@@ -481,14 +454,14 @@ namespace NClass.AssemblyCSharpImport
             if ( string.IsNullOrEmpty( pathName ) )
                 return string.Empty;
 
-            var pathRoot = Path.GetPathRoot( pathName );
+            string pathRoot = Path.GetPathRoot( pathName );
 
             if ( string.IsNullOrEmpty( pathRoot ) )
                 return string.Empty;
 
             // Check all parent folders
-            var parentFolder = string.Empty;
-            var path = pathName;
+            string parentFolder = string.Empty;
+            string path = pathName;
             do
             {
                 parentFolder = Path.GetDirectoryName( path );
@@ -532,7 +505,7 @@ namespace NClass.AssemblyCSharpImport
             if ( string.IsNullOrWhiteSpace( fileName ) )
                 return;
 
-            var extension = Path.GetExtension( fileName );
+            string extension = Path.GetExtension( fileName );
             // Only for C# file
             if ( extension == ".cs" )
             {
@@ -540,7 +513,7 @@ namespace NClass.AssemblyCSharpImport
                 if ( lbEntries.Items.Contains( fileName ) == false )
                 {
                     // Don't include a C# source code file if a parent folder is alreday present
-                    var parentFolder = IsParentFolderAlreadyExits( fileName, true );
+                    string parentFolder = IsParentFolderAlreadyExits( fileName, true );
                     if ( string.IsNullOrEmpty( parentFolder ) )
                         lbEntries.Items.Add( fileName );
                     else
@@ -548,7 +521,7 @@ namespace NClass.AssemblyCSharpImport
                 }
             }
             // For .exe and .dll assemblies and Visual Studio files
-            else if ( extension == ".exe" || extension == ".dll" || extension == ".sln" || extension == ".csproj" )
+            else if ( ( extension == ".exe" ) || ( extension == ".dll" ) || ( extension == ".sln" ) || ( extension == ".csproj" ) )
             {
                 // Don't add the same files multiple times
                 if ( lbEntries.Items.Contains( fileName ) == false )
@@ -572,23 +545,23 @@ namespace NClass.AssemblyCSharpImport
             // Don't add the same folder multiple times
             if ( lbEntries.Items.Contains( folderName ) == false )
             {
-                var parentFolder = IsParentFolderAlreadyExits( folderName, false );
+                string parentFolder = IsParentFolderAlreadyExits( folderName, false );
 
                 // Don't include a subfolder if parent folder is already present
                 if ( string.IsNullOrEmpty( parentFolder ) )
                 {
                     // Remove all subfolders and C# source code items if it is a parent folder included
-                    for ( var i = 0; i < lbEntries.Items.Count; i++ )
+                    for ( int i = 0; i < lbEntries.Items.Count; i++ )
                     {
-                        var item = lbEntries.Items[ i ].ToString( );
-                        var extension = Path.GetExtension( item );
-                        var path = Path.GetDirectoryName( item );
+                        string item = lbEntries.Items[ i ].ToString( );
+                        string extension = Path.GetExtension( item );
+                        string path = Path.GetDirectoryName( item );
 
                         if ( string.IsNullOrWhiteSpace( path ) )
                             continue;
 
                         // A C# code source file or a directory
-                        if ( extension != ".cs" && string.IsNullOrEmpty( extension ) == false )
+                        if ( ( extension != ".cs" ) && ( string.IsNullOrEmpty( extension ) == false ) )
                             continue;
 
                         // Is it a file in a parent folder added?
@@ -619,7 +592,7 @@ namespace NClass.AssemblyCSharpImport
             if ( lbEntries.Items.Count == 0 )
                 return;
 
-            var items = new List< string >( lbEntries.Items.Count );
+            List< string > items = new List< string >( lbEntries.Items.Count );
 
             foreach ( string itemName in lbEntries.Items )
                 items.Add( itemName );

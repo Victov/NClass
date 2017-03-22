@@ -23,7 +23,7 @@ using NReflect.NRAttributes;
 namespace NReflect.NRMembers
 {
     /// <summary>
-    /// Represents an enum value which is reflected by NReflect.
+    ///     Represents an enum value which is reflected by NReflect.
     /// </summary>
     [Serializable]
     public class NREnumValue : IVisitable, IAttributable
@@ -34,11 +34,27 @@ namespace NReflect.NRMembers
         #region === Con- / Destruction
 
         /// <summary>
-        /// Initializes a new instance of <see cref="NREnumValue"/>.
+        ///     Initializes a new instance of <see cref="NREnumValue" />.
         /// </summary>
         public NREnumValue( )
         {
             Attributes = new List< NRAttribute >( );
+        }
+
+        #endregion
+
+        // ========================================================================
+        // Methods
+
+        #region === Methods
+
+        /// <summary>
+        ///     Accept an <see cref="IVisitor" /> instance on the implementing class and all its children.
+        /// </summary>
+        /// <param name="visitor">The <see cref="IVisitor" /> instance to accept.</param>
+        public void Accept( IVisitor visitor )
+        {
+            visitor.Visit( this );
         }
 
         #endregion
@@ -49,35 +65,19 @@ namespace NReflect.NRMembers
         #region === Properties
 
         /// <summary>
-        /// Gets or sets the name of the enum value.
+        ///     Gets or sets the name of the enum value.
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of the enum value.
+        ///     Gets or sets the value of the enum value.
         /// </summary>
         public string Value { get; set; }
 
         /// <summary>
-        /// Gets a list of attributes.
+        ///     Gets a list of attributes.
         /// </summary>
-        public List< NRAttribute > Attributes { get; private set; }
-
-        #endregion
-
-        // ========================================================================
-        // Methods
-
-        #region === Methods
-
-        /// <summary>
-        /// Accept an <see cref="IVisitor"/> instance on the implementing class and all its children.
-        /// </summary>
-        /// <param name="visitor">The <see cref="IVisitor"/> instance to accept.</param>
-        public void Accept( IVisitor visitor )
-        {
-            visitor.Visit( this );
-        }
+        public List< NRAttribute > Attributes { get; }
 
         #endregion
     }

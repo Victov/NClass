@@ -14,7 +14,7 @@ namespace NClass.GUI
 
         public TextBoxAppender( RichTextBox textBox )
         {
-            var frm = textBox.FindForm( );
+            Form frm = textBox.FindForm( );
             if ( frm == null )
                 return;
 
@@ -38,7 +38,7 @@ namespace NClass.GUI
                     _textBox = null;
                 }
 
-                var hierarchy = ( Hierarchy ) LogManager.GetRepository( );
+                Hierarchy hierarchy = ( Hierarchy ) LogManager.GetRepository( );
                 hierarchy.Root.RemoveAppender( this );
             }
             catch
@@ -67,7 +67,7 @@ namespace NClass.GUI
                 // decide to add information to the displayed message 
                 // (e.g. log level) or implement something a little more 
                 // dynamic.
-                var msg = string.Concat( loggingEvent.RenderedMessage, "\r\n" );
+                string msg = string.Concat( loggingEvent.RenderedMessage, "\r\n" );
 
                 lock ( _lockObj )
                 {
@@ -80,7 +80,7 @@ namespace NClass.GUI
                     // the GUI, the control's "BeginInvoke" method has to be
                     // leveraged in order to append the message. Otherwise, a 
                     // threading exception will be thrown. 
-                    var del = new Action< string >( s => _textBox.AppendText( s ) );
+                    Action< string > del = s => _textBox.AppendText( s );
                     _textBox.BeginInvoke( del, msg );
                 }
             }
@@ -93,8 +93,8 @@ namespace NClass.GUI
 
         public static void ConfigureTextBoxAppender( RichTextBox textBox )
         {
-            var hierarchy = ( Hierarchy ) LogManager.GetRepository( );
-            var appender = new TextBoxAppender( textBox );
+            Hierarchy hierarchy = ( Hierarchy ) LogManager.GetRepository( );
+            TextBoxAppender appender = new TextBoxAppender( textBox );
             hierarchy.Root.AddAppender( appender );
         }
     }

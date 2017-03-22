@@ -23,7 +23,7 @@ using NReflect.NRParameters;
 namespace NReflect.NREntities
 {
     /// <summary>
-    /// Represents a type which can be customized via generics.
+    ///     Represents a type which can be customized via generics.
     /// </summary>
     [Serializable]
     public abstract class NRGenericType : NRTypeBase, IGeneric
@@ -34,7 +34,7 @@ namespace NReflect.NREntities
         #region === Con- / Destruction
 
         /// <summary>
-        /// Initializes a new instance of <see cref="NRGenericType"/>.
+        ///     Initializes a new instance of <see cref="NRGenericType" />.
         /// </summary>
         protected NRGenericType( )
         {
@@ -49,12 +49,12 @@ namespace NReflect.NREntities
         #region === Properties
 
         /// <summary>
-        /// Gets a list containing all type parameters of a type.
+        ///     Gets a list containing all type parameters of a type.
         /// </summary>
-        public List< NRTypeParameter > GenericTypes { get; private set; }
+        public List< NRTypeParameter > GenericTypes { get; }
 
         /// <summary>
-        /// Gets a value indicating wether this type is a generic.
+        ///     Gets a value indicating wether this type is a generic.
         /// </summary>
         public bool IsGeneric
         {

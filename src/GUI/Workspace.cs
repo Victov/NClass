@@ -23,9 +23,8 @@ namespace NClass.GUI
 {
     public class Workspace
     {
-        private Project activeProject;
-
         private readonly List< Project > projects = new List< Project >( );
+        private Project activeProject;
 
         private Workspace( ) {}
 
@@ -59,7 +58,7 @@ namespace NClass.GUI
                         OnActiveProjectChanged( EventArgs.Empty );
                     }
                 }
-                else if ( activeProject != value && projects.Contains( value ) )
+                else if ( ( activeProject != value ) && projects.Contains( value ) )
                 {
                     activeProject = value;
                     OnActiveProjectChanged( EventArgs.Empty );
@@ -79,7 +78,7 @@ namespace NClass.GUI
 
         public Project AddEmptyProject( )
         {
-            var project = new Project( );
+            Project project = new Project( );
             projects.Add( project );
             project.Modified += project_StateChanged;
             project.FileStateChanged += project_StateChanged;
@@ -115,7 +114,7 @@ namespace NClass.GUI
         {
             if ( saveConfirmation && project.IsDirty )
             {
-                var result = MessageBox.Show( Strings.AskSaveChanges, Strings.Confirmation, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question );
+                DialogResult result = MessageBox.Show( Strings.AskSaveChanges, Strings.Confirmation, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question );
 
                 if ( result == DialogResult.Yes )
                 {
@@ -165,11 +164,11 @@ namespace NClass.GUI
 
                 if ( unsavedProjects.Count > 0 )
                 {
-                    var message = Strings.AskSaveChanges + "\n";
-                    foreach ( var project in unsavedProjects )
+                    string message = Strings.AskSaveChanges + "\n";
+                    foreach ( Project project in unsavedProjects )
                         message += "\n" + project.Name;
 
-                    var result = MessageBox.Show( message, Strings.Confirmation, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question );
+                    DialogResult result = MessageBox.Show( message, Strings.Confirmation, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question );
 
                     if ( result == DialogResult.Yes )
                     {
@@ -185,8 +184,8 @@ namespace NClass.GUI
 
             while ( HasProject )
             {
-                var lastIndex = projects.Count - 1;
-                var project = projects[ lastIndex ];
+                int lastIndex = projects.Count - 1;
+                Project project = projects[ lastIndex ];
                 project.CloseItems( );
                 projects.RemoveAt( lastIndex );
                 OnProjectRemoved( new ProjectEventArgs( project ) );
@@ -197,7 +196,7 @@ namespace NClass.GUI
 
         public Project OpenProject( )
         {
-            using ( var dialog = new OpenFileDialog( ) )
+            using ( OpenFileDialog dialog = new OpenFileDialog( ) )
             {
                 dialog.Filter = string.Format( "{0} (*.ncp)|*.ncp|" + "{1} (*.csd; *.jd)|*.csd;*.jd", Strings.NClassProjectFiles, Strings.PreviousFileFormats );
 
@@ -213,7 +212,7 @@ namespace NClass.GUI
         {
             try
             {
-                var project = Project.Load( fileName );
+                Project project = Project.Load( fileName );
                 AddProject( project );
                 return project;
             }
@@ -232,10 +231,8 @@ namespace NClass.GUI
             if ( project == null )
                 throw new ArgumentNullException( "project" );
 
-            if ( project.FilePath == null || project.IsReadOnly )
-            {
+            if ( ( project.FilePath == null ) || project.IsReadOnly )
                 return SaveProjectAs( project );
-            }
             try
             {
                 project.Save( );
@@ -256,14 +253,13 @@ namespace NClass.GUI
             if ( project == null )
                 throw new ArgumentNullException( "project" );
 
-            using ( var dialog = new SaveFileDialog( ) )
+            using ( SaveFileDialog dialog = new SaveFileDialog( ) )
             {
                 dialog.FileName = project.Name;
                 dialog.InitialDirectory = project.GetProjectDirectory( );
                 dialog.Filter = Strings.NClassProjectFiles + " (*.ncp)|*.ncp";
 
                 if ( dialog.ShowDialog( ) == DialogResult.OK )
-                {
                     try
                     {
                         project.Save( dialog.FileName );
@@ -274,7 +270,6 @@ namespace NClass.GUI
                     {
                         MessageBox.Show( Strings.Error + ": " + ex.Message, Strings.SaveAs, MessageBoxButtons.OK, MessageBoxIcon.Error );
                     }
-                }
                 return false;
             }
         }
@@ -295,24 +290,20 @@ namespace NClass.GUI
 
         public bool SaveAllProjects( )
         {
-            var allSaved = true;
+            bool allSaved = true;
 
-            foreach ( var project in projects )
-            {
+            foreach ( Project project in projects )
                 allSaved &= SaveProject( project );
-            }
             return allSaved;
         }
 
         public bool SaveAllUnsavedProjects( )
         {
-            var allSaved = true;
+            bool allSaved = true;
 
-            foreach ( var project in projects )
-            {
+            foreach ( Project project in projects )
                 if ( project.IsDirty )
                     allSaved &= SaveProject( project );
-            }
             return allSaved;
         }
 
@@ -321,24 +312,18 @@ namespace NClass.GUI
             if ( HasProject )
                 RemoveAll( );
 
-            foreach ( var projectFile in Settings.Default.OpenedProjects )
-            {
+            foreach ( string projectFile in Settings.Default.OpenedProjects )
                 if ( !string.IsNullOrEmpty( projectFile ) )
-                {
                     OpenProject( projectFile );
-                }
-            }
         }
 
         public void Save( )
         {
             Settings.Default.OpenedProjects.Clear( );
 
-            foreach ( var project in projects )
-            {
+            foreach ( Project project in projects )
                 if ( project.FilePath != null )
                     Settings.Default.OpenedProjects.Add( project.FilePath );
-            }
         }
 
         public bool SaveAndClose( )
@@ -349,7 +334,7 @@ namespace NClass.GUI
 
         private void project_StateChanged( object sender, EventArgs e )
         {
-            var project = ( Project ) sender;
+            Project project = ( Project ) sender;
             if ( project == ActiveProject )
                 OnActiveProjectStateChanged( EventArgs.Empty );
         }

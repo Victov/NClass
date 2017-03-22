@@ -31,9 +31,7 @@ namespace NClass.GUI.ModelExplorer
         public virtual void BeforeDelete( )
         {
             foreach ( ModelNode node in Nodes )
-            {
                 node.BeforeDelete( );
-            }
         }
 
         public void Delete( )

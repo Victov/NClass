@@ -74,11 +74,11 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             btnPrint.Text = Strings.ButtonPrint;
             btnCancel.Text = Strings.ButtonCancel;
 
-            var buttonWidth = Math.Max( btnPrinter.Width, btnPageSetup.Width );
+            int buttonWidth = Math.Max( btnPrinter.Width, btnPageSetup.Width );
             btnPrinter.Width = buttonWidth;
             btnPageSetup.Width = buttonWidth;
 
-            var minLeft = btnPrinter.Left + buttonWidth + 6;
+            int minLeft = btnPrinter.Left + buttonWidth + 6;
             lblStyle.Left = minLeft;
             lblPages.Left = minLeft;
 
@@ -92,7 +92,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
 
         private void LoadSettings( )
         {
-            var settings = Settings.Default.PrintingSettings;
+            PrintingSettings settings = Settings.Default.PrintingSettings;
             if ( settings != null )
             {
                 printDocument.DefaultPageSettings.Landscape = settings.Landscape;
@@ -112,7 +112,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         private void LoadStyles( )
         {
             cboStyle.Items.Clear( );
-            foreach ( var style in Style.AvaiableStyles )
+            foreach ( Style style in Style.AvaiableStyles )
             {
                 cboStyle.Items.Add( style );
                 if ( style == Style.CurrentStyle )
@@ -158,23 +158,23 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
 
         private static Style MakeShadowsOpaque( Style selectedStyle )
         {
-            var converted = selectedStyle.Clone( );
+            Style converted = selectedStyle.Clone( );
             converted.ShadowColor = DisableTransparency( converted.ShadowColor );
             return converted;
         }
 
         private static Color DisableTransparency( Color color )
         {
-            var red = color.R * color.A / 255 + ( 255 - color.A );
-            var green = color.G * color.A / 255 + ( 255 - color.A );
-            var blue = color.B * color.A / 255 + ( 255 - color.A );
+            int red = color.R * color.A / 255 + ( 255 - color.A );
+            int green = color.G * color.A / 255 + ( 255 - color.A );
+            int blue = color.B * color.A / 255 + ( 255 - color.A );
 
             return Color.FromArgb( red, green, blue );
         }
 
         private void printDocument_BeginPrint( object sender, PrintEventArgs e )
         {
-            if ( Document != null && printDocument.PrinterSettings.IsValid )
+            if ( ( Document != null ) && printDocument.PrinterSettings.IsValid )
             {
                 pageIndex = 0;
                 printingStyle = MakeShadowsOpaque( selectedStyle );
@@ -193,26 +193,26 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             e.Graphics.PageScale = 1 / DiagramElement.Graphics.DpiX;
 
             // Get the phisical page margins
-            var marginScale = DiagramElement.Graphics.DpiX / 100;
+            float marginScale = DiagramElement.Graphics.DpiX / 100;
             RectangleF marginBounds = e.MarginBounds;
             if ( !printDocument.PrintController.IsPreview )
                 marginBounds.Offset( -e.PageSettings.HardMarginX, -e.PageSettings.HardMarginY );
             marginBounds = new RectangleF( marginBounds.X * marginScale, marginBounds.Y * marginScale, marginBounds.Width * marginScale, marginBounds.Height * marginScale );
 
             // Get logical area information
-            var drawingArea = Document.GetPrintingArea( selectedOnly );
-            var column = pageIndex % columns;
-            var row = pageIndex / columns;
+            RectangleF drawingArea = Document.GetPrintingArea( selectedOnly );
+            int column = pageIndex % columns;
+            int row = pageIndex / columns;
 
             // Get zooming information if diagram is too big
-            var scaleX = columns * marginBounds.Width / drawingArea.Width;
-            var scaleY = rows * marginBounds.Height / drawingArea.Height;
-            var scale = Math.Min( scaleX, scaleY );
+            float scaleX = columns * marginBounds.Width / drawingArea.Width;
+            float scaleY = rows * marginBounds.Height / drawingArea.Height;
+            float scale = Math.Min( scaleX, scaleY );
             if ( scale > 1 )
                 scale = 1; // No need for zooming in
 
             // Set the printing clip region
-            var clipBounds = marginBounds;
+            RectangleF clipBounds = marginBounds;
             if ( column == 0 )
             {
                 clipBounds.X = 0;
@@ -224,13 +224,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                 clipBounds.Height += marginBounds.Top;
             }
             if ( column == columns - 1 )
-            {
                 clipBounds.Width += marginBounds.Left;
-            }
             if ( row == rows - 1 )
-            {
                 clipBounds.Height += marginBounds.Top;
-            }
             e.Graphics.SetClip( clipBounds );
 
             // Moving the image to it's right position
@@ -283,14 +279,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
 
         private void btnPageSetup_Click( object sender, EventArgs e )
         {
-            var originalMargins = pageSetupDialog.PageSettings.Margins;
+            Margins originalMargins = pageSetupDialog.PageSettings.Margins;
 
             if ( RegionInfo.CurrentRegion.IsMetric && !MonoHelper.IsRunningOnMono )
-            {
-                // This is necessary because of a bug in PageSetupDialog control.
-                // More information: http://support.microsoft.com/?id=814355
                 pageSetupDialog.PageSettings.Margins = PrinterUnitConvert.Convert( pageSetupDialog.PageSettings.Margins, PrinterUnit.Display, PrinterUnit.TenthsOfAMillimeter );
-            }
 
             if ( pageSetupDialog.ShowDialog( ) == DialogResult.OK )
                 printPreview.InvalidatePreview( );
@@ -300,7 +292,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
 
         private void cboStyle_SelectedIndexChanged( object sender, EventArgs e )
         {
-            var style = cboStyle.SelectedItem as Style;
+            Style style = cboStyle.SelectedItem as Style;
             if ( style != null )
             {
                 selectedStyle = style;

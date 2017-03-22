@@ -39,7 +39,7 @@ namespace NClass.AssemblyCSharpImport.Controls
             e.DrawBackground( );
             e.DrawFocusRectangle( );
 
-            var item = e.Index >= 0 ? Items[ e.Index ] : null;
+            object item = e.Index >= 0 ? Items[ e.Index ] : null;
 
             ControlDrawHelper.DrawImageComboBoxItem( e.Graphics, item, ImageList, ImageSize, e.Bounds, Font, ForeColor );
 

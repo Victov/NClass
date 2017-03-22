@@ -32,9 +32,9 @@ namespace NClass.DiagramEditor
         private const int DiagramPadding = 10;
 
         private static readonly Pen borderPen;
+        private readonly List< PopupWindow > windows = new List< PopupWindow >( );
 
         private IDocument document;
-        private readonly List< PopupWindow > windows = new List< PopupWindow >( );
 
         static Canvas( )
         {
@@ -49,9 +49,7 @@ namespace NClass.DiagramEditor
             DoubleBuffered = true;
 
             if ( DiagramElement.Graphics == null )
-            {
                 DiagramElement.Graphics = CreateGraphics( );
-            }
         }
 
         public override Color BackColor
@@ -152,9 +150,7 @@ namespace NClass.DiagramEditor
             get
             {
                 if ( HasDocument )
-                {
                     return new Rectangle( ( int ) ( Document.Offset.X / Document.Zoom ), ( int ) ( Document.Offset.Y / Document.Zoom ), ( int ) ( ClientSize.Width / Document.Zoom ), ( int ) ( ClientSize.Height / Document.Zoom ) );
-                }
                 return Rectangle.Empty;
             }
         }
@@ -174,23 +170,19 @@ namespace NClass.DiagramEditor
         public void ChangeZoom( bool enlarge )
         {
             if ( HasDocument )
-            {
                 if ( Document.HasSelectedElement )
                     ChangeZoom( enlarge, Document.GetPrintingArea( true ) );
                 else
                     ChangeZoom( enlarge, GetAbsoluteCenterPoint( ) );
-            }
         }
 
         public void ChangeZoom( float zoom )
         {
             if ( HasDocument )
-            {
                 if ( Document.HasSelectedElement )
                     ChangeZoom( zoom, Document.GetPrintingArea( true ) );
                 else
                     ChangeZoom( zoom, GetAbsoluteCenterPoint( ) );
-            }
         }
 
         public void AutoZoom( )
@@ -205,18 +197,18 @@ namespace NClass.DiagramEditor
                 const int Margin = Shape.SelectionMargin;
                 selectedOnly &= Document.HasSelectedElement;
 
-                var visibleRectangle = ClientRectangle;
-                var diagramRectangle = document.GetPrintingArea( selectedOnly );
+                Rectangle visibleRectangle = ClientRectangle;
+                RectangleF diagramRectangle = document.GetPrintingArea( selectedOnly );
                 visibleRectangle.Inflate( -Margin, -Margin );
 
-                var scaleX = visibleRectangle.Width / diagramRectangle.Width;
-                var scaleY = visibleRectangle.Height / diagramRectangle.Height;
-                var scale = Math.Min( scaleX, scaleY );
+                float scaleX = visibleRectangle.Width / diagramRectangle.Width;
+                float scaleY = visibleRectangle.Height / diagramRectangle.Height;
+                float scale = Math.Min( scaleX, scaleY );
 
                 Document.Zoom = scale;
 
-                var offsetX = ( visibleRectangle.Width - diagramRectangle.Width * Zoom ) / 2;
-                var offsetY = ( visibleRectangle.Height - diagramRectangle.Height * Zoom ) / 2;
+                float offsetX = ( visibleRectangle.Width - diagramRectangle.Width * Zoom ) / 2;
+                float offsetY = ( visibleRectangle.Height - diagramRectangle.Height * Zoom ) / 2;
                 Offset = new Point( ( int ) ( diagramRectangle.X * Zoom - Margin - offsetX ), ( int ) ( diagramRectangle.Y * Zoom - Margin - offsetY ) );
             }
         }
@@ -261,15 +253,15 @@ namespace NClass.DiagramEditor
 
         private void document_ShowingWindow( object sender, PopupWindowEventArgs e )
         {
-            var window = e.Window;
+            PopupWindow window = e.Window;
             if ( !windows.Contains( window ) )
             {
                 windows.Add( window );
                 if ( ParentForm != null )
                 {
                     ParentForm.Controls.Add( window );
-                    var point = PointToScreen( Point.Empty );
-                    var absPos = ParentForm.PointToClient( point );
+                    Point point = PointToScreen( Point.Empty );
+                    Point absPos = ParentForm.PointToClient( point );
                     window.ParentLocation = absPos;
                     window.BringToFront( );
                 }
@@ -278,14 +270,12 @@ namespace NClass.DiagramEditor
 
         private void document_HidingWindow( object sender, PopupWindowEventArgs e )
         {
-            var window = e.Window;
+            PopupWindow window = e.Window;
             if ( windows.Contains( window ) )
             {
                 windows.Remove( window );
                 if ( ParentForm != null )
-                {
                     ParentForm.Controls.Remove( window );
-                }
             }
         }
 
@@ -318,7 +308,7 @@ namespace NClass.DiagramEditor
         {
             if ( HasDocument )
             {
-                var zoomValue = CalculateZoomValue( enlarge );
+                float zoomValue = CalculateZoomValue( enlarge );
                 ChangeZoom( zoomValue, zoomingCenter );
             }
         }
@@ -327,7 +317,7 @@ namespace NClass.DiagramEditor
         {
             if ( HasDocument )
             {
-                var zoomValue = CalculateZoomValue( enlarge );
+                float zoomValue = CalculateZoomValue( enlarge );
                 ChangeZoom( zoomValue, zoomingCenter );
             }
         }
@@ -343,9 +333,9 @@ namespace NClass.DiagramEditor
         {
             if ( HasDocument )
             {
-                var oldLocation = ConvertAbsoluteToRelative( zoomingCenter );
+                Point oldLocation = ConvertAbsoluteToRelative( zoomingCenter );
                 Document.Zoom = zoomValue;
-                var newLocation = ConvertAbsoluteToRelative( zoomingCenter );
+                Point newLocation = ConvertAbsoluteToRelative( zoomingCenter );
 
                 Offset += new Size( newLocation.X - oldLocation.X, newLocation.Y - oldLocation.Y );
             }
@@ -353,11 +343,11 @@ namespace NClass.DiagramEditor
 
         private void ChangeZoom( float zoomValue, RectangleF zoomingCenter )
         {
-            var centerPoint = new PointF( zoomingCenter.Left + zoomingCenter.Width / 2, zoomingCenter.Top + zoomingCenter.Height / 2 );
+            PointF centerPoint = new PointF( zoomingCenter.Left + zoomingCenter.Width / 2, zoomingCenter.Top + zoomingCenter.Height / 2 );
 
             Document.Zoom = zoomValue;
-            var newLocation = ConvertAbsoluteToRelative( centerPoint );
-            var desiredLocation = new Point( Width / 2, Height / 2 );
+            Point newLocation = ConvertAbsoluteToRelative( centerPoint );
+            Point desiredLocation = new Point( Width / 2, Height / 2 );
 
             Offset += new Size( newLocation.X - desiredLocation.X, newLocation.Y - desiredLocation.Y );
         }
@@ -378,11 +368,9 @@ namespace NClass.DiagramEditor
 
         protected override Point ScrollToControl( Control activeControl )
         {
-            if ( activeControl.Parent != null && activeControl.Parent != this )
-            {
+            if ( ( activeControl.Parent != null ) && ( activeControl.Parent != this ) )
                 return ScrollToControl( activeControl.Parent );
-            }
-            var point = base.ScrollToControl( activeControl );
+            Point point = base.ScrollToControl( activeControl );
             if ( HasDocument )
                 Document.Offset = new Point( -point.X, -point.Y );
             return point;
@@ -403,14 +391,10 @@ namespace NClass.DiagramEditor
                 }
                 else
                 {
-                    if ( Settings.Default.UseClearType == ClearTypeMode.WhenZoomed || Settings.Default.UseClearType == ClearTypeMode.Always )
-                    {
+                    if ( ( Settings.Default.UseClearType == ClearTypeMode.WhenZoomed ) || ( Settings.Default.UseClearType == ClearTypeMode.Always ) )
                         g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-                    }
                     else
-                    {
                         g.TextRenderingHint = TextRenderingHint.AntiAlias;
-                    }
                 }
 
                 // Transform the screen to absolute coordinate system
@@ -426,8 +410,8 @@ namespace NClass.DiagramEditor
         {
             if ( HScroll )
             {
-                var posX = -DisplayRectangle.X + offset;
-                var maxX = DisplayRectangle.Width - ClientRectangle.Width;
+                int posX = -DisplayRectangle.X + offset;
+                int maxX = DisplayRectangle.Width - ClientRectangle.Width;
 
                 if ( posX < 0 )
                     posX = 0;
@@ -453,21 +437,19 @@ namespace NClass.DiagramEditor
         {
             if ( ParentForm != null )
             {
-                var point = PointToScreen( Point.Empty );
-                var absPos = ParentForm.PointToClient( point );
+                Point point = PointToScreen( Point.Empty );
+                Point absPos = ParentForm.PointToClient( point );
 
-                foreach ( var window in windows )
-                {
+                foreach ( PopupWindow window in windows )
                     window.ParentLocation = absPos;
-                }
             }
         }
 
         protected override bool ProcessDialogKey( Keys keyData )
         {
-            var key = keyData & ~Keys.Modifiers;
+            Keys key = keyData & ~Keys.Modifiers;
 
-            if ( key == Keys.Up || key == Keys.Down )
+            if ( ( key == Keys.Up ) || ( key == Keys.Down ) )
                 return false;
             return base.ProcessDialogKey( keyData );
         }
@@ -488,7 +470,7 @@ namespace NClass.DiagramEditor
         {
             if ( ModifierKeys == Keys.Control )
             {
-                var enlarge = e.Delta > 0;
+                bool enlarge = e.Delta > 0;
 
                 if ( ClientRectangle.Contains( e.Location ) )
                     ChangeZoom( enlarge, ConvertRelativeToAbsolute( e.Location ) );
@@ -520,7 +502,7 @@ namespace NClass.DiagramEditor
 
             if ( HasDocument )
             {
-                var abs_e = new AbsoluteMouseEventArgs( e, Document );
+                AbsoluteMouseEventArgs abs_e = new AbsoluteMouseEventArgs( e, Document );
                 Document.MouseDown( abs_e );
                 if ( e.Button == MouseButtons.Right )
                     ContextMenuStrip = Document.GetContextMenu( abs_e );
@@ -532,9 +514,7 @@ namespace NClass.DiagramEditor
             base.OnMouseMove( e );
 
             if ( HasDocument )
-            {
                 Document.MouseMove( new AbsoluteMouseEventArgs( e, Document ) );
-            }
         }
 
         protected override void OnMouseUp( MouseEventArgs e )
@@ -542,9 +522,7 @@ namespace NClass.DiagramEditor
             base.OnMouseUp( e );
 
             if ( HasDocument )
-            {
                 Document.MouseUp( new AbsoluteMouseEventArgs( e, Document ) );
-            }
         }
 
         protected override void OnMouseDoubleClick( MouseEventArgs e )
@@ -552,9 +530,7 @@ namespace NClass.DiagramEditor
             base.OnMouseDoubleClick( e );
 
             if ( HasDocument )
-            {
                 Document.DoubleClick( new AbsoluteMouseEventArgs( e, Document ) );
-            }
         }
 
         protected override void OnKeyDown( KeyEventArgs e )
@@ -564,20 +540,12 @@ namespace NClass.DiagramEditor
             if ( document != null )
             {
                 if ( e.Modifiers == Keys.Control )
-                {
                     if ( e.KeyCode == Keys.Add )
-                    {
                         ZoomIn( );
-                    }
                     else if ( e.KeyCode == Keys.Subtract )
-                    {
                         ZoomOut( );
-                    }
-                    else if ( e.KeyCode == Keys.Multiply || e.KeyCode == Keys.NumPad0 )
-                    {
+                    else if ( ( e.KeyCode == Keys.Multiply ) || ( e.KeyCode == Keys.NumPad0 ) )
                         Zoom = 1.0F;
-                    }
-                }
 
                 document.KeyDown( e );
             }
@@ -588,9 +556,7 @@ namespace NClass.DiagramEditor
             base.OnPaint( e );
 
             if ( HasDocument )
-            {
                 DrawContent( e.Graphics );
-            }
         }
 
         protected override void WndProc( ref Message m )
@@ -598,9 +564,7 @@ namespace NClass.DiagramEditor
             base.WndProc( ref m );
 
             if ( m.Msg == 0x020E ) // WM_MOUSEHWHEEL
-            {
                 OnMouseHWheel( EventArgs.Empty );
-            }
         }
 
         protected override void OnLocationChanged( EventArgs e )

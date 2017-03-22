@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using NClass.DiagramEditor;
 using PdfSharp.Drawing;
@@ -56,20 +57,20 @@ namespace PDFExport
         /// </summary>
         public void Export( )
         {
-            var document = new PdfDocument( );
-            var page = document.AddPage( );
-            var diagramSize = nclassDocument.GetPrintingArea( selectedOnly );
+            PdfDocument document = new PdfDocument( );
+            PdfPage page = document.AddPage( );
+            RectangleF diagramSize = nclassDocument.GetPrintingArea( selectedOnly );
             page.Width = new XUnit( diagramSize.Width, XGraphicsUnit.Presentation ) + new XUnit( padding.Right * 2 );
             page.Height = new XUnit( diagramSize.Height, XGraphicsUnit.Presentation ) + new XUnit( padding.Bottom * 2 );
 
-            var gfx = XGraphics.FromPdfPage( page );
-            var graphics = new PDFGraphics( gfx );
+            XGraphics gfx = XGraphics.FromPdfPage( page );
+            PDFGraphics graphics = new PDFGraphics( gfx );
 
             //Translate because of the padding.
             graphics.TranslateTransform( padding.Left, padding.Top );
 
             //Do some scaling to get from pixels to dots...
-            var gdiGraphics = new Control( ).CreateGraphics( );
+            Graphics gdiGraphics = new Control( ).CreateGraphics( );
             graphics.ScaleTransform( 72.0f / gdiGraphics.DpiX, 72.0f / gdiGraphics.DpiY );
             //Fonts are already mesured in dots but the size of them is also scaled by the above
             //transformation. So we have to applay an opposite transformation on the fonts first.
@@ -87,9 +88,7 @@ namespace PDFExport
 
             //Clean up...
             while ( gfx.GraphicsStateLevel > 0 )
-            {
                 gfx.Restore( );
-            }
 
             document.Options.CompressContentStreams = true;
             try

@@ -55,7 +55,7 @@ namespace NClass.Core
                 if ( value == AccessModifier )
                     return;
 
-                var previousAccess = base.AccessModifier;
+                AccessModifier previousAccess = base.AccessModifier;
 
                 try
                 {
@@ -94,7 +94,7 @@ namespace NClass.Core
                 if ( value == IsStatic )
                     return;
 
-                var previousModifier = Modifier;
+                FieldModifier previousModifier = Modifier;
 
                 try
                 {
@@ -124,7 +124,7 @@ namespace NClass.Core
                 if ( value == IsHider )
                     return;
 
-                var previousModifier = Modifier;
+                FieldModifier previousModifier = Modifier;
 
                 try
                 {
@@ -154,7 +154,7 @@ namespace NClass.Core
                 if ( value == IsReadonly )
                     return;
 
-                var previousModifier = Modifier;
+                FieldModifier previousModifier = Modifier;
 
                 try
                 {
@@ -184,7 +184,7 @@ namespace NClass.Core
                 if ( value == IsConstant )
                     return;
 
-                var previousModifier = Modifier;
+                FieldModifier previousModifier = Modifier;
 
                 try
                 {
@@ -214,7 +214,7 @@ namespace NClass.Core
                 if ( value == IsVolatile )
                     return;
 
-                var previousModifier = Modifier;
+                FieldModifier previousModifier = Modifier;
 
                 try
                 {
@@ -238,7 +238,7 @@ namespace NClass.Core
             get { return initialValue; }
             set
             {
-                if ( initialValue != value && ( !string.IsNullOrEmpty( value ) || !string.IsNullOrEmpty( initialValue ) ) )
+                if ( ( initialValue != value ) && ( !string.IsNullOrEmpty( value ) || !string.IsNullOrEmpty( initialValue ) ) )
                 {
                     initialValue = value;
                     Changed( );
@@ -262,7 +262,7 @@ namespace NClass.Core
 
         public sealed override string GetUmlDescription( bool getType, bool getParameters, bool getParameterNames, bool getInitValue )
         {
-            var builder = new StringBuilder( 50 );
+            StringBuilder builder = new StringBuilder( 50 );
 
             builder.Append( Name );
             if ( getType )
@@ -277,7 +277,7 @@ namespace NClass.Core
         {
             base.CopyFrom( member );
 
-            var field = ( Field ) member;
+            Field field = ( Field ) member;
             Modifier = field.Modifier;
             initialValue = field.initialValue;
         }

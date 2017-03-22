@@ -68,14 +68,14 @@ namespace NClass.CSharp
             get { return base.Name; }
             set
             {
-                var match = nameRegex.Match( value );
+                Match match = nameRegex.Match( value );
 
                 if ( match.Success )
                 {
                     RaiseChangedEvent = false;
                     try
                     {
-                        var name = match.Groups[ "name" ].Value;
+                        string name = match.Groups[ "name" ].Value;
                         if ( Language.IsForbiddenName( name ) )
                             throw new BadSyntaxException( Strings.ErrorForbiddenName );
 
@@ -144,18 +144,12 @@ namespace NClass.CSharp
             get { return base.AccessModifier; }
             set
             {
-                if ( value != AccessModifier.Default && IsExplicitImplementation )
-                {
+                if ( ( value != AccessModifier.Default ) && IsExplicitImplementation )
                     throw new BadSyntaxException( Strings.ErrorExplicitImplementationAccess );
-                }
-                if ( value != AccessModifier.Public && IsOperator )
-                {
+                if ( ( value != AccessModifier.Public ) && IsOperator )
                     throw new BadSyntaxException( Strings.ErrorOperatorMustBePublic );
-                }
-                if ( value != AccessModifier.Default && Parent is InterfaceType )
-                {
+                if ( ( value != AccessModifier.Default ) && Parent is InterfaceType )
                     throw new BadSyntaxException( Strings.ErrorInterfaceMemberAccess );
-                }
 
                 base.AccessModifier = value;
             }
@@ -214,7 +208,6 @@ namespace NClass.CSharp
             private set
             {
                 if ( isExplicitImplementation != value )
-                {
                     try
                     {
                         RaiseChangedEvent = false;
@@ -228,7 +221,6 @@ namespace NClass.CSharp
                     {
                         RaiseChangedEvent = true;
                     }
-                }
             }
         }
 
@@ -243,7 +235,7 @@ namespace NClass.CSharp
         /// </exception>
         public override void InitFromString( string declaration )
         {
-            var match = methodRegex.Match( declaration );
+            Match match = methodRegex.Match( declaration );
             RaiseChangedEvent = false;
 
             try
@@ -251,15 +243,15 @@ namespace NClass.CSharp
                 if ( match.Success )
                 {
                     ClearModifiers( );
-                    var nameGroup = match.Groups[ "name" ];
-                    var typeGroup = match.Groups[ "type" ];
-                    var accessGroup = match.Groups[ "access" ];
-                    var modifierGroup = match.Groups[ "modifier" ];
-                    var staticGroup = match.Groups[ "static" ];
-                    var operatorGroup = match.Groups[ "operator" ];
-                    var convopGroup = match.Groups[ "convop" ];
-                    var nameDotGroup = match.Groups[ "namedot" ];
-                    var argsGroup = match.Groups[ "args" ];
+                    Group nameGroup = match.Groups[ "name" ];
+                    Group typeGroup = match.Groups[ "type" ];
+                    Group accessGroup = match.Groups[ "access" ];
+                    Group modifierGroup = match.Groups[ "modifier" ];
+                    Group staticGroup = match.Groups[ "static" ];
+                    Group operatorGroup = match.Groups[ "operator" ];
+                    Group convopGroup = match.Groups[ "convop" ];
+                    Group nameDotGroup = match.Groups[ "namedot" ];
+                    Group argsGroup = match.Groups[ "args" ];
 
                     if ( CSharpLanguage.Instance.IsForbiddenName( nameGroup.Value ) )
                         throw new BadSyntaxException( Strings.ErrorInvalidName );
@@ -319,7 +311,7 @@ namespace NClass.CSharp
 
         public string GetDeclarationLine( bool withSemicolon )
         {
-            var builder = new StringBuilder( 100 );
+            StringBuilder builder = new StringBuilder( 100 );
 
             if ( AccessModifier != AccessModifier.Default )
             {
@@ -344,7 +336,7 @@ namespace NClass.CSharp
             else
                 builder.AppendFormat( "{0} {1}(", Type, Name );
 
-            for ( var i = 0; i < ArgumentList.Count; i++ )
+            for ( int i = 0; i < ArgumentList.Count; i++ )
             {
                 builder.Append( ArgumentList[ i ] );
                 if ( i < ArgumentList.Count - 1 )
@@ -365,7 +357,7 @@ namespace NClass.CSharp
 
         public override Operation Clone( CompositeType newParent )
         {
-            var method = new CSharpMethod( newParent );
+            CSharpMethod method = new CSharpMethod( newParent );
             method.CopyFrom( this );
             return method;
         }

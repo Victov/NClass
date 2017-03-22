@@ -23,7 +23,7 @@ using NReflect.NRParameters;
 namespace NReflect.NRMembers
 {
     /// <summary>
-    /// Represents a method of a type which is reflected by NReflect.
+    ///     Represents a method of a type which is reflected by NReflect.
     /// </summary>
     [Serializable]
     public class NRMethod : NRReturnValueOperation, IGeneric
@@ -34,36 +34,11 @@ namespace NReflect.NRMembers
         #region === Con- / Destruction
 
         /// <summary>
-        /// Initializes a new instance of <see cref="NRMethod"/>.
+        ///     Initializes a new instance of <see cref="NRMethod" />.
         /// </summary>
         public NRMethod( )
         {
             GenericTypes = new List< NRTypeParameter >( );
-        }
-
-        #endregion
-
-        // ========================================================================
-        // Properties
-
-        #region === Properties
-
-        /// <summary>
-        /// Gets or sets a value indicating if the method is a 
-        /// </summary>
-        public bool IsExtensionMethod { get; set; }
-
-        /// <summary>
-        /// Gets a list containing all type parameters of a type.
-        /// </summary>
-        public List< NRTypeParameter > GenericTypes { get; private set; }
-
-        /// <summary>
-        /// Gets a value indicating wether this type is a generic.
-        /// </summary>
-        public bool IsGeneric
-        {
-            get { return GenericTypes.Count > 0; }
         }
 
         #endregion
@@ -74,12 +49,37 @@ namespace NReflect.NRMembers
         #region === Methods
 
         /// <summary>
-        /// Accept an <see cref="IVisitor"/> instance on the implementing class and all its children.
+        ///     Accept an <see cref="IVisitor" /> instance on the implementing class and all its children.
         /// </summary>
-        /// <param name="visitor">The <see cref="IVisitor"/> instance to accept.</param>
+        /// <param name="visitor">The <see cref="IVisitor" /> instance to accept.</param>
         public override void Accept( IVisitor visitor )
         {
             visitor.Visit( this );
+        }
+
+        #endregion
+
+        // ========================================================================
+        // Properties
+
+        #region === Properties
+
+        /// <summary>
+        ///     Gets or sets a value indicating if the method is a
+        /// </summary>
+        public bool IsExtensionMethod { get; set; }
+
+        /// <summary>
+        ///     Gets a list containing all type parameters of a type.
+        /// </summary>
+        public List< NRTypeParameter > GenericTypes { get; }
+
+        /// <summary>
+        ///     Gets a value indicating wether this type is a generic.
+        /// </summary>
+        public bool IsGeneric
+        {
+            get { return GenericTypes.Count > 0; }
         }
 
         #endregion

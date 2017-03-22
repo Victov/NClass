@@ -36,7 +36,7 @@ namespace PDFExport
 
         public static GraphicsPath GetPath( this Region region )
         {
-            var path = new GraphicsPath( );
+            GraphicsPath path = new GraphicsPath( );
 
             path.AddRectangle( new Rectangle( 0, 0, 100, 100 ) );
 

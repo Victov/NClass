@@ -33,10 +33,8 @@ namespace NClass.Java
             get { return base.AccessModifier; }
             set
             {
-                if ( IsNested || value == AccessModifier.Default || value == AccessModifier.Public )
-                {
+                if ( IsNested || ( value == AccessModifier.Default ) || ( value == AccessModifier.Public ) )
                     base.AccessModifier = value;
-                }
             }
         }
 
@@ -58,7 +56,7 @@ namespace NClass.Java
                     RaiseChangedEvent = false;
 
                     base.NestingParent = value;
-                    if ( NestingParent == null && Access != AccessModifier.Public )
+                    if ( ( NestingParent == null ) && ( Access != AccessModifier.Public ) )
                         AccessModifier = AccessModifier.Default;
                 }
                 finally
@@ -104,7 +102,7 @@ namespace NClass.Java
 
         public override string GetDeclaration( )
         {
-            var builder = new StringBuilder( );
+            StringBuilder builder = new StringBuilder( );
 
             if ( AccessModifier != AccessModifier.Default )
             {
@@ -118,7 +116,7 @@ namespace NClass.Java
 
         public override EnumType Clone( )
         {
-            var newEnum = new JavaEnum( );
+            JavaEnum newEnum = new JavaEnum( );
             newEnum.CopyFrom( this );
             return newEnum;
         }

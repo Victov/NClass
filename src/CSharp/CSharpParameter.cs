@@ -35,9 +35,7 @@ namespace NClass.CSharp
             protected set
             {
                 if ( value == "void" )
-                {
                     throw new BadSyntaxException( Strings.ErrorInvalidParameterDeclaration );
-                }
                 base.Type = value;
             }
         }
@@ -47,10 +45,8 @@ namespace NClass.CSharp
             get { return base.Modifier; }
             protected set
             {
-                if ( value != ParameterModifier.In && DefaultValue != null )
-                {
+                if ( ( value != ParameterModifier.In ) && ( DefaultValue != null ) )
                     throw new BadSyntaxException( Strings.ErrorInvalidParameterDeclaration );
-                }
                 base.Modifier = value;
             }
         }
@@ -60,10 +56,8 @@ namespace NClass.CSharp
             get { return base.DefaultValue; }
             protected set
             {
-                if ( !string.IsNullOrWhiteSpace( value ) && Modifier != ParameterModifier.In )
-                {
+                if ( !string.IsNullOrWhiteSpace( value ) && ( Modifier != ParameterModifier.In ) )
                     throw new BadSyntaxException( Strings.ErrorInvalidParameterDeclaration );
-                }
                 base.DefaultValue = value;
             }
         }
@@ -76,17 +70,11 @@ namespace NClass.CSharp
         public override string GetDeclaration( )
         {
             if ( DefaultValue != null )
-            {
                 return Type + " " + Name + " = " + DefaultValue;
-            }
             if ( Modifier == ParameterModifier.In )
-            {
                 return Type + " " + Name;
-            }
             if ( Modifier == ParameterModifier.Inout )
-            {
                 return string.Format( "ref {0} {1}", Type, Name );
-            }
             return string.Format( "{0} {1} {2}", Modifier.ToString( ).ToLower( ), Type, Name );
         }
 

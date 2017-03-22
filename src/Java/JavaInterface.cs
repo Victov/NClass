@@ -33,10 +33,8 @@ namespace NClass.Java
             get { return base.AccessModifier; }
             set
             {
-                if ( IsNested || value == AccessModifier.Default || value == AccessModifier.Public )
-                {
+                if ( IsNested || ( value == AccessModifier.Default ) || ( value == AccessModifier.Public ) )
                     base.AccessModifier = value;
-                }
             }
         }
 
@@ -78,7 +76,7 @@ namespace NClass.Java
                     RaiseChangedEvent = false;
 
                     base.NestingParent = value;
-                    if ( NestingParent == null && Access != AccessModifier.Public )
+                    if ( ( NestingParent == null ) && ( Access != AccessModifier.Public ) )
                         AccessModifier = AccessModifier.Default;
                 }
                 finally
@@ -95,7 +93,7 @@ namespace NClass.Java
 
         public override Field AddField( )
         {
-            var field = new JavaField( this );
+            JavaField field = new JavaField( this );
 
             field.IsStatic = true;
             field.IsReadonly = true;
@@ -130,7 +128,7 @@ namespace NClass.Java
 
         public override string GetDeclaration( )
         {
-            var builder = new StringBuilder( 30 );
+            StringBuilder builder = new StringBuilder( 30 );
 
             if ( AccessModifier != AccessModifier.Default )
             {
@@ -145,7 +143,7 @@ namespace NClass.Java
             if ( HasExplicitBase )
             {
                 builder.Append( " extends " );
-                for ( var i = 0; i < BaseList.Count; i++ )
+                for ( int i = 0; i < BaseList.Count; i++ )
                 {
                     builder.Append( BaseList[ i ].Name );
                     if ( i < BaseList.Count - 1 )
@@ -158,7 +156,7 @@ namespace NClass.Java
 
         public override InterfaceType Clone( )
         {
-            var newInterface = new JavaInterface( );
+            JavaInterface newInterface = new JavaInterface( );
             newInterface.CopyFrom( this );
             return newInterface;
         }

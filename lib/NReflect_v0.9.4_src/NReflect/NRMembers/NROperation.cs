@@ -19,13 +19,12 @@
 using System;
 using System.Collections.Generic;
 using NReflect.Modifier;
-using NReflect.NREntities;
 using NReflect.NRParameters;
 
 namespace NReflect.NRMembers
 {
     /// <summary>
-    /// Represents an operation of a type which is reflected by NReflect.
+    ///     Represents an operation of a type which is reflected by NReflect.
     /// </summary>
     [Serializable]
     public abstract class NROperation : NRMember
@@ -36,7 +35,7 @@ namespace NReflect.NRMembers
         #region === Con- / Destruction
 
         /// <summary>
-        /// Initializes a new instance of <see cref="NROperation"/>.
+        ///     Initializes a new instance of <see cref="NROperation" />.
         /// </summary>
         protected NROperation( )
         {
@@ -51,12 +50,12 @@ namespace NReflect.NRMembers
         #region === Properties
 
         /// <summary>
-        /// Gets or sets the operation modifier for this operation.
+        ///     Gets or sets the operation modifier for this operation.
         /// </summary>
         public OperationModifier OperationModifier { get; set; }
 
         /// <summary>
-        /// Gets or sets if the operation is static.
+        ///     Gets or sets if the operation is static.
         /// </summary>
         public bool IsStatic
         {
@@ -64,18 +63,14 @@ namespace NReflect.NRMembers
             set
             {
                 if ( value )
-                {
                     OperationModifier |= OperationModifier.Static;
-                }
                 else
-                {
                     OperationModifier &= ~OperationModifier.Static;
-                }
             }
         }
 
         /// <summary>
-        /// Gets or sets if the operation is abstract.
+        ///     Gets or sets if the operation is abstract.
         /// </summary>
         public bool IsAbstract
         {
@@ -83,18 +78,14 @@ namespace NReflect.NRMembers
             set
             {
                 if ( value )
-                {
                     OperationModifier |= OperationModifier.Abstract;
-                }
                 else
-                {
                     OperationModifier &= ~OperationModifier.Abstract;
-                }
             }
         }
 
         /// <summary>
-        /// Gets or sets if the operation is virtual.
+        ///     Gets or sets if the operation is virtual.
         /// </summary>
         public bool IsVirtual
         {
@@ -102,18 +93,14 @@ namespace NReflect.NRMembers
             set
             {
                 if ( value )
-                {
                     OperationModifier |= OperationModifier.Virtual;
-                }
                 else
-                {
                     OperationModifier &= ~OperationModifier.Virtual;
-                }
             }
         }
 
         /// <summary>
-        /// Gets or sets if the operation is overriding another operation.
+        ///     Gets or sets if the operation is overriding another operation.
         /// </summary>
         public bool IsOverride
         {
@@ -121,18 +108,14 @@ namespace NReflect.NRMembers
             set
             {
                 if ( value )
-                {
                     OperationModifier |= OperationModifier.Override;
-                }
                 else
-                {
                     OperationModifier &= ~OperationModifier.Override;
-                }
             }
         }
 
         /// <summary>
-        /// Gets or sets if the operation is hiding another operation.
+        ///     Gets or sets if the operation is hiding another operation.
         /// </summary>
         public bool IsHider
         {
@@ -140,18 +123,14 @@ namespace NReflect.NRMembers
             set
             {
                 if ( value )
-                {
                     OperationModifier |= OperationModifier.Hider;
-                }
                 else
-                {
                     OperationModifier &= ~OperationModifier.Hider;
-                }
             }
         }
 
         /// <summary>
-        /// Gets or sets if the operation is sealed.
+        ///     Gets or sets if the operation is sealed.
         /// </summary>
         public bool IsSealed
         {
@@ -159,18 +138,14 @@ namespace NReflect.NRMembers
             set
             {
                 if ( value )
-                {
                     OperationModifier |= OperationModifier.Sealed;
-                }
                 else
-                {
                     OperationModifier &= ~OperationModifier.Sealed;
-                }
             }
         }
 
         /// <summary>
-        /// Gets a list of parameters of this operation.
+        ///     Gets a list of parameters of this operation.
         /// </summary>
         public List< NRParameter > Parameters { get; private set; }
 

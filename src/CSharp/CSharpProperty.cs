@@ -60,7 +60,7 @@ namespace NClass.CSharp
             get { return base.Name; }
             set
             {
-                var match = nameRegex.Match( value );
+                Match match = nameRegex.Match( value );
 
                 if ( match.Success )
                 {
@@ -125,9 +125,7 @@ namespace NClass.CSharp
             set
             {
                 if ( value && IsIndexer )
-                {
                     throw new BadSyntaxException( Strings.ErrorStaticIndexer );
-                }
                 base.IsStatic = value;
             }
         }
@@ -140,14 +138,10 @@ namespace NClass.CSharp
             get { return base.AccessModifier; }
             set
             {
-                if ( value != AccessModifier.Default && IsExplicitImplementation )
-                {
+                if ( ( value != AccessModifier.Default ) && IsExplicitImplementation )
                     throw new BadSyntaxException( Strings.ErrorExplicitImplementationAccess );
-                }
-                if ( value != AccessModifier.Default && Parent is InterfaceType )
-                {
+                if ( ( value != AccessModifier.Default ) && Parent is InterfaceType )
                     throw new BadSyntaxException( Strings.ErrorInterfaceMemberAccess );
-                }
 
                 base.AccessModifier = value;
             }
@@ -197,7 +191,7 @@ namespace NClass.CSharp
         /// </exception>
         public override void InitFromString( string declaration )
         {
-            var match = propertyRegex.Match( declaration );
+            Match match = propertyRegex.Match( declaration );
             RaiseChangedEvent = false;
 
             try
@@ -208,28 +202,24 @@ namespace NClass.CSharp
                     ReadAccess = AccessModifier.Default;
                     WriteAccess = AccessModifier.Default;
 
-                    var nameGroup = match.Groups[ "name" ];
-                    var typeGroup = match.Groups[ "type" ];
-                    var accessGroup = match.Groups[ "access" ];
-                    var modifierGroup = match.Groups[ "modifier" ];
-                    var nameDotGroup = match.Groups[ "namedot" ];
-                    var argsGroup = match.Groups[ "args" ];
-                    var getGroup = match.Groups[ "get" ];
-                    var setGroup = match.Groups[ "set" ];
-                    var getAccessGroup = match.Groups[ "getaccess" ];
-                    var setAccessGroup = match.Groups[ "setaccess" ];
+                    Group nameGroup = match.Groups[ "name" ];
+                    Group typeGroup = match.Groups[ "type" ];
+                    Group accessGroup = match.Groups[ "access" ];
+                    Group modifierGroup = match.Groups[ "modifier" ];
+                    Group nameDotGroup = match.Groups[ "namedot" ];
+                    Group argsGroup = match.Groups[ "args" ];
+                    Group getGroup = match.Groups[ "get" ];
+                    Group setGroup = match.Groups[ "set" ];
+                    Group getAccessGroup = match.Groups[ "getaccess" ];
+                    Group setAccessGroup = match.Groups[ "setaccess" ];
 
                     ArgumentList.InitFromString( argsGroup.Value );
 
                     // Validating identifier's name
-                    if ( ( nameGroup.Value != "this" || !HasParameter ) && CSharpLanguage.Instance.IsForbiddenName( nameGroup.Value ) )
-                    {
+                    if ( ( ( nameGroup.Value != "this" ) || !HasParameter ) && CSharpLanguage.Instance.IsForbiddenName( nameGroup.Value ) )
                         throw new BadSyntaxException( Strings.ErrorInvalidName );
-                    }
                     else
-                    {
                         ValidName = nameGroup.Value;
-                    }
 
                     // Validating type's name
                     if ( CSharpLanguage.Instance.IsForbiddenTypeName( typeGroup.Value ) )
@@ -273,7 +263,7 @@ namespace NClass.CSharp
 
         public override string GetUmlDescription( bool getType, bool getParameters, bool getParameterNames, bool getInitValue )
         {
-            var builder = new StringBuilder( 50 );
+            StringBuilder builder = new StringBuilder( 50 );
 
             builder.AppendFormat( Name );
             if ( getParameters )
@@ -281,7 +271,7 @@ namespace NClass.CSharp
                 if ( HasParameter )
                 {
                     builder.Append( "[" );
-                    for ( var i = 0; i < ArgumentList.Count; i++ )
+                    for ( int i = 0; i < ArgumentList.Count; i++ )
                     {
                         builder.Append( ArgumentList[ i ] );
                         if ( i < ArgumentList.Count - 1 )
@@ -310,7 +300,7 @@ namespace NClass.CSharp
 
         public string GetDeclarationLine( bool showAccessors )
         {
-            var builder = new StringBuilder( 50 );
+            StringBuilder builder = new StringBuilder( 50 );
 
             if ( AccessModifier != AccessModifier.Default )
             {
@@ -336,7 +326,7 @@ namespace NClass.CSharp
             if ( HasParameter )
             {
                 builder.Append( "[" );
-                for ( var i = 0; i < ArgumentList.Count; i++ )
+                for ( int i = 0; i < ArgumentList.Count; i++ )
                 {
                     builder.Append( ArgumentList[ i ] );
                     if ( i < ArgumentList.Count - 1 )
@@ -349,7 +339,6 @@ namespace NClass.CSharp
             {
                 builder.Append( " { " );
                 if ( !IsWriteonly )
-                {
                     if ( ReadAccess != AccessModifier.Default )
                     {
                         builder.Append( Language.GetAccessString( ReadAccess, true ) );
@@ -359,9 +348,7 @@ namespace NClass.CSharp
                     {
                         builder.Append( "get; " );
                     }
-                }
                 if ( !IsReadonly )
-                {
                     if ( WriteAccess != AccessModifier.Default )
                     {
                         builder.Append( Language.GetAccessString( WriteAccess, true ) );
@@ -371,7 +358,6 @@ namespace NClass.CSharp
                     {
                         builder.Append( "set; " );
                     }
-                }
                 builder.Append( "}" );
             }
 
@@ -385,7 +371,7 @@ namespace NClass.CSharp
 
         public override Operation Clone( CompositeType newParent )
         {
-            var property = new CSharpProperty( newParent );
+            CSharpProperty property = new CSharpProperty( newParent );
             property.CopyFrom( this );
             return property;
         }

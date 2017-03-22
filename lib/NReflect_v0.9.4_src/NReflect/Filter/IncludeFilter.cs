@@ -27,7 +27,7 @@ using NReflect.NRMembers;
 namespace NReflect.Filter
 {
     /// <summary>
-    /// This filter uses exclusion rules to determine which element to import.
+    ///     This filter uses exclusion rules to determine which element to import.
     /// </summary>
     [Serializable]
     public class IncludeFilter : IFilter
@@ -38,7 +38,7 @@ namespace NReflect.Filter
         #region === Con- / Destruction
 
         /// <summary>
-        /// Initializes a new instance of <see cref="IncludeFilter"/>.
+        ///     Initializes a new instance of <see cref="IncludeFilter" />.
         /// </summary>
         public IncludeFilter( )
         {
@@ -53,7 +53,7 @@ namespace NReflect.Filter
         #region === Properties
 
         /// <summary>
-        /// Gets the list of exception rules.
+        ///     Gets the list of exception rules.
         /// </summary>
         public List< FilterRule > Rules { get; set; }
 
@@ -65,7 +65,7 @@ namespace NReflect.Filter
         #region === Methods
 
         /// <summary>
-        /// Determines if a class will be reflected.
+        ///     Determines if a class will be reflected.
         /// </summary>
         /// <param name="nrClass">The class to test.</param>
         /// <returns><c>True</c> if the class should be reflected.</returns>
@@ -77,7 +77,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if an interface will be reflected.
+        ///     Determines if an interface will be reflected.
         /// </summary>
         /// <param name="nrInterface">The interface to test.</param>
         /// <returns><c>True</c> if the interface should be reflected.</returns>
@@ -87,7 +87,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if a struct will be reflected.
+        ///     Determines if a struct will be reflected.
         /// </summary>
         /// <param name="nrStruct">The struct to test.</param>
         /// <returns><c>True</c> if the struct should be reflected.</returns>
@@ -97,7 +97,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if a delegate will be reflected.
+        ///     Determines if a delegate will be reflected.
         /// </summary>
         /// <param name="nrDelegate">The delegate to test.</param>
         /// <returns><c>True</c> if the delegate should be reflected.</returns>
@@ -107,7 +107,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if a enum will be reflected.
+        ///     Determines if a enum will be reflected.
         /// </summary>
         /// <param name="nrEnum">The enum to test.</param>
         /// <returns><c>True</c> if the enum should be reflected.</returns>
@@ -117,7 +117,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if a enum value will be reflected.
+        ///     Determines if a enum value will be reflected.
         /// </summary>
         /// <param name="nrEnumValue">The enum value to test.</param>
         /// <returns><c>True</c> if the enum value should be reflected.</returns>
@@ -127,7 +127,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if a method will be reflected.
+        ///     Determines if a method will be reflected.
         /// </summary>
         /// <param name="nrConstructor">The method to test.</param>
         /// <returns><c>True</c> if the method should be reflected.</returns>
@@ -137,7 +137,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if a method will be reflected.
+        ///     Determines if a method will be reflected.
         /// </summary>
         /// <param name="nrMethod">The method to test.</param>
         /// <returns><c>True</c> if the method should be reflected.</returns>
@@ -147,7 +147,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if an operator will be reflected.
+        ///     Determines if an operator will be reflected.
         /// </summary>
         /// <param name="nrOperator">The operator to test.</param>
         /// <returns><c>True</c> if the operator should be reflected.</returns>
@@ -157,7 +157,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if an event will be reflected.
+        ///     Determines if an event will be reflected.
         /// </summary>
         /// <param name="nrEvent">The event to test.</param>
         /// <returns><c>True</c> if the event should be reflected.</returns>
@@ -167,7 +167,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if a field will be reflected.
+        ///     Determines if a field will be reflected.
         /// </summary>
         /// <param name="nrField">The field to test.</param>
         /// <returns><c>True</c> if the field should be reflected.</returns>
@@ -180,7 +180,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if a property will be reflected.
+        ///     Determines if a property will be reflected.
         /// </summary>
         /// <param name="nrProperty">The property to test.</param>
         /// <returns><c>True</c> if the property should be reflected.</returns>
@@ -190,7 +190,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if an attribute will be reflected.
+        ///     Determines if an attribute will be reflected.
         /// </summary>
         /// <param name="nrAttribute">The attribute to test.</param>
         /// <returns><c>True</c> if the attribute should be reflected.</returns>
@@ -200,17 +200,17 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Determines if a module will be reflected.
+        ///     Determines if a module will be reflected.
         /// </summary>
         /// <param name="nrModule">The module to test.</param>
         /// <returns><c>True</c> if the module should be reflected.</returns>
         public bool Reflect( NRModule nrModule )
         {
-            return Rules.Any( filterRule => filterRule.Element == FilterElements.AllElements | filterRule.Element == FilterElements.Module );
+            return Rules.Any( filterRule => ( filterRule.Element == FilterElements.AllElements ) | ( filterRule.Element == FilterElements.Module ) );
         }
 
         /// <summary>
-        /// Checks if there is a matching rule for the specified type.
+        ///     Checks if there is a matching rule for the specified type.
         /// </summary>
         /// <param name="nrElement">The type of the element to check.</param>
         /// <param name="nrType">The type to check.</param>
@@ -222,7 +222,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Checks if there is a matching rule for the specified operation.
+        ///     Checks if there is a matching rule for the specified operation.
         /// </summary>
         /// <param name="nrElement">The type of the element to check.</param>
         /// <param name="nrOperation">The operation to check.</param>
@@ -235,7 +235,7 @@ namespace NReflect.Filter
         }
 
         /// <summary>
-        /// Checks if there is a rule matching the given values.
+        ///     Checks if there is a rule matching the given values.
         /// </summary>
         /// <param name="element">The element of the rule to check.</param>
         /// <param name="modifier">The modifier of the rule to check.</param>
@@ -243,25 +243,19 @@ namespace NReflect.Filter
         private bool RuleMatch( FilterElements element, FilterModifiers modifier )
         {
             foreach ( FilterRule rule in Rules )
-            {
-                if ( rule.Element == FilterElements.AllElements || rule.Element == element )
-                {
-                    if ( rule.Modifier == FilterModifiers.AllModifiers || ( rule.Modifier & modifier ) != 0 )
-                    {
+                if ( ( rule.Element == FilterElements.AllElements ) || ( rule.Element == element ) )
+                    if ( ( rule.Modifier == FilterModifiers.AllModifiers ) || ( ( rule.Modifier & modifier ) != 0 ) )
                         return true;
-                    }
-                }
-            }
             return false;
             //return Rules.Where(rule => rule.Element == FilterElements.AllElements || rule.Element == element)
             //  .Any(rule => rule.Modifier == FilterModifiers.AllModifiers || (rule.Modifier & modifier) != 0);
         }
 
         /// <summary>
-        /// Gets the <see cref="FilterModifiers"/> for a given <see cref="AccessModifier"/>.
+        ///     Gets the <see cref="FilterModifiers" /> for a given <see cref="AccessModifier" />.
         /// </summary>
-        /// <param name="accessModifier">The <see cref="AccessModifier"/> to convert.</param>
-        /// <returns>The corresponding <see cref="FilterModifiers"/></returns>
+        /// <param name="accessModifier">The <see cref="AccessModifier" /> to convert.</param>
+        /// <returns>The corresponding <see cref="FilterModifiers" /></returns>
         private static FilterModifiers GetFilterModifier( AccessModifier accessModifier )
         {
             switch ( accessModifier )

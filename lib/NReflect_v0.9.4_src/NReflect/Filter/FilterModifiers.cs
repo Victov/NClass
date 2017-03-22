@@ -21,53 +21,53 @@ using System;
 namespace NReflect.Filter
 {
     /// <summary>
-    /// A collection of possible modifiers.
+    ///     A collection of possible modifiers.
     /// </summary>
     [Flags]
     public enum FilterModifiers
     {
         /// <summary>
-        /// Means "all modifiers"
+        ///     Means "all modifiers"
         /// </summary>
         AllModifiers = 0,
 
         /// <summary>
-        /// Modifier private
+        ///     Modifier private
         /// </summary>
         Private = 1,
 
         /// <summary>
-        /// Modifier public
+        ///     Modifier public
         /// </summary>
         Public = 2,
 
         /// <summary>
-        /// Modifier protected
+        ///     Modifier protected
         /// </summary>
         Protected = 4,
 
         /// <summary>
-        /// Modifier internal
+        ///     Modifier internal
         /// </summary>
         Internal = 8,
 
         /// <summary>
-        /// Modifier protected internal
+        ///     Modifier protected internal
         /// </summary>
         ProtectedInternal = 16,
 
         /// <summary>
-        /// static elements
+        ///     static elements
         /// </summary>
         Static = 32,
 
         /// <summary>
-        /// elements which are not static
+        ///     elements which are not static
         /// </summary>
         Instance = 64,
 
         /// <summary>
-        /// The default access modifier.
+        ///     The default access modifier.
         /// </summary>
         Default = 128
     }

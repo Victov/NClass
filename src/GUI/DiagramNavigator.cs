@@ -85,11 +85,11 @@ namespace NClass.GUI
 
         private void MoveVisibleArea( Point location )
         {
-            if ( DocumentVisualizer != null && DocumentVisualizer.HasDocument )
+            if ( ( DocumentVisualizer != null ) && DocumentVisualizer.HasDocument )
             {
-                var zoom = GetZoom( ) / DocumentVisualizer.Zoom;
-                var frameWidth = DocumentVisualizer.VisibleArea.Width * DocumentVisualizer.Zoom;
-                var frameHeight = DocumentVisualizer.VisibleArea.Height * DocumentVisualizer.Zoom;
+                float zoom = GetZoom( ) / DocumentVisualizer.Zoom;
+                float frameWidth = DocumentVisualizer.VisibleArea.Width * DocumentVisualizer.Zoom;
+                float frameHeight = DocumentVisualizer.VisibleArea.Height * DocumentVisualizer.Zoom;
 
                 DocumentVisualizer.Offset = new Point( ( int ) ( location.X / zoom - frameWidth / 2 ), ( int ) ( location.Y / zoom - frameHeight / 2 ) );
             }
@@ -97,32 +97,32 @@ namespace NClass.GUI
 
         private float GetZoom( )
         {
-            var borders = ClientRectangle;
-            var zoom1 = ( float ) borders.Width / DocumentVisualizer.DocumentSize.Width;
-            var zoom2 = ( float ) borders.Height / DocumentVisualizer.DocumentSize.Height;
+            Rectangle borders = ClientRectangle;
+            float zoom1 = ( float ) borders.Width / DocumentVisualizer.DocumentSize.Width;
+            float zoom2 = ( float ) borders.Height / DocumentVisualizer.DocumentSize.Height;
 
             return Math.Min( zoom1, zoom2 );
         }
 
         private void DrawDocument( Graphics g )
         {
-            if ( DocumentVisualizer != null && DocumentVisualizer.HasDocument )
+            if ( ( DocumentVisualizer != null ) && DocumentVisualizer.HasDocument )
             {
                 g.SmoothingMode = SmoothingMode.AntiAlias;
                 g.TextRenderingHint = TextRenderingHint.AntiAlias;
 
-                var borders = ClientRectangle;
-                var zoom = GetZoom( );
+                Rectangle borders = ClientRectangle;
+                float zoom = GetZoom( );
                 g.ScaleTransform( zoom, zoom );
 
                 DocumentVisualizer.DrawDocument( g );
 
                 g.ResetTransform( );
 
-                if ( DocumentVisualizer.VisibleArea.Width < DocumentVisualizer.DocumentSize.Width || DocumentVisualizer.VisibleArea.Height < DocumentVisualizer.DocumentSize.Height )
+                if ( ( DocumentVisualizer.VisibleArea.Width < DocumentVisualizer.DocumentSize.Width ) || ( DocumentVisualizer.VisibleArea.Height < DocumentVisualizer.DocumentSize.Height ) )
                 {
                     g.SmoothingMode = SmoothingMode.None;
-                    var frame = new Rectangle( ( int ) ( DocumentVisualizer.VisibleArea.X * zoom ), ( int ) ( DocumentVisualizer.VisibleArea.Y * zoom ), ( int ) ( DocumentVisualizer.VisibleArea.Width * zoom ), ( int ) ( DocumentVisualizer.VisibleArea.Height * zoom ) );
+                    Rectangle frame = new Rectangle( ( int ) ( DocumentVisualizer.VisibleArea.X * zoom ), ( int ) ( DocumentVisualizer.VisibleArea.Y * zoom ), ( int ) ( DocumentVisualizer.VisibleArea.Width * zoom ), ( int ) ( DocumentVisualizer.VisibleArea.Height * zoom ) );
                     if ( frame.Right > ClientRectangle.Right )
                         frame.Width = ClientRectangle.Right - frame.Left - 1;
                     if ( frame.Bottom > ClientRectangle.Bottom )
@@ -135,9 +135,9 @@ namespace NClass.GUI
         private void DrawFrame( Graphics g, Rectangle frame )
         {
             FrameColor = Color.FromArgb( 80, 100, 150 );
-            var pen = new Pen( FrameColor );
+            Pen pen = new Pen( FrameColor );
 
-            for ( var alpha = 256; alpha >= 4; alpha /= 2 )
+            for ( int alpha = 256; alpha >= 4; alpha /= 2 )
             {
                 pen.Color = Color.FromArgb( alpha - 1, FrameColor );
                 g.DrawRectangle( pen, frame );

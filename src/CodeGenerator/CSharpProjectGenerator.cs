@@ -37,8 +37,8 @@ namespace NClass.CodeGenerator
         {
             get
             {
-                var fileName = ProjectName + ".csproj";
-                var directoryName = ProjectName;
+                string fileName = ProjectName + ".csproj";
+                string directoryName = ProjectName;
 
                 return Path.Combine( directoryName, fileName );
             }
@@ -53,16 +53,17 @@ namespace NClass.CodeGenerator
         {
             try
             {
-                var templateDir = Path.Combine( Application.StartupPath, "Templates" );
-                var templateFile = Path.Combine( templateDir, "csproj.template" );
-                var projectFile = Path.Combine( location, RelativeProjectFileName );
+                string templateDir = Path.Combine( Application.StartupPath, "Templates" );
+                string templateFile = Path.Combine( templateDir, "csproj.template" );
+                string projectFile = Path.Combine( location, RelativeProjectFileName );
 
-                using ( var reader = new StreamReader( templateFile ) )
-                    using ( var writer = new StreamWriter( projectFile, false, reader.CurrentEncoding ) )
+                using ( StreamReader reader = new StreamReader( templateFile ) )
+                {
+                    using ( StreamWriter writer = new StreamWriter( projectFile, false, reader.CurrentEncoding ) )
                     {
                         while ( !reader.EndOfStream )
                         {
-                            var line = reader.ReadLine( );
+                            string line = reader.ReadLine( );
 
                             line = line.Replace( "${RootNamespace}", RootNamespace );
                             line = line.Replace( "${AssemblyName}", ProjectName );
@@ -99,19 +100,16 @@ namespace NClass.CodeGenerator
                             }
 
                             if ( line.Contains( "${SourceFile}" ) )
-                            {
-                                foreach ( var fileName in FileNames )
+                                foreach ( string fileName in FileNames )
                                 {
-                                    var newLine = line.Replace( "${SourceFile}", fileName );
+                                    string newLine = line.Replace( "${SourceFile}", fileName );
                                     writer.WriteLine( newLine );
                                 }
-                            }
                             else
-                            {
                                 writer.WriteLine( line );
-                            }
                         }
                     }
+                }
 
                 return true;
             }

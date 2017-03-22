@@ -19,143 +19,143 @@
 namespace NReflect.NRMembers
 {
     /// <summary>
-    /// Enumerates the types of operators.
+    ///     Enumerates the types of operators.
     /// </summary>
     public enum OperatorType
     {
         /// <summary>
-        /// The unaryplus operator.
+        ///     The unaryplus operator.
         /// </summary>
         UnaryPlus,
 
         /// <summary>
-        /// The unary negation operator.
+        ///     The unary negation operator.
         /// </summary>
         UnaryNegation,
 
         /// <summary>
-        /// The logical not operator.
+        ///     The logical not operator.
         /// </summary>
         LogicalNot,
 
         /// <summary>
-        /// The ones complement operator.
+        ///     The ones complement operator.
         /// </summary>
         OnesComplement,
 
         /// <summary>
-        /// The increment operator.
+        ///     The increment operator.
         /// </summary>
         Increment,
 
         /// <summary>
-        /// The decrement operator.
+        ///     The decrement operator.
         /// </summary>
         Decrement,
 
         /// <summary>
-        /// The true operator.
+        ///     The true operator.
         /// </summary>
         True,
 
         /// <summary>
-        /// The false operator.
+        ///     The false operator.
         /// </summary>
         False,
 
         /// <summary>
-        /// The addition operator.
+        ///     The addition operator.
         /// </summary>
         Addition,
 
         /// <summary>
-        /// The subtraction operator.
+        ///     The subtraction operator.
         /// </summary>
         Subtraction,
 
         /// <summary>
-        /// The multiply operator.
+        ///     The multiply operator.
         /// </summary>
         Multiply,
 
         /// <summary>
-        /// The division operator.
+        ///     The division operator.
         /// </summary>
         Division,
 
         /// <summary>
-        /// The modulus operator.
+        ///     The modulus operator.
         /// </summary>
         Modulus,
 
         /// <summary>
-        /// The bitwise and operator.
+        ///     The bitwise and operator.
         /// </summary>
         BitwiseAnd,
 
         /// <summary>
-        /// The bitwise or operator.
+        ///     The bitwise or operator.
         /// </summary>
         BitwiseOr,
 
         /// <summary>
-        /// The exclusive or operator.
+        ///     The exclusive or operator.
         /// </summary>
         ExclusiveOr,
 
         /// <summary>
-        /// The left shift operator.
+        ///     The left shift operator.
         /// </summary>
         LeftShift,
 
         /// <summary>
-        /// The right shift operator.
+        ///     The right shift operator.
         /// </summary>
         RightShift,
 
         /// <summary>
-        /// The equality operator.
+        ///     The equality operator.
         /// </summary>
         Equality,
 
         /// <summary>
-        /// The inequality operator.
+        ///     The inequality operator.
         /// </summary>
         Inequality,
 
         /// <summary>
-        /// The less than operator.
+        ///     The less than operator.
         /// </summary>
         LessThan,
 
         /// <summary>
-        /// The greater than operator.
+        ///     The greater than operator.
         /// </summary>
         GreaterThan,
 
         /// <summary>
-        /// The less than or equal operator.
+        ///     The less than or equal operator.
         /// </summary>
         LessThanOrEqual,
 
         /// <summary>
-        /// The greater than or equal operator.
+        ///     The greater than or equal operator.
         /// </summary>
         GreaterThanOrEqual,
 
         /// <summary>
-        /// The implicit conversion operator.
+        ///     The implicit conversion operator.
         /// </summary>
         Implicit,
 
         /// <summary>
-        /// The explicit conversion operator.
+        ///     The explicit conversion operator.
         /// </summary>
         Explicit,
 
         /// <summary>
-        /// The type of the operator is unknown.
+        ///     The type of the operator is unknown.
         /// </summary>
-        Unknown = -1,
+        Unknown = -1
     }
 }

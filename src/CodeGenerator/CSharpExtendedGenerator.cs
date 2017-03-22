@@ -65,7 +65,7 @@ namespace NClass.CodeGenerator
             if ( generetaNUnit )
             {
                 // Generate the project
-                var gen = new NStub.CSharp.CSharpProjectGenerator( string.Format( "{0}_unitary_tests", projectName ), outputDirectory );
+                NStub.CSharp.CSharpProjectGenerator gen = new NStub.CSharp.CSharpProjectGenerator( string.Format( "{0}_unitary_tests", projectName ), outputDirectory );
                 // gen.ReferencedAssemblies
 
                 gen.GenerateProjectFile( );
@@ -83,13 +83,13 @@ namespace NClass.CodeGenerator
 
         private void FormatSourceCode( string fileName, CSharpFormattingOptions formatStyle )
         {
-            var parser = new CSharpParser( );
+            CSharpParser parser = new CSharpParser( );
 
             // Open the C# source file to read
             using ( TextReader sr = new StreamReader( fileName ) )
             {
                 // TO DO: TextEditorOptions
-                var formater = new CSharpFormatter( formatStyle );
+                CSharpFormatter formater = new CSharpFormatter( formatStyle );
                 formater.Format( sr.ReadToEnd( ) );
 
                 // Write the new C# source file if modified

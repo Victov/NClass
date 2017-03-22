@@ -84,18 +84,17 @@ namespace NClass.AssemblyCSharpImport
                 diagram.Name = Path.GetFileName( fileName );
                 diagram.RedrawSuspended = true;
 
-                var parser = new CSharpParser( );
+                CSharpParser parser = new CSharpParser( );
 
                 // Open the C# source file to read
-                using ( var sr = new StreamReader( fileName ) )
+                using ( StreamReader sr = new StreamReader( fileName ) )
                 {
                     // Parse the C# file
-                    var syntaxTree = parser.Parse( sr, fileName );
+                    SyntaxTree syntaxTree = parser.Parse( sr, fileName );
 
                     if ( parser.HasErrors == false )
                     {
-                        foreach ( var tp in syntaxTree.Descendants.OfType< TypeDeclaration >( ) )
-                        {
+                        foreach ( TypeDeclaration tp in syntaxTree.Descendants.OfType< TypeDeclaration >( ) )
                             switch ( tp.ClassType )
                             {
                                 case ClassType.Class:
@@ -113,9 +112,8 @@ namespace NClass.AssemblyCSharpImport
                                 default:
                                     continue;
                             }
-                        }
 
-                        foreach ( var dd in syntaxTree.Descendants.OfType< DelegateDeclaration >( ) )
+                        foreach ( DelegateDeclaration dd in syntaxTree.Descendants.OfType< DelegateDeclaration >( ) )
                             AddDelegate( dd );
 
                         Common.ArrangeTypes( diagram );
@@ -163,7 +161,7 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         private void AddClass( TypeDeclaration classTp )
         {
-            var classType = diagram.AddClass( );
+            Core.ClassType classType = diagram.AddClass( );
             classType.Name = classTp.Name;
             classType.AccessModifier = classTp.Modifiers.ToNClass( );
             classType.Modifier = classTp.Modifiers.ToNClassFromClass( );
@@ -182,7 +180,7 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         private void AddStrct( TypeDeclaration strctTp )
         {
-            var structureType = diagram.AddStructure( );
+            StructureType structureType = diagram.AddStructure( );
             structureType.Name = strctTp.Name;
             structureType.AccessModifier = strctTp.Modifiers.ToNClass( );
 
@@ -200,7 +198,7 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         private void AddInterface( TypeDeclaration interfaceTp )
         {
-            var interfaceType = diagram.AddInterface( );
+            InterfaceType interfaceType = diagram.AddInterface( );
             interfaceType.Name = interfaceTp.Name;
             interfaceType.AccessModifier = interfaceTp.Modifiers.ToNClass( );
 
@@ -214,12 +212,12 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         private void AddDelegate( DelegateDeclaration dd )
         {
-            var delegateType = diagram.AddDelegate( );
+            DelegateType delegateType = diagram.AddDelegate( );
             delegateType.Name = dd.Name;
             delegateType.AccessModifier = dd.Modifiers.ToNClass( );
             delegateType.ReturnType = dd.ReturnType.ToString( );
 
-            foreach ( var ichParameter in dd.Parameters )
+            foreach ( ParameterDeclaration ichParameter in dd.Parameters )
                 delegateType.AddParameter( ichParameter.ToString( ) ); // To Check
         }
 
@@ -228,7 +226,7 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         private void AddEnum( TypeDeclaration enumTp )
         {
-            var enumType = diagram.AddEnum( );
+            EnumType enumType = diagram.AddEnum( );
             enumType.Name = enumTp.Name;
             enumType.AccessModifier = enumTp.Modifiers.ToNClass( );
 
@@ -246,13 +244,13 @@ namespace NClass.AssemblyCSharpImport
         /// <param name="tp">.</param>
         private void AddFields( SingleInharitanceType type, TypeDeclaration tp )
         {
-            foreach ( var fp in tp.Descendants.OfType< FieldDeclaration >( ) )
+            foreach ( FieldDeclaration fp in tp.Descendants.OfType< FieldDeclaration >( ) )
             {
-                var variable = fp.Variables.First( );
+                VariableInitializer variable = fp.Variables.First( );
                 if ( variable == null )
                     continue;
 
-                var fld = type.AddField( );
+                Field fld = type.AddField( );
 
                 fld.Name = variable.Name;
                 fld.AccessModifier = fp.Modifiers.ToNClass( );
@@ -268,9 +266,9 @@ namespace NClass.AssemblyCSharpImport
         /// <param name="tp">.</param>
         private void AddProperties( CompositeType type, TypeDeclaration tp )
         {
-            foreach ( var pp in tp.Descendants.OfType< PropertyDeclaration >( ) )
+            foreach ( PropertyDeclaration pp in tp.Descendants.OfType< PropertyDeclaration >( ) )
             {
-                var prop = type.AddProperty( );
+                Property prop = type.AddProperty( );
 
                 prop.Name = pp.Name;
                 prop.AccessModifier = pp.Modifiers.ToNClass( );
@@ -286,13 +284,13 @@ namespace NClass.AssemblyCSharpImport
         /// <param name="tp">.</param>
         private void AddEvents( CompositeType type, TypeDeclaration tp )
         {
-            foreach ( var ep in tp.Descendants.OfType< EventDeclaration >( ) )
+            foreach ( EventDeclaration ep in tp.Descendants.OfType< EventDeclaration >( ) )
             {
-                var variable = ep.Variables.First( );
+                VariableInitializer variable = ep.Variables.First( );
                 if ( variable == null )
                     continue;
 
-                var ev = type.AddEvent( );
+                Event ev = type.AddEvent( );
 
                 ev.Name = variable.Name;
                 ev.AccessModifier = ep.Modifiers.ToNClass( );
@@ -307,16 +305,16 @@ namespace NClass.AssemblyCSharpImport
         /// <param name="tp">.</param>
         private void AddConstructors( CompositeType type, TypeDeclaration tp )
         {
-            foreach ( var cp in tp.Descendants.OfType< ConstructorDeclaration >( ) )
+            foreach ( ConstructorDeclaration cp in tp.Descendants.OfType< ConstructorDeclaration >( ) )
             {
-                var cons = type.AddConstructor( );
+                Constructor cons = type.AddConstructor( );
 
                 cons.Name = cp.Name;
                 cons.AccessModifier = cp.Modifiers.ToNClass( );
 
-                var Arg = new CSharpArgumentList( );
+                CSharpArgumentList Arg = new CSharpArgumentList( );
 
-                foreach ( var ichParameter in cp.Parameters )
+                foreach ( ParameterDeclaration ichParameter in cp.Parameters )
                     Arg.Add( ichParameter.Name, ichParameter.Type.ToString( ), ichParameter.ParameterModifier.ToNClass( ), ichParameter.DefaultExpression.ToString( ) );
 
                 cons.ArgumentList = Arg;
@@ -330,9 +328,9 @@ namespace NClass.AssemblyCSharpImport
         /// <param name="tp">.</param>
         private void AddDestructors( CompositeType type, TypeDeclaration tp )
         {
-            foreach ( var dp in tp.Descendants.OfType< DestructorDeclaration >( ) )
+            foreach ( DestructorDeclaration dp in tp.Descendants.OfType< DestructorDeclaration >( ) )
             {
-                var des = type.AddDestructor( );
+                Destructor des = type.AddDestructor( );
 
                 des.Name = dp.Name;
             }
@@ -343,23 +341,23 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         private void AddMethods( CompositeType type, TypeDeclaration tp )
         {
-            foreach ( var mp in tp.Descendants.OfType< MethodDeclaration >( ) )
+            foreach ( MethodDeclaration mp in tp.Descendants.OfType< MethodDeclaration >( ) )
             {
-                var method = type.AddMethod( );
+                Method method = type.AddMethod( );
 
                 method.Name = mp.Name;
 
                 method.Type = mp.ReturnType.ToString( );
                 method.AccessModifier = mp.Modifiers.ToNClass( );
 
-                var Arg = new CSharpArgumentList( );
+                CSharpArgumentList Arg = new CSharpArgumentList( );
 
-                foreach ( var ichParameter in mp.Parameters )
+                foreach ( ParameterDeclaration ichParameter in mp.Parameters )
                 {
-                    var defaultValue = string.Empty;
+                    string defaultValue = string.Empty;
                     if ( ichParameter.DefaultExpression is PrimitiveExpression )
                     {
-                        var defaultExpression = ( PrimitiveExpression ) ichParameter.DefaultExpression;
+                        PrimitiveExpression defaultExpression = ( PrimitiveExpression ) ichParameter.DefaultExpression;
                         defaultValue = defaultExpression.Value.ToString( );
                     }
 
@@ -375,17 +373,17 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         private void AddOperators( CompositeType type, TypeDeclaration tp )
         {
-            foreach ( var op in tp.Descendants.OfType< OperatorDeclaration >( ) )
+            foreach ( OperatorDeclaration op in tp.Descendants.OfType< OperatorDeclaration >( ) )
             {
-                var method = type.AddMethod( );
+                Method method = type.AddMethod( );
 
                 method.Name = op.Name;
                 method.Type = op.ReturnType.ToString( );
                 method.AccessModifier = op.Modifiers.ToNClass( );
 
-                var Arg = new CSharpArgumentList( );
+                CSharpArgumentList Arg = new CSharpArgumentList( );
 
-                foreach ( var ichParameter in op.Parameters )
+                foreach ( ParameterDeclaration ichParameter in op.Parameters )
                     Arg.Add( ichParameter.Name, ichParameter.Type.ToString( ), ichParameter.ParameterModifier.ToNClass( ), ichParameter.DefaultExpression.ToString( ) );
 
                 method.ArgumentList = Arg;
@@ -399,7 +397,7 @@ namespace NClass.AssemblyCSharpImport
         /// <param name="values">A list of enum values to add.</param>
         private void AddEnumValues( EnumType type, IEnumerable< EnumValue > values )
         {
-            foreach ( var enumValue in values )
+            foreach ( EnumValue enumValue in values )
                 type.AddValue( enumValue.Name );
         }
 

@@ -40,19 +40,17 @@ namespace NClass.Core
 
         public sealed override string GetUmlDescription( bool getType, bool getParameters, bool getParameterNames, bool getInitValue )
         {
-            var builder = new StringBuilder( 100 );
+            StringBuilder builder = new StringBuilder( 100 );
 
             builder.AppendFormat( "{0}(", Name );
 
             if ( getParameters )
-            {
-                for ( var i = 0; i < ArgumentList.Count; i++ )
+                for ( int i = 0; i < ArgumentList.Count; i++ )
                 {
                     builder.Append( ArgumentList[ i ].GetUmlDescription( getParameterNames, getInitValue ) );
                     if ( i < ArgumentList.Count - 1 )
                         builder.Append( ", " );
                 }
-            }
 
             if ( getType && !string.IsNullOrEmpty( Type ) )
                 builder.AppendFormat( ") : {0}", Type );

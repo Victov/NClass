@@ -76,25 +76,25 @@ namespace NClass.GUI
 
         private void MoveSlider( int location, bool snapToCenter )
         {
-            var center = Width / 2;
+            int center = Width / 2;
 
             // Mono hack for a ToolStripItem layout problem
             if ( MonoHelper.IsRunningOnMono )
                 location -= Bounds.Left;
 
-            if ( snapToCenter && Math.Abs( location - center ) <= PrecisionSize )
+            if ( snapToCenter && ( Math.Abs( location - center ) <= PrecisionSize ) )
                 location = center;
 
             if ( location < center )
             {
-                var left = SliderWidth / 2;
-                var scale = ( DefaultValue - MinValue ) / ( center - left );
+                int left = SliderWidth / 2;
+                float scale = ( DefaultValue - MinValue ) / ( center - left );
                 ZoomValue = ( location - left ) * scale + MinValue;
             }
             else // location >= center
             {
-                var right = Width - SliderWidth / 2;
-                var scale = ( MaxValue - DefaultValue ) / ( right - center );
+                int right = Width - SliderWidth / 2;
+                float scale = ( MaxValue - DefaultValue ) / ( right - center );
                 ZoomValue = ( location - center ) * scale + DefaultValue;
             }
         }
@@ -109,9 +109,9 @@ namespace NClass.GUI
         {
             base.OnMouseDown( e );
 
-            if ( Enabled && e.Button == MouseButtons.Left )
+            if ( Enabled && ( e.Button == MouseButtons.Left ) )
             {
-                var snapToCenter = Control.ModifierKeys == Keys.None;
+                bool snapToCenter = Control.ModifierKeys == Keys.None;
                 MoveSlider( e.X, snapToCenter );
             }
         }
@@ -120,9 +120,9 @@ namespace NClass.GUI
         {
             base.OnMouseDown( e );
 
-            if ( Enabled && e.Button == MouseButtons.Left )
+            if ( Enabled && ( e.Button == MouseButtons.Left ) )
             {
-                var snapToCenter = Control.ModifierKeys == Keys.None;
+                bool snapToCenter = Control.ModifierKeys == Keys.None;
                 MoveSlider( e.X, snapToCenter );
             }
         }
@@ -130,16 +130,16 @@ namespace NClass.GUI
         protected override void OnPaint( PaintEventArgs e )
         {
             base.OnPaint( e );
-            var g = e.Graphics;
+            Graphics g = e.Graphics;
 
-            var center = new Point( Width / 2, Height / 2 );
-            var left = SliderWidth / 2;
-            var right = Width - SliderWidth / 2;
-            var top = center.Y - 3;
-            var bottom = center.Y + 3;
+            Point center = new Point( Width / 2, Height / 2 );
+            int left = SliderWidth / 2;
+            int right = Width - SliderWidth / 2;
+            int top = center.Y - 3;
+            int bottom = center.Y + 3;
 
             // Draw horizontal and vertical lines
-            var pen = Enabled ? linePen : disabledPen;
+            Pen pen = Enabled ? linePen : disabledPen;
             g.DrawLine( pen, left, center.Y, right, center.Y );
             g.DrawLine( pen, center.X, top, center.X, bottom );
 
@@ -155,14 +155,14 @@ namespace NClass.GUI
 
             if ( ZoomValue < DefaultValue )
             {
-                var regionWidth = Width / 2 - SliderWidth / 2;
-                var scale = regionWidth / ( DefaultValue - MinValue );
+                int regionWidth = Width / 2 - SliderWidth / 2;
+                float scale = regionWidth / ( DefaultValue - MinValue );
                 sliderLocation = ( int ) Math.Round( scale * ( ZoomValue - MinValue ) ) + SliderWidth / 2;
             }
             else
             {
-                var regionWidth = Width / 2 - SliderWidth / 2;
-                var scale = regionWidth / ( MaxValue - DefaultValue );
+                int regionWidth = Width / 2 - SliderWidth / 2;
+                float scale = regionWidth / ( MaxValue - DefaultValue );
                 sliderLocation = ( int ) Math.Round( scale * ( ZoomValue - DefaultValue ) ) + Width / 2;
             }
 
@@ -171,8 +171,8 @@ namespace NClass.GUI
                 slider = Resources.DisabledSlider;
             else
                 slider = Resources.Slider;
-            var top = Height / 2 - SliderHeight / 2;
-            var left = sliderLocation - SliderWidth / 2;
+            int top = Height / 2 - SliderHeight / 2;
+            int left = sliderLocation - SliderWidth / 2;
 
             g.DrawImage( slider, left, top, SliderWidth, SliderHeight );
         }

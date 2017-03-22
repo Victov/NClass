@@ -30,26 +30,24 @@ namespace NClass.Translations
         static UILanguage( )
         {
             // Load localization resources
-            var assembly = Assembly.GetExecutingAssembly( );
-            var resourceDir = Path.GetDirectoryName( assembly.Location );
+            Assembly assembly = Assembly.GetExecutingAssembly( );
+            string resourceDir = Path.GetDirectoryName( assembly.Location );
 
             // Search for localized cultures
             try
             {
-                var resource = new DirectoryInfo( resourceDir );
-                var directories = resource.GetDirectories( "*", SearchOption.TopDirectoryOnly );
+                DirectoryInfo resource = new DirectoryInfo( resourceDir );
+                DirectoryInfo[] directories = resource.GetDirectories( "*", SearchOption.TopDirectoryOnly );
                 availableCultures = new List< UILanguage >( directories.Length + 2 );
 
-                foreach ( var directory in directories )
-                {
-                    if ( directory.Name != "Plugins" && directory.Name != "Templates" )
+                foreach ( DirectoryInfo directory in directories )
+                    if ( ( directory.Name != "Plugins" ) && ( directory.Name != "Templates" ) )
                     {
-                        var cultureName = directory.Name;
-                        var language = CreateUILanguage( cultureName );
+                        string cultureName = directory.Name;
+                        UILanguage language = CreateUILanguage( cultureName );
                         if ( language != null )
                             availableCultures.Add( language );
                     }
-                }
             }
             catch
             {
@@ -108,7 +106,7 @@ namespace NClass.Translations
 
         public static UILanguage CreateDefaultUILanguage( )
         {
-            var language = new UILanguage( );
+            UILanguage language = new UILanguage( );
             language.IsDefault = true;
 
             return language;
@@ -121,7 +119,7 @@ namespace NClass.Translations
 
             try
             {
-                var culture = new CultureInfo( cultureName );
+                CultureInfo culture = new CultureInfo( cultureName );
                 return new UILanguage( culture );
             }
             catch ( ArgumentException )
@@ -132,7 +130,7 @@ namespace NClass.Translations
 
         public override bool Equals( object obj )
         {
-            var other = obj as UILanguage;
+            UILanguage other = obj as UILanguage;
 
             if ( other == null )
                 return false;

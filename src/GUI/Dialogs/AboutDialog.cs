@@ -53,10 +53,9 @@ namespace NClass.GUI.Dialogs
 
         private void lnkEmail_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
         {
-            var target = e.Link.LinkData as string;
+            string target = e.Link.LinkData as string;
 
             if ( target != null )
-            {
                 try
                 {
                     Process.Start( target );
@@ -65,15 +64,13 @@ namespace NClass.GUI.Dialogs
                 {
                     MessageBox.Show( string.Format( "{0}\n{1}: {2}", Strings.CommandFailed, Strings.ErrorsReason, ex.Message ), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error );
                 }
-            }
         }
 
         private void lnkHomepage_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
         {
-            var target = e.Link.LinkData as string;
+            string target = e.Link.LinkData as string;
 
             if ( target != null )
-            {
                 try
                 {
                     Process.Start( target );
@@ -82,7 +79,6 @@ namespace NClass.GUI.Dialogs
                 {
                     MessageBox.Show( string.Format( "{0}\n{1}: {2}", Strings.CommandFailed, Strings.ErrorsReason, ex.Message ), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error );
                 }
-            }
         }
 
         private void btnClose_Click( object sender, EventArgs e )

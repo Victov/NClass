@@ -24,7 +24,7 @@ using NReflect.NRAttributes;
 namespace NReflect.NRParameters
 {
     /// <summary>
-    /// Represents a parameter which is reflected by NReflect.
+    ///     Represents a parameter which is reflected by NReflect.
     /// </summary>
     [Serializable]
     public class NRParameter : IVisitable, IAttributable
@@ -35,11 +35,27 @@ namespace NReflect.NRParameters
         #region === Con- / Destruction
 
         /// <summary>
-        /// Initializes a new instance of <see cref="NRParameter"/>.
+        ///     Initializes a new instance of <see cref="NRParameter" />.
         /// </summary>
         public NRParameter( )
         {
             Attributes = new List< NRAttribute >( );
+        }
+
+        #endregion
+
+        // ========================================================================
+        // Methods
+
+        #region === Methods
+
+        /// <summary>
+        ///     Accept an <see cref="IVisitor" /> instance on the implementing class and all its children.
+        /// </summary>
+        /// <param name="visitor">The <see cref="IVisitor" /> instance to accept.</param>
+        public void Accept( IVisitor visitor )
+        {
+            visitor.Visit( this );
         }
 
         #endregion
@@ -50,57 +66,41 @@ namespace NReflect.NRParameters
         #region === Properties
 
         /// <summary>
-        /// Gets or sets the name of the parameter.
+        ///     Gets or sets the name of the parameter.
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the type of the parameter.
+        ///     Gets or sets the type of the parameter.
         /// </summary>
         public NRTypeUsage Type { get; set; }
 
         /// <summary>
-        /// Gets or sets the full name of the type.
+        ///     Gets or sets the full name of the type.
         /// </summary>
         public string TypeFullName { get; set; }
 
         /// <summary>
-        /// Gets or sets the parameter modifier for this parameter.
+        ///     Gets or sets the parameter modifier for this parameter.
         /// </summary>
         public ParameterModifier ParameterModifier { get; set; }
 
         /// <summary>
-        /// Gets or sets the default value of the parameter. The value is only valid if
-        /// <see cref="ParameterModifier"/> is set to <see cref="Modifier.ParameterModifier.Optional"/>.
+        ///     Gets or sets the default value of the parameter. The value is only valid if
+        ///     <see cref="ParameterModifier" /> is set to <see cref="Modifier.ParameterModifier.Optional" />.
         /// </summary>
         public string DefaultValue { get; set; }
 
         /// <summary>
-        /// Gets a list of attributes of the parameter.
+        ///     Gets a list of attributes of the parameter.
         /// </summary>
-        public List< NRAttribute > Attributes { get; private set; }
+        public List< NRAttribute > Attributes { get; }
 
         /// <summary>
-        /// Gets or sets a value indicating if the parameter is the extension parameter
-        /// of an extension method.
+        ///     Gets or sets a value indicating if the parameter is the extension parameter
+        ///     of an extension method.
         /// </summary>
         public bool IsExtensionParameter { get; set; }
-
-        #endregion
-
-        // ========================================================================
-        // Methods
-
-        #region === Methods
-
-        /// <summary>
-        /// Accept an <see cref="IVisitor"/> instance on the implementing class and all its children.
-        /// </summary>
-        /// <param name="visitor">The <see cref="IVisitor"/> instance to accept.</param>
-        public void Accept( IVisitor visitor )
-        {
-            visitor.Visit( this );
-        }
 
         #endregion
     }

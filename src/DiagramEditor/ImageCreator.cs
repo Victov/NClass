@@ -49,12 +49,13 @@ namespace NClass.DiagramEditor
             if ( document == null )
                 throw new ArgumentNullException( "document" );
 
-            var areaF = document.GetPrintingArea( true );
+            RectangleF areaF = document.GetPrintingArea( true );
             areaF.Offset( 0.5F, 0.5F );
-            var area = Rectangle.FromLTRB( ( int ) areaF.Left, ( int ) areaF.Top, ( int ) Math.Ceiling( areaF.Right ), ( int ) Math.Ceiling( areaF.Bottom ) );
+            Rectangle area = Rectangle.FromLTRB( ( int ) areaF.Left, ( int ) areaF.Top, ( int ) Math.Ceiling( areaF.Right ), ( int ) Math.Ceiling( areaF.Bottom ) );
 
-            using ( var image = new Bitmap( area.Width, area.Height, PixelFormat.Format24bppRgb ) )
-                using ( var g = Graphics.FromImage( image ) )
+            using ( Bitmap image = new Bitmap( area.Width, area.Height, PixelFormat.Format24bppRgb ) )
+            {
+                using ( Graphics g = Graphics.FromImage( image ) )
                 {
                     // Set drawing parameters
                     g.SmoothingMode = SmoothingMode.HighQuality;
@@ -78,6 +79,7 @@ namespace NClass.DiagramEditor
                         //UNDONE: exception handling of CopyAsImage()
                     }
                 }
+            }
         }
 
         /// <exception cref="ArgumentNullException">
@@ -96,7 +98,7 @@ namespace NClass.DiagramEditor
             if ( document == null )
                 throw new ArgumentNullException( "document" );
 
-            using ( var saveAsImageDialog = new SaveFileDialog( ) )
+            using ( SaveFileDialog saveAsImageDialog = new SaveFileDialog( ) )
             {
                 saveAsImageDialog.DefaultExt = "png";
                 if ( Settings.Default.UseClearTypeForImages )
@@ -105,7 +107,7 @@ namespace NClass.DiagramEditor
                     saveAsImageDialog.Filter = DialogFilter;
                 saveAsImageDialog.FilterIndex = 4;
                 saveAsImageDialog.FileName = document.GetSelectedElementName( ) ?? document.Name;
-                if ( initDir == null && document.Project != null )
+                if ( ( initDir == null ) && ( document.Project != null ) )
                     saveAsImageDialog.InitialDirectory = document.Project.GetProjectDirectory( );
                 else
                     saveAsImageDialog.InitialDirectory = initDir;
@@ -114,7 +116,7 @@ namespace NClass.DiagramEditor
                 {
                     initDir = Path.GetDirectoryName( saveAsImageDialog.FileName );
 
-                    var extension = Path.GetExtension( saveAsImageDialog.FileName );
+                    string extension = Path.GetExtension( saveAsImageDialog.FileName );
                     ImageFormat format;
 
                     switch ( extension.ToLower( ) )
@@ -141,7 +143,7 @@ namespace NClass.DiagramEditor
                             format = ImageFormat.Png;
                             break;
                     }
-                    var transparent = saveAsImageDialog.FilterIndex == 5 && !Settings.Default.UseClearTypeForImages;
+                    bool transparent = ( saveAsImageDialog.FilterIndex == 5 ) && !Settings.Default.UseClearTypeForImages;
 
                     SaveAsImage( document, saveAsImageDialog.FileName, format, selectedOnly, transparent );
                 }
@@ -152,20 +154,20 @@ namespace NClass.DiagramEditor
         {
             const int Margin = 20;
 
-            var areaF = document.GetPrintingArea( selectedOnly );
+            RectangleF areaF = document.GetPrintingArea( selectedOnly );
             areaF.Offset( 0.5F, 0.5F );
-            var area = Rectangle.FromLTRB( ( int ) areaF.Left, ( int ) areaF.Top, ( int ) Math.Ceiling( areaF.Right ), ( int ) Math.Ceiling( areaF.Bottom ) );
+            Rectangle area = Rectangle.FromLTRB( ( int ) areaF.Left, ( int ) areaF.Top, ( int ) Math.Ceiling( areaF.Right ), ( int ) Math.Ceiling( areaF.Bottom ) );
 
             if ( format == ImageFormat.Emf ) // Save to metafile
             {
-                var metaG = control.CreateGraphics( );
-                var hc = metaG.GetHdc( );
+                Graphics metaG = control.CreateGraphics( );
+                IntPtr hc = metaG.GetHdc( );
                 Graphics g = null;
 
                 try
                 {
                     // Set drawing parameters
-                    var meta = new Metafile( path, hc );
+                    Metafile meta = new Metafile( path, hc );
                     g = Graphics.FromImage( meta );
                     g.SmoothingMode = SmoothingMode.HighQuality;
                     if ( Settings.Default.UseClearTypeForImages )
@@ -194,8 +196,8 @@ namespace NClass.DiagramEditor
             }
             else // Save to rastered image
             {
-                var width = area.Width + Margin * 2;
-                var height = area.Height + Margin * 2;
+                int width = area.Width + Margin * 2;
+                int height = area.Height + Margin * 2;
                 PixelFormat pixelFormat;
 
                 if ( transparent )
@@ -203,8 +205,9 @@ namespace NClass.DiagramEditor
                 else
                     pixelFormat = PixelFormat.Format24bppRgb;
 
-                using ( var image = new Bitmap( width, height, pixelFormat ) )
-                    using ( var g = Graphics.FromImage( image ) )
+                using ( Bitmap image = new Bitmap( width, height, pixelFormat ) )
+                {
+                    using ( Graphics g = Graphics.FromImage( image ) )
                     {
                         // Set drawing parameters
                         g.SmoothingMode = SmoothingMode.HighQuality;
@@ -230,6 +233,7 @@ namespace NClass.DiagramEditor
                             MessageBox.Show( string.Format( "{0}\n{1}: {2}", Strings.ErrorInSavingImage, Strings.ErrorsReason, ex.Message ), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error );
                         }
                     }
+                }
             }
         }
     }

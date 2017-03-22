@@ -23,14 +23,14 @@ namespace NClass.DiagramEditor.ClassDiagram.ContextMenus
 {
     internal sealed class TypeShapeContextMenu : DiagramContextMenu
     {
-        private ToolStripMenuItem mnuCollapseAllSelected;
-        private ToolStripMenuItem mnuExpandAllSelected;
-        private ToolStripMenuItem mnuEditMembers;
-
-        private ToolStripMenuItem mnuSize;
+        private ToolStripMenuItem mnuAutoHeight;
         private ToolStripMenuItem mnuAutoSize;
         private ToolStripMenuItem mnuAutoWidth;
-        private ToolStripMenuItem mnuAutoHeight;
+        private ToolStripMenuItem mnuCollapseAllSelected;
+        private ToolStripMenuItem mnuEditMembers;
+        private ToolStripMenuItem mnuExpandAllSelected;
+
+        private ToolStripMenuItem mnuSize;
 
         private TypeShapeContextMenu( )
         {
@@ -105,7 +105,7 @@ namespace NClass.DiagramEditor.ClassDiagram.ContextMenus
         {
             if ( Diagram != null )
             {
-                var typeShape = Diagram.TopSelectedElement as TypeShape;
+                TypeShape typeShape = Diagram.TopSelectedElement as TypeShape;
                 if ( typeShape != null )
                 {
                     typeShape.IsActive = false;

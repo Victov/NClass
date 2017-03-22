@@ -72,10 +72,8 @@ namespace NClass.Java
             get { return base.AccessModifier; }
             set
             {
-                if ( value != AccessModifier.Default && value != AccessModifier.Public && Parent is InterfaceType )
-                {
+                if ( ( value != AccessModifier.Default ) && ( value != AccessModifier.Public ) && Parent is InterfaceType )
                     throw new BadSyntaxException( Strings.ErrorInterfaceMemberAccess );
-                }
 
                 base.AccessModifier = value;
             }
@@ -91,7 +89,7 @@ namespace NClass.Java
         /// </exception>
         public override void InitFromString( string declaration )
         {
-            var match = fieldRegex.Match( declaration );
+            Match match = fieldRegex.Match( declaration );
             RaiseChangedEvent = false;
 
             try
@@ -99,11 +97,11 @@ namespace NClass.Java
                 if ( match.Success )
                 {
                     ClearModifiers( );
-                    var nameGroup = match.Groups[ "name" ];
-                    var typeGroup = match.Groups[ "type" ];
-                    var accessGroup = match.Groups[ "access" ];
-                    var modifierGroup = match.Groups[ "modifier" ];
-                    var initGroup = match.Groups[ "initvalue" ];
+                    Group nameGroup = match.Groups[ "name" ];
+                    Group typeGroup = match.Groups[ "type" ];
+                    Group accessGroup = match.Groups[ "access" ];
+                    Group modifierGroup = match.Groups[ "modifier" ];
+                    Group initGroup = match.Groups[ "initvalue" ];
 
                     if ( JavaLanguage.Instance.IsForbiddenName( nameGroup.Value ) )
                         throw new BadSyntaxException( Strings.ErrorInvalidName );
@@ -145,7 +143,7 @@ namespace NClass.Java
 
         public string GetDeclarationLine( bool withSemicolon )
         {
-            var builder = new StringBuilder( 50 );
+            StringBuilder builder = new StringBuilder( 50 );
 
             if ( AccessModifier != AccessModifier.Default )
             {
@@ -170,7 +168,7 @@ namespace NClass.Java
 
         protected override Field Clone( CompositeType newParent )
         {
-            var field = new JavaField( newParent );
+            JavaField field = new JavaField( newParent );
             field.CopyFrom( this );
             return field;
         }

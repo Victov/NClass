@@ -32,10 +32,8 @@ namespace NClass.CSharp
             get { return base.AccessModifier; }
             set
             {
-                if ( IsNested || value == AccessModifier.Default || value == AccessModifier.Internal || value == AccessModifier.Public )
-                {
+                if ( IsNested || ( value == AccessModifier.Default ) || ( value == AccessModifier.Internal ) || ( value == AccessModifier.Public ) )
                     base.AccessModifier = value;
-                }
             }
         }
 
@@ -56,7 +54,7 @@ namespace NClass.CSharp
 
         public override string GetDeclaration( )
         {
-            var builder = new StringBuilder( );
+            StringBuilder builder = new StringBuilder( );
 
             if ( AccessModifier != AccessModifier.Default )
             {
@@ -65,8 +63,8 @@ namespace NClass.CSharp
             }
             builder.AppendFormat( "delegate {0} {1}(", ReturnType, Name );
 
-            var parameterIndex = 0;
-            foreach ( var parameter in Arguments )
+            int parameterIndex = 0;
+            foreach ( Parameter parameter in Arguments )
             {
                 builder.Append( parameter );
                 if ( parameterIndex++ < ArgumentCount - 1 )
@@ -79,7 +77,7 @@ namespace NClass.CSharp
 
         public override DelegateType Clone( )
         {
-            var newDelegate = new CSharpDelegate( );
+            CSharpDelegate newDelegate = new CSharpDelegate( );
             newDelegate.CopyFrom( this );
             return newDelegate;
         }

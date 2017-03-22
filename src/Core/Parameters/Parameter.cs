@@ -44,7 +44,7 @@ namespace NClass.Core
             get { return name; }
             protected set
             {
-                var newName = Language.GetValidName( value, false );
+                string newName = Language.GetValidName( value, false );
 
                 if ( newName != name )
                 {
@@ -62,7 +62,7 @@ namespace NClass.Core
             get { return type; }
             protected set
             {
-                var newType = Language.GetValidTypeName( value );
+                string newType = Language.GetValidTypeName( value );
 
                 if ( newType != type )
                 {
@@ -128,15 +128,13 @@ namespace NClass.Core
 
         public string GetUmlDescription( bool getName, bool initValue )
         {
-            var format = "{0} {1}: {2} = {3}";
+            string format = "{0} {1}: {2} = {3}";
 
             if ( getName )
-            {
                 if ( Modifier != ParameterModifier.In )
                     format = "{0} {1}: {2}";
                 else
                     format = "{1}: {2}";
-            }
             else
                 format = "{2}";
 

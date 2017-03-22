@@ -153,7 +153,7 @@ namespace NClass.DiagramEditor.ClassDiagram
 
         protected bool ConfirmMemberDelete( )
         {
-            var result = MessageBox.Show( Strings.DeleteMemberConfirmation, Strings.Confirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Warning );
+            DialogResult result = MessageBox.Show( Strings.DeleteMemberConfirmation, Strings.Confirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Warning );
 
             return result == DialogResult.Yes;
         }

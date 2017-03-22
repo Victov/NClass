@@ -34,7 +34,7 @@ namespace NClass.DiagramEditor
         {
             get
             {
-                if ( First == null || First.Next == null )
+                if ( ( First == null ) || ( First.Next == null ) )
                     return default( T );
                 return First.Next.Value;
             }
@@ -44,7 +44,7 @@ namespace NClass.DiagramEditor
         {
             get
             {
-                if ( Last == null || Last.Previous == null )
+                if ( ( Last == null ) || ( Last.Previous == null ) )
                     return default( T );
                 return Last.Previous.Value;
             }
@@ -67,10 +67,10 @@ namespace NClass.DiagramEditor
 
         public IEnumerable< T > GetModifiableList( )
         {
-            var current = First;
+            LinkedListNode< T > current = First;
             while ( current != null )
             {
-                var next = current.Next;
+                LinkedListNode< T > next = current.Next;
                 yield return current.Value;
                 current = next;
             }
@@ -78,7 +78,7 @@ namespace NClass.DiagramEditor
 
         public IEnumerable< T > GetReversedList( )
         {
-            var current = Last;
+            LinkedListNode< T > current = Last;
             while ( current != null )
             {
                 yield return current.Value;
@@ -94,7 +94,7 @@ namespace NClass.DiagramEditor
 
         public bool RemoveOn( Predicate< T > match )
         {
-            var current = First;
+            LinkedListNode< T > current = First;
             while ( current != null )
             {
                 if ( match( current.Value ) )
@@ -109,10 +109,10 @@ namespace NClass.DiagramEditor
 
         public void Reverse( )
         {
-            var node = First;
+            LinkedListNode< T > node = First;
             while ( Last != node )
             {
-                var last = Last;
+                LinkedListNode< T > last = Last;
                 Remove( last );
                 AddBefore( node, last );
             }

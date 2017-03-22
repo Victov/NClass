@@ -51,7 +51,7 @@ namespace NClass.CodeGenerator
 
             if ( string.IsNullOrEmpty( DestinationPath ) )
             {
-                var myDocuments = Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments );
+                string myDocuments = Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments );
                 DestinationPath = Path.Combine( myDocuments, "NClass Generated Projects" );
             }
         }

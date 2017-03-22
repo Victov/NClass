@@ -46,7 +46,7 @@ namespace NClass.Core
             get { return returnType; }
             set
             {
-                var newReturnType = Language.GetValidTypeName( value );
+                string newReturnType = Language.GetValidTypeName( value );
 
                 if ( newReturnType != returnType )
                 {
@@ -80,7 +80,7 @@ namespace NClass.Core
 
         public Parameter GetArgument( int index )
         {
-            if ( index >= 0 && index < argumentList.Count )
+            if ( ( index >= 0 ) && ( index < argumentList.Count ) )
                 return argumentList[ index ];
             return null;
         }
@@ -93,7 +93,7 @@ namespace NClass.Core
         /// </exception>
         public Parameter AddParameter( string declaration )
         {
-            var parameter = argumentList.Add( declaration );
+            Parameter parameter = argumentList.Add( declaration );
 
             parameter.Modified += delegate { Changed( ); };
             Changed( );
@@ -108,7 +108,7 @@ namespace NClass.Core
         /// </exception>
         public Parameter ModifyParameter( Parameter parameter, string declaration )
         {
-            var modified = argumentList.ModifyParameter( parameter, declaration );
+            Parameter modified = argumentList.ModifyParameter( parameter, declaration );
 
             Changed( );
             return modified;
@@ -144,7 +144,7 @@ namespace NClass.Core
         {
             base.CopyFrom( type );
 
-            var delegateType = ( DelegateType ) type;
+            DelegateType delegateType = ( DelegateType ) type;
             returnType = delegateType.returnType;
             argumentList = delegateType.argumentList.Clone( );
         }
@@ -158,13 +158,13 @@ namespace NClass.Core
         {
             base.Serialize( node );
 
-            var returnTypeNode = node.OwnerDocument.CreateElement( "ReturnType" );
+            XmlElement returnTypeNode = node.OwnerDocument.CreateElement( "ReturnType" );
             returnTypeNode.InnerText = ReturnType;
             node.AppendChild( returnTypeNode );
 
             foreach ( Parameter parameter in argumentList )
             {
-                var paramNode = node.OwnerDocument.CreateElement( "Param" );
+                XmlElement paramNode = node.OwnerDocument.CreateElement( "Param" );
                 paramNode.InnerText = parameter.ToString( );
                 node.AppendChild( paramNode );
             }
@@ -183,11 +183,11 @@ namespace NClass.Core
         {
             RaiseChangedEvent = false;
 
-            var returnTypeNode = node[ "ReturnType" ];
+            XmlElement returnTypeNode = node[ "ReturnType" ];
             if ( returnTypeNode != null )
                 ReturnType = returnTypeNode.InnerText;
 
-            var nodeList = node.SelectNodes( "Param" );
+            XmlNodeList nodeList = node.SelectNodes( "Param" );
             foreach ( XmlNode parameterNode in nodeList )
                 argumentList.Add( parameterNode.InnerText );
 

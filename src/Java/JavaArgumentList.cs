@@ -58,12 +58,12 @@ namespace NClass.Java
         /// </exception>
         public override Parameter Add( string declaration )
         {
-            var match = singleParamterRegex.Match( declaration );
+            Match match = singleParamterRegex.Match( declaration );
 
             if ( match.Success )
             {
-                var nameGroup = match.Groups[ "name" ];
-                var typeGroup = match.Groups[ "type" ];
+                Group nameGroup = match.Groups[ "name" ];
+                Group typeGroup = match.Groups[ "type" ];
 
                 if ( IsReservedName( nameGroup.Value ) )
                     throw new ReservedNameException( nameGroup.Value );
@@ -84,16 +84,16 @@ namespace NClass.Java
         /// </exception>
         public override Parameter ModifyParameter( Parameter parameter, string declaration )
         {
-            var match = singleParamterRegex.Match( declaration );
-            var index = InnerList.IndexOf( parameter );
+            Match match = singleParamterRegex.Match( declaration );
+            int index = InnerList.IndexOf( parameter );
 
             if ( index < 0 )
                 return parameter;
 
             if ( match.Success )
             {
-                var nameGroup = match.Groups[ "name" ];
-                var typeGroup = match.Groups[ "type" ];
+                Group nameGroup = match.Groups[ "name" ];
+                Group typeGroup = match.Groups[ "type" ];
 
                 if ( IsReservedName( nameGroup.Value, index ) )
                     throw new ReservedNameException( nameGroup.Value );
@@ -107,11 +107,9 @@ namespace NClass.Java
 
         public override ArgumentList Clone( )
         {
-            var argumentList = new JavaArgumentList( Capacity );
+            JavaArgumentList argumentList = new JavaArgumentList( Capacity );
             foreach ( Parameter parameter in InnerList )
-            {
                 argumentList.InnerList.Add( parameter.Clone( ) );
-            }
             return argumentList;
         }
 
@@ -125,8 +123,8 @@ namespace NClass.Java
                 Clear( );
                 foreach ( Match match in parameterRegex.Matches( declaration ) )
                 {
-                    var nameGroup = match.Groups[ "name" ];
-                    var typeGroup = match.Groups[ "type" ];
+                    Group nameGroup = match.Groups[ "name" ];
+                    Group typeGroup = match.Groups[ "type" ];
 
                     InnerList.Add( new JavaParameter( nameGroup.Value, typeGroup.Value ) );
                 }

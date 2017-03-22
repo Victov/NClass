@@ -101,9 +101,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
             base.OnDoubleClick( e );
 
             if ( !e.Handled )
-            {
                 ShowEditDialog( );
-            }
         }
 
         protected internal override void ShowEditor( )
@@ -113,7 +111,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         public void ShowEditDialog( )
         {
-            using ( var dialog = new AssociationDialog( ) )
+            using ( AssociationDialog dialog = new AssociationDialog( ) )
             {
                 dialog.Association = AssociationRelationship;
                 dialog.ShowDialog( );
@@ -127,12 +125,12 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         protected override bool CloneRelationship( Diagram diagram, Shape first, Shape second )
         {
-            var firstType = first.Entity as TypeBase;
-            var secondType = second.Entity as TypeBase;
+            TypeBase firstType = first.Entity as TypeBase;
+            TypeBase secondType = second.Entity as TypeBase;
 
-            if ( firstType != null && secondType != null )
+            if ( ( firstType != null ) && ( secondType != null ) )
             {
-                var clone = AssociationRelationship.Clone( firstType, secondType );
+                AssociationRelationship clone = AssociationRelationship.Clone( firstType, secondType );
                 return diagram.InsertAssociation( clone );
             }
             return false;
@@ -150,27 +148,25 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         private void DrawStartRole( IGraphics g, Style style )
         {
-            var startRole = AssociationRelationship.StartRole;
+            string startRole = AssociationRelationship.StartRole;
             if ( startRole != null )
-            {
                 DrawRole( g, style, startRole, RouteCache[ 0 ], RouteCache[ 1 ], StartCapSize );
-            }
         }
 
         private void DrawEndRole( IGraphics g, Style style )
         {
-            var endRole = AssociationRelationship.EndRole;
+            string endRole = AssociationRelationship.EndRole;
             if ( endRole != null )
             {
-                var last = RouteCache.Count - 1;
+                int last = RouteCache.Count - 1;
                 DrawRole( g, style, endRole, RouteCache[ last ], RouteCache[ last - 1 ], EndCapSize );
             }
         }
 
         private void DrawRole( IGraphics g, Style style, string text, Point firstPoint, Point secondPoint, Size capSize )
         {
-            var angle = GetAngle( firstPoint, secondPoint );
-            var point = firstPoint;
+            float angle = GetAngle( firstPoint, secondPoint );
+            Point point = firstPoint;
 
             if ( angle == 0 ) // Down
             {
@@ -207,27 +203,25 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         private void DrawStartMultiplicity( IGraphics g, Style style )
         {
-            var startMultiplicity = AssociationRelationship.StartMultiplicity;
+            string startMultiplicity = AssociationRelationship.StartMultiplicity;
             if ( startMultiplicity != null )
-            {
                 DrawMultiplicity( g, style, startMultiplicity, RouteCache[ 0 ], RouteCache[ 1 ], StartCapSize );
-            }
         }
 
         private void DrawEndMultiplicity( IGraphics g, Style style )
         {
-            var endMultiplicity = AssociationRelationship.EndMultiplicity;
+            string endMultiplicity = AssociationRelationship.EndMultiplicity;
             if ( endMultiplicity != null )
             {
-                var last = RouteCache.Count - 1;
+                int last = RouteCache.Count - 1;
                 DrawMultiplicity( g, style, endMultiplicity, RouteCache[ last ], RouteCache[ last - 1 ], EndCapSize );
             }
         }
 
         private void DrawMultiplicity( IGraphics g, Style style, string text, Point firstPoint, Point secondPoint, Size capSize )
         {
-            var angle = GetAngle( firstPoint, secondPoint );
-            var point = firstPoint;
+            float angle = GetAngle( firstPoint, secondPoint );
+            Point point = firstPoint;
 
             if ( angle == 0 ) // Down
             {
@@ -293,7 +287,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         protected override RectangleF CalculateDrawingArea( Style style, bool printing, float zoom )
         {
-            var area = base.CalculateDrawingArea( style, printing, zoom );
+            RectangleF area = base.CalculateDrawingArea( style, printing, zoom );
 
             if ( AssociationRelationship.StartRole != null )
                 area = RectangleF.Union( area, GetStartRoleArea( style ) );
@@ -317,16 +311,16 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         private RectangleF GetEndRoleArea( Style style )
         {
-            var last = RouteCache.Count - 1;
+            int last = RouteCache.Count - 1;
             return GetRoleArea( style, AssociationRelationship.EndRole, RouteCache[ last ], RouteCache[ last - 1 ], EndCapSize );
         }
 
         private RectangleF GetRoleArea( Style style, string text, Point firstPoint, Point secondPoint, Size capSize )
         {
-            var angle = GetAngle( firstPoint, secondPoint );
+            float angle = GetAngle( firstPoint, secondPoint );
 
-            var textSize = Graphics.MeasureString( text, style.RelationshipTextFont, PointF.Empty, stringFormat );
-            var area = new RectangleF( firstPoint, textSize );
+            SizeF textSize = Graphics.MeasureString( text, style.RelationshipTextFont, PointF.Empty, stringFormat );
+            RectangleF area = new RectangleF( firstPoint, textSize );
 
             if ( angle == 0 ) // Down
             {
@@ -359,16 +353,16 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         private RectangleF GetEndMultiplicityArea( Style style )
         {
-            var last = RouteCache.Count - 1;
+            int last = RouteCache.Count - 1;
             return MultiplicityArea( style, AssociationRelationship.EndMultiplicity, RouteCache[ last ], RouteCache[ last - 1 ], EndCapSize );
         }
 
         private RectangleF MultiplicityArea( Style style, string text, Point firstPoint, Point secondPoint, Size capSize )
         {
-            var angle = GetAngle( firstPoint, secondPoint );
+            float angle = GetAngle( firstPoint, secondPoint );
 
-            var textSize = Graphics.MeasureString( text, style.RelationshipTextFont, PointF.Empty, stringFormat );
-            var area = new RectangleF( firstPoint, textSize );
+            SizeF textSize = Graphics.MeasureString( text, style.RelationshipTextFont, PointF.Empty, stringFormat );
+            RectangleF area = new RectangleF( firstPoint, textSize );
 
             if ( angle == 0 ) // Down
             {

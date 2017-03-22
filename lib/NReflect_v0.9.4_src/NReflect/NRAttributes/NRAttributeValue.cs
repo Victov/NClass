@@ -21,7 +21,7 @@ using System;
 namespace NReflect.NRAttributes
 {
     /// <summary>
-    /// Represents a value used to initialize an attribute which is reflected by NReflect.
+    ///     Represents a value used to initialize an attribute which is reflected by NReflect.
     /// </summary>
     [Serializable]
     public class NRAttributeValue
@@ -32,23 +32,23 @@ namespace NReflect.NRAttributes
         #region === Properties
 
         /// <summary>
-        /// Gets or sets the name of the type of the attribute value.
+        ///     Gets or sets the name of the type of the attribute value.
         /// </summary>
         /// <remarks>
-        /// The name is prefixed by the namespace of the type.
+        ///     The name is prefixed by the namespace of the type.
         /// </remarks>
         public string Type { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of the attribute value.
+        ///     Gets or sets the value of the attribute value.
         /// </summary>
         /// <remarks>
-        /// If the type of the attribute value is a <see cref="System.Type"/>,
-        /// this property will hold a <see cref="string"/> instead of the
-        /// <see cref="System.Type"/>. The reason to do this is the fact that
-        /// a <see cref="System.Type"/> is not serializable. All other types
-        /// which can occur as an attribute value are serializable since they
-        /// are of any number, string, boolean or enum type.
+        ///     If the type of the attribute value is a <see cref="System.Type" />,
+        ///     this property will hold a <see cref="string" /> instead of the
+        ///     <see cref="System.Type" />. The reason to do this is the fact that
+        ///     a <see cref="System.Type" /> is not serializable. All other types
+        ///     which can occur as an attribute value are serializable since they
+        ///     are of any number, string, boolean or enum type.
         /// </remarks>
         public object Value { get; set; }
 

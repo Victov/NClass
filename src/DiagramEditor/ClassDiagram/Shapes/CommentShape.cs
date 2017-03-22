@@ -112,15 +112,13 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         protected override void OnMouseDown( AbsoluteMouseEventArgs e )
         {
             if ( e.Button == MouseButtons.Left )
-            {
                 IsActive = true;
-            }
             base.OnMouseDown( e );
         }
 
         protected override void OnDoubleClick( AbsoluteMouseEventArgs e )
         {
-            if ( Contains( e.Location ) && e.Button == MouseButtons.Left )
+            if ( Contains( e.Location ) && ( e.Button == MouseButtons.Left ) )
                 ShowEditor( );
         }
 
@@ -152,7 +150,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         internal void EditText( )
         {
-            using ( var dialog = new EditCommentDialog( Text ) )
+            using ( EditCommentDialog dialog = new EditCommentDialog( Text ) )
             {
                 if ( dialog.ShowDialog( ) == DialogResult.OK )
                     Text = dialog.InputText;
@@ -176,7 +174,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
                 borderPen.DashStyle = DashStyle.Solid;
 
             // Create shape pattern
-            var path = new GraphicsPath( );
+            GraphicsPath path = new GraphicsPath( );
             path.AddLine( Left, Top, Right - PaddingSize, Top );
             path.AddLine( Right, Top + PaddingSize, Right, Bottom );
             path.AddLine( Right, Bottom, Left, Bottom );
@@ -206,7 +204,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         private void DrawText( IGraphics g, bool onScreen, Style style )
         {
-            var textBounds = GetTextRectangle( );
+            Rectangle textBounds = GetTextRectangle( );
 
             if ( string.IsNullOrEmpty( Text ) && onScreen )
             {

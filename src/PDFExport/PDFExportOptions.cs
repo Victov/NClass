@@ -127,12 +127,8 @@ namespace PDFExport
         private static XGraphicsUnit GetUnit( string unit )
         {
             foreach ( XGraphicsUnit xGraphicsUnit in Enum.GetValues( typeof( XGraphicsUnit ) ) )
-            {
                 if ( GetUnitString( xGraphicsUnit ) == unit )
-                {
                     return xGraphicsUnit;
-                }
-            }
 
             return XGraphicsUnit.Point;
         }
@@ -174,9 +170,7 @@ namespace PDFExport
 
             cboUnit.Items.Clear( );
             foreach ( XGraphicsUnit xGraphicsUnit in Enum.GetValues( typeof( XGraphicsUnit ) ) )
-            {
                 cboUnit.Items.Add( GetUnitString( xGraphicsUnit ) );
-            }
             cboUnit.Text = GetUnitString( Unit );
         }
 

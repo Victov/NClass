@@ -46,9 +46,9 @@ namespace NClass.Core
             {
                 if ( modifier != value )
                 {
-                    if ( value == ClassModifier.Static && ( IsSuperClass || HasExplicitBase ) )
+                    if ( ( value == ClassModifier.Static ) && ( IsSuperClass || HasExplicitBase ) )
                         throw new BadSyntaxException( Strings.ErrorInvalidModifier );
-                    if ( value == ClassModifier.Sealed && IsSuperClass )
+                    if ( ( value == ClassModifier.Sealed ) && IsSuperClass )
                         throw new BadSyntaxException( Strings.ErrorInvalidModifier );
 
                     modifier = value;
@@ -79,7 +79,7 @@ namespace NClass.Core
 
         public override bool IsAllowedParent
         {
-            get { return Modifier != ClassModifier.Sealed && Modifier != ClassModifier.Static; }
+            get { return ( Modifier != ClassModifier.Sealed ) && ( Modifier != ClassModifier.Static ); }
         }
 
         public override bool IsAllowedChild
@@ -101,8 +101,8 @@ namespace NClass.Core
         {
             get
             {
-                var accessString = Language.GetAccessString( Access, false );
-                var modifierString = Language.GetClassModifierString( Modifier, false );
+                string accessString = Language.GetAccessString( Access, false );
+                string modifierString = Language.GetClassModifierString( Modifier, false );
 
                 if ( Modifier == ClassModifier.None )
                     return string.Format( "{0} Class", accessString );
@@ -124,7 +124,7 @@ namespace NClass.Core
             get { return BaseClass; }
             set
             {
-                if ( value != null && !( value is ClassType ) )
+                if ( ( value != null ) && !( value is ClassType ) )
                     throw new RelationshipException( Strings.ErrorInvalidBaseType );
 
                 BaseClass = ( ClassType ) value;
@@ -155,14 +155,10 @@ namespace NClass.Core
                 if ( value == this )
                     throw new RelationshipException( Strings.ErrorInvalidBaseType );
 
-                if ( value.Modifier == ClassModifier.Sealed || value.Modifier == ClassModifier.Static )
-                {
+                if ( ( value.Modifier == ClassModifier.Sealed ) || ( value.Modifier == ClassModifier.Static ) )
                     throw new RelationshipException( Strings.ErrorCannotInherit );
-                }
                 if ( value.IsAncestor( this ) )
-                {
                     throw new RelationshipException( string.Format( Strings.ErrorCyclicBase, Strings.Class ) );
-                }
                 if ( value.Language != Language )
                     throw new RelationshipException( Strings.ErrorLanguagesDoNotEqual );
 
@@ -176,17 +172,15 @@ namespace NClass.Core
         {
             get
             {
-                for ( var i = 0; i < OperationList.Count; i++ )
-                {
+                for ( int i = 0; i < OperationList.Count; i++ )
                     if ( OperationList[ i ].Overridable )
                         yield return OperationList[ i ];
-                }
             }
         }
 
         private bool IsAncestor( ClassType classType )
         {
-            if ( BaseClass != null && BaseClass.IsAncestor( classType ) )
+            if ( ( BaseClass != null ) && BaseClass.IsAncestor( classType ) )
                 return true;
             return classType == this;
         }
@@ -194,7 +188,7 @@ namespace NClass.Core
         protected override void CopyFrom( TypeBase type )
         {
             base.CopyFrom( type );
-            var classType = ( ClassType ) type;
+            ClassType classType = ( ClassType ) type;
             modifier = classType.modifier;
         }
 
@@ -207,7 +201,7 @@ namespace NClass.Core
         {
             base.Serialize( node );
 
-            var child = node.OwnerDocument.CreateElement( "Modifier" );
+            XmlElement child = node.OwnerDocument.CreateElement( "Modifier" );
             child.InnerText = Modifier.ToString( );
             node.AppendChild( child );
         }
@@ -225,7 +219,7 @@ namespace NClass.Core
         {
             RaiseChangedEvent = false;
 
-            var child = node[ "Modifier" ];
+            XmlElement child = node[ "Modifier" ];
             if ( child != null )
                 Modifier = Language.TryParseClassModifier( child.InnerText );
 

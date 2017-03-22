@@ -14,18 +14,17 @@ namespace CommandLine
         private static void Main( string[] args )
         {
             // Arguments
-            if ( args == null || args.Length == 0 )
+            if ( ( args == null ) || ( args.Length == 0 ) )
             {
                 DisplayVersion( );
                 return;
             }
 
             // Run program with logger
-            var app = new App( );
+            App app = new App( );
             string result;
 
-            for ( var i = 0; i < args.Length; i++ )
-            {
+            for ( int i = 0; i < args.Length; i++ )
                 switch ( args[ i ] )
                 {
                     // NClass project to load if exist or to create
@@ -91,7 +90,6 @@ namespace CommandLine
                         DisplayHelp( );
                         return;
                 }
-            }
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
 

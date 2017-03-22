@@ -82,7 +82,7 @@ namespace NClass.Core
             if ( node == null )
                 throw new ArgumentNullException( "node" );
 
-            var child = node.OwnerDocument.CreateElement( "Text" );
+            XmlElement child = node.OwnerDocument.CreateElement( "Text" );
             child.InnerText = Text;
             node.AppendChild( child );
 
@@ -103,7 +103,7 @@ namespace NClass.Core
             if ( node == null )
                 throw new ArgumentNullException( "node" );
 
-            var textNode = node[ "Text" ];
+            XmlElement textNode = node[ "Text" ];
 
             if ( textNode != null )
                 Text = textNode.InnerText;
@@ -130,13 +130,9 @@ namespace NClass.Core
             const int MaxLength = 50;
 
             if ( Text == null )
-            {
                 return Strings.Comment;
-            }
             if ( Text.Length > MaxLength )
-            {
                 return '"' + Text.Substring( 0, MaxLength ) + "...\"";
-            }
             return '"' + Text + '"';
         }
     }

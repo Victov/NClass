@@ -21,7 +21,7 @@ using System;
 namespace NReflect.NREntities
 {
     /// <summary>
-    /// Represents a struct which is reflected by NReflect.
+    ///     Represents a struct which is reflected by NReflect.
     /// </summary>
     [Serializable]
     public class NRStruct : NRSingleInheritanceType
@@ -32,9 +32,9 @@ namespace NReflect.NREntities
         #region === Methods
 
         /// <summary>
-        /// Accept an <see cref="IVisitor"/> instance on the implementing class and all its children.
+        ///     Accept an <see cref="IVisitor" /> instance on the implementing class and all its children.
         /// </summary>
-        /// <param name="visitor">The <see cref="IVisitor"/> instance to accept.</param>
+        /// <param name="visitor">The <see cref="IVisitor" /> instance to accept.</param>
         public override void Accept( IVisitor visitor )
         {
             visitor.Visit( this );

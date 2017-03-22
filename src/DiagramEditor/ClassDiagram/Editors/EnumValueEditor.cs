@@ -36,13 +36,13 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
         internal void Relocate( EnumShape shape )
         {
-            var diagram = shape.Diagram;
+            Diagram diagram = shape.Diagram;
             if ( diagram != null )
             {
-                var record = shape.GetMemberRectangle( shape.ActiveMemberIndex );
+                Rectangle record = shape.GetMemberRectangle( shape.ActiveMemberIndex );
 
-                var absolute = new Point( shape.Right, record.Top );
-                var relative = new Size( ( int ) ( absolute.X * diagram.Zoom ) - diagram.Offset.X + MarginSize, ( int ) ( absolute.Y * diagram.Zoom ) - diagram.Offset.Y );
+                Point absolute = new Point( shape.Right, record.Top );
+                Size relative = new Size( ( int ) ( absolute.X * diagram.Zoom ) - diagram.Offset.X + MarginSize, ( int ) ( absolute.Y * diagram.Zoom ) - diagram.Offset.Y );
                 relative.Height -= ( Height - ( int ) ( record.Height * diagram.Zoom ) ) / 2;
 
                 Location = ParentLocation + relative;
@@ -53,7 +53,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
         {
             if ( shape.ActiveValue != null )
             {
-                var cursorPosition = SelectionStart;
+                int cursorPosition = SelectionStart;
                 DeclarationText = shape.ActiveValue.ToString( );
                 SelectionStart = cursorPosition;
 
@@ -65,8 +65,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
         private void RefreshMoveUpDownTools( )
         {
-            var index = shape.ActiveMemberIndex;
-            var parameterCount = shape.EnumType.ValueCount;
+            int index = shape.ActiveMemberIndex;
+            int parameterCount = shape.EnumType.ValueCount;
 
             toolMoveUp.Enabled = index > 0;
             toolMoveDown.Enabled = index < parameterCount - 1;
@@ -74,8 +74,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
         protected override bool ValidateDeclarationLine( )
         {
-            if ( NeedValidation && shape.ActiveValue != null )
-            {
+            if ( NeedValidation && ( shape.ActiveValue != null ) )
                 try
                 {
                     shape.EnumType.ModifyValue( shape.ActiveValue, DeclarationText );
@@ -86,7 +85,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                     SetError( ex.Message );
                     return false;
                 }
-            }
             return true;
         }
 
@@ -99,33 +97,25 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
         protected override void SelectPrevious( )
         {
             if ( ValidateDeclarationLine( ) )
-            {
                 shape.SelectPrevious( );
-            }
         }
 
         protected override void SelectNext( )
         {
             if ( ValidateDeclarationLine( ) )
-            {
                 shape.SelectNext( );
-            }
         }
 
         protected override void MoveUp( )
         {
             if ( ValidateDeclarationLine( ) )
-            {
                 shape.MoveUp( );
-            }
         }
 
         protected override void MoveDown( )
         {
             if ( ValidateDeclarationLine( ) )
-            {
                 shape.MoveDown( );
-            }
         }
 
         protected override void Delete( )

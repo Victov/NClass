@@ -39,12 +39,11 @@ namespace NClass.GUI
         private static void Main( string[] args )
         {
             // Run program with logger
-            var app = new App( );
+            App app = new App( );
             string result;
-            var projectFiles = new List< string >( );
+            List< string > projectFiles = new List< string >( );
 
-            for ( var i = 0; i < args.Length; i++ )
-            {
+            for ( int i = 0; i < args.Length; i++ )
                 switch ( args[ i ] )
                 {
                     case "-projects":
@@ -54,7 +53,7 @@ namespace NClass.GUI
                             return;
 
                         // Do we have other project behind the fist one
-                        for ( var j = i + 2; j < args.Length; j++ )
+                        for ( int j = i + 2; j < args.Length; j++ )
                         {
                             // If another arg is present
                             if ( args[ j ].StartsWith( "-" ) )
@@ -73,7 +72,6 @@ namespace NClass.GUI
                         app.ArgumentLog( i, args.Length, args[ i + 1 ] );
                         break;
                 }
-            }
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
             Application.ThreadException += ApplicationThreadException;
@@ -82,7 +80,7 @@ namespace NClass.GUI
             UpdateSettings( );
 
             // Set the user interface language
-            var language = UILanguage.CreateUILanguage( Settings.Default.UILanguage );
+            UILanguage language = UILanguage.CreateUILanguage( Settings.Default.UILanguage );
             if ( language != null )
                 Strings.Culture = language.Culture;
 
@@ -118,9 +116,7 @@ namespace NClass.GUI
         public static string GetVersionString( )
         {
             if ( CurrentVersion.Minor == 0 )
-            {
                 return string.Format( "NClass {0}.0", CurrentVersion.Major );
-            }
             return string.Format( "NClass {0}.{1:00}", CurrentVersion.Major, CurrentVersion.Minor );
         }
 
@@ -128,10 +124,8 @@ namespace NClass.GUI
         {
             if ( args.Length >= 1 )
             {
-                foreach ( var filePath in args )
-                {
+                foreach ( string filePath in args )
                     Workspace.Default.OpenProject( filePath );
-                }
             }
             else
             {
@@ -154,7 +148,7 @@ namespace NClass.GUI
 
         private static void ReportCrash( Exception exception )
         {
-            var reportCrash = new ReportCrash {ToEmail = "13300sam@gmail.com"};
+            ReportCrash reportCrash = new ReportCrash {ToEmail = "13300sam@gmail.com"};
 
             reportCrash.Send( exception );
         }

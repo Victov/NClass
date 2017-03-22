@@ -54,10 +54,8 @@ namespace NClass.Java
             get { return base.AccessModifier; }
             set
             {
-                if ( value != AccessModifier.Default && value != AccessModifier.Public && Parent is InterfaceType )
-                {
+                if ( ( value != AccessModifier.Default ) && ( value != AccessModifier.Public ) && Parent is InterfaceType )
                     throw new BadSyntaxException( Strings.ErrorInterfaceMemberAccess );
-                }
 
                 base.AccessModifier = value;
             }
@@ -117,7 +115,7 @@ namespace NClass.Java
         /// </exception>
         public override void InitFromString( string declaration )
         {
-            var match = methodRegex.Match( declaration );
+            Match match = methodRegex.Match( declaration );
             RaiseChangedEvent = false;
 
             try
@@ -125,11 +123,11 @@ namespace NClass.Java
                 if ( match.Success )
                 {
                     ClearModifiers( );
-                    var nameGroup = match.Groups[ "name" ];
-                    var typeGroup = match.Groups[ "type" ];
-                    var accessGroup = match.Groups[ "access" ];
-                    var modifierGroup = match.Groups[ "modifier" ];
-                    var argsGroup = match.Groups[ "args" ];
+                    Group nameGroup = match.Groups[ "name" ];
+                    Group typeGroup = match.Groups[ "type" ];
+                    Group accessGroup = match.Groups[ "access" ];
+                    Group modifierGroup = match.Groups[ "modifier" ];
+                    Group argsGroup = match.Groups[ "args" ];
 
                     if ( JavaLanguage.Instance.IsForbiddenName( nameGroup.Value ) )
                         throw new BadSyntaxException( Strings.ErrorInvalidName );
@@ -168,7 +166,7 @@ namespace NClass.Java
 
         public string GetDeclarationLine( bool withSemicolon )
         {
-            var builder = new StringBuilder( 100 );
+            StringBuilder builder = new StringBuilder( 100 );
 
             if ( AccessModifier != AccessModifier.Default )
             {
@@ -184,7 +182,7 @@ namespace NClass.Java
 
             builder.AppendFormat( "{0} {1}(", Type, Name );
 
-            for ( var i = 0; i < ArgumentList.Count; i++ )
+            for ( int i = 0; i < ArgumentList.Count; i++ )
             {
                 builder.Append( ArgumentList[ i ] );
                 if ( i < ArgumentList.Count - 1 )
@@ -200,7 +198,7 @@ namespace NClass.Java
 
         public override Operation Clone( CompositeType newParent )
         {
-            var method = new JavaMethod( newParent );
+            JavaMethod method = new JavaMethod( newParent );
             method.CopyFrom( this );
             return method;
         }

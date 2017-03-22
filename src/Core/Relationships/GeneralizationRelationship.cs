@@ -49,7 +49,7 @@ namespace NClass.Core
 
         public GeneralizationRelationship Clone( CompositeType derivedType, CompositeType baseType )
         {
-            var generalization = new GeneralizationRelationship( derivedType, baseType );
+            GeneralizationRelationship generalization = new GeneralizationRelationship( derivedType, baseType );
             generalization.CopyFrom( this );
             return generalization;
         }
@@ -67,17 +67,13 @@ namespace NClass.Core
                 throw new RelationshipException( Strings.ErrorNotAllowedParent );
             if ( First is SingleInharitanceType && ( ( SingleInharitanceType ) First ).HasExplicitBase )
                 throw new RelationshipException( Strings.ErrorMultipleBases );
-            if ( First is SingleInharitanceType ^ Second is SingleInharitanceType || First is InterfaceType ^ Second is InterfaceType )
+            if ( ( First is SingleInharitanceType ^ Second is SingleInharitanceType ) || ( First is InterfaceType ^ Second is InterfaceType ) )
                 throw new RelationshipException( Strings.ErrorInvalidBaseType );
 
             if ( First is SingleInharitanceType && Second is SingleInharitanceType )
-            {
                 ( ( SingleInharitanceType ) First ).Base = ( SingleInharitanceType ) Second;
-            }
             else if ( First is InterfaceType && Second is InterfaceType )
-            {
                 ( ( InterfaceType ) First ).AddBase( ( InterfaceType ) Second );
-            }
         }
 
         protected override void OnDetaching( EventArgs e )

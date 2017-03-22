@@ -52,12 +52,12 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
         private void RefreshValues( )
         {
-            var type = shape.DelegateType;
-            var language = type.Language;
+            DelegateType type = shape.DelegateType;
+            Language language = type.Language;
             SuspendLayout( );
 
             // txtReturnType
-            var cursorPosition = txtReturnType.SelectionStart;
+            int cursorPosition = txtReturnType.SelectionStart;
             txtReturnType.Text = type.ReturnType;
             txtReturnType.SelectionStart = cursorPosition;
             // txtName
@@ -74,8 +74,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
         private void RefreshVisibility( )
         {
-            var language = shape.DelegateType.Language;
-            var type = shape.DelegateType;
+            Language language = shape.DelegateType.Language;
+            DelegateType type = shape.DelegateType;
 
             toolVisibility.Image = Icons.GetImage( type );
             toolVisibility.Text = language.ValidAccessModifiers[ type.AccessModifier ];
@@ -151,7 +151,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
         private bool ValidateName( )
         {
             if ( needValidation )
-            {
                 try
                 {
                     shape.DelegateType.Name = txtName.Text;
@@ -163,7 +162,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                     SetError( ex.Message );
                     return false;
                 }
-            }
             return true;
         }
 
@@ -178,7 +176,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
         private void AddNewValue( )
         {
             if ( !noNewValue && ValidateName( ) )
-            {
                 try
                 {
                     shape.DelegateType.AddParameter( txtNewParameter.Text );
@@ -188,7 +185,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                 {
                     SetError( ex.Message );
                 }
-            }
         }
 
         private void ClearNewValueField( )
@@ -200,7 +196,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
         private void ChangeAccess( AccessModifier access )
         {
             if ( ValidateName( ) )
-            {
                 try
                 {
                     shape.DelegateType.AccessModifier = access;
@@ -211,7 +206,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                     RefreshValues( );
                     SetError( ex.Message );
                 }
-            }
         }
 
         private void toolPublic_Click( object sender, EventArgs e )
@@ -274,9 +268,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
         private void txtNewValue_GotFocus( object sender, EventArgs e )
         {
             if ( noNewValue )
-            {
                 txtNewParameter.Text = string.Empty;
-            }
         }
 
         private void txtNewValue_LostFocus( object sender, EventArgs e )

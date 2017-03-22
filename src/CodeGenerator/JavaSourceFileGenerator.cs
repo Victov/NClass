@@ -14,6 +14,7 @@
 // 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 using System;
+using System.Collections.Specialized;
 using NClass.Core;
 
 namespace NClass.CodeGenerator
@@ -45,8 +46,8 @@ namespace NClass.CodeGenerator
 
         private void WriteImportList( )
         {
-            var importList = Settings.Default.JavaImportList;
-            foreach ( var importElement in importList )
+            StringCollection importList = Settings.Default.JavaImportList;
+            foreach ( string importElement in importList )
                 WriteLine( "import " + importElement + ";" );
 
             if ( importList.Count > 0 )
@@ -69,29 +70,25 @@ namespace NClass.CodeGenerator
             IndentLevel++;
 
             if ( type is ClassType )
-            {
-                foreach ( var nestedType in ( ( ClassType ) type ).NestedChilds )
+                foreach ( TypeBase nestedType in ( ( ClassType ) type ).NestedChilds )
                 {
                     WriteType( nestedType );
                     AddBlankLine( );
                 }
-            }
 
             if ( type.FieldCount > 0 )
             {
-                foreach ( var field in type.Fields )
+                foreach ( Field field in type.Fields )
                     WriteField( field );
                 AddBlankLine( );
             }
 
             if ( type.OperationCount > 0 )
-            {
                 foreach ( Method method in type.Operations )
                 {
                     WriteMethod( method );
                     AddBlankLine( );
                 }
-            }
 
             // Writing closing bracket of the type block
             IndentLevel--;
@@ -105,14 +102,12 @@ namespace NClass.CodeGenerator
             AddBlankLine( );
             IndentLevel++;
 
-            var valuesRemained = _enum.ValueCount;
-            foreach ( var value in _enum.Values )
-            {
+            int valuesRemained = _enum.ValueCount;
+            foreach ( EnumValue value in _enum.Values )
                 if ( --valuesRemained > 0 )
                     WriteLine( value.GetDeclaration( ) + "," );
                 else
                     WriteLine( value.GetDeclaration( ) );
-            }
 
             // Writing closing bracket of the type block
             IndentLevel--;
@@ -143,13 +138,9 @@ namespace NClass.CodeGenerator
         private void WriteNotImplementedString( )
         {
             if ( Settings.Default.UseNotImplementedExceptions )
-            {
                 WriteLine( "throw new UnsupportedOperationException(" + "\"The method is not implemented yet.\");" );
-            }
             else
-            {
                 AddBlankLine( true );
-            }
         }
     }
 }

@@ -22,32 +22,32 @@ using NReflect.NREntities;
 namespace NReflect
 {
     /// <summary>
-    /// Classes implementing this interface can contain entities like classe, interfaces, ...
+    ///     Classes implementing this interface can contain entities like classe, interfaces, ...
     /// </summary>
     public interface IEntityContainer
     {
         /// <summary>
-        /// Gets a list of reflected classes.
+        ///     Gets a list of reflected classes.
         /// </summary>
         List< NRClass > Classes { get; }
 
         /// <summary>
-        /// Gets a list of reflected interfaces.
+        ///     Gets a list of reflected interfaces.
         /// </summary>
         List< NRInterface > Interfaces { get; }
 
         /// <summary>
-        /// Gets a list of reflected structs.
+        ///     Gets a list of reflected structs.
         /// </summary>
         List< NRStruct > Structs { get; }
 
         /// <summary>
-        /// Gets a list of reflected enums.
+        ///     Gets a list of reflected enums.
         /// </summary>
         List< NREnum > Enums { get; }
 
         /// <summary>
-        /// Gets a list of reflected delegates.
+        ///     Gets a list of reflected delegates.
         /// </summary>
         List< NRDelegate > Delegates { get; }
     }

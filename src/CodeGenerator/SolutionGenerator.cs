@@ -49,7 +49,7 @@ namespace NClass.CodeGenerator
         /// </exception>
         internal GenerationResult Generate( string location, bool sort_using, bool generate_document_comment, string compagny_name, string copyright_header, string author )
         {
-            var result = CheckDestination( location );
+            GenerationResult result = CheckDestination( location );
             if ( result != GenerationResult.Success )
                 return result;
 
@@ -68,7 +68,7 @@ namespace NClass.CodeGenerator
                 location = Path.Combine( location, SolutionName );
                 if ( Directory.Exists( location ) )
                 {
-                    var result = MessageBox.Show( Strings.CodeGenerationOverwriteConfirmation, Strings.Confirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Warning );
+                    DialogResult result = MessageBox.Show( Strings.CodeGenerationOverwriteConfirmation, Strings.Confirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Warning );
 
                     if ( result == DialogResult.Yes )
                         return GenerationResult.Success;
@@ -85,17 +85,17 @@ namespace NClass.CodeGenerator
 
         private bool GenerateProjectFiles( string location, bool sort_using, bool generate_document_comment, string compagny_name, string copyright_header, string author )
         {
-            var success = true;
+            bool success = true;
             location = Path.Combine( location, Project.Name );
 
             ProjectGenerators.Clear( );
-            foreach ( var projectItem in Project.Items )
+            foreach ( IProjectItem projectItem in Project.Items )
             {
-                var model = projectItem as Model;
+                Model model = projectItem as Model;
 
                 if ( model != null )
                 {
-                    var projectGenerator = CreateProjectGenerator( model );
+                    ProjectGenerator projectGenerator = CreateProjectGenerator( model );
                     ProjectGenerators.Add( projectGenerator );
 
                     try

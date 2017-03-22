@@ -33,10 +33,8 @@ namespace NClass.CSharp
             get { return base.AccessModifier; }
             set
             {
-                if ( IsNested || value == AccessModifier.Default || value == AccessModifier.Internal || value == AccessModifier.Public )
-                {
+                if ( IsNested || ( value == AccessModifier.Default ) || ( value == AccessModifier.Internal ) || ( value == AccessModifier.Public ) )
                     base.AccessModifier = value;
-                }
             }
         }
 
@@ -73,7 +71,7 @@ namespace NClass.CSharp
                     RaiseChangedEvent = false;
 
                     base.NestingParent = value;
-                    if ( NestingParent == null && Access != AccessModifier.Public )
+                    if ( ( NestingParent == null ) && ( Access != AccessModifier.Public ) )
                         AccessModifier = AccessModifier.Internal;
                 }
                 finally
@@ -123,7 +121,7 @@ namespace NClass.CSharp
 
         public override string GetDeclaration( )
         {
-            var builder = new StringBuilder( 30 );
+            StringBuilder builder = new StringBuilder( 30 );
 
             if ( AccessModifier != AccessModifier.Default )
             {
@@ -135,7 +133,7 @@ namespace NClass.CSharp
             if ( HasExplicitBase )
             {
                 builder.Append( " : " );
-                for ( var i = 0; i < BaseList.Count; i++ )
+                for ( int i = 0; i < BaseList.Count; i++ )
                 {
                     builder.Append( BaseList[ i ].Name );
                     if ( i < BaseList.Count - 1 )
@@ -148,7 +146,7 @@ namespace NClass.CSharp
 
         public override InterfaceType Clone( )
         {
-            var newInterface = new CSharpInterface( );
+            CSharpInterface newInterface = new CSharpInterface( );
             newInterface.CopyFrom( this );
             return newInterface;
         }

@@ -62,54 +62,36 @@ namespace NClass.DiagramEditor.ClassDiagram
             if ( member == null )
                 throw new ArgumentNullException( "member" );
 
-            var group = 0;
+            int group = 0;
 
             if ( member is Field )
             {
                 if ( ( ( Field ) member ).IsConstant )
-                {
                     group = 0;
-                }
                 else
-                {
                     group = 1;
-                }
             }
             else if ( member is Method )
             {
                 if ( member is Destructor )
-                {
                     return PrivateDestructorIndex;
-                }
                 if ( member is Constructor )
-                {
-                    @group = 2;
-                }
+                    group = 2;
                 else if ( ( ( Method ) member ).IsOperator )
-                {
-                    @group = 3;
-                }
+                    group = 3;
                 else
-                {
-                    @group = 4;
-                }
+                    group = 4;
             }
             else if ( member is Property )
             {
-                var property = ( Property ) member;
+                Property property = ( Property ) member;
 
                 if ( property.IsReadonly )
-                {
                     group = 5;
-                }
                 else if ( property.IsWriteonly )
-                {
                     group = 6;
-                }
                 else
-                {
                     group = 7;
-                }
             }
             else if ( member is Event )
             {
@@ -124,7 +106,7 @@ namespace NClass.DiagramEditor.ClassDiagram
         /// </exception>
         public static Image GetImage( Member member )
         {
-            var imageIndex = GetImageIndex( member );
+            int imageIndex = GetImageIndex( member );
             return images[ imageIndex ];
         }
 
@@ -137,7 +119,7 @@ namespace NClass.DiagramEditor.ClassDiagram
                 return Resources.PrivateDestructor;
             }
 
-            var group = 0;
+            int group = 0;
             switch ( type )
             {
                 case MemberType.Field:
@@ -180,7 +162,7 @@ namespace NClass.DiagramEditor.ClassDiagram
         /// </exception>
         public static Image GetImage( EntityType type, AccessModifier access )
         {
-            var group = 0;
+            int group = 0;
             switch ( type )
             {
                 case EntityType.Class:

@@ -21,7 +21,7 @@ using System;
 namespace NReflect.NRMembers
 {
     /// <summary>
-    /// Represents an event which is reflected by NReflect.
+    ///     Represents an event which is reflected by NReflect.
     /// </summary>
     [Serializable]
     public class NREvent : NROperation
@@ -32,9 +32,9 @@ namespace NReflect.NRMembers
         #region === Methods
 
         /// <summary>
-        /// Accept an <see cref="IVisitor"/> instance on the implementing class and all its children.
+        ///     Accept an <see cref="IVisitor" /> instance on the implementing class and all its children.
         /// </summary>
-        /// <param name="visitor">The <see cref="IVisitor"/> instance to accept.</param>
+        /// <param name="visitor">The <see cref="IVisitor" /> instance to accept.</param>
         public override void Accept( IVisitor visitor )
         {
             visitor.Visit( this );

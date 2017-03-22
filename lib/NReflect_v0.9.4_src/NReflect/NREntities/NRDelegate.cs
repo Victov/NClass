@@ -23,7 +23,7 @@ using NReflect.NRParameters;
 namespace NReflect.NREntities
 {
     /// <summary>
-    /// Represents a delegate which is reflected by NReflect.
+    ///     Represents a delegate which is reflected by NReflect.
     /// </summary>
     [Serializable]
     public class NRDelegate : NRGenericType
@@ -34,11 +34,27 @@ namespace NReflect.NREntities
         #region === Con- / Destruction
 
         /// <summary>
-        /// Initializes a new instance of <see cref="NRDelegate"/>.
+        ///     Initializes a new instance of <see cref="NRDelegate" />.
         /// </summary>
         public NRDelegate( )
         {
             Parameters = new List< NRParameter >( );
+        }
+
+        #endregion
+
+        // ========================================================================
+        // Methods
+
+        #region === Methods
+
+        /// <summary>
+        ///     Accept an <see cref="IVisitor" /> instance on the implementing class and all its children.
+        /// </summary>
+        /// <param name="visitor">The <see cref="IVisitor" /> instance to accept.</param>
+        public override void Accept( IVisitor visitor )
+        {
+            visitor.Visit( this );
         }
 
         #endregion
@@ -49,30 +65,14 @@ namespace NReflect.NREntities
         #region === Properties
 
         /// <summary>
-        /// Gets or sets the return type of this delegate.
+        ///     Gets or sets the return type of this delegate.
         /// </summary>
         public NRTypeUsage ReturnType { get; set; }
 
         /// <summary>
-        /// Gets a list of parameters of this delegate.
+        ///     Gets a list of parameters of this delegate.
         /// </summary>
         public List< NRParameter > Parameters { get; private set; }
-
-        #endregion
-
-        // ========================================================================
-        // Methods
-
-        #region === Methods
-
-        /// <summary>
-        /// Accept an <see cref="IVisitor"/> instance on the implementing class and all its children.
-        /// </summary>
-        /// <param name="visitor">The <see cref="IVisitor"/> instance to accept.</param>
-        public override void Accept( IVisitor visitor )
-        {
-            visitor.Visit( this );
-        }
 
         #endregion
     }

@@ -207,7 +207,7 @@ namespace NClass.DiagramEditor.ClassDiagram.ContextMenus
 
         private void mnuSaveAsImage_Click( object sender, EventArgs e )
         {
-            if ( Diagram != null && !Diagram.IsEmpty )
+            if ( ( Diagram != null ) && !Diagram.IsEmpty )
                 Diagram.SaveAsImage( );
         }
 

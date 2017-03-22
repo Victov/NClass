@@ -22,23 +22,42 @@ using NReflect.NREntities;
 namespace NReflect.NRRelationship
 {
     /// <summary>
-    /// Represents an realization relationship between two types.
+    ///     Represents an realization relationship between two types.
     /// </summary>
     [Serializable]
     public class NRRealization
     {
+        // ========================================================================
+        // Methods
+
+        #region === Methods
+
+        /// <summary>
+        ///     Returns a <see cref="T:System.String" /> that represents the current <see cref="T:System.Object" />.
+        /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.String" /> that represents the current <see cref="T:System.Object" />.
+        /// </returns>
+        /// <filterpriority>2</filterpriority>
+        public override string ToString( )
+        {
+            return BaseType.Name + " < - " + ImplementingType.Name;
+        }
+
+        #endregion
+
         // ========================================================================
         // Con- / Destruction
 
         #region === Con- / Destruction
 
         /// <summary>
-        /// Initializes a new instance of <see cref="NRRealization"/>.
+        ///     Initializes a new instance of <see cref="NRRealization" />.
         /// </summary>
         public NRRealization( ) {}
 
         /// <summary>
-        /// Initializes a new instance of <see cref="NRRealization"/>.
+        ///     Initializes a new instance of <see cref="NRRealization" />.
         /// </summary>
         /// <param name="baseType">The base type of the generalization.</param>
         /// <param name="implementingType">The implementing type of the realization.</param>
@@ -56,33 +75,14 @@ namespace NReflect.NRRelationship
         #region === Properties
 
         /// <summary>
-        /// Gets or sets the base type of the generalization.
+        ///     Gets or sets the base type of the generalization.
         /// </summary>
         public NRInterface BaseType { get; set; }
 
         /// <summary>
-        /// Gets or sets the derived type of the generalization.
+        ///     Gets or sets the derived type of the generalization.
         /// </summary>
         public NRSingleInheritanceType ImplementingType { get; set; }
-
-        #endregion
-
-        // ========================================================================
-        // Methods
-
-        #region === Methods
-
-        /// <summary>
-        /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
-        /// </returns>
-        /// <filterpriority>2</filterpriority>
-        public override string ToString( )
-        {
-            return BaseType.Name + " < - " + ImplementingType.Name;
-        }
 
         #endregion
     }

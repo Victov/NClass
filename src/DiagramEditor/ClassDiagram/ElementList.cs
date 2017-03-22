@@ -21,38 +21,30 @@ namespace NClass.DiagramEditor.ClassDiagram
     {
         public IEnumerable< T > GetSelectedElements( )
         {
-            foreach ( var element in GetModifiableList( ) )
-            {
+            foreach ( T element in GetModifiableList( ) )
                 if ( element.IsSelected )
                     yield return element;
-            }
         }
 
         public IEnumerable< T > GetUnselectedElements( )
         {
-            foreach ( var element in GetModifiableList( ) )
-            {
+            foreach ( T element in GetModifiableList( ) )
                 if ( !element.IsSelected )
                     yield return element;
-            }
         }
 
         public IEnumerable< T > GetSelectedElementsReversed( )
         {
-            foreach ( var element in GetReversedList( ) )
-            {
+            foreach ( T element in GetReversedList( ) )
                 if ( element.IsSelected )
                     yield return element;
-            }
         }
 
         public IEnumerable< T > GetUnselectedElementsReversed( )
         {
-            foreach ( var element in GetReversedList( ) )
-            {
+            foreach ( T element in GetReversedList( ) )
                 if ( !element.IsSelected )
                     yield return element;
-            }
         }
     }
 }

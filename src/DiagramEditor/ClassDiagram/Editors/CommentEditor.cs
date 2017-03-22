@@ -42,7 +42,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
             txtComment.ForeColor = Style.CurrentStyle.CommentTextColor;
             txtComment.Text = shape.Comment.Text;
 
-            var font = Style.CurrentStyle.CommentFont;
+            Font font = Style.CurrentStyle.CommentFont;
             txtComment.Font = new Font( font.FontFamily, font.SizeInPoints * shape.Diagram.Zoom, font.Style );
         }
 
@@ -53,10 +53,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
         internal void Relocate( CommentShape shape )
         {
-            var diagram = shape.Diagram;
+            Diagram diagram = shape.Diagram;
             if ( diagram != null )
             {
-                var absolute = shape.GetTextRectangle( );
+                Rectangle absolute = shape.GetTextRectangle( );
                 // The following lines are required because of a .NET bug:
                 // http://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=380085
                 if ( !MonoHelper.IsRunningOnMono )
@@ -76,10 +76,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
         private void txtComment_KeyDown( object sender, KeyEventArgs e )
         {
-            if ( e.KeyCode == Keys.Enter && e.Modifiers != Keys.None || e.KeyCode == Keys.Escape )
-            {
+            if ( ( ( e.KeyCode == Keys.Enter ) && ( e.Modifiers != Keys.None ) ) || ( e.KeyCode == Keys.Escape ) )
                 shape.HideEditor( );
-            }
         }
     }
 }

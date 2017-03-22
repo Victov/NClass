@@ -37,7 +37,7 @@ namespace NClass.Core
                 if ( value == "" )
                     value = null;
 
-                if ( label != value && SupportsLabel )
+                if ( ( label != value ) && SupportsLabel )
                 {
                     label = value;
                     Changed( );
@@ -96,9 +96,9 @@ namespace NClass.Core
             if ( node == null )
                 throw new ArgumentNullException( "node" );
 
-            if ( SupportsLabel && Label != null )
+            if ( SupportsLabel && ( Label != null ) )
             {
-                var labelNode = node.OwnerDocument.CreateElement( "Label" );
+                XmlElement labelNode = node.OwnerDocument.CreateElement( "Label" );
                 labelNode.InnerText = Label;
                 node.AppendChild( labelNode );
             }
@@ -115,7 +115,7 @@ namespace NClass.Core
 
             if ( SupportsLabel )
             {
-                var labelNode = node[ "Label" ];
+                XmlElement labelNode = node[ "Label" ];
                 if ( labelNode != null )
                     Label = labelNode.InnerText;
             }

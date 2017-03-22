@@ -40,7 +40,7 @@ namespace NClass.CSharp
             get { return "~" + GetNameWithoutGeneric( Parent.Name ); }
             set
             {
-                if ( value != null && value != "~" + GetNameWithoutGeneric( Parent.Name ) )
+                if ( ( value != null ) && ( value != "~" + GetNameWithoutGeneric( Parent.Name ) ) )
                     throw new BadSyntaxException( Strings.ErrorDestructorName );
             }
         }

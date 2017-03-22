@@ -56,7 +56,7 @@ namespace NClass.DiagramEditor.ClassDiagram.ContextMenus
         {
             if ( Diagram != null )
             {
-                var commentShape = Diagram.TopSelectedElement as CommentShape;
+                CommentShape commentShape = Diagram.TopSelectedElement as CommentShape;
                 if ( commentShape != null )
                     commentShape.EditText( );
             }

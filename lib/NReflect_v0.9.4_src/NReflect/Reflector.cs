@@ -23,13 +23,13 @@ using NReflect.Filter;
 namespace NReflect
 {
     /// <summary>
-    /// An instance of this class is able to reflect the types of an assembly.
+    ///     An instance of this class is able to reflect the types of an assembly.
     /// </summary>
     /// <remarks>
-    /// If reflection takes place inside the same app domain it is called from, the
-    /// reflected assembly files stay opened until this app domain is unloaded. If
-    /// the current app domain is the starting app domain, this can only be done via
-    /// closing the application.
+    ///     If reflection takes place inside the same app domain it is called from, the
+    ///     reflected assembly files stay opened until this app domain is unloaded. If
+    ///     the current app domain is the starting app domain, this can only be done via
+    ///     closing the application.
     /// </remarks>
     public class Reflector : MarshalByRefObject
     {
@@ -39,7 +39,7 @@ namespace NReflect
         #region === Properties
 
         /// <summary>
-        /// Gets or sets the type filter used to determine which types to reflect.
+        ///     Gets or sets the type filter used to determine which types to reflect.
         /// </summary>
         private IFilter Filter { get; set; }
 
@@ -51,11 +51,13 @@ namespace NReflect
         #region === Methods
 
         /// <summary>
-        /// Reflects the types of an assembly.
+        ///     Reflects the types of an assembly.
         /// </summary>
         /// <param name="fileName">The file name of the assembly to reflect.</param>
-        /// <param name="useNewAppDomain">If set to true, a new app domain will be used for
-        ///                               the reflection.</param>
+        /// <param name="useNewAppDomain">
+        ///     If set to true, a new app domain will be used for
+        ///     the reflection.
+        /// </param>
         /// <returns>The result of the reflection.</returns>
         public NRAssembly Reflect( string fileName, bool useNewAppDomain = true )
         {
@@ -64,12 +66,14 @@ namespace NReflect
         }
 
         /// <summary>
-        /// Reflects the types of an assembly.
+        ///     Reflects the types of an assembly.
         /// </summary>
         /// <param name="fileName">The file name of the assembly to reflect.</param>
         /// <param name="filter">The type filter used to determine which types to reflect.</param>
-        /// <param name="useNewAppDomain">If set to true, a new app domain will be used for
-        ///                               the reflection.</param>
+        /// <param name="useNewAppDomain">
+        ///     If set to true, a new app domain will be used for
+        ///     the reflection.
+        /// </param>
         /// <returns>The result of the reflection.</returns>
         public NRAssembly Reflect( string fileName, ref IFilter filter, bool useNewAppDomain = true )
         {
@@ -78,7 +82,7 @@ namespace NReflect
                 // Create the new AppDomain
                 AppDomain newAppDomain = AppDomain.CreateDomain( "NReflect-AppDomain", null, null );
                 // Create a new instance of Reflector at the new AppDomain
-                String dllName = Assembly.GetAssembly( typeof( Reflector ) ).FullName;
+                string dllName = Assembly.GetAssembly( typeof( Reflector ) ).FullName;
                 Reflector reflector = ( Reflector ) newAppDomain.CreateInstanceAndUnwrap( dllName, "NReflect.Reflector" );
                 // Move the filter from this to the new instance
                 reflector.Filter = filter;
@@ -95,7 +99,7 @@ namespace NReflect
         }
 
         /// <summary>
-        /// Reflects the types of an assembly.
+        ///     Reflects the types of an assembly.
         /// </summary>
         /// <param name="fileName">The file name of the assembly to reflect.</param>
         /// <returns>The result of the reflection.</returns>
@@ -107,7 +111,7 @@ namespace NReflect
         }
 
         /// <summary>
-        /// Reflects the types of the provided assembly.
+        ///     Reflects the types of the provided assembly.
         /// </summary>
         /// <param name="assembly">The assembly to reflect.</param>
         /// <returns>The result of the reflection.</returns>
@@ -118,7 +122,7 @@ namespace NReflect
         }
 
         /// <summary>
-        /// Reflects the types of the provided assembly.
+        ///     Reflects the types of the provided assembly.
         /// </summary>
         /// <param name="assembly">The assembly to reflect.</param>
         /// <param name="filter">The type filter used to determine which types to reflect.</param>

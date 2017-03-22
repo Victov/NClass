@@ -38,7 +38,7 @@ namespace NClass.AssemblyCSharpImport.Controls
         /// </returns>
         public override object Clone( )
         {
-            var clone = base.Clone( ) as DataGridViewImageComboBoxColumn;
+            DataGridViewImageComboBoxColumn clone = base.Clone( ) as DataGridViewImageComboBoxColumn;
             if ( clone != null )
             {
                 clone.ImageList = ImageList;
@@ -93,10 +93,8 @@ namespace NClass.AssemblyCSharpImport.Controls
             set
             {
                 // Ensure that the cell used for the template is a DataGridViewImageComboBoxColumnCell.
-                if ( value != null && !value.GetType( ).IsAssignableFrom( typeof( DataGridViewImageComboBoxColumnCell ) ) )
-                {
+                if ( ( value != null ) && !value.GetType( ).IsAssignableFrom( typeof( DataGridViewImageComboBoxColumnCell ) ) )
                     throw new ArgumentException( "CellTemplate of DataGridViewImageComboBoxColumn has to be a DataGridViewImageComboBoxColumnCell" );
-                }
                 base.CellTemplate = value;
             }
         }

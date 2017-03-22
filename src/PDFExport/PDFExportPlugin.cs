@@ -56,34 +56,28 @@ namespace PDFExport
         protected void Launch( )
         {
             if ( !DocumentManager.HasDocument )
-            {
                 return;
-            }
 
             string fileName;
-            using ( var dialog = new SaveFileDialog( ) )
+            using ( SaveFileDialog dialog = new SaveFileDialog( ) )
             {
                 dialog.Filter = Strings.SaveDialogFilter;
                 dialog.RestoreDirectory = true;
                 if ( dialog.ShowDialog( ) == DialogResult.Cancel )
-                {
                     return;
-                }
                 fileName = dialog.FileName;
             }
 
-            var optionsForm = new PDFExportOptions( );
+            PDFExportOptions optionsForm = new PDFExportOptions( );
             if ( optionsForm.ShowDialog( ) == DialogResult.Cancel )
-            {
                 return;
-            }
-            var padding = new Padding( ( int ) new XUnit( optionsForm.PDFPadding.Left, optionsForm.Unit ).Point, ( int ) new XUnit( optionsForm.PDFPadding.Top, optionsForm.Unit ).Point, ( int ) new XUnit( optionsForm.PDFPadding.Right, optionsForm.Unit ).Point, ( int ) new XUnit( optionsForm.PDFPadding.Bottom, optionsForm.Unit ).Point );
+            Padding padding = new Padding( ( int ) new XUnit( optionsForm.PDFPadding.Left, optionsForm.Unit ).Point, ( int ) new XUnit( optionsForm.PDFPadding.Top, optionsForm.Unit ).Point, ( int ) new XUnit( optionsForm.PDFPadding.Right, optionsForm.Unit ).Point, ( int ) new XUnit( optionsForm.PDFPadding.Bottom, optionsForm.Unit ).Point );
 
-            var mainForm = Application.OpenForms.OfType< MainForm >( ).FirstOrDefault( );
+            MainForm mainForm = Application.OpenForms.OfType< MainForm >( ).FirstOrDefault( );
 
             PDFExportProgress.ShowAsync( mainForm );
 
-            var exporter = new PDFExporter( fileName, DocumentManager.ActiveDocument, optionsForm.SelectedOnly, padding );
+            PDFExporter exporter = new PDFExporter( fileName, DocumentManager.ActiveDocument, optionsForm.SelectedOnly, padding );
             Application.DoEvents( );
             exporter.Export( );
 
@@ -106,12 +100,8 @@ namespace PDFExport
             PDFExportProgress.CloseAsync( );
 
             if ( exporter.Successful )
-            {
                 if ( new PDFExportFinished( ).ShowDialog( mainForm ) == DialogResult.OK )
-                {
                     Process.Start( fileName );
-                }
-            }
         }
 
         #endregion

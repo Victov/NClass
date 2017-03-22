@@ -24,116 +24,116 @@ using NReflect.NRParameters;
 namespace NReflect
 {
     /// <summary>
-    /// Classes implementing this interface are able to visit entities of NReflect.
+    ///     Classes implementing this interface are able to visit entities of NReflect.
     /// </summary>
     public interface IVisitor
     {
         /// <summary>
-        /// Visit a <see cref="NRAssembly"/>.
+        ///     Visit a <see cref="NRAssembly" />.
         /// </summary>
-        /// <param name="nrAssembly">The <see cref="NRAssembly"/> to visit.</param>
+        /// <param name="nrAssembly">The <see cref="NRAssembly" /> to visit.</param>
         void Visit( NRAssembly nrAssembly );
 
         /// <summary>
-        /// Visit a <see cref="NRClass"/>.
+        ///     Visit a <see cref="NRClass" />.
         /// </summary>
-        /// <param name="nrClass">The <see cref="NRClass"/> to visit.</param>
+        /// <param name="nrClass">The <see cref="NRClass" /> to visit.</param>
         void Visit( NRClass nrClass );
 
         /// <summary>
-        /// Visit a <see cref="NRInterface"/>.
+        ///     Visit a <see cref="NRInterface" />.
         /// </summary>
-        /// <param name="nrInterface">The <see cref="NRInterface"/> to visit.</param>
+        /// <param name="nrInterface">The <see cref="NRInterface" /> to visit.</param>
         void Visit( NRInterface nrInterface );
 
         /// <summary>
-        /// Visit a <see cref="NRDelegate"/>.
+        ///     Visit a <see cref="NRDelegate" />.
         /// </summary>
-        /// <param name="nrDelegate">The <see cref="NRDelegate"/> to visit.</param>
+        /// <param name="nrDelegate">The <see cref="NRDelegate" /> to visit.</param>
         void Visit( NRDelegate nrDelegate );
 
         /// <summary>
-        /// Visit a <see cref="NRStruct"/>.
+        ///     Visit a <see cref="NRStruct" />.
         /// </summary>
-        /// <param name="nrStruct">The <see cref="NRStruct"/> to visit.</param>
+        /// <param name="nrStruct">The <see cref="NRStruct" /> to visit.</param>
         void Visit( NRStruct nrStruct );
 
         /// <summary>
-        /// Visit a <see cref="NREnum"/>.
+        ///     Visit a <see cref="NREnum" />.
         /// </summary>
-        /// <param name="nrEnum">The <see cref="NREnum"/> to visit.</param>
+        /// <param name="nrEnum">The <see cref="NREnum" /> to visit.</param>
         void Visit( NREnum nrEnum );
 
         /// <summary>
-        /// Visit a <see cref="NRField"/>.
+        ///     Visit a <see cref="NRField" />.
         /// </summary>
-        /// <param name="nrField">The <see cref="NRField"/> to visit.</param>
+        /// <param name="nrField">The <see cref="NRField" /> to visit.</param>
         void Visit( NRField nrField );
 
         /// <summary>
-        /// Visit a <see cref="NRProperty"/>.
+        ///     Visit a <see cref="NRProperty" />.
         /// </summary>
-        /// <param name="nrProperty">The <see cref="NRProperty"/> to visit.</param>
+        /// <param name="nrProperty">The <see cref="NRProperty" /> to visit.</param>
         void Visit( NRProperty nrProperty );
 
         /// <summary>
-        /// Visit a <see cref="NRMethod"/>.
+        ///     Visit a <see cref="NRMethod" />.
         /// </summary>
-        /// <param name="nrMethod">The <see cref="NRMethod"/> to visit.</param>
+        /// <param name="nrMethod">The <see cref="NRMethod" /> to visit.</param>
         void Visit( NRMethod nrMethod );
 
         /// <summary>
-        /// Visit a <see cref="NROperator"/>.
+        ///     Visit a <see cref="NROperator" />.
         /// </summary>
-        /// <param name="nrOperator">The <see cref="NROperator"/> to visit.</param>
+        /// <param name="nrOperator">The <see cref="NROperator" /> to visit.</param>
         void Visit( NROperator nrOperator );
 
         /// <summary>
-        /// Visit a <see cref="NRConstructor"/>.
+        ///     Visit a <see cref="NRConstructor" />.
         /// </summary>
-        /// <param name="nrConstructor">The <see cref="NRConstructor"/> to visit.</param>
+        /// <param name="nrConstructor">The <see cref="NRConstructor" /> to visit.</param>
         void Visit( NRConstructor nrConstructor );
 
         /// <summary>
-        /// Visit a <see cref="NREvent"/>.
+        ///     Visit a <see cref="NREvent" />.
         /// </summary>
-        /// <param name="nrEvent">The <see cref="NREvent"/> to visit.</param>
+        /// <param name="nrEvent">The <see cref="NREvent" /> to visit.</param>
         void Visit( NREvent nrEvent );
 
         /// <summary>
-        /// Visit a <see cref="NRParameter"/>.
+        ///     Visit a <see cref="NRParameter" />.
         /// </summary>
-        /// <param name="nrParameter">The <see cref="NRParameter"/> to visit.</param>
+        /// <param name="nrParameter">The <see cref="NRParameter" /> to visit.</param>
         void Visit( NRParameter nrParameter );
 
         /// <summary>
-        /// Visit a <see cref="NRTypeParameter"/>.
+        ///     Visit a <see cref="NRTypeParameter" />.
         /// </summary>
-        /// <param name="nrTypeParameter">The <see cref="NRTypeParameter"/> to visit.</param>
+        /// <param name="nrTypeParameter">The <see cref="NRTypeParameter" /> to visit.</param>
         void Visit( NRTypeParameter nrTypeParameter );
 
         /// <summary>
-        /// Visit a <see cref="NREnumValue"/>.
+        ///     Visit a <see cref="NREnumValue" />.
         /// </summary>
-        /// <param name="nrEnumValue">The <see cref="NREnumValue"/> to visit.</param>
+        /// <param name="nrEnumValue">The <see cref="NREnumValue" /> to visit.</param>
         void Visit( NREnumValue nrEnumValue );
 
         /// <summary>
-        /// Visit a <see cref="NRAttribute"/>.
+        ///     Visit a <see cref="NRAttribute" />.
         /// </summary>
-        /// <param name="nrAttribute">The <see cref="NRAttribute"/> to visit.</param>
+        /// <param name="nrAttribute">The <see cref="NRAttribute" /> to visit.</param>
         void Visit( NRAttribute nrAttribute );
 
         /// <summary>
-        /// Visit a <see cref="NRModule"/>.
+        ///     Visit a <see cref="NRModule" />.
         /// </summary>
-        /// <param name="nrModule">The <see cref="NRModule"/> to visit.</param>
+        /// <param name="nrModule">The <see cref="NRModule" /> to visit.</param>
         void Visit( NRModule nrModule );
 
         /// <summary>
-        /// Visit a <see cref="NRTypeUsage"/>.
+        ///     Visit a <see cref="NRTypeUsage" />.
         /// </summary>
-        /// <param name="nrTypeUsage">The <see cref="NRTypeUsage"/> to visit.</param>
+        /// <param name="nrTypeUsage">The <see cref="NRTypeUsage" /> to visit.</param>
         void Visit( NRTypeUsage nrTypeUsage );
     }
 }

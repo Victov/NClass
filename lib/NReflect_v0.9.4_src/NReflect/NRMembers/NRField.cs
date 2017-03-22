@@ -22,28 +22,44 @@ using NReflect.Modifier;
 namespace NReflect.NRMembers
 {
     /// <summary>
-    /// Represents a field of a type which is reflected by NReflect.
+    ///     Represents a field of a type which is reflected by NReflect.
     /// </summary>
     [Serializable]
     public class NRField : NRMember
     {
+        // ========================================================================
+        // Methods
+
+        #region === Methods
+
+        /// <summary>
+        ///     Accept an <see cref="IVisitor" /> instance on the implementing class and all its children.
+        /// </summary>
+        /// <param name="visitor">The <see cref="IVisitor" /> instance to accept.</param>
+        public override void Accept( IVisitor visitor )
+        {
+            visitor.Visit( this );
+        }
+
+        #endregion
+
         // ========================================================================
         // Properties
 
         #region === Properties
 
         /// <summary>
-        /// Gets or sets the initial value of this field.
+        ///     Gets or sets the initial value of this field.
         /// </summary>
         public string InitialValue { get; set; }
 
         /// <summary>
-        /// Gets or sets the field modifier for this field.
+        ///     Gets or sets the field modifier for this field.
         /// </summary>
         public FieldModifier FieldModifier { get; set; }
 
         /// <summary>
-        /// Gets or sets if the field is static.
+        ///     Gets or sets if the field is static.
         /// </summary>
         public bool IsStatic
         {
@@ -51,18 +67,14 @@ namespace NReflect.NRMembers
             set
             {
                 if ( value )
-                {
                     FieldModifier |= FieldModifier.Static;
-                }
                 else
-                {
                     FieldModifier &= ~FieldModifier.Static;
-                }
             }
         }
 
         /// <summary>
-        /// Gets or sets if the field is readonly.
+        ///     Gets or sets if the field is readonly.
         /// </summary>
         public bool IsReadonly
         {
@@ -70,18 +82,14 @@ namespace NReflect.NRMembers
             set
             {
                 if ( value )
-                {
                     FieldModifier |= FieldModifier.Readonly;
-                }
                 else
-                {
                     FieldModifier &= ~FieldModifier.Readonly;
-                }
             }
         }
 
         /// <summary>
-        /// Gets or sets if the field is a constant.
+        ///     Gets or sets if the field is a constant.
         /// </summary>
         public bool IsConstant
         {
@@ -89,18 +97,14 @@ namespace NReflect.NRMembers
             set
             {
                 if ( value )
-                {
                     FieldModifier |= FieldModifier.Constant;
-                }
                 else
-                {
                     FieldModifier &= ~FieldModifier.Constant;
-                }
             }
         }
 
         /// <summary>
-        /// Gets or sets if the field is a hider.
+        ///     Gets or sets if the field is a hider.
         /// </summary>
         public bool IsHider
         {
@@ -108,18 +112,14 @@ namespace NReflect.NRMembers
             set
             {
                 if ( value )
-                {
                     FieldModifier |= FieldModifier.Hider;
-                }
                 else
-                {
                     FieldModifier &= ~FieldModifier.Hider;
-                }
             }
         }
 
         /// <summary>
-        /// Gets or sets if the field is volatile.
+        ///     Gets or sets if the field is volatile.
         /// </summary>
         public bool IsVolatile
         {
@@ -127,30 +127,10 @@ namespace NReflect.NRMembers
             set
             {
                 if ( value )
-                {
                     FieldModifier |= FieldModifier.Volatile;
-                }
                 else
-                {
                     FieldModifier &= ~FieldModifier.Volatile;
-                }
             }
-        }
-
-        #endregion
-
-        // ========================================================================
-        // Methods
-
-        #region === Methods
-
-        /// <summary>
-        /// Accept an <see cref="IVisitor"/> instance on the implementing class and all its children.
-        /// </summary>
-        /// <param name="visitor">The <see cref="IVisitor"/> instance to accept.</param>
-        public override void Accept( IVisitor visitor )
-        {
-            visitor.Visit( this );
         }
 
         #endregion

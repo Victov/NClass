@@ -19,14 +19,14 @@
 namespace NReflect
 {
     /// <summary>
-    /// Classes implementing this interface are able to accept an <see cref="IVisitor"/> instance.
+    ///     Classes implementing this interface are able to accept an <see cref="IVisitor" /> instance.
     /// </summary>
     public interface IVisitable
     {
         /// <summary>
-        /// Accept an <see cref="IVisitor"/> instance on the implementing class and all its children.
+        ///     Accept an <see cref="IVisitor" /> instance on the implementing class and all its children.
         /// </summary>
-        /// <param name="visitor">The <see cref="IVisitor"/> instance to accept.</param>
+        /// <param name="visitor">The <see cref="IVisitor" /> instance to accept.</param>
         void Accept( IVisitor visitor );
     }
 }

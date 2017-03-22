@@ -94,33 +94,31 @@ namespace NClass.GUI.ModelExplorer
 
         private static void open_Click( object sender, EventArgs e )
         {
-            var menuItem = ( ToolStripItem ) sender;
-            var modelView = ( ModelView ) ( ( ContextMenuStrip ) menuItem.Owner ).SourceControl;
-            var node = ( DiagramNode ) menuItem.Owner.Tag;
+            ToolStripItem menuItem = ( ToolStripItem ) sender;
+            ModelView modelView = ( ModelView ) ( ( ContextMenuStrip ) menuItem.Owner ).SourceControl;
+            DiagramNode node = ( DiagramNode ) menuItem.Owner.Tag;
 
             modelView.OnDocumentOpening( new DocumentEventArgs( node.Diagram ) );
         }
 
         private static void renameItem_Click( object sender, EventArgs e )
         {
-            var menuItem = ( ToolStripItem ) sender;
-            var node = ( DiagramNode ) menuItem.Owner.Tag;
+            ToolStripItem menuItem = ( ToolStripItem ) sender;
+            DiagramNode node = ( DiagramNode ) menuItem.Owner.Tag;
 
             node.EditLabel( );
         }
 
         private static void deleteProjectItem_Click( object sender, EventArgs e )
         {
-            var menuItem = ( ToolStripItem ) sender;
-            var diagram = ( ( DiagramNode ) menuItem.Owner.Tag ).Diagram;
-            var project = diagram.Project;
+            ToolStripItem menuItem = ( ToolStripItem ) sender;
+            Diagram diagram = ( ( DiagramNode ) menuItem.Owner.Tag ).Diagram;
+            Project project = diagram.Project;
 
-            var result = MessageBox.Show( string.Format( Strings.DeleteProjectItemConfirmation, diagram.Name ), Strings.Confirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Warning );
+            DialogResult result = MessageBox.Show( string.Format( Strings.DeleteProjectItemConfirmation, diagram.Name ), Strings.Confirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Warning );
 
             if ( result == DialogResult.Yes )
-            {
                 project.Remove( diagram );
-            }
         }
     }
 }

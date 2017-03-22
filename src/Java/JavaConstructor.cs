@@ -44,7 +44,7 @@ namespace NClass.Java
             get { return GetNameWithoutGeneric( Parent.Name ); }
             set
             {
-                if ( value != null && value != GetNameWithoutGeneric( Parent.Name ) )
+                if ( ( value != null ) && ( value != GetNameWithoutGeneric( Parent.Name ) ) )
                     throw new BadSyntaxException( Strings.ErrorConstructorName );
             }
         }
@@ -85,18 +85,17 @@ namespace NClass.Java
         /// </exception>
         public override void InitFromString( string declaration )
         {
-            var match = constructorRegex.Match( declaration );
+            Match match = constructorRegex.Match( declaration );
             RaiseChangedEvent = false;
 
             try
             {
                 if ( match.Success )
-                {
                     try
                     {
-                        var nameGroup = match.Groups[ "name" ];
-                        var accessGroup = match.Groups[ "access" ];
-                        var argsGroup = match.Groups[ "args" ];
+                        Group nameGroup = match.Groups[ "name" ];
+                        Group accessGroup = match.Groups[ "access" ];
+                        Group argsGroup = match.Groups[ "args" ];
 
                         ValidName = nameGroup.Value;
                         AccessModifier = Language.TryParseAccessModifier( accessGroup.Value );
@@ -106,11 +105,8 @@ namespace NClass.Java
                     {
                         throw new BadSyntaxException( Strings.ErrorInvalidDeclaration, ex );
                     }
-                }
                 else
-                {
                     throw new BadSyntaxException( Strings.ErrorInvalidDeclaration );
-                }
             }
             finally
             {
@@ -120,7 +116,7 @@ namespace NClass.Java
 
         public override string GetDeclaration( )
         {
-            var builder = new StringBuilder( 50 );
+            StringBuilder builder = new StringBuilder( 50 );
 
             if ( AccessModifier != AccessModifier.Default )
             {
@@ -130,7 +126,7 @@ namespace NClass.Java
 
             builder.AppendFormat( "{0}(", Name );
 
-            for ( var i = 0; i < ArgumentList.Count; i++ )
+            for ( int i = 0; i < ArgumentList.Count; i++ )
             {
                 builder.Append( ArgumentList[ i ] );
                 if ( i < ArgumentList.Count - 1 )
@@ -143,7 +139,7 @@ namespace NClass.Java
 
         public override Operation Clone( CompositeType newParent )
         {
-            var constructor = new JavaConstructor( newParent );
+            JavaConstructor constructor = new JavaConstructor( newParent );
             constructor.CopyFrom( this );
             return constructor;
         }

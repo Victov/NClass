@@ -22,26 +22,22 @@ namespace NClass.AssemblyCSharpImport.Controls
         /// <param name="foreColor">The color of the text.</param>
         public static void DrawImageComboBoxItem( Graphics graphics, object value, ImageList imageList, Size imageSize, Rectangle bounds, Font font, Color foreColor )
         {
-            var left = bounds.Left;
+            int left = bounds.Left;
             int top;
-            var text = "";
+            string text = "";
             Image image = null;
 
             if ( value != null )
             {
-                var item = value as ImageComboBoxItem;
+                ImageComboBoxItem item = value as ImageComboBoxItem;
                 if ( item != null )
                 {
                     text = item.Text;
 
                     if ( item.Image != null )
-                    {
                         image = item.Image;
-                    }
-                    else if ( imageList != null && item.ImageIndex >= 0 )
-                    {
+                    else if ( ( imageList != null ) && ( item.ImageIndex >= 0 ) )
                         image = imageList.Images[ item.ImageIndex ];
-                    }
                 }
                 else
                 {

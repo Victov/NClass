@@ -35,9 +35,7 @@ namespace NClass.Java
             protected set
             {
                 if ( value == "void" )
-                {
                     throw new BadSyntaxException( Strings.ErrorInvalidParameterDeclaration );
-                }
                 base.Type = value;
             }
         }

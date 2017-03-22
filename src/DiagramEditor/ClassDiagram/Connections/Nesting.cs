@@ -67,12 +67,12 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         protected override bool CloneRelationship( Diagram diagram, Shape first, Shape second )
         {
-            var firstType = first.Entity as CompositeType;
-            var secondType = second.Entity as TypeBase;
+            CompositeType firstType = first.Entity as CompositeType;
+            TypeBase secondType = second.Entity as TypeBase;
 
-            if ( firstType != null && secondType != null )
+            if ( ( firstType != null ) && ( secondType != null ) )
             {
-                var clone = NestingRelationship.Clone( firstType, secondType );
+                NestingRelationship clone = NestingRelationship.Clone( firstType, secondType );
                 return diagram.InsertNesting( clone );
             }
             return false;

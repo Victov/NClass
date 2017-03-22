@@ -19,39 +19,39 @@
 namespace NReflect.Modifier
 {
     /// <summary>
-    /// This enumeration contains all possible access modifiers.
+    ///     This enumeration contains all possible access modifiers.
     /// </summary>
     public enum AccessModifier
     {
         /// <summary>
-        /// The default access in the context of the element's scope.
+        ///     The default access in the context of the element's scope.
         /// </summary>
         Default = 0,
 
         /// <summary>
-        /// Access is not restricted.
+        ///     Access is not restricted.
         /// </summary>
         Public = 1,
 
         /// <summary>
-        /// Access is limited to the current assembly or types 
-        /// derived from the containing class.
+        ///     Access is limited to the current assembly or types
+        ///     derived from the containing class.
         /// </summary>
         ProtectedInternal = 2,
 
         /// <summary>
-        /// Access is limited to the current assembly.
+        ///     Access is limited to the current assembly.
         /// </summary>
         Internal = 3,
 
         /// <summary>
-        /// Access is limited to the containing class or types 
-        /// derived from the containing class.
+        ///     Access is limited to the containing class or types
+        ///     derived from the containing class.
         /// </summary>
         Protected = 4,
 
         /// <summary>
-        /// Access is limited to the containing type.
+        ///     Access is limited to the containing type.
         /// </summary>
         Private = 5
     }

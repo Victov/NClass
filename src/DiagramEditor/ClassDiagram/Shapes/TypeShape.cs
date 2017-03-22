@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using System.Xml;
 using NClass.Core;
 using NClass.DiagramEditor.ClassDiagram.ContextMenus;
 using NClass.DiagramEditor.ClassDiagram.Editors;
@@ -85,7 +86,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             {
                 if ( collapsed != value )
                 {
-                    var oldSize = Size;
+                    Size oldSize = Size;
                     collapsed = value;
                     OnResize( new ResizeEventArgs( Size - oldSize ) );
                     OnModified( EventArgs.Empty );
@@ -117,7 +118,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         private bool CanDrawChevron
         {
-            get { return Settings.Default.ShowChevron == ChevronMode.Always || Settings.Default.ShowChevron == ChevronMode.AsNeeded && showChevron; }
+            get { return ( Settings.Default.ShowChevron == ChevronMode.Always ) || ( ( Settings.Default.ShowChevron == ChevronMode.AsNeeded ) && showChevron ); }
         }
 
         private RectangleF CaptionRegion
@@ -172,7 +173,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         private bool HasIdentifier( Style style )
         {
-            return style.ShowSignature || style.ShowStereotype && TypeBase.Stereotype != null;
+            return style.ShowSignature || ( style.ShowStereotype && ( TypeBase.Stereotype != null ) );
         }
 
         public override void Collapse( )
@@ -187,11 +188,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         protected internal override void ShowEditor( )
         {
-            var editor = GetEditorWindow( );
+            EditorWindow editor = GetEditorWindow( );
             if ( editor != null )
-            {
                 ShowEditor( editor );
-            }
         }
 
         protected internal override void HideEditor( )
@@ -223,7 +222,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         private bool IsChevronPressed( PointF mouseLocation )
         {
-            return Settings.Default.ShowChevron != ChevronMode.Never && mouseLocation.X >= Right - MarginSize - chevronSize.Width && mouseLocation.X < Right - MarginSize && mouseLocation.Y >= Top + MarginSize && mouseLocation.Y < Top + MarginSize + chevronSize.Height;
+            return ( Settings.Default.ShowChevron != ChevronMode.Never ) && ( mouseLocation.X >= Right - MarginSize - chevronSize.Width ) && ( mouseLocation.X < Right - MarginSize ) && ( mouseLocation.Y >= Top + MarginSize ) && ( mouseLocation.Y < Top + MarginSize + chevronSize.Height );
         }
 
         protected abstract EditorWindow GetEditorWindow( );
@@ -231,7 +230,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         protected override void OnMove( MoveEventArgs e )
         {
             base.OnMove( e );
-            var window = GetEditorWindow( );
+            EditorWindow window = GetEditorWindow( );
             if ( window != null )
                 window.Relocate( this );
         }
@@ -240,7 +239,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         {
             base.OnResize( e );
 
-            var window = GetEditorWindow( );
+            EditorWindow window = GetEditorWindow( );
             if ( window != null )
                 window.Relocate( this );
         }
@@ -256,9 +255,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             else
             {
                 if ( e.Button == MouseButtons.Left )
-                {
                     IsActive = true;
-                }
             }
         }
 
@@ -267,19 +264,15 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             base.OnMouseUp( e );
 
             if ( showedEditor != null )
-            {
                 showedEditor.Focus( );
-            }
         }
 
         protected override void OnDoubleClick( AbsoluteMouseEventArgs e )
         {
             base.OnDoubleClick( e );
 
-            if ( !IsChevronPressed( e.Location ) && Contains( e.Location ) && e.Button == MouseButtons.Left )
-            {
+            if ( !IsChevronPressed( e.Location ) && Contains( e.Location ) && ( e.Button == MouseButtons.Left ) )
                 ShowEditor( );
-            }
         }
 
         protected override void OnMouseEnter( EventArgs e )
@@ -307,12 +300,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         protected override ResizeMode GetResizeMode( AbsoluteMouseEventArgs e )
         {
-            var resizeMode = base.GetResizeMode( e );
+            ResizeMode resizeMode = base.GetResizeMode( e );
 
             if ( Collapsed )
-            {
                 return resizeMode & ~ResizeMode.Bottom;
-            }
             return resizeMode;
         }
 
@@ -345,10 +336,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         private void DrawHeaderBackground( IGraphics g, Style style )
         {
-            var backColor = GetBackgroundColor( style );
-            var headerColor = GetHeaderColor( style );
+            Color backColor = GetBackgroundColor( style );
+            Color headerColor = GetHeaderColor( style );
 
-            var headerRectangle = new Rectangle( Left, Top, Width, HeaderHeight );
+            Rectangle headerRectangle = new Rectangle( Left, Top, Width, HeaderHeight );
 
             if ( GetGradientHeaderStyle( style ) != GradientStyle.None )
             {
@@ -376,7 +367,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             }
             else
             {
-                if ( headerColor != backColor || headerColor.A < 255 )
+                if ( ( headerColor != backColor ) || ( headerColor.A < 255 ) )
                 {
                     solidHeaderBrush.Color = GetHeaderColor( style );
                     g.FillRectangle( solidHeaderBrush, headerRectangle );
@@ -386,9 +377,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         private void DrawRoundedSurface( IGraphics g, bool onScreen, Style style )
         {
-            var diameter = GetRoundingSize( style ) * 2;
+            int diameter = GetRoundingSize( style ) * 2;
 
-            var borderPath = new GraphicsPath( );
+            GraphicsPath borderPath = new GraphicsPath( );
             borderPath.AddArc( Left, Top, diameter, diameter, 180, 90 );
             borderPath.AddArc( Right - diameter, Top, diameter, diameter, 270, 90 );
             borderPath.AddArc( Right - diameter, Bottom - diameter, diameter, diameter, 0, 90 );
@@ -408,7 +399,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             g.FillPath( backgroundBrush, borderPath );
 
             // Draw header background
-            var oldClip = g.Clip;
+            Region oldClip = g.Clip;
             g.SetClip( borderPath, CombineMode.Intersect );
             DrawHeaderBackground( g, style );
             g.Clip.Dispose( );
@@ -483,7 +474,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         private static float GetHeaderTextTop( RectangleF textRegion, float textHeight, ContentAlignment alignment )
         {
-            var top = textRegion.Top;
+            float top = textRegion.Top;
 
             switch ( alignment )
             {
@@ -505,8 +496,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         private void DrawHeaderText( IGraphics g, Style style )
         {
-            var name = TypeBase.Name;
-            var textRegion = CaptionRegion;
+            string name = TypeBase.Name;
+            RectangleF textRegion = CaptionRegion;
 
             // Update styles
             nameBrush.Color = style.NameColor;
@@ -515,9 +506,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
             if ( HasIdentifier( style ) )
             {
-                var nameHeight = GetNameFont( style ).GetHeight( );
-                var identifierHeight = style.IdentifierFont.GetHeight( );
-                var textHeight = nameHeight + identifierHeight;
+                float nameHeight = GetNameFont( style ).GetHeight( );
+                float identifierHeight = style.IdentifierFont.GetHeight( );
+                float textHeight = nameHeight + identifierHeight;
 
                 textRegion.Y = GetHeaderTextTop( textRegion, textHeight, style.HeaderAlignment );
                 textRegion.Height = textHeight;
@@ -558,8 +549,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         private void DrawChevron( IGraphics g )
         {
-            var chevron = Collapsed ? Resources.Expand : Resources.Collapse;
-            var location = new Point( Right - MarginSize - chevronSize.Width, Top + MarginSize );
+            Bitmap chevron = Collapsed ? Resources.Expand : Resources.Collapse;
+            Point location = new Point( Right - MarginSize - chevronSize.Width, Top + MarginSize );
 
             g.DrawImage( chevron, location );
         }
@@ -585,11 +576,11 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
             if ( HasIdentifier( style ) )
             {
-                var identifier = style.ShowSignature ? TypeBase.Signature : TypeBase.Stereotype;
+                string identifier = style.ShowSignature ? TypeBase.Signature : TypeBase.Stereotype;
                 identifierWidth = g.MeasureString( identifier, style.IdentifierFont, PointF.Empty, headerFormat ).Width;
             }
 
-            var requiredWidth = Math.Max( nameWidth, identifierWidth ) + MarginSize * 2;
+            float requiredWidth = Math.Max( nameWidth, identifierWidth ) + MarginSize * 2;
             return Math.Max( requiredWidth, base.GetRequiredWidth( g, style ) );
         }
 
@@ -597,7 +588,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         protected internal override void MoveWindow( )
         {
-            var editor = GetEditorWindow( );
+            EditorWindow editor = GetEditorWindow( );
             if ( editor != null )
                 editor.Relocate( this );
         }
@@ -619,12 +610,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
             if ( showedEditor != null )
             {
-                var editor = GetEditorWindow( );
+                EditorWindow editor = GetEditorWindow( );
 
                 if ( editor != showedEditor )
-                {
                     HideWindow( showedEditor );
-                }
                 ShowEditor( editor );
             }
             NeedsRedraw = true;
@@ -643,7 +632,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
                 base.OnSerializing( e );
             }
 
-            var collapsedNode = e.Node.OwnerDocument.CreateElement( "Collapsed" );
+            XmlElement collapsedNode = e.Node.OwnerDocument.CreateElement( "Collapsed" );
             collapsedNode.InnerText = Collapsed.ToString( );
             e.Node.AppendChild( collapsedNode );
         }
@@ -652,7 +641,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         {
             base.OnDeserializing( e );
 
-            var collapsedNode = e.Node[ "Collapsed" ];
+            XmlElement collapsedNode = e.Node[ "Collapsed" ];
             if ( collapsedNode != null )
             {
                 bool collapsed;

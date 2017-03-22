@@ -37,7 +37,7 @@ namespace NClass.Core
 
         public bool HasParameter
         {
-            get { return ArgumentList != null && ArgumentList.Count > 0; }
+            get { return ( ArgumentList != null ) && ( ArgumentList.Count > 0 ); }
         }
 
         public ArgumentList ArgumentList
@@ -63,7 +63,7 @@ namespace NClass.Core
                 if ( value == AccessModifier )
                     return;
 
-                var previousAccess = base.AccessModifier;
+                AccessModifier previousAccess = base.AccessModifier;
 
                 try
                 {
@@ -102,7 +102,7 @@ namespace NClass.Core
                 if ( value == IsStatic )
                     return;
 
-                var previousModifier = Modifier;
+                OperationModifier previousModifier = Modifier;
 
                 try
                 {
@@ -132,7 +132,7 @@ namespace NClass.Core
                 if ( value == IsHider )
                     return;
 
-                var previousModifier = Modifier;
+                OperationModifier previousModifier = Modifier;
 
                 try
                 {
@@ -162,7 +162,7 @@ namespace NClass.Core
                 if ( value == IsVirtual )
                     return;
 
-                var previousModifier = Modifier;
+                OperationModifier previousModifier = Modifier;
 
                 try
                 {
@@ -192,7 +192,7 @@ namespace NClass.Core
                 if ( value == IsAbstract )
                     return;
 
-                var previousModifier = Modifier;
+                OperationModifier previousModifier = Modifier;
 
                 try
                 {
@@ -222,7 +222,7 @@ namespace NClass.Core
                 if ( value == IsOverride )
                     return;
 
-                var previousModifier = Modifier;
+                OperationModifier previousModifier = Modifier;
 
                 try
                 {
@@ -252,7 +252,7 @@ namespace NClass.Core
                 if ( value == IsSealed )
                     return;
 
-                var previousModifier = Modifier;
+                OperationModifier previousModifier = Modifier;
 
                 try
                 {
@@ -281,10 +281,8 @@ namespace NClass.Core
             get
             {
                 if ( Language.ExplicitVirtualMethods )
-                {
                     return IsVirtual || IsAbstract || ( IsOverride && !IsSealed );
-                }
-                return Access != AccessModifier.Private && ( IsModifierless || IsAbstract || IsHider );
+                return ( Access != AccessModifier.Private ) && ( IsModifierless || IsAbstract || IsHider );
             }
         }
 
@@ -301,7 +299,7 @@ namespace NClass.Core
         {
             base.CopyFrom( member );
 
-            var operation = ( Operation ) member;
+            Operation operation = ( Operation ) member;
             Modifier = operation.Modifier;
             argumentList = operation.argumentList.Clone( );
         }
@@ -310,20 +308,16 @@ namespace NClass.Core
 
         public virtual bool HasSameSignatureAs( Operation operation )
         {
-            if ( operation == null || Name != operation.Name )
+            if ( ( operation == null ) || ( Name != operation.Name ) )
                 return false;
 
             // Names and types are the same and the parameter counts do not equal
             if ( ArgumentList.Count != operation.ArgumentList.Count )
                 return false;
 
-            for ( var i = 0; i < ArgumentList.Count; i++ )
-            {
-                if ( ArgumentList[ i ].Type != operation.ArgumentList[ i ].Type || ArgumentList[ i ].Modifier != operation.ArgumentList[ i ].Modifier )
-                {
+            for ( int i = 0; i < ArgumentList.Count; i++ )
+                if ( ( ArgumentList[ i ].Type != operation.ArgumentList[ i ].Type ) || ( ArgumentList[ i ].Modifier != operation.ArgumentList[ i ].Modifier ) )
                     return false;
-                }
-            }
 
             return true;
         }

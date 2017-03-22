@@ -41,7 +41,7 @@ namespace NClass.Core
 
         public DependencyRelationship Clone( TypeBase first, TypeBase second )
         {
-            var dependency = new DependencyRelationship( first, second );
+            DependencyRelationship dependency = new DependencyRelationship( first, second );
             dependency.CopyFrom( this );
             return dependency;
         }

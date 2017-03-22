@@ -93,11 +93,9 @@ namespace NClass.Core
 
         private bool IsAncestor( InterfaceType _interface )
         {
-            foreach ( var baseInterface in BaseList )
-            {
+            foreach ( InterfaceType baseInterface in BaseList )
                 if ( baseInterface.IsAncestor( _interface ) )
                     return true;
-            }
             return _interface == this;
         }
 
@@ -115,13 +113,9 @@ namespace NClass.Core
                 throw new ArgumentNullException( "_base" );
 
             if ( BaseList.Contains( _base ) )
-            {
                 throw new RelationshipException( Strings.ErrorCannotAddSameBaseInterface );
-            }
             if ( _base.IsAncestor( this ) )
-            {
                 throw new RelationshipException( string.Format( Strings.ErrorCyclicBase, Strings.Interface ) );
-            }
 
             if ( _base.Language != Language )
                 throw new RelationshipException( Strings.ErrorLanguagesDoNotEqual );

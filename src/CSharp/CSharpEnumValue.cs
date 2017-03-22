@@ -40,7 +40,7 @@ namespace NClass.CSharp
         /// </exception>
         public override void InitFromString( string declaration )
         {
-            var match = enumItemRegex.Match( declaration );
+            Match match = enumItemRegex.Match( declaration );
 
             try
             {
@@ -48,8 +48,8 @@ namespace NClass.CSharp
 
                 if ( match.Success )
                 {
-                    var nameGroup = match.Groups[ "name" ];
-                    var valueGroup = match.Groups[ "value" ];
+                    Group nameGroup = match.Groups[ "name" ];
+                    Group valueGroup = match.Groups[ "value" ];
 
                     Name = nameGroup.Value;
                     if ( valueGroup.Success )

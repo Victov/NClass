@@ -22,7 +22,7 @@ using NReflect.Modifier;
 namespace NReflect.NREntities
 {
     /// <summary>
-    /// Represents a class which is reflected by NReflect.
+    ///     Represents a class which is reflected by NReflect.
     /// </summary>
     [Serializable]
     public class NRClass : NRSingleInheritanceType
@@ -33,7 +33,7 @@ namespace NReflect.NREntities
         #region === Properties
 
         /// <summary>
-        /// Gets or sets the modifier for this class.
+        ///     Gets or sets the modifier for this class.
         /// </summary>
         public ClassModifier ClassModifier { get; set; }
 
@@ -45,9 +45,9 @@ namespace NReflect.NREntities
         #region === Methods
 
         /// <summary>
-        /// Accept an <see cref="IVisitor"/> instance on the implementing class and all its children.
+        ///     Accept an <see cref="IVisitor" /> instance on the implementing class and all its children.
         /// </summary>
-        /// <param name="visitor">The <see cref="IVisitor"/> instance to accept.</param>
+        /// <param name="visitor">The <see cref="IVisitor" /> instance to accept.</param>
         public override void Accept( IVisitor visitor )
         {
             visitor.Visit( this );

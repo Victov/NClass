@@ -92,7 +92,7 @@ namespace NClass.Core
                 if ( value == readAccess )
                     return;
 
-                if ( value == AccessModifier.Default || ( value != Access && WriteAccess == AccessModifier.Default && !IsReadonly && !IsWriteonly ) )
+                if ( ( value == AccessModifier.Default ) || ( ( value != Access ) && ( WriteAccess == AccessModifier.Default ) && !IsReadonly && !IsWriteonly ) )
                 {
                     readAccess = value;
                     Changed( );
@@ -115,7 +115,7 @@ namespace NClass.Core
                 if ( value == writeAccess )
                     return;
 
-                if ( value == AccessModifier.Default || ( value != Access && ReadAccess == AccessModifier.Default && !IsReadonly && !IsWriteonly ) )
+                if ( ( value == AccessModifier.Default ) || ( ( value != Access ) && ( ReadAccess == AccessModifier.Default ) && !IsReadonly && !IsWriteonly ) )
                 {
                     writeAccess = value;
                     Changed( );
@@ -131,7 +131,7 @@ namespace NClass.Core
         {
             base.CopyFrom( member );
 
-            var property = ( Property ) member;
+            Property property = ( Property ) member;
             isReadonly = property.isReadonly;
             isWriteonly = property.isWriteonly;
             readAccess = property.readAccess;

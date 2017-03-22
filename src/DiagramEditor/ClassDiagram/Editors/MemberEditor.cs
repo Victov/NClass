@@ -66,12 +66,12 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
         {
             if ( shape.ActiveMember != null )
             {
-                var member = shape.ActiveMember;
+                Member member = shape.ActiveMember;
                 SuspendLayout( );
                 RefreshModifiers( );
-                var language = shape.CompositeType.Language;
+                Language language = shape.CompositeType.Language;
 
-                var cursorPosition = txtDeclaration.SelectionStart;
+                int cursorPosition = txtDeclaration.SelectionStart;
                 txtDeclaration.Text = member.ToString( );
                 txtDeclaration.SelectionStart = cursorPosition;
                 txtDeclaration.ReadOnly = member.MemberType == MemberType.Destructor;
@@ -89,10 +89,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                 toolHider.Enabled = member.MemberType != MemberType.Destructor;
 
                 // Field modifiers
-                var field = member as Field;
+                Field field = member as Field;
                 if ( field != null )
                 {
-                    var modifier = field.Modifier & ( FieldModifier.Constant | FieldModifier.Readonly | FieldModifier.Volatile );
+                    FieldModifier modifier = field.Modifier & ( FieldModifier.Constant | FieldModifier.Readonly | FieldModifier.Volatile );
 
                     if ( modifier == FieldModifier.None )
                         toolFieldModifiers.Text = Strings.None;
@@ -101,10 +101,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                 }
 
                 // Operation modifiers
-                var operation = member as Operation;
+                Operation operation = member as Operation;
                 if ( operation != null )
                 {
-                    var modifier = operation.Modifier & ( OperationModifier.Abstract | OperationModifier.Override | OperationModifier.Sealed | OperationModifier.Virtual );
+                    OperationModifier modifier = operation.Modifier & ( OperationModifier.Abstract | OperationModifier.Override | OperationModifier.Sealed | OperationModifier.Virtual );
 
                     if ( modifier == OperationModifier.None )
                         toolOperationModifiers.Text = Strings.None;
@@ -115,9 +115,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                 }
 
                 // Property accessor
-                var property = member as Property;
+                Property property = member as Property;
                 if ( property != null )
-                {
                     if ( property.IsReadonly )
                     {
                         toolAccessor.Image = Resources.PublicReadonly;
@@ -133,7 +132,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                         toolAccessor.Image = Resources.PublicProperty;
                         toolAccessor.ToolTipText = Strings.ReadWrite;
                     }
-                }
 
                 RefreshNewMembers( );
                 RefreshMoveUpDownTools( );
@@ -143,8 +141,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
         private void RefreshVisibility( )
         {
-            var member = shape.ActiveMember;
-            var language = shape.ActiveMember.Language;
+            Member member = shape.ActiveMember;
+            Language language = shape.ActiveMember.Language;
 
             toolVisibility.Image = Icons.GetImage( member.MemberType, member.AccessModifier );
             toolVisibility.Text = language.ValidAccessModifiers[ member.AccessModifier ];
@@ -220,7 +218,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
         private void RefreshModifiers( )
         {
-            var language = shape.CompositeType.Language;
+            Language language = shape.CompositeType.Language;
 
             if ( shape.ActiveMember is Field )
             {
@@ -365,7 +363,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
         private void RefreshNewMembers( )
         {
-            var valid = false;
+            bool valid = false;
             switch ( NewMemberType )
             {
                 case MemberType.Field:
@@ -440,12 +438,12 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
         private void RefreshMoveUpDownTools( )
         {
-            var index = shape.ActiveMemberIndex;
-            var fieldCount = shape.CompositeType.FieldCount;
-            var memberCount = shape.CompositeType.MemberCount;
+            int index = shape.ActiveMemberIndex;
+            int fieldCount = shape.CompositeType.FieldCount;
+            int memberCount = shape.CompositeType.MemberCount;
 
-            toolMoveUp.Enabled = ( index < fieldCount && index > 0 ) || index > fieldCount;
-            toolMoveDown.Enabled = index < fieldCount - 1 || ( index >= fieldCount && index < memberCount - 1 );
+            toolMoveUp.Enabled = ( ( index < fieldCount ) && ( index > 0 ) ) || ( index > fieldCount );
+            toolMoveDown.Enabled = ( index < fieldCount - 1 ) || ( ( index >= fieldCount ) && ( index < memberCount - 1 ) );
         }
 
         internal override void Relocate( DiagramElement element )
@@ -455,13 +453,13 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
         internal void Relocate( CompositeTypeShape shape )
         {
-            var diagram = shape.Diagram;
+            Diagram diagram = shape.Diagram;
             if ( diagram != null )
             {
-                var record = shape.GetMemberRectangle( shape.ActiveMemberIndex );
+                Rectangle record = shape.GetMemberRectangle( shape.ActiveMemberIndex );
 
-                var absolute = new Point( shape.Right, record.Top );
-                var relative = new Size( ( int ) ( absolute.X * diagram.Zoom ) - diagram.Offset.X + MarginSize, ( int ) ( absolute.Y * diagram.Zoom ) - diagram.Offset.Y );
+                Point absolute = new Point( shape.Right, record.Top );
+                Size relative = new Size( ( int ) ( absolute.X * diagram.Zoom ) - diagram.Offset.X + MarginSize, ( int ) ( absolute.Y * diagram.Zoom ) - diagram.Offset.Y );
                 relative.Height -= ( Height - ( int ) ( record.Height * diagram.Zoom ) ) / 2;
 
                 Location = ParentLocation + relative;
@@ -476,8 +474,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
         private bool ValidateDeclarationLine( )
         {
-            if ( needValidation && shape.ActiveMember != null )
-            {
+            if ( needValidation && ( shape.ActiveMember != null ) )
                 try
                 {
                     shape.ActiveMember.InitFromString( txtDeclaration.Text );
@@ -488,7 +485,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                     SetError( ex.Message );
                     return false;
                 }
-            }
             return true;
         }
 
@@ -502,8 +498,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
         private void ChangeAccess( AccessModifier access )
         {
-            if ( shape.ActiveMember != null && ValidateDeclarationLine( ) )
-            {
+            if ( ( shape.ActiveMember != null ) && ValidateDeclarationLine( ) )
                 try
                 {
                     shape.ActiveMember.AccessModifier = access;
@@ -514,16 +509,14 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                     RefreshValues( );
                     SetError( ex.Message );
                 }
-            }
         }
 
         private void ChangeModifier( FieldModifier modifier )
         {
             if ( ValidateDeclarationLine( ) )
             {
-                var field = shape.ActiveMember as Field;
+                Field field = shape.ActiveMember as Field;
                 if ( field != null )
-                {
                     try
                     {
                         // Clear other modifiers
@@ -541,24 +534,23 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                         RefreshValues( );
                         SetError( ex.Message );
                     }
-                }
             }
         }
 
         private void ChangeModifier( OperationModifier modifier )
         {
-            if ( shape.ActiveMember != null && ValidateDeclarationLine( ) )
+            if ( ( shape.ActiveMember != null ) && ValidateDeclarationLine( ) )
             {
-                var operation = shape.ActiveMember as Operation;
+                Operation operation = shape.ActiveMember as Operation;
                 if ( operation != null )
                 {
                     // Class changing to abstract
                     if ( ( modifier & OperationModifier.Abstract ) != 0 )
                     {
-                        var classType = shape.CompositeType as ClassType;
-                        if ( classType != null && classType.Modifier != ClassModifier.Abstract )
+                        ClassType classType = shape.CompositeType as ClassType;
+                        if ( ( classType != null ) && ( classType.Modifier != ClassModifier.Abstract ) )
                         {
-                            var result = MessageBox.Show( Strings.ChangingToAbstractConfirmation, Strings.Confirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Warning );
+                            DialogResult result = MessageBox.Show( Strings.ChangingToAbstractConfirmation, Strings.Confirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Warning );
 
                             if ( result == DialogResult.No )
                                 return;
@@ -590,33 +582,25 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
         private void SelectPrevious( )
         {
             if ( ValidateDeclarationLine( ) )
-            {
                 shape.SelectPrevious( );
-            }
         }
 
         private void SelectNext( )
         {
             if ( ValidateDeclarationLine( ) )
-            {
                 shape.SelectNext( );
-            }
         }
 
         private void MoveUp( )
         {
             if ( ValidateDeclarationLine( ) )
-            {
                 shape.MoveUp( );
-            }
         }
 
         private void MoveDown( )
         {
             if ( ValidateDeclarationLine( ) )
-            {
                 shape.MoveDown( );
-            }
         }
 
         protected override void OnVisibleChanged( EventArgs e )
@@ -630,7 +614,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
             switch ( e.KeyCode )
             {
                 case Keys.Enter:
-                    if ( e.Modifiers == Keys.Control || e.Modifiers == Keys.Shift )
+                    if ( ( e.Modifiers == Keys.Control ) || ( e.Modifiers == Keys.Shift ) )
                         OpenNewMemberDropDown( );
                     else
                         ValidateDeclarationLine( );
@@ -661,7 +645,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
             }
 
             if ( e.Modifiers == ( Keys.Control | Keys.Shift ) )
-            {
                 switch ( e.KeyCode )
                 {
                     case Keys.A:
@@ -692,7 +675,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                         AddNewMember( MemberType.Event );
                         break;
                 }
-            }
         }
 
         private void OpenNewMemberDropDown( )
@@ -769,10 +751,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
         private void toolStatic_CheckedChanged( object sender, EventArgs e )
         {
-            var checkedState = toolStatic.Checked;
+            bool checkedState = toolStatic.Checked;
 
-            if ( shape.ActiveMember != null && ValidateDeclarationLine( ) )
-            {
+            if ( ( shape.ActiveMember != null ) && ValidateDeclarationLine( ) )
                 try
                 {
                     shape.ActiveMember.IsStatic = checkedState;
@@ -783,15 +764,13 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                     RefreshValues( );
                     SetError( ex.Message );
                 }
-            }
         }
 
         private void toolHider_CheckedChanged( object sender, EventArgs e )
         {
-            var checkedState = toolHider.Checked;
+            bool checkedState = toolHider.Checked;
 
-            if ( shape.ActiveMember != null && ValidateDeclarationLine( ) )
-            {
+            if ( ( shape.ActiveMember != null ) && ValidateDeclarationLine( ) )
                 try
                 {
                     shape.ActiveMember.IsHider = checkedState;
@@ -802,7 +781,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                     RefreshValues( );
                     SetError( ex.Message );
                 }
-            }
         }
 
         private void toolFieldNone_Click( object sender, EventArgs e )
@@ -859,9 +837,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
         {
             if ( ValidateDeclarationLine( ) )
             {
-                var property = shape.ActiveMember as Property;
+                Property property = shape.ActiveMember as Property;
                 if ( property != null )
-                {
                     try
                     {
                         property.IsReadonly = false;
@@ -873,7 +850,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                         RefreshValues( );
                         SetError( ex.Message );
                     }
-                }
             }
         }
 
@@ -881,9 +857,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
         {
             if ( ValidateDeclarationLine( ) )
             {
-                var property = shape.ActiveMember as Property;
+                Property property = shape.ActiveMember as Property;
                 if ( property != null )
-                {
                     try
                     {
                         property.IsReadonly = true;
@@ -894,7 +869,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                         RefreshValues( );
                         SetError( ex.Message );
                     }
-                }
             }
         }
 
@@ -902,9 +876,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
         {
             if ( ValidateDeclarationLine( ) )
             {
-                var property = shape.ActiveMember as Property;
+                Property property = shape.ActiveMember as Property;
                 if ( property != null )
-                {
                     try
                     {
                         property.IsWriteonly = true;
@@ -915,7 +888,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                         RefreshValues( );
                         SetError( ex.Message );
                     }
-                }
             }
         }
 

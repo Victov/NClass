@@ -52,11 +52,11 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
         private void RefreshValues( )
         {
-            var type = shape.EnumType;
-            var language = type.Language;
+            EnumType type = shape.EnumType;
+            Language language = type.Language;
             SuspendLayout( );
 
-            var cursorPosition = txtName.SelectionStart;
+            int cursorPosition = txtName.SelectionStart;
             txtName.Text = type.Name;
             txtName.SelectionStart = cursorPosition;
 
@@ -69,8 +69,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
         private void RefreshVisibility( )
         {
-            var language = shape.EnumType.Language;
-            var type = shape.EnumType;
+            Language language = shape.EnumType.Language;
+            EnumType type = shape.EnumType;
 
             toolVisibility.Image = Icons.GetImage( type );
             toolVisibility.Text = language.ValidAccessModifiers[ type.AccessModifier ];
@@ -146,7 +146,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
         private bool ValidateName( )
         {
             if ( needValidation )
-            {
                 try
                 {
                     shape.EnumType.Name = txtName.Text;
@@ -157,7 +156,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                     SetError( ex.Message );
                     return false;
                 }
-            }
             return true;
         }
 
@@ -172,7 +170,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
         private void AddNewValue( )
         {
             if ( !noNewValue && ValidateName( ) )
-            {
                 try
                 {
                     shape.EnumType.AddValue( txtNewValue.Text );
@@ -182,7 +179,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                 {
                     SetError( ex.Message );
                 }
-            }
         }
 
         private void ClearNewValueField( )
@@ -194,7 +190,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
         private void ChangeAccess( AccessModifier access )
         {
             if ( ValidateName( ) )
-            {
                 try
                 {
                     shape.EnumType.AccessModifier = access;
@@ -205,7 +200,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                     RefreshValues( );
                     SetError( ex.Message );
                 }
-            }
         }
 
         private void toolPublic_Click( object sender, EventArgs e )
@@ -268,9 +262,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
         private void txtNewValue_GotFocus( object sender, EventArgs e )
         {
             if ( noNewValue )
-            {
                 txtNewValue.Text = string.Empty;
-            }
         }
 
         private void txtNewValue_LostFocus( object sender, EventArgs e )

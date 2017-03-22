@@ -33,10 +33,10 @@ namespace NClass.DiagramEditor.ClassDiagram
         private static readonly Pen arrowPen;
 
         private readonly Diagram diagram;
+        private readonly RelationshipType type;
         private Shape first;
         private bool firstSelected;
         private Shape second;
-        private readonly RelationshipType type;
 
         static ConnectionCreator( )
         {
@@ -60,10 +60,9 @@ namespace NClass.DiagramEditor.ClassDiagram
 
         public void MouseMove( AbsoluteMouseEventArgs e )
         {
-            var mouseLocation = new Point( ( int ) e.X, ( int ) e.Y );
+            Point mouseLocation = new Point( ( int ) e.X, ( int ) e.Y );
 
-            foreach ( var shape in diagram.Shapes )
-            {
+            foreach ( Shape shape in diagram.Shapes )
                 if ( shape.BorderRectangle.Contains( mouseLocation ) )
                 {
                     if ( !firstSelected )
@@ -84,7 +83,6 @@ namespace NClass.DiagramEditor.ClassDiagram
                     }
                     return;
                 }
-            }
 
             if ( !firstSelected )
             {
@@ -160,56 +158,43 @@ namespace NClass.DiagramEditor.ClassDiagram
 
         private void CreateAssociation( )
         {
-            var shape1 = first as TypeShape;
-            var shape2 = second as TypeShape;
+            TypeShape shape1 = first as TypeShape;
+            TypeShape shape2 = second as TypeShape;
 
-            if ( shape1 != null && shape2 != null )
-            {
+            if ( ( shape1 != null ) && ( shape2 != null ) )
                 diagram.AddAssociation( shape1.TypeBase, shape2.TypeBase );
-            }
             else
-            {
                 MessageBox.Show( Strings.ErrorCannotCreateRelationship );
-            }
         }
 
         private void CreateComposition( )
         {
-            var shape1 = first as TypeShape;
-            var shape2 = second as TypeShape;
+            TypeShape shape1 = first as TypeShape;
+            TypeShape shape2 = second as TypeShape;
 
-            if ( shape1 != null && shape2 != null )
-            {
+            if ( ( shape1 != null ) && ( shape2 != null ) )
                 diagram.AddComposition( shape1.TypeBase, shape2.TypeBase );
-            }
             else
-            {
                 MessageBox.Show( Strings.ErrorCannotCreateRelationship );
-            }
         }
 
         private void CreateAggregation( )
         {
-            var shape1 = first as TypeShape;
-            var shape2 = second as TypeShape;
+            TypeShape shape1 = first as TypeShape;
+            TypeShape shape2 = second as TypeShape;
 
-            if ( shape1 != null && shape2 != null )
-            {
+            if ( ( shape1 != null ) && ( shape2 != null ) )
                 diagram.AddAggregation( shape1.TypeBase, shape2.TypeBase );
-            }
             else
-            {
                 MessageBox.Show( Strings.ErrorCannotCreateRelationship );
-            }
         }
 
         private void CreateGeneralization( )
         {
-            var shape1 = first as CompositeTypeShape;
-            var shape2 = second as CompositeTypeShape;
+            CompositeTypeShape shape1 = first as CompositeTypeShape;
+            CompositeTypeShape shape2 = second as CompositeTypeShape;
 
-            if ( shape1 != null && shape2 != null )
-            {
+            if ( ( shape1 != null ) && ( shape2 != null ) )
                 try
                 {
                     diagram.AddGeneralization( shape1.CompositeType, shape2.CompositeType );
@@ -218,20 +203,16 @@ namespace NClass.DiagramEditor.ClassDiagram
                 {
                     MessageBox.Show( Strings.ErrorCannotCreateRelationship );
                 }
-            }
             else
-            {
                 MessageBox.Show( Strings.ErrorCannotCreateRelationship );
-            }
         }
 
         private void CreateRealization( )
         {
-            var shape1 = first as TypeShape;
-            var shape2 = second as InterfaceShape;
+            TypeShape shape1 = first as TypeShape;
+            InterfaceShape shape2 = second as InterfaceShape;
 
-            if ( shape1 != null && shape2 != null )
-            {
+            if ( ( shape1 != null ) && ( shape2 != null ) )
                 try
                 {
                     diagram.AddRealization( shape1.TypeBase, shape2.InterfaceType );
@@ -240,35 +221,27 @@ namespace NClass.DiagramEditor.ClassDiagram
                 {
                     MessageBox.Show( Strings.ErrorCannotCreateRelationship );
                 }
-            }
             else
-            {
                 MessageBox.Show( Strings.ErrorCannotCreateRelationship );
-            }
         }
 
         private void CreateDependency( )
         {
-            var shape1 = first as TypeShape;
-            var shape2 = second as TypeShape;
+            TypeShape shape1 = first as TypeShape;
+            TypeShape shape2 = second as TypeShape;
 
-            if ( shape1 != null && shape2 != null )
-            {
+            if ( ( shape1 != null ) && ( shape2 != null ) )
                 diagram.AddDependency( shape1.TypeBase, shape2.TypeBase );
-            }
             else
-            {
                 MessageBox.Show( Strings.ErrorCannotCreateRelationship );
-            }
         }
 
         private void CreateNesting( )
         {
-            var shape1 = first as CompositeTypeShape;
-            var shape2 = second as TypeShape;
+            CompositeTypeShape shape1 = first as CompositeTypeShape;
+            TypeShape shape2 = second as TypeShape;
 
-            if ( shape1 != null && shape2 != null )
-            {
+            if ( ( shape1 != null ) && ( shape2 != null ) )
                 try
                 {
                     diagram.AddNesting( shape1.CompositeType, shape2.TypeBase );
@@ -277,44 +250,35 @@ namespace NClass.DiagramEditor.ClassDiagram
                 {
                     MessageBox.Show( Strings.ErrorCannotCreateRelationship );
                 }
-            }
             else
-            {
                 MessageBox.Show( Strings.ErrorCannotCreateRelationship );
-            }
         }
 
         private void CreateCommentRelationship( )
         {
-            var shape1 = first as CommentShape;
-            var shape2 = second as CommentShape;
+            CommentShape shape1 = first as CommentShape;
+            CommentShape shape2 = second as CommentShape;
 
             if ( shape1 != null )
-            {
                 diagram.AddCommentRelationship( shape1.Comment, second.Entity );
-            }
             else if ( shape2 != null )
-            {
                 diagram.AddCommentRelationship( shape2.Comment, first.Entity );
-            }
             else
-            {
                 MessageBox.Show( Strings.ErrorCannotCreateRelationship );
-            }
         }
 
         public void Draw( Graphics g )
         {
             if ( first != null )
             {
-                var border = first.BorderRectangle;
+                Rectangle border = first.BorderRectangle;
                 border.Inflate( BorderOffset, BorderOffset );
                 g.DrawRectangle( firstPen, border );
             }
 
             if ( second != null )
             {
-                var border = second.BorderRectangle;
+                Rectangle border = second.BorderRectangle;
                 if ( second == first )
                     border.Inflate( BorderOffset2, BorderOffset2 );
                 else
@@ -322,10 +286,8 @@ namespace NClass.DiagramEditor.ClassDiagram
                 g.DrawRectangle( secondPen, border );
             }
 
-            if ( first != null && second != null )
-            {
+            if ( ( first != null ) && ( second != null ) )
                 g.DrawLine( arrowPen, first.CenterPoint, second.CenterPoint );
-            }
         }
     }
 }

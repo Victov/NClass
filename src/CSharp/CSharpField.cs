@@ -80,9 +80,7 @@ namespace NClass.CSharp
             set
             {
                 if ( value && !HasInitialValue )
-                {
                     throw new BadSyntaxException( Strings.ErrorLackOfInitialization );
-                }
                 base.IsConstant = value;
             }
         }
@@ -97,7 +95,7 @@ namespace NClass.CSharp
         /// </exception>
         public override void InitFromString( string declaration )
         {
-            var match = fieldRegex.Match( declaration );
+            Match match = fieldRegex.Match( declaration );
             RaiseChangedEvent = false;
 
             try
@@ -105,11 +103,11 @@ namespace NClass.CSharp
                 if ( match.Success )
                 {
                     ClearModifiers( );
-                    var nameGroup = match.Groups[ "name" ];
-                    var typeGroup = match.Groups[ "type" ];
-                    var accessGroup = match.Groups[ "access" ];
-                    var modifierGroup = match.Groups[ "modifier" ];
-                    var initGroup = match.Groups[ "initvalue" ];
+                    Group nameGroup = match.Groups[ "name" ];
+                    Group typeGroup = match.Groups[ "type" ];
+                    Group accessGroup = match.Groups[ "access" ];
+                    Group modifierGroup = match.Groups[ "modifier" ];
+                    Group initGroup = match.Groups[ "initvalue" ];
 
                     if ( CSharpLanguage.Instance.IsForbiddenName( nameGroup.Value ) )
                         throw new BadSyntaxException( Strings.ErrorInvalidName );
@@ -155,7 +153,7 @@ namespace NClass.CSharp
 
         public string GetDeclarationLine( bool withSemicolon )
         {
-            var builder = new StringBuilder( 50 );
+            StringBuilder builder = new StringBuilder( 50 );
 
             if ( AccessModifier != AccessModifier.Default )
             {
@@ -186,7 +184,7 @@ namespace NClass.CSharp
 
         protected override Field Clone( CompositeType newParent )
         {
-            var field = new CSharpField( newParent );
+            CSharpField field = new CSharpField( newParent );
             field.CopyFrom( this );
             return field;
         }

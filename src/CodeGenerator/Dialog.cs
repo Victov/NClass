@@ -33,7 +33,7 @@ namespace NClass.CodeGenerator
             importToolStrip.Renderer = ToolStripSimplifiedRenderer.Default;
 
 
-            this.cboLanguage.Items.AddRange( new object[] {"C#", "Java", "C# extended"} );
+            cboLanguage.Items.AddRange( new object[] {"C#", "Java", "C# extended"} );
         }
 
         private void UpdateTexts( )
@@ -92,7 +92,7 @@ namespace NClass.CodeGenerator
             {
                 Settings.Default.Upgrade( );
                 lstImportList.Items.Clear( );
-                foreach ( var importString in Settings.Default.ImportList[ language ] )
+                foreach ( string importString in Settings.Default.ImportList[ language ] )
                     lstImportList.Items.Add( importString );
             }
 
@@ -111,8 +111,8 @@ namespace NClass.CodeGenerator
 
         private void SaveImportList( )
         {
-            var importList = new StringCollection( );
-            foreach ( var import in lstImportList.Items )
+            StringCollection importList = new StringCollection( );
+            foreach ( object import in lstImportList.Items )
                 importList.Add( import.ToString( ) );
 
             //TODO: ezt is másképp kéne
@@ -140,7 +140,7 @@ namespace NClass.CodeGenerator
 
         private void btnBrowse_Click( object sender, EventArgs e )
         {
-            using ( var dialog = new FolderBrowserDialog( ) )
+            using ( FolderBrowserDialog dialog = new FolderBrowserDialog( ) )
             {
                 dialog.Description = Strings.GeneratorTargetDir;
                 dialog.SelectedPath = txtDestination.Text;
@@ -156,10 +156,10 @@ namespace NClass.CodeGenerator
 
         private void toolMoveUp_Click( object sender, EventArgs e )
         {
-            var index = lstImportList.SelectedIndex;
+            int index = lstImportList.SelectedIndex;
             if ( index > 0 )
             {
-                var temp = lstImportList.Items[ index ];
+                object temp = lstImportList.Items[ index ];
                 lstImportList.Items[ index ] = lstImportList.Items[ index - 1 ];
                 lstImportList.Items[ index - 1 ] = temp;
                 lstImportList.SelectedIndex--;
@@ -169,10 +169,10 @@ namespace NClass.CodeGenerator
 
         private void toolMoveDown_Click( object sender, EventArgs e )
         {
-            var index = lstImportList.SelectedIndex;
+            int index = lstImportList.SelectedIndex;
             if ( index < lstImportList.Items.Count - 1 )
             {
-                var temp = lstImportList.Items[ index ];
+                object temp = lstImportList.Items[ index ];
                 lstImportList.Items[ index ] = lstImportList.Items[ index + 1 ];
                 lstImportList.Items[ index + 1 ] = temp;
                 lstImportList.SelectedIndex++;
@@ -184,7 +184,7 @@ namespace NClass.CodeGenerator
         {
             if ( lstImportList.SelectedItem != null )
             {
-                var selectedIndex = lstImportList.SelectedIndex;
+                int selectedIndex = lstImportList.SelectedIndex;
                 lstImportList.Items.RemoveAt( selectedIndex );
                 if ( lstImportList.Items.Count > selectedIndex )
                     lstImportList.SelectedIndex = selectedIndex;
@@ -196,7 +196,7 @@ namespace NClass.CodeGenerator
 
         private void lstImportList_SelectedValueChanged( object sender, EventArgs e )
         {
-            var isSelected = lstImportList.SelectedItem != null;
+            bool isSelected = lstImportList.SelectedItem != null;
 
             toolMoveUp.Enabled = isSelected && ( lstImportList.SelectedIndex > 0 );
             toolMoveDown.Enabled = isSelected && ( lstImportList.SelectedIndex < lstImportList.Items.Count - 1 );
@@ -215,7 +215,7 @@ namespace NClass.CodeGenerator
 
         private void txtNewImport_KeyDown( object sender, KeyEventArgs e )
         {
-            if ( e.KeyCode == Keys.Enter && txtNewImport.Text.Length > 0 )
+            if ( ( e.KeyCode == Keys.Enter ) && ( txtNewImport.Text.Length > 0 ) )
             {
                 lstImportList.Items.Add( txtNewImport.Text );
                 txtNewImport.Text = string.Empty;
@@ -233,7 +233,7 @@ namespace NClass.CodeGenerator
 
         private void chkUseTabs_CheckedChanged( object sender, EventArgs e )
         {
-            var useTabs = chkUseTabs.Checked;
+            bool useTabs = chkUseTabs.Checked;
 
             lblIndentSize.Enabled = !useTabs;
             updIndentSize.Enabled = !useTabs;
@@ -247,11 +247,11 @@ namespace NClass.CodeGenerator
 
                 try
                 {
-                    var solutionType = ( SolutionType ) cboSolutionType.SelectedIndex;
-                    var generator = new Generator( project, solutionType );
-                    var destination = txtDestination.Text;
+                    SolutionType solutionType = ( SolutionType ) cboSolutionType.SelectedIndex;
+                    Generator generator = new Generator( project, solutionType );
+                    string destination = txtDestination.Text;
 
-                    var result = generator.Generate( destination, chkSortUsing.Checked, chkXMLDocFood.Checked, Settings.Default.CompagnyName, Settings.Default.CopyrightHeader, Settings.Default.Author );
+                    GenerationResult result = generator.Generate( destination, chkSortUsing.Checked, chkXMLDocFood.Checked, Settings.Default.CompagnyName, Settings.Default.CopyrightHeader, Settings.Default.Author );
                     if ( result == GenerationResult.Success )
                     {
                         if ( Equals( cboLanguage.SelectedItem, "C# extented" ) )
@@ -304,14 +304,14 @@ namespace NClass.CodeGenerator
 
         private void btnCustomFormatStyle_Click( object sender, EventArgs e )
         {
-            var dialogBox = new FormatStyleSettings( );
+            FormatStyleSettings dialogBox = new FormatStyleSettings( );
 
             dialogBox.ShowDialog( );
         }
 
         private void btnCopyrightHeader_Click( object sender, EventArgs e )
         {
-            var dialogBox = new CopyrightHeader( );
+            CopyrightHeader dialogBox = new CopyrightHeader( );
 
             dialogBox.ShowDialog( );
         }

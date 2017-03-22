@@ -51,8 +51,8 @@ namespace NClass.CodeGenerator
         {
             get
             {
-                var projectName = Model.Project.Name;
-                var modelName = Model.Name;
+                string projectName = Model.Project.Name;
+                string modelName = Model.Name;
 
                 if ( string.Equals( projectName, modelName, StringComparison.OrdinalIgnoreCase ) )
                     return modelName;
@@ -67,7 +67,7 @@ namespace NClass.CodeGenerator
         /// </exception>
         internal bool Generate( string location, bool sort_using, bool generate_document_comment, string compagny_name, string copyright_header, string author )
         {
-            var success = true;
+            bool success = true;
 
             success &= GenerateSourceFiles( location, sort_using, generate_document_comment, compagny_name, copyright_header, author );
             success &= GenerateProjectFiles( location );
@@ -77,21 +77,21 @@ namespace NClass.CodeGenerator
 
         private bool GenerateSourceFiles( string location, bool sort_using, bool generate_document_comment, string compagny_name, string copyright_header, string author )
         {
-            var success = true;
+            bool success = true;
             location = Path.Combine( location, ProjectName );
 
             FileNames.Clear( );
-            foreach ( var entity in Model.Entities )
+            foreach ( IEntity entity in Model.Entities )
             {
-                var type = entity as TypeBase;
+                TypeBase type = entity as TypeBase;
 
-                if ( type != null && !type.IsNested )
+                if ( ( type != null ) && !type.IsNested )
                 {
-                    var sourceFile = CreateSourceFileGenerator( type, sort_using, generate_document_comment, compagny_name, copyright_header, author );
+                    SourceFileGenerator sourceFile = CreateSourceFileGenerator( type, sort_using, generate_document_comment, compagny_name, copyright_header, author );
 
                     try
                     {
-                        var fileName = sourceFile.Generate( location );
+                        string fileName = sourceFile.Generate( location );
                         FileNames.Add( fileName );
                     }
                     catch ( FileGenerationException )

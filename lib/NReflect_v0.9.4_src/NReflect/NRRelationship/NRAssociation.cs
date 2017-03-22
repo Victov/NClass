@@ -22,23 +22,54 @@ using NReflect.NREntities;
 namespace NReflect.NRRelationship
 {
     /// <summary>
-    /// Represents an association relationship between two types.
+    ///     Represents an association relationship between two types.
     /// </summary>
     [Serializable]
     public class NRAssociation
     {
+        // ========================================================================
+        // Methods
+
+        #region === Methods
+
+        /// <summary>
+        ///     Returns a <see cref="T:System.String" /> that represents the current <see cref="T:System.Object" />.
+        /// </summary>
+        /// <returns>
+        ///     A <see cref="T:System.String" /> that represents the current <see cref="T:System.Object" />.
+        /// </returns>
+        /// <filterpriority>2</filterpriority>
+        public override string ToString( )
+        {
+            string startRole = "";
+            string endRole = "";
+            if ( !string.IsNullOrWhiteSpace( StartRole ) )
+                startRole = " (" + StartRole + ")";
+            if ( !string.IsNullOrWhiteSpace( EndRole ) )
+                endRole = " (" + EndRole + ")";
+            string startMultiplicity = " ";
+            string endMultiplicity = " ";
+            if ( !string.IsNullOrWhiteSpace( StartMultiplicity ) )
+                startMultiplicity = " " + StartMultiplicity;
+            if ( !string.IsNullOrWhiteSpace( EndMultiplicity ) )
+                endMultiplicity = EndMultiplicity + " ";
+            return StartType.Name + startRole + startMultiplicity + "---" + endMultiplicity + endRole + EndType.Name;
+        }
+
+        #endregion
+
         // ========================================================================
         // Con- / Destruction
 
         #region === Con- / Destruction
 
         /// <summary>
-        /// Initializes a new instance of <see cref="NRAssociation"/>.
+        ///     Initializes a new instance of <see cref="NRAssociation" />.
         /// </summary>
         public NRAssociation( ) {}
 
         /// <summary>
-        /// Initializes a new instance of <see cref="NRAssociation"/>.
+        ///     Initializes a new instance of <see cref="NRAssociation" />.
         /// </summary>
         /// <param name="startType">The start type of the assotiation.</param>
         /// <param name="endType">The end type of the assotiation.</param>
@@ -56,73 +87,34 @@ namespace NReflect.NRRelationship
         #region === Properties
 
         /// <summary>
-        /// Gets or sets the start type of the assotiation.
+        ///     Gets or sets the start type of the assotiation.
         /// </summary>
         public NRTypeBase StartType { get; set; }
 
         /// <summary>
-        /// Gets or sets the end type of the assotiation.
+        ///     Gets or sets the end type of the assotiation.
         /// </summary>
         public NRTypeBase EndType { get; set; }
 
         /// <summary>
-        /// Gets or sets the start role.
+        ///     Gets or sets the start role.
         /// </summary>
         public string StartRole { get; set; }
 
         /// <summary>
-        /// Gets or sets the end role.
+        ///     Gets or sets the end role.
         /// </summary>
         public string EndRole { get; set; }
 
         /// <summary>
-        /// Gets or sets the start multiplicity.
+        ///     Gets or sets the start multiplicity.
         /// </summary>
         public string StartMultiplicity { get; set; }
 
         /// <summary>
-        /// Gets or sets the end multiplicity.
+        ///     Gets or sets the end multiplicity.
         /// </summary>
         public string EndMultiplicity { get; set; }
-
-        #endregion
-
-        // ========================================================================
-        // Methods
-
-        #region === Methods
-
-        /// <summary>
-        /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
-        /// </returns>
-        /// <filterpriority>2</filterpriority>
-        public override string ToString( )
-        {
-            string startRole = "";
-            string endRole = "";
-            if ( !String.IsNullOrWhiteSpace( StartRole ) )
-            {
-                startRole = " (" + StartRole + ")";
-            }
-            if ( !String.IsNullOrWhiteSpace( EndRole ) )
-            {
-                endRole = " (" + EndRole + ")";
-            }
-            string startMultiplicity = " ";
-            string endMultiplicity = " ";
-            if ( !String.IsNullOrWhiteSpace( StartMultiplicity ) )
-            {
-                startMultiplicity = " " + StartMultiplicity;
-            }
-            if ( !String.IsNullOrWhiteSpace( EndMultiplicity ) )
-            {
-                endMultiplicity = EndMultiplicity + " ";
-            }
-            return StartType.Name + startRole + startMultiplicity + "---" + endMultiplicity + endRole + EndType.Name;
-        }
 
         #endregion
     }

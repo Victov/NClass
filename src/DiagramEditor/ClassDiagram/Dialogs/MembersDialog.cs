@@ -111,7 +111,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         private void LanguageSpecificInitialization( Language language )
         {
             cboAccess.Items.Clear( );
-            foreach ( var modifier in language.ValidAccessModifiers.Values )
+            foreach ( string modifier in language.ValidAccessModifiers.Values )
                 cboAccess.Items.Add( modifier );
 
             // chkFieldStatic
@@ -243,10 +243,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             lstMembers.Items.Clear( );
             attributeCount = 0;
 
-            foreach ( var field in parent.Fields )
+            foreach ( Field field in parent.Fields )
                 AddFieldToList( field );
 
-            foreach ( var operation in parent.Operations )
+            foreach ( Operation operation in parent.Operations )
                 AddOperationToList( operation );
 
             DisableFields( );
@@ -260,7 +260,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             if ( field == null )
                 throw new ArgumentNullException( "field" );
 
-            var item = lstMembers.Items.Insert( attributeCount, "" );
+            ListViewItem item = lstMembers.Items.Insert( attributeCount, "" );
 
             item.Tag = field;
             item.ImageIndex = Icons.GetImageIndex( field );
@@ -282,7 +282,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             if ( operation == null )
                 throw new ArgumentNullException( "operation" );
 
-            var item = lstMembers.Items.Add( "" );
+            ListViewItem item = lstMembers.Items.Add( "" );
 
             item.Tag = operation;
             item.ImageIndex = Icons.GetImageIndex( operation );
@@ -296,7 +296,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
 
         private void ShowNewMember( Member actualMember )
         {
-            if ( locked || actualMember == null )
+            if ( locked || ( actualMember == null ) )
                 return;
             member = actualMember;
 
@@ -313,9 +313,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             txtSyntax.Enabled = true;
             txtName.Enabled = true;
             txtSyntax.ReadOnly = member is Destructor;
-            txtName.ReadOnly = member == null || member.IsNameReadonly;
-            cboType.Enabled = member != null && !member.IsTypeReadonly;
-            cboAccess.Enabled = member != null && member.IsAccessModifiable;
+            txtName.ReadOnly = ( member == null ) || member.IsNameReadonly;
+            cboType.Enabled = ( member != null ) && !member.IsTypeReadonly;
+            cboAccess.Enabled = ( member != null ) && member.IsAccessModifiable;
             txtInitialValue.Enabled = member is Field;
             toolSortByKind.Enabled = true;
             toolSortByAccess.Enabled = true;
@@ -337,7 +337,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
 
             if ( member is Field )
             {
-                var field = ( Field ) member;
+                Field field = ( Field ) member;
 
                 grpFieldModifiers.Enabled = true;
                 grpFieldModifiers.Visible = true;
@@ -352,7 +352,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             }
             else if ( member is Operation )
             {
-                var operation = ( Operation ) member;
+                Operation operation = ( Operation ) member;
 
                 grpOperationModifiers.Enabled = true;
                 grpOperationModifiers.Visible = true;
@@ -387,20 +387,16 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             else if ( lstMembers.SelectedItems.Count > 0 )
                 item = lstMembers.SelectedItems[ 0 ];
 
-            if ( item != null && member != null )
+            if ( ( item != null ) && ( member != null ) )
             {
                 item.ImageIndex = Icons.GetImageIndex( member );
                 item.SubItems[ 1 ].Text = txtName.Text;
                 item.SubItems[ 2 ].Text = cboType.Text;
                 item.SubItems[ 3 ].Text = cboAccess.Text;
                 if ( member is Field )
-                {
                     item.SubItems[ 4 ].Text = member.Language.GetFieldModifierString( ( ( Field ) member ).Modifier );
-                }
                 else if ( member is Operation )
-                {
                     item.SubItems[ 4 ].Text = member.Language.GetOperationModifierString( ( ( Operation ) member ).Modifier );
-                }
             }
         }
 
@@ -440,17 +436,17 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
 
         private void SwapListItems( ListViewItem item1, ListViewItem item2 )
         {
-            var image = item1.ImageIndex;
+            int image = item1.ImageIndex;
             item1.ImageIndex = item2.ImageIndex;
             item2.ImageIndex = image;
 
-            var tag = item1.Tag;
+            object tag = item1.Tag;
             item1.Tag = item2.Tag;
             item2.Tag = tag;
 
-            for ( var i = 0; i < item1.SubItems.Count; i++ )
+            for ( int i = 0; i < item1.SubItems.Count; i++ )
             {
-                var text = item1.SubItems[ i ].Text;
+                string text = item1.SubItems[ i ].Text;
                 item1.SubItems[ i ].Text = item2.SubItems[ i ].Text;
                 item2.SubItems[ i ].Text = text;
             }
@@ -461,8 +457,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         {
             if ( lstMembers.SelectedItems.Count > 0 )
             {
-                var item = lstMembers.SelectedItems[ 0 ];
-                var index = item.Index;
+                ListViewItem item = lstMembers.SelectedItems[ 0 ];
+                int index = item.Index;
 
                 if ( item.Tag is Field )
                     attributeCount--;
@@ -470,7 +466,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                 lstMembers.Items.Remove( item );
                 OnContentsChanged( EventArgs.Empty );
 
-                var count = lstMembers.Items.Count;
+                int count = lstMembers.Items.Count;
                 if ( count > 0 )
                 {
                     if ( index >= count )
@@ -496,25 +492,20 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         private void PropertiesDialog_KeyDown( object sender, KeyEventArgs e )
         {
             if ( e.KeyCode == Keys.Escape )
-            {
                 if ( error )
                     RefreshValues( );
                 else
                     Close( );
-            }
             else if ( e.KeyCode == Keys.Enter )
-            {
                 lstMembers.Focus( );
-            }
         }
 
         private void txtSyntax_Validating( object sender, CancelEventArgs e )
         {
-            if ( !locked && member != null )
-            {
+            if ( !locked && ( member != null ) )
                 try
                 {
-                    var oldValue = member.ToString( );
+                    string oldValue = member.ToString( );
 
                     member.InitFromString( txtSyntax.Text );
                     errorProvider.SetError( txtSyntax, null );
@@ -530,16 +521,14 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                     errorProvider.SetError( txtSyntax, ex.Message );
                     error = true;
                 }
-            }
         }
 
         private void txtName_Validating( object sender, CancelEventArgs e )
         {
-            if ( !locked && member != null )
-            {
+            if ( !locked && ( member != null ) )
                 try
                 {
-                    var oldValue = member.Name;
+                    string oldValue = member.Name;
 
                     member.Name = txtName.Text;
                     errorProvider.SetError( txtName, null );
@@ -555,16 +544,14 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                     errorProvider.SetError( txtName, ex.Message );
                     error = true;
                 }
-            }
         }
 
         private void cboType_Validating( object sender, CancelEventArgs e )
         {
-            if ( !locked && member != null )
-            {
+            if ( !locked && ( member != null ) )
                 try
                 {
-                    var oldValue = member.Type;
+                    string oldValue = member.Type;
 
                     member.Type = cboType.Text;
                     if ( !cboType.Items.Contains( cboType.Text ) )
@@ -583,21 +570,18 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                     errorProvider.SetError( cboType, ex.Message );
                     error = true;
                 }
-            }
         }
 
         private void cboAccess_SelectedIndexChanged( object sender, EventArgs e )
         {
-            var index = cboAccess.SelectedIndex;
+            int index = cboAccess.SelectedIndex;
 
-            if ( !locked && member != null )
-            {
+            if ( !locked && ( member != null ) )
                 try
                 {
-                    var selectedModifierString = cboAccess.SelectedItem.ToString( );
+                    string selectedModifierString = cboAccess.SelectedItem.ToString( );
 
-                    foreach ( var modifier in member.Language.ValidAccessModifiers.Keys )
-                    {
+                    foreach ( AccessModifier modifier in member.Language.ValidAccessModifiers.Keys )
                         if ( member.Language.ValidAccessModifiers[ modifier ] == selectedModifierString )
                         {
                             member.AccessModifier = modifier;
@@ -605,14 +589,12 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                             OnContentsChanged( EventArgs.Empty );
                             break;
                         }
-                    }
                 }
                 catch ( BadSyntaxException ex )
                 {
                     errorProvider.SetError( cboAccess, ex.Message );
                     error = true;
                 }
-            }
         }
 
         private void cboAccess_Validated( object sender, EventArgs e )
@@ -628,7 +610,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         private void chkFieldStatic_CheckedChanged( object sender, EventArgs e )
         {
             if ( !locked && member is Field )
-            {
                 try
                 {
                     ( ( Field ) member ).IsStatic = chkFieldStatic.Checked;
@@ -643,13 +624,11 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                     errorProvider.SetError( grpFieldModifiers, ex.Message );
                     error = true;
                 }
-            }
         }
 
         private void chkReadonly_CheckedChanged( object sender, EventArgs e )
         {
             if ( !locked && member is Field )
-            {
                 try
                 {
                     ( ( Field ) member ).IsReadonly = chkReadonly.Checked;
@@ -664,13 +643,11 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                     errorProvider.SetError( grpFieldModifiers, ex.Message );
                     error = true;
                 }
-            }
         }
 
         private void chkConstant_CheckedChanged( object sender, EventArgs e )
         {
             if ( !locked && member is Field )
-            {
                 try
                 {
                     ( ( Field ) member ).IsConstant = chkConstant.Checked;
@@ -685,13 +662,11 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                     errorProvider.SetError( grpFieldModifiers, ex.Message );
                     error = true;
                 }
-            }
         }
 
         private void chkFieldHider_CheckedChanged( object sender, EventArgs e )
         {
             if ( !locked && member is Field )
-            {
                 try
                 {
                     ( ( Field ) member ).IsHider = chkFieldHider.Checked;
@@ -706,13 +681,11 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                     errorProvider.SetError( grpFieldModifiers, ex.Message );
                     error = true;
                 }
-            }
         }
 
         private void chkVolatile_CheckedChanged( object sender, EventArgs e )
         {
             if ( !locked && member is Field )
-            {
                 try
                 {
                     ( ( Field ) member ).IsVolatile = chkVolatile.Checked;
@@ -727,13 +700,11 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                     errorProvider.SetError( grpFieldModifiers, ex.Message );
                     error = true;
                 }
-            }
         }
 
         private void chkOperationStatic_CheckedChanged( object sender, EventArgs e )
         {
             if ( !locked && member is Operation )
-            {
                 try
                 {
                     ( ( Operation ) member ).IsStatic = chkOperationStatic.Checked;
@@ -748,13 +719,11 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                     errorProvider.SetError( grpOperationModifiers, ex.Message );
                     error = true;
                 }
-            }
         }
 
         private void chkVirtual_CheckedChanged( object sender, EventArgs e )
         {
             if ( !locked && member is Operation )
-            {
                 try
                 {
                     ( ( Operation ) member ).IsVirtual = chkVirtual.Checked;
@@ -769,18 +738,16 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                     errorProvider.SetError( grpOperationModifiers, ex.Message );
                     error = true;
                 }
-            }
         }
 
         private void chkAbstract_CheckedChanged( object sender, EventArgs e )
         {
             if ( !locked && member is Operation )
-            {
                 try
                 {
-                    if ( parent is ClassType && ( ( ClassType ) parent ).Modifier != ClassModifier.Abstract )
+                    if ( parent is ClassType && ( ( ( ClassType ) parent ).Modifier != ClassModifier.Abstract ) )
                     {
-                        var result = MessageBox.Show( Strings.ChangingToAbstractConfirmation, Strings.Confirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Warning );
+                        DialogResult result = MessageBox.Show( Strings.ChangingToAbstractConfirmation, Strings.Confirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Warning );
 
                         if ( result == DialogResult.No )
                         {
@@ -801,13 +768,11 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                     errorProvider.SetError( grpOperationModifiers, ex.Message );
                     error = true;
                 }
-            }
         }
 
         private void chkOperationHider_CheckedChanged( object sender, EventArgs e )
         {
             if ( !locked && member is Operation )
-            {
                 try
                 {
                     ( ( Operation ) member ).IsHider = chkOperationHider.Checked;
@@ -822,13 +787,11 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                     errorProvider.SetError( grpOperationModifiers, ex.Message );
                     error = true;
                 }
-            }
         }
 
         private void chkOverride_CheckedChanged( object sender, EventArgs e )
         {
             if ( !locked && member is Operation )
-            {
                 try
                 {
                     ( ( Operation ) member ).IsOverride = chkOverride.Checked;
@@ -843,13 +806,11 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                     errorProvider.SetError( grpOperationModifiers, ex.Message );
                     error = true;
                 }
-            }
         }
 
         private void chkSealed_CheckedChanged( object sender, EventArgs e )
         {
             if ( !locked && member is Operation )
-            {
                 try
                 {
                     ( ( Operation ) member ).IsSealed = chkSealed.Checked;
@@ -864,7 +825,6 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                     errorProvider.SetError( grpOperationModifiers, ex.Message );
                     error = true;
                 }
-            }
         }
 
         private void grpFieldModifiers_Validated( object sender, EventArgs e )
@@ -883,11 +843,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         {
             if ( !locked && member is Field )
             {
-                if ( txtInitialValue.Text.Length > 0 && txtInitialValue.Text[ 0 ] == '"' && !txtInitialValue.Text.EndsWith( "\"" ) )
-                {
+                if ( ( txtInitialValue.Text.Length > 0 ) && ( txtInitialValue.Text[ 0 ] == '"' ) && !txtInitialValue.Text.EndsWith( "\"" ) )
                     txtInitialValue.Text += '"';
-                }
-                var oldValue = ( ( Field ) member ).InitialValue;
+                string oldValue = ( ( Field ) member ).InitialValue;
                 ( ( Field ) member ).InitialValue = txtInitialValue.Text;
 
                 RefreshValues( );
@@ -938,14 +896,14 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
 
         private void AddNewField( Field field )
         {
-            var item = AddFieldToList( field );
+            ListViewItem item = AddFieldToList( field );
             AddNewItem( item );
             OnContentsChanged( EventArgs.Empty );
         }
 
         private void AddNewOperation( Operation operation )
         {
-            var item = AddOperationToList( operation );
+            ListViewItem item = AddOperationToList( operation );
             AddNewItem( item );
             OnContentsChanged( EventArgs.Empty );
         }
@@ -954,14 +912,14 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         {
             if ( parent.SupportsFields )
             {
-                var field = parent.AddField( );
+                Field field = parent.AddField( );
                 AddNewField( field );
             }
         }
 
         private void toolNewMethod_Click( object sender, EventArgs e )
         {
-            var method = parent.AddMethod( );
+            Method method = parent.AddMethod( );
             AddNewOperation( method );
         }
 
@@ -969,7 +927,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         {
             if ( parent.SupportsProperties )
             {
-                var property = parent.AddProperty( );
+                Property property = parent.AddProperty( );
                 AddNewOperation( property );
             }
         }
@@ -978,7 +936,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         {
             if ( parent.SupportsEvents )
             {
-                var _event = parent.AddEvent( );
+                Event _event = parent.AddEvent( );
                 AddNewOperation( _event );
             }
         }
@@ -988,7 +946,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             if ( parent.SupportsConstuctors )
             {
                 Method constructor = parent.AddConstructor( );
-                var item = AddOperationToList( constructor );
+                ListViewItem item = AddOperationToList( constructor );
 
                 item.Focused = true;
                 item.Selected = true;
@@ -1001,7 +959,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             if ( parent.SupportsDestructors )
             {
                 Method destructor = parent.AddDestructor( );
-                var item = AddOperationToList( destructor );
+                ListViewItem item = AddOperationToList( destructor );
 
                 item.Focused = true;
                 item.Selected = true;
@@ -1013,14 +971,14 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         {
             if ( parent is SingleInharitanceType )
             {
-                var derivedType = ( SingleInharitanceType ) parent;
-                using ( var dialog = new OverrideDialog( ) )
+                SingleInharitanceType derivedType = ( SingleInharitanceType ) parent;
+                using ( OverrideDialog dialog = new OverrideDialog( ) )
                 {
                     if ( dialog.ShowDialog( derivedType ) == DialogResult.OK )
                     {
-                        foreach ( var operation in dialog.GetSelectedOperations( ) )
+                        foreach ( Operation operation in dialog.GetSelectedOperations( ) )
                         {
-                            var overridden = derivedType.Override( operation );
+                            Operation overridden = derivedType.Override( operation );
                             AddOperationToList( overridden );
                         }
                         OnContentsChanged( EventArgs.Empty );
@@ -1032,35 +990,31 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         private void toolImplementList_Click( object sender, EventArgs e )
         {
             if ( parent is IInterfaceImplementer )
-            {
-                using ( var dialog = new ImplementDialog( ) )
+                using ( ImplementDialog dialog = new ImplementDialog( ) )
                 {
                     if ( dialog.ShowDialog( parent as IInterfaceImplementer ) == DialogResult.OK )
                     {
-                        foreach ( var operation in dialog.GetSelectedOperations( ) )
-                        {
+                        foreach ( Operation operation in dialog.GetSelectedOperations( ) )
                             Implement( ( IInterfaceImplementer ) parent, operation, dialog.ImplementExplicitly );
-                        }
                         OnContentsChanged( EventArgs.Empty );
                     }
                 }
-            }
         }
 
         private void Implement( IInterfaceImplementer parent, Operation operation, bool mustExplicit )
         {
-            var defined = parent.GetDefinedOperation( operation );
+            Operation defined = parent.GetDefinedOperation( operation );
             if ( !operation.Language.SupportsExplicitImplementation )
                 mustExplicit = false;
 
             if ( defined == null )
             {
-                var implemented = parent.Implement( operation, mustExplicit );
+                Operation implemented = parent.Implement( operation, mustExplicit );
                 AddOperationToList( implemented );
             }
             else if ( defined.Type != operation.Type )
             {
-                var implemented = parent.Implement( operation, true );
+                Operation implemented = parent.Implement( operation, true );
                 AddOperationToList( implemented );
             }
         }
@@ -1090,14 +1044,14 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         {
             if ( lstMembers.SelectedItems.Count > 0 )
             {
-                var item1 = lstMembers.SelectedItems[ 0 ];
-                var index = item1.Index;
+                ListViewItem item1 = lstMembers.SelectedItems[ 0 ];
+                int index = item1.Index;
 
                 if ( index > 0 )
                 {
-                    var item2 = lstMembers.Items[ index - 1 ];
+                    ListViewItem item2 = lstMembers.Items[ index - 1 ];
 
-                    if ( item1.Tag is Field && item2.Tag is Field || item1.Tag is Operation && item2.Tag is Operation )
+                    if ( ( item1.Tag is Field && item2.Tag is Field ) || ( item1.Tag is Operation && item2.Tag is Operation ) )
                     {
                         locked = true;
                         parent.MoveUpItem( item1.Tag );
@@ -1115,14 +1069,14 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         {
             if ( lstMembers.SelectedItems.Count > 0 )
             {
-                var item1 = lstMembers.SelectedItems[ 0 ];
-                var index = item1.Index;
+                ListViewItem item1 = lstMembers.SelectedItems[ 0 ];
+                int index = item1.Index;
 
                 if ( index < lstMembers.Items.Count - 1 )
                 {
-                    var item2 = lstMembers.Items[ index + 1 ];
+                    ListViewItem item2 = lstMembers.Items[ index + 1 ];
 
-                    if ( item1.Tag is Field && item2.Tag is Field || item1.Tag is Operation && item2.Tag is Operation )
+                    if ( ( item1.Tag is Field && item2.Tag is Field ) || ( item1.Tag is Operation && item2.Tag is Operation ) )
                     {
                         locked = true;
                         parent.MoveDownItem( item1.Tag );

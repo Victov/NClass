@@ -33,37 +33,33 @@ namespace NClass.DiagramEditor
 
         public void AddSet( IEnumerable< T > values )
         {
-            foreach ( var value in values )
+            foreach ( T value in values )
                 AddToDomain( value );
             setCount++;
         }
 
         private void AddToDomain( T value )
         {
-            var found = false;
+            bool found = false;
 
-            for ( var i = domainIndex; i < domain.Count && !found; i++ )
-            {
+            for ( int i = domainIndex; ( i < domain.Count ) && !found; i++ )
                 if ( EqualityComparer< T >.Default.Equals( domain[ i ].Value, value ) )
                 {
                     domain[ i ].Count++;
                     domainIndex = ( i + 1 ) % domain.Count;
                     found = true;
                 }
-            }
-            for ( var i = 0; i < domainIndex && !found; i++ )
-            {
+            for ( int i = 0; ( i < domainIndex ) && !found; i++ )
                 if ( EqualityComparer< T >.Default.Equals( domain[ i ].Value, value ) )
                 {
                     domain[ i ].Count++;
                     domainIndex = ( i + 1 ) % domain.Count;
                     found = true;
                 }
-            }
 
             if ( !found )
             {
-                var newElement = new DomainElement( value );
+                DomainElement newElement = new DomainElement( value );
                 domain.Add( newElement );
                 domainIndex = 0;
             }
@@ -71,11 +67,9 @@ namespace NClass.DiagramEditor
 
         public IEnumerable< T > GetIntersection( )
         {
-            for ( var i = 0; i < domain.Count; i++ )
-            {
+            for ( int i = 0; i < domain.Count; i++ )
                 if ( domain[ i ].Count == setCount )
                     yield return domain[ i ].Value;
-            }
         }
 
         private class DomainElement

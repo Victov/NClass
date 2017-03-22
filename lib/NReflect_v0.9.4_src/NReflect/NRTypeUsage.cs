@@ -22,7 +22,7 @@ using System.Collections.Generic;
 namespace NReflect
 {
     /// <summary>
-    /// Contains a reflected typeUsage.
+    ///     Contains a reflected typeUsage.
     /// </summary>
     [Serializable]
     public class NRTypeUsage : IVisitable
@@ -33,7 +33,7 @@ namespace NReflect
         #region === Con- / Destruction
 
         /// <summary>
-        /// Initializes a new instance of <see cref="NRTypeUsage"/>.
+        ///     Initializes a new instance of <see cref="NRTypeUsage" />.
         /// </summary>
         public NRTypeUsage( )
         {
@@ -44,37 +44,53 @@ namespace NReflect
         #endregion
 
         // ========================================================================
+        // Methods
+
+        #region === Methods
+
+        /// <summary>
+        ///     Accept an <see cref="IVisitor" /> instance on the implementing class and all its children.
+        /// </summary>
+        /// <param name="visitor">The <see cref="IVisitor" /> instance to accept.</param>
+        public void Accept( IVisitor visitor )
+        {
+            visitor.Visit( this );
+        }
+
+        #endregion
+
+        // ========================================================================
         // Properties
 
         #region === Properties
 
         /// <summary>
-        /// Gets or sets the name of the type.
+        ///     Gets or sets the name of the type.
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the namespace of the used type.
+        ///     Gets or sets the namespace of the used type.
         /// </summary>
         public string Namespace { get; set; }
 
         /// <summary>
-        /// Gets or sets the full name of the used type.
+        ///     Gets or sets the full name of the used type.
         /// </summary>
         public string FullName { get; set; }
 
         /// <summary>
-        /// Gets or sets the type which declares this type.
+        ///     Gets or sets the type which declares this type.
         /// </summary>
         public NRTypeUsage DeclaringType { get; set; }
 
         /// <summary>
-        /// Gets a list of generic parameters of the type.
+        ///     Gets a list of generic parameters of the type.
         /// </summary>
-        public List< NRTypeUsage > GenericParameters { get; private set; }
+        public List< NRTypeUsage > GenericParameters { get; }
 
         /// <summary>
-        /// Gets a value indicating if the type is an array.
+        ///     Gets a value indicating if the type is an array.
         /// </summary>
         public bool IsArray
         {
@@ -82,42 +98,26 @@ namespace NReflect
         }
 
         /// <summary>
-        /// Gets a list of array ranks of the type.
+        ///     Gets a list of array ranks of the type.
         /// </summary>
-        public List< int > ArrayRanks { get; private set; }
+        public List< int > ArrayRanks { get; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the type is dynamic.
+        ///     Gets or sets a value indicating whether the type is dynamic.
         /// </summary>
         public bool IsDynamic { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the type is nullable.
+        ///     Gets or sets a value indicating whether the type is nullable.
         /// </summary>
         public bool IsNullable { get; set; }
 
         /// <summary>
-        /// Gets a value indicating if the type is a generic type.
+        ///     Gets a value indicating if the type is a generic type.
         /// </summary>
         public bool IsGeneric
         {
             get { return GenericParameters.Count > 0; }
-        }
-
-        #endregion
-
-        // ========================================================================
-        // Methods
-
-        #region === Methods
-
-        /// <summary>
-        /// Accept an <see cref="IVisitor"/> instance on the implementing class and all its children.
-        /// </summary>
-        /// <param name="visitor">The <see cref="IVisitor"/> instance to accept.</param>
-        public void Accept( IVisitor visitor )
-        {
-            visitor.Visit( this );
         }
 
         #endregion

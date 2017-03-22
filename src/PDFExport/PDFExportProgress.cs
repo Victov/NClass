@@ -79,7 +79,7 @@ namespace PDFExport
             // Test samuel
             showThread.SetApartmentState( ApartmentState.STA );
 
-            var point = parent == null ? new Point( Screen.PrimaryScreen.WorkingArea.Width / 2, Screen.PrimaryScreen.WorkingArea.Height / 2 ) : new Point( parent.Left + parent.Width / 2, parent.Top + parent.Height / 2 );
+            Point point = parent == null ? new Point( Screen.PrimaryScreen.WorkingArea.Width / 2, Screen.PrimaryScreen.WorkingArea.Height / 2 ) : new Point( parent.Left + parent.Width / 2, parent.Top + parent.Height / 2 );
 
             showThread.Start( point );
         }
@@ -89,7 +89,7 @@ namespace PDFExport
         /// </summary>
         public static void CloseAsync( )
         {
-            if ( showThread != null && showThread.IsAlive )
+            if ( ( showThread != null ) && showThread.IsAlive )
             {
                 showThread.Abort( );
                 showThread.Join( );
@@ -103,8 +103,8 @@ namespace PDFExport
         /// <param name="center">The center of the form.</param>
         private static void Run( object center )
         {
-            var point = ( Point ) center;
-            var progressForm = new PDFExportProgress( );
+            Point point = ( Point ) center;
+            PDFExportProgress progressForm = new PDFExportProgress( );
             progressForm.Location = new Point( point.X - progressForm.Width / 2, point.Y - progressForm.Height / 2 );
             progressForm.Show( );
 

@@ -74,17 +74,15 @@ namespace NClass.Core
         {
             try
             {
-                var languageString = languageName;
-                var assembly = Assembly.Load( "NClass." + languageString );
+                string languageString = languageName;
+                Assembly assembly = Assembly.Load( "NClass." + languageString );
 
-                foreach ( var type in assembly.GetTypes( ) )
-                {
+                foreach ( Type type in assembly.GetTypes( ) )
                     if ( type.IsSubclassOf( typeof( Language ) ) )
                     {
-                        var languageInstance = type.InvokeMember( "Instance", BindingFlags.Public | BindingFlags.Static | BindingFlags.GetProperty, null, null, null );
+                        object languageInstance = type.InvokeMember( "Instance", BindingFlags.Public | BindingFlags.Static | BindingFlags.GetProperty, null, null, null );
                         return languageInstance as Language;
                     }
-                }
                 return null;
             }
             catch
@@ -98,7 +96,7 @@ namespace NClass.Core
             if ( values == null )
                 return false;
 
-            for ( var i = 0; i < values.Length; i++ )
+            for ( int i = 0; i < values.Length; i++ )
                 if ( values[ i ] == value )
                     return true;
 
@@ -175,9 +173,7 @@ namespace NClass.Core
             try
             {
                 if ( string.IsNullOrEmpty( value ) )
-                {
                     return OperationModifier.None;
-                }
                 return ( OperationModifier ) Enum.Parse( typeof( OperationModifier ), value, true );
             }
             catch

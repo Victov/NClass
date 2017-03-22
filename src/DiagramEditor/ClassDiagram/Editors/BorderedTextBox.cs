@@ -140,12 +140,12 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
         {
             protected override bool ProcessCmdKey( ref Message msg, Keys keyData )
             {
-                if ( keyData == Keys.Enter && AcceptsReturn )
+                if ( ( keyData == Keys.Enter ) && AcceptsReturn )
                 {
                     OnKeyDown( new KeyEventArgs( keyData ) );
                     return true;
                 }
-                if ( keyData == Keys.Tab && AcceptsTab )
+                if ( ( keyData == Keys.Tab ) && AcceptsTab )
                 {
                     OnKeyDown( new KeyEventArgs( keyData ) );
                     return true;
