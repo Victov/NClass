@@ -72,7 +72,8 @@ namespace NClass.CodeGenerator
 
         private void OpenNamespace( )
         {
-            WriteLine( "namespace " + RootNamespace );
+            string AddedNamespace = Type.ParentNameSpace == null ? "" : "." + Type.ParentNameSpace.Name;
+            WriteLine( "namespace " + RootNamespace + AddedNamespace );
             WriteLine( "{" );
             IndentLevel++;
         }

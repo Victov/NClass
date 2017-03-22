@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using NClass.Core;
 
 namespace NClass.CodeGenerator
@@ -69,10 +70,29 @@ namespace NClass.CodeGenerator
         {
             bool success = true;
 
+            success &= CreateFolders( location );
             success &= GenerateSourceFiles( location, sort_using, generate_document_comment, compagny_name, copyright_header, author );
             success &= GenerateProjectFiles( location );
 
             return success;
+        }
+
+        private bool CreateFolders( string location )
+        {
+            try
+            {
+                Namespace[] namespaces = Model.Entities.Where((a) => a is Namespace).Cast<Namespace>().ToArray();
+                foreach (Namespace ns in namespaces)
+                {
+                    Directory.CreateDirectory(Path.Combine(location, ProjectName, ns.Name));
+                }
+                return true;
+            }
+            catch ( Exception )
+            {
+
+                return false;
+            }
         }
 
         private bool GenerateSourceFiles( string location, bool sort_using, bool generate_document_comment, string compagny_name, string copyright_header, string author )
@@ -84,9 +104,12 @@ namespace NClass.CodeGenerator
             foreach ( IEntity entity in Model.Entities )
             {
                 TypeBase type = entity as TypeBase;
-
+                
                 if ( ( type != null ) && !type.IsNested )
                 {
+                    if (type.ParentNameSpace != null)
+                        location = Path.Combine(location, type.ParentNameSpace.Name);
+
                     SourceFileGenerator sourceFile = CreateSourceFileGenerator( type, sort_using, generate_document_comment, compagny_name, copyright_header, author );
 
                     try

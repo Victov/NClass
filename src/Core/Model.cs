@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using NClass.Translations;
 
@@ -577,9 +578,23 @@ namespace NClass.Core
 
             LoadEntitites( node );
             LoadRelationships( node );
+            LinkNamespaces( );
 
             OnDeserializing( new SerializeEventArgs( node ) );
             Loading = false;
+        }
+
+        private void LinkNamespaces( )
+        {
+            foreach(IEntity e in Entities)
+            {
+                if ( e is TypeBase )
+                {
+                    TypeBase entity = e as TypeBase;
+                    if ( entity.ParentNamespaceName != "" )
+                        entity.ParentNameSpace = Namespace.Namespaces[ entity.ParentNamespaceName ];
+                }
+            }
         }
 
         /// <exception cref="InvalidDataException">

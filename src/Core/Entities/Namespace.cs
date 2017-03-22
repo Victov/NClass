@@ -14,6 +14,7 @@
 // 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 using System;
+using System.Collections.Generic;
 using System.Xml;
 using NClass.Translations;
 
@@ -23,11 +24,18 @@ namespace NClass.Core
     {
         public string Name { get; set; }
 
+        public static Dictionary<string, Namespace> Namespaces = new Dictionary< string, Namespace >();
+
         internal Namespace( ) {}
 
         public Namespace( string name )
         {
             this.Name = name;
+            while (Namespaces.ContainsKey(Name))
+            {
+                Name = "New" + Name;
+            }
+            Namespaces.Add( Name, this );
         }
 
 
@@ -85,10 +93,15 @@ namespace NClass.Core
 
             XmlElement textNode = node[ "NamespaceName" ];
 
+            if (Namespaces.ContainsValue(this))
+                Namespaces.Remove(Name);
+
             if ( textNode != null )
                 Name = textNode.InnerText;
             else
                 Name = "";
+            
+            Namespaces.Add(Name, this);
 
             OnDeserializing( new SerializeEventArgs( node ) );
         }

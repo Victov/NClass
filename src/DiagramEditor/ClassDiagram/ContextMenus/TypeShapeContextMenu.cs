@@ -14,7 +14,10 @@
 // 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
+using NClass.Core;
 using NClass.DiagramEditor.ClassDiagram.Shapes;
 using NClass.DiagramEditor.Properties;
 using NClass.Translations;
@@ -28,9 +31,12 @@ namespace NClass.DiagramEditor.ClassDiagram.ContextMenus
         private ToolStripMenuItem mnuAutoWidth;
         private ToolStripMenuItem mnuCollapseAllSelected;
         private ToolStripMenuItem mnuEditMembers;
+        private ToolStripMenuItem mnuAddToNamespace;
         private ToolStripMenuItem mnuExpandAllSelected;
 
         private ToolStripMenuItem mnuSize;
+
+        private List<ToolStripItem> generatedNamespaceItems = new List< ToolStripItem >();
 
         private TypeShapeContextMenu( )
         {
@@ -55,11 +61,45 @@ namespace NClass.DiagramEditor.ClassDiagram.ContextMenus
             base.ValidateMenuItems( diagram );
             ShapeContextMenu.Default.ValidateMenuItems( diagram );
             mnuEditMembers.Enabled = diagram.SelectedElementCount == 1;
+
+            generatedNamespaceItems.Clear(  );
+            if (MenuList.Contains(mnuAddToNamespace))
+                MenuList.Remove(mnuAddToNamespace);
+
+
+            generatedNamespaceItems.Add( new ToolStripMenuItem(Strings.None, null, ( sender, args ) =>
+            {
+                TypeShape typeShape = Diagram.TopSelectedElement as TypeShape;
+                if (typeShape != null)
+                {
+                    typeShape.TypeBase.ParentNameSpace = null;
+                }
+            }) );
+            foreach ( IEntity diagramEntity in Diagram.Entities )
+            {
+                if ( diagramEntity is Namespace )
+                {
+                    string name = ( diagramEntity as Namespace ).Name;
+                    ToolStripItem item = new ToolStripMenuItem(name, null, ( sender, args ) =>
+                    {
+                        TypeShape typeShape = Diagram.TopSelectedElement as TypeShape;
+                        if (typeShape != null)
+                        {
+                            typeShape.TypeBase.ParentNameSpace = ( diagramEntity as Namespace );
+                        }
+                    } );
+                    generatedNamespaceItems.Add( item );
+                }
+            }
+
+            mnuAddToNamespace = new ToolStripMenuItem( Strings.MenuAddToNamespace, null, generatedNamespaceItems.ToArray( ) );
+            MenuList.Add( mnuAddToNamespace );
         }
 
         private void InitMenuItems( )
         {
             mnuEditMembers = new ToolStripMenuItem( Strings.MenuEditMembers, Resources.EditMembers, mnuEditMembers_Click );
+            mnuAddToNamespace = new ToolStripMenuItem( Strings.MenuAddToNamespace, null);
             mnuAutoSize = new ToolStripMenuItem( Strings.MenuAutoSize, null, mnuAutoSize_Click );
             mnuAutoWidth = new ToolStripMenuItem( Strings.MenuAutoWidth, null, mnuAutoWidth_Click );
             mnuAutoHeight = new ToolStripMenuItem( Strings.MenuAutoHeight, null, mnuAutoHeight_Click );
@@ -68,7 +108,7 @@ namespace NClass.DiagramEditor.ClassDiagram.ContextMenus
             mnuSize = new ToolStripMenuItem( Strings.MenuSize, null, mnuAutoSize, mnuAutoWidth, mnuAutoHeight, new ToolStripSeparator( ), mnuCollapseAllSelected, mnuExpandAllSelected );
 
             MenuList.AddRange( ShapeContextMenu.Default.MenuItems );
-            MenuList.AddRange( new ToolStripItem[] {mnuSize, new ToolStripSeparator( ), mnuEditMembers} );
+            MenuList.AddRange( new ToolStripItem[] {mnuSize, new ToolStripSeparator( ), mnuEditMembers } );
         }
 
         private void mnuAutoSize_Click( object sender, EventArgs e )

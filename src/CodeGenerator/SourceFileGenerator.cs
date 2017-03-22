@@ -84,7 +84,8 @@ namespace NClass.CodeGenerator
                 {
                     WriteFileContent( fileName, writer );
                 }
-                return fileName;
+                string extension = Type.ParentNameSpace == null ? "" : Type.ParentNameSpace.Name;
+                return Path.Combine(extension, fileName);
             }
             catch ( Exception ex )
             {

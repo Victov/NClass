@@ -228,6 +228,8 @@ namespace NClass.Core
             if ( !File.Exists( fileName ) )
                 throw new FileNotFoundException( Strings.ErrorFileNotFound );
 
+            Namespace.Namespaces = new Dictionary< string, Namespace >();
+
             XmlDocument document = new XmlDocument( );
             try
             {

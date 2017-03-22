@@ -318,6 +318,9 @@
   <data name="MenuSelectAll" xml:space="preserve">
     <value>&amp;Select All</value>
   </data>
+  <data name="MenuAddToNamespace" xml:space="preserve">
+    <value>Set Namespace...</value>
+  </data>
   <data name="MenuEditMembers" xml:space="preserve">
     <value>&amp;Edit members...</value>
   </data>

@@ -1504,6 +1504,15 @@ namespace NClass.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Set Namespace....
+        /// </summary>
+        public static string MenuAddToNamespace {
+            get {
+                return ResourceManager.GetString("MenuAddToNamespace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A&amp;ggregation.
         /// </summary>
         public static string MenuAggregation {

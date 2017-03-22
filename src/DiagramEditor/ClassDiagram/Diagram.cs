@@ -1546,6 +1546,20 @@ namespace NClass.DiagramEditor.ClassDiagram
             Shape shape = GetShape( e.Entity );
             RemoveShape( shape );
 
+            if ( e.Entity is Namespace )
+            {
+                Namespace.Namespaces.Remove( ( e.Entity as Namespace).Name );
+                foreach ( IEntity entity in Entities )
+                {
+                    if ( entity is TypeBase )
+                    {
+                        TypeBase t = ( entity as TypeBase );
+                        if ( t.ParentNameSpace == e.Entity )
+                            t.ParentNameSpace = null;
+                    }
+                }
+            }
+
             base.OnEntityRemoved( e );
         }
 

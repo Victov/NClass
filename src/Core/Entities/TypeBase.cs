@@ -25,6 +25,8 @@ namespace NClass.Core
         private AccessModifier access = AccessModifier.Public;
         private string name;
         private CompositeType nestingParent;
+        public string ParentNamespaceName;
+        public Namespace ParentNameSpace;
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
@@ -207,6 +209,10 @@ namespace NClass.Core
             child.InnerText = AccessModifier.ToString( );
             node.AppendChild( child );
 
+            child = node.OwnerDocument.CreateElement("Namespace");
+            child.InnerText = ParentNameSpace == null ? "" : ParentNameSpace.Name;
+            node.AppendChild(child);
+
             OnSerializing( new SerializeEventArgs( node ) );
         }
 
@@ -232,6 +238,10 @@ namespace NClass.Core
             XmlElement accessChild = node[ "Access" ];
             if ( accessChild != null )
                 AccessModifier = Language.TryParseAccessModifier( accessChild.InnerText );
+
+            accessChild = node["Namespace"];
+            if ( accessChild != null )
+                ParentNamespaceName = accessChild.InnerText;
 
             RaiseChangedEvent = true;
             OnDeserializing( new SerializeEventArgs( node ) );

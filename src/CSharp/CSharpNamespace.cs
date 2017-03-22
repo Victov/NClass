@@ -22,6 +22,6 @@ namespace NClass.CSharp
 {
     internal sealed class CSharpNamespace : Namespace
     {
-        public CSharpNamespace(  ) : base( "NewNamespace" ) {}
+        public CSharpNamespace(  ) : base( "Namespace" ) {}
     }
 }
