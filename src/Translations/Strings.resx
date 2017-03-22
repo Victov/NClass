@@ -1188,6 +1188,9 @@ Do you still want to continue?</value>
   <data name="MenuCodingLanguageDiagram" xml:space="preserve">
     <value>Coding language diagram</value>
   </data>
+  <data name="MenuEmptyDiagram" xml:space="preserve">
+    <value>Empty Diagram</value>
+  </data>
   <data name="ProgramingLanguage" xml:space="preserve">
     <value>Programing Language</value>
   </data>

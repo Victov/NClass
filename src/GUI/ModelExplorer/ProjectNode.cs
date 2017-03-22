@@ -30,7 +30,27 @@ namespace NClass.GUI.ModelExplorer
 
         static ProjectNode( )
         {
-            contextMenu.Items.AddRange( new ToolStripItem[] {new ToolStripMenuItem( Strings.MenuAddNew, Resources.NewDocument, new ToolStripMenuItem( Strings.MenuCodingLanguageDiagram, null, mnuNewCodingLanguageDiagram_Click ) ), new ToolStripSeparator( ), new ToolStripMenuItem( Strings.MenuSave, Resources.Save, save_Click ), new ToolStripMenuItem( Strings.MenuSaveAs, null, saveAs_Click ), new ToolStripMenuItem( Strings.MenuRename, null, rename_Click, Keys.F2 ), new ToolStripSeparator( ), new ToolStripMenuItem( Strings.MenuCloseProject, null, close_Click )} );
+            contextMenu.Items.AddRange( new ToolStripItem[]
+            {
+                new ToolStripMenuItem( Strings.MenuAddNew, Resources.NewDocument, 
+                    new ToolStripMenuItem( Strings.MenuCodingLanguageDiagram, null, mnuNewCodingLanguageDiagram_Click ),
+                    new ToolStripMenuItem( Strings.MenuEmptyDiagram, null, AddItemEmptyDiagramOnClick)),
+                new ToolStripSeparator( ),
+                new ToolStripMenuItem( Strings.MenuSave, Resources.Save, save_Click ),
+                new ToolStripMenuItem( Strings.MenuSaveAs, null, saveAs_Click ),
+                new ToolStripMenuItem( Strings.MenuRename, null, rename_Click, Keys.F2 ),
+                new ToolStripSeparator( ),
+                new ToolStripMenuItem( Strings.MenuCloseProject, null, close_Click )
+            } );
+        }
+
+        private static void AddItemEmptyDiagramOnClick( object sender, EventArgs eventArgs )
+        {
+            var menuItem = (ToolStripItem)sender;
+            var project = ((ProjectNode)menuItem.OwnerItem.Owner.Tag).Project;
+
+            project.Add( new Diagram( Settings.Default.GetDefaultLanguage(  ) ) );
+            
         }
 
         /// <exception cref="ArgumentNullException">
