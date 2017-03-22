@@ -23,50 +23,47 @@ namespace NClass.Translations
 {
     public class UILanguage
     {
-        private static readonly List<UILanguage> availableCultures;
+        private static readonly List< UILanguage > availableCultures;
 
         private readonly CultureInfo culture;
 
-        static UILanguage()
+        static UILanguage( )
         {
             // Load localization resources
-            var assembly = Assembly.GetExecutingAssembly();
-            var resourceDir = Path.GetDirectoryName(assembly.Location);
+            var assembly = Assembly.GetExecutingAssembly( );
+            var resourceDir = Path.GetDirectoryName( assembly.Location );
 
             // Search for localized cultures
             try
             {
-                var resource = new DirectoryInfo(resourceDir);
-                var directories = resource.GetDirectories("*",
-                                                          SearchOption.TopDirectoryOnly);
-                availableCultures = new List<UILanguage>(directories.Length + 2);
+                var resource = new DirectoryInfo( resourceDir );
+                var directories = resource.GetDirectories( "*", SearchOption.TopDirectoryOnly );
+                availableCultures = new List< UILanguage >( directories.Length + 2 );
 
-                foreach (var directory in directories)
+                foreach ( var directory in directories )
                 {
-                    if (directory.Name != "Plugins" && directory.Name != "Templates")
+                    if ( directory.Name != "Plugins" && directory.Name != "Templates" )
                     {
                         var cultureName = directory.Name;
-                        var language = CreateUILanguage(cultureName);
-                        if (language != null)
-                            availableCultures.Add(language);
+                        var language = CreateUILanguage( cultureName );
+                        if ( language != null )
+                            availableCultures.Add( language );
                     }
                 }
             }
             catch
             {
-                availableCultures = new List<UILanguage>(2);
+                availableCultures = new List< UILanguage >( 2 );
             }
 
-            availableCultures.Add(CreateDefaultUILanguage());
-            availableCultures.Add(CreateUILanguage("en"));
-            availableCultures.Sort(delegate(UILanguage c1, UILanguage c2) { return c1.Name.CompareTo(c2.Name); });
+            availableCultures.Add( CreateDefaultUILanguage( ) );
+            availableCultures.Add( CreateUILanguage( "en" ) );
+            availableCultures.Sort( delegate( UILanguage c1, UILanguage c2 ) { return c1.Name.CompareTo( c2.Name ); } );
         }
 
-        private UILanguage()
-        {
-        }
+        private UILanguage( ) {}
 
-        private UILanguage(CultureInfo culture)
+        private UILanguage( CultureInfo culture )
         {
             this.culture = culture;
             IsDefault = false;
@@ -76,7 +73,7 @@ namespace NClass.Translations
         {
             get
             {
-                if (IsDefault)
+                if ( IsDefault )
                     return "[Default]";
                 return culture.EnglishName;
             }
@@ -86,7 +83,7 @@ namespace NClass.Translations
         {
             get
             {
-                if (IsDefault)
+                if ( IsDefault )
                     return "default";
                 return culture.Name;
             }
@@ -96,7 +93,7 @@ namespace NClass.Translations
         {
             get
             {
-                if (IsDefault)
+                if ( IsDefault )
                     return CultureInfo.CurrentUICulture;
                 return culture;
             }
@@ -104,53 +101,56 @@ namespace NClass.Translations
 
         public bool IsDefault { get; private set; }
 
-        public static IEnumerable<UILanguage> AvalilableCultures { get { return availableCultures; } }
-
-        public static UILanguage CreateDefaultUILanguage()
+        public static IEnumerable< UILanguage > AvalilableCultures
         {
-            var language = new UILanguage();
+            get { return availableCultures; }
+        }
+
+        public static UILanguage CreateDefaultUILanguage( )
+        {
+            var language = new UILanguage( );
             language.IsDefault = true;
 
             return language;
         }
 
-        public static UILanguage CreateUILanguage(string cultureName)
+        public static UILanguage CreateUILanguage( string cultureName )
         {
-            if (cultureName == "default")
-                return CreateDefaultUILanguage();
+            if ( cultureName == "default" )
+                return CreateDefaultUILanguage( );
 
             try
             {
-                var culture = new CultureInfo(cultureName);
-                return new UILanguage(culture);
+                var culture = new CultureInfo( cultureName );
+                return new UILanguage( culture );
             }
-            catch (ArgumentException)
+            catch ( ArgumentException )
             {
                 return null;
             }
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals( object obj )
         {
             var other = obj as UILanguage;
 
-            if (other == null)
+            if ( other == null )
                 return false;
-            if (IsDefault && other.IsDefault)
+            if ( IsDefault && other.IsDefault )
                 return true;
-            if (!IsDefault && !other.IsDefault)
-                return culture.Equals(other.culture);
+            if ( !IsDefault && !other.IsDefault )
+                return culture.Equals( other.culture );
             return false;
         }
 
-        public override int GetHashCode()
+        public override int GetHashCode( )
         {
-            if (IsDefault)
+            if ( IsDefault )
                 return 0;
-            return culture.GetHashCode();
+            return culture.GetHashCode( );
         }
 
-        public override string ToString()
+        public override string ToString( )
         {
             return Name;
         }

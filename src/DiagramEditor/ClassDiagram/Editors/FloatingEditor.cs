@@ -25,18 +25,18 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
         private static readonly Color beginColor = SystemColors.ControlLight;
         private static readonly Color endColor = SystemColors.Control;
 
-        protected FloatingEditor()
+        protected FloatingEditor( )
         {
             BackColor = SystemColors.Control;
-            Padding = new Padding(1);
+            Padding = new Padding( 1 );
         }
 
         protected static MemberType NewMemberType { get; set; } = MemberType.Method;
 
-        protected override void OnPaintBackground(PaintEventArgs e)
+        protected override void OnPaintBackground( PaintEventArgs e )
         {
-            base.OnPaintBackground(e);
-            e.Graphics.DrawRectangle(SystemPens.ControlDark, 0, 0, Width - 1, Height - 1);
+            base.OnPaintBackground( e );
+            e.Graphics.DrawRectangle( SystemPens.ControlDark, 0, 0, Width - 1, Height - 1 );
         }
     }
 }

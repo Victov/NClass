@@ -24,13 +24,9 @@ namespace NClass.CSharp
     internal sealed class CSharpConstructor : Constructor
     {
         // [<access>] [static] <name>([<args>])
-        private const string ConstructorPattern =
-            @"^\s*" + CSharpLanguage.AccessPattern + @"(?<static>static\s+)?" +
-            @"(?<name>" + CSharpLanguage.NamePattern + ")" +
-            @"\((?(static)|(?<args>.*))\)" + CSharpLanguage.DeclarationEnding;
+        private const string ConstructorPattern = @"^\s*" + CSharpLanguage.AccessPattern + @"(?<static>static\s+)?" + @"(?<name>" + CSharpLanguage.NamePattern + ")" + @"\((?(static)|(?<args>.*))\)" + CSharpLanguage.DeclarationEnding;
 
-        private static readonly Regex constructorRegex =
-            new Regex(ConstructorPattern, RegexOptions.ExplicitCapture);
+        private static readonly Regex constructorRegex = new Regex( ConstructorPattern, RegexOptions.ExplicitCapture );
 
         /// <exception cref="ArgumentException">
         ///     The language of <paramref name="parent" /> does not equal.
@@ -38,21 +34,18 @@ namespace NClass.CSharp
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="parent" /> is null.
         /// </exception>
-        internal CSharpConstructor(CompositeType parent)
-            : base(parent)
-        {
-        }
+        internal CSharpConstructor( CompositeType parent ) : base( parent ) {}
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="value" /> does not fit to the syntax.
         /// </exception>
         public override string Name
         {
-            get { return GetNameWithoutGeneric(Parent.Name); }
+            get { return GetNameWithoutGeneric( Parent.Name ); }
             set
             {
-                if (value != null && value != GetNameWithoutGeneric(Parent.Name))
-                    throw new BadSyntaxException(Strings.ErrorConstructorName);
+                if ( value != null && value != GetNameWithoutGeneric( Parent.Name ) )
+                    throw new BadSyntaxException( Strings.ErrorConstructorName );
             }
         }
 
@@ -68,7 +61,7 @@ namespace NClass.CSharp
                 {
                     RaiseChangedEvent = false;
 
-                    if (value != AccessModifier.Default)
+                    if ( value != AccessModifier.Default )
                         IsStatic = false;
                     base.AccessModifier = value;
                 }
@@ -87,14 +80,14 @@ namespace NClass.CSharp
             get { return base.IsStatic; }
             set
             {
-                if (value && HasParameter)
-                    throw new BadSyntaxException(Strings.ErrorStaticConstructor);
+                if ( value && HasParameter )
+                    throw new BadSyntaxException( Strings.ErrorStaticConstructor );
 
                 try
                 {
                     RaiseChangedEvent = false;
 
-                    if (value)
+                    if ( value )
                         AccessModifier = AccessModifier.Default;
                     base.IsStatic = value;
                 }
@@ -113,39 +106,42 @@ namespace NClass.CSharp
             get { return false; }
             set
             {
-                if (value)
-                    throw new BadSyntaxException(Strings.ErrorCannotSetModifier);
+                if ( value )
+                    throw new BadSyntaxException( Strings.ErrorCannotSetModifier );
             }
         }
 
-        public override Language Language { get { return CSharpLanguage.Instance; } }
+        public override Language Language
+        {
+            get { return CSharpLanguage.Instance; }
+        }
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="declaration" /> does not fit to the syntax.
         /// </exception>
-        public override void InitFromString(string declaration)
+        public override void InitFromString( string declaration )
         {
-            var match = constructorRegex.Match(declaration);
+            var match = constructorRegex.Match( declaration );
             RaiseChangedEvent = false;
 
             try
             {
-                if (match.Success)
+                if ( match.Success )
                 {
-                    ClearModifiers();
-                    var nameGroup = match.Groups["name"];
-                    var accessGroup = match.Groups["access"];
-                    var staticGroup = match.Groups["static"];
-                    var argsGroup = match.Groups["args"];
+                    ClearModifiers( );
+                    var nameGroup = match.Groups[ "name" ];
+                    var accessGroup = match.Groups[ "access" ];
+                    var staticGroup = match.Groups[ "static" ];
+                    var argsGroup = match.Groups[ "args" ];
 
                     ValidName = nameGroup.Value;
-                    AccessModifier = Language.TryParseAccessModifier(accessGroup.Value);
-                    ArgumentList.InitFromString(argsGroup.Value);
+                    AccessModifier = Language.TryParseAccessModifier( accessGroup.Value );
+                    ArgumentList.InitFromString( argsGroup.Value );
                     IsStatic = staticGroup.Success;
                 }
                 else
                 {
-                    throw new BadSyntaxException(Strings.ErrorInvalidDeclaration);
+                    throw new BadSyntaxException( Strings.ErrorInvalidDeclaration );
                 }
             }
             finally
@@ -154,38 +150,38 @@ namespace NClass.CSharp
             }
         }
 
-        public override string GetDeclaration()
+        public override string GetDeclaration( )
         {
-            var builder = new StringBuilder(50);
+            var builder = new StringBuilder( 50 );
 
-            if (AccessModifier != AccessModifier.Default)
+            if ( AccessModifier != AccessModifier.Default )
             {
-                builder.Append(Language.GetAccessString(AccessModifier, true));
-                builder.Append(" ");
+                builder.Append( Language.GetAccessString( AccessModifier, true ) );
+                builder.Append( " " );
             }
-            if (IsStatic)
+            if ( IsStatic )
             {
-                builder.Append("static ");
+                builder.Append( "static " );
             }
 
-            builder.AppendFormat("{0}(", Name);
+            builder.AppendFormat( "{0}(", Name );
 
-            for (var i = 0; i < ArgumentList.Count; i++)
+            for ( var i = 0; i < ArgumentList.Count; i++ )
             {
-                builder.Append(ArgumentList[i]);
-                if (i < ArgumentList.Count - 1)
-                    builder.Append(", ");
+                builder.Append( ArgumentList[ i ] );
+                if ( i < ArgumentList.Count - 1 )
+                    builder.Append( ", " );
             }
-            builder.Append(")");
+            builder.Append( ")" );
 
-            return builder.ToString();
+            return builder.ToString( );
         }
 
 
-        public override Operation Clone(CompositeType newParent)
+        public override Operation Clone( CompositeType newParent )
         {
-            var constructor = new CSharpConstructor(newParent);
-            constructor.CopyFrom(this);
+            var constructor = new CSharpConstructor( newParent );
+            constructor.CopyFrom( this );
             return constructor;
         }
     }

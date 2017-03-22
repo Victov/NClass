@@ -20,40 +20,39 @@ using System;
 
 namespace NReflect.Filter
 {
-  /// <summary>
-  /// A combination of a modifier and an element.
-  /// </summary>
-  [Serializable]
-  public struct FilterRule
-  {
-    #region === Construction
-
     /// <summary>
-    /// Creates a new FilterRule with the given values.
+    /// A combination of a modifier and an element.
     /// </summary>
-    /// <param name="modifier">The Modifier for this rule.</param>
-    /// <param name="element">The element for this rule</param>
-    public FilterRule(FilterModifiers modifier, FilterElements element)
-      : this()
+    [Serializable]
+    public struct FilterRule
     {
-      Element = element;
-      Modifier = modifier;
+        #region === Construction
+
+        /// <summary>
+        /// Creates a new FilterRule with the given values.
+        /// </summary>
+        /// <param name="modifier">The Modifier for this rule.</param>
+        /// <param name="element">The element for this rule</param>
+        public FilterRule( FilterModifiers modifier, FilterElements element ) : this( )
+        {
+            Element = element;
+            Modifier = modifier;
+        }
+
+        #endregion
+
+        #region === Properties
+
+        /// <summary>
+        /// Gets or sets the modifier for this rule.
+        /// </summary>
+        public FilterModifiers Modifier { get; set; }
+
+        /// <summary>
+        /// Gets or sets the element for this rule.
+        /// </summary>
+        public FilterElements Element { get; set; }
+
+        #endregion
     }
-
-    #endregion
-
-    #region === Properties
-
-    /// <summary>
-    /// Gets or sets the modifier for this rule.
-    /// </summary>
-    public FilterModifiers Modifier { get; set; }
-
-    /// <summary>
-    /// Gets or sets the element for this rule.
-    /// </summary>
-    public FilterElements Element { get; set; }
-
-    #endregion
-  }
 }

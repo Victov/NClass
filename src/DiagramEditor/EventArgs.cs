@@ -17,9 +17,9 @@ using System;
 
 namespace NClass.DiagramEditor
 {
-    public class EventArgs<T> : EventArgs
+    public class EventArgs< T > : EventArgs
     {
-        public EventArgs(T value)
+        public EventArgs( T value )
         {
             Value = value;
         }

@@ -22,27 +22,24 @@ namespace NClass.Java
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="declaration" /> does not fit to the syntax.
         /// </exception>
-        internal JavaEnumValue(string declaration)
-            : base(declaration)
-        {
-        }
+        internal JavaEnumValue( string declaration ) : base( declaration ) {}
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="declaration" /> does not fit to the syntax.
         /// </exception>
-        public override void InitFromString(string declaration)
+        public override void InitFromString( string declaration )
         {
-            Name = JavaLanguage.Instance.GetValidName(declaration, false);
+            Name = JavaLanguage.Instance.GetValidName( declaration, false );
         }
 
-        public override string GetDeclaration()
+        public override string GetDeclaration( )
         {
             return Name;
         }
 
-        protected override EnumValue Clone()
+        protected override EnumValue Clone( )
         {
-            return new JavaEnumValue(Name);
+            return new JavaEnumValue( Name );
         }
     }
 }

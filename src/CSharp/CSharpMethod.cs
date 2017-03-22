@@ -23,34 +23,23 @@ namespace NClass.CSharp
 {
     internal sealed class CSharpMethod : Method
     {
-        private const string OverloadableOperators =
-            @"(\+|-|\*|/|%|&|\||\^|!|~|\+\+|--|<<|>>|==|!=|>|<|>=|<=| true| false)";
+        private const string OverloadableOperators = @"(\+|-|\*|/|%|&|\||\^|!|~|\+\+|--|<<|>>|==|!=|>|<|>=|<=| true| false)";
 
         // operator <operator>
         private const string OperatorPattern = @"operator\s*(?<operator>" + OverloadableOperators + ")";
 
         // {implicit | explicit} operator <operator>
-        private const string ConvOperatorPattern = @"(?<convop>implicit|explicit)" +
-                                                   @"\s+operator\s+(?<operator>" + CSharpLanguage.GenericTypePattern2
-                                                   + ")";
+        private const string ConvOperatorPattern = @"(?<convop>implicit|explicit)" + @"\s+operator\s+(?<operator>" + CSharpLanguage.GenericTypePattern2 + ")";
 
         // [<access>] [<modifier>]
         // { {explicit | implicit | <type>} operator <operator>(<args>) | <type> <name>(<args>) }
-        private const string MethodPattern =
-            @"^\s*" + CSharpLanguage.AccessPattern + CSharpLanguage.OperationModifiersPattern +
-            @"((?<name>" + ConvOperatorPattern + ")|" +
-            @"(?<type>" + CSharpLanguage.GenericTypePattern2 + @")\s+" +
-            @"(?<name>" + OperatorPattern + "|" + CSharpLanguage.GenericOperationNamePattern + "))" +
-            @"\s*\((?<args>.*)\)" + CSharpLanguage.DeclarationEnding;
+        private const string MethodPattern = @"^\s*" + CSharpLanguage.AccessPattern + CSharpLanguage.OperationModifiersPattern + @"((?<name>" + ConvOperatorPattern + ")|" + @"(?<type>" + CSharpLanguage.GenericTypePattern2 + @")\s+" + @"(?<name>" + OperatorPattern + "|" + CSharpLanguage.GenericOperationNamePattern + "))" + @"\s*\((?<args>.*)\)" + CSharpLanguage.DeclarationEnding;
 
         // [explicit | implicit] operator <operator> | <name>
-        private const string MethodNamePattern =
-            @"^\s*(?<name>((?<convop>implicit\s+|explicit\s+)?operator" +
-            @"(?<operator>(?(convop)\s+" + CSharpLanguage.GenericTypePattern2 + @"|\s*" +
-            OverloadableOperators + @"))|" + CSharpLanguage.GenericOperationNamePattern + @"))\s*$";
+        private const string MethodNamePattern = @"^\s*(?<name>((?<convop>implicit\s+|explicit\s+)?operator" + @"(?<operator>(?(convop)\s+" + CSharpLanguage.GenericTypePattern2 + @"|\s*" + OverloadableOperators + @"))|" + CSharpLanguage.GenericOperationNamePattern + @"))\s*$";
 
-        private static readonly Regex methodRegex = new Regex(MethodPattern, RegexOptions.ExplicitCapture);
-        private static readonly Regex nameRegex = new Regex(MethodNamePattern, RegexOptions.ExplicitCapture);
+        private static readonly Regex methodRegex = new Regex( MethodPattern, RegexOptions.ExplicitCapture );
+        private static readonly Regex nameRegex = new Regex( MethodNamePattern, RegexOptions.ExplicitCapture );
         private bool isExplicitImplementation;
 
         private bool isOperator;
@@ -58,10 +47,7 @@ namespace NClass.CSharp
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="parent" /> is null.
         /// </exception>
-        internal CSharpMethod(CompositeType parent)
-            : this("NewMethod", parent)
-        {
-        }
+        internal CSharpMethod( CompositeType parent ) : this( "NewMethod", parent ) {}
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
@@ -72,10 +58,7 @@ namespace NClass.CSharp
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="parent" /> is null.
         /// </exception>
-        internal CSharpMethod(string name, CompositeType parent)
-            : base(name, parent)
-        {
-        }
+        internal CSharpMethod( string name, CompositeType parent ) : base( name, parent ) {}
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="value" /> does not fit to the syntax.
@@ -85,30 +68,30 @@ namespace NClass.CSharp
             get { return base.Name; }
             set
             {
-                var match = nameRegex.Match(value);
+                var match = nameRegex.Match( value );
 
-                if (match.Success)
+                if ( match.Success )
                 {
                     RaiseChangedEvent = false;
                     try
                     {
-                        var name = match.Groups["name"].Value;
-                        if (Language.IsForbiddenName(name))
-                            throw new BadSyntaxException(Strings.ErrorForbiddenName);
+                        var name = match.Groups[ "name" ].Value;
+                        if ( Language.IsForbiddenName( name ) )
+                            throw new BadSyntaxException( Strings.ErrorForbiddenName );
 
                         ValidName = name;
-                        isOperator = match.Groups["operator"].Success;
-                        IsConversionOperator = match.Groups["convop"].Success;
-                        IsExplicitImplementation = match.Groups["namedot"].Success;
+                        isOperator = match.Groups[ "operator" ].Success;
+                        IsConversionOperator = match.Groups[ "convop" ].Success;
+                        IsExplicitImplementation = match.Groups[ "namedot" ].Success;
 
-                        if (isOperator)
+                        if ( isOperator )
                         {
-                            ClearModifiers();
+                            ClearModifiers( );
                             IsStatic = true;
                             AccessModifier = AccessModifier.Public;
-                            if (IsConversionOperator)
+                            if ( IsConversionOperator )
                                 ValidType = null;
-                            else if (string.IsNullOrEmpty(Type))
+                            else if ( string.IsNullOrEmpty( Type ) )
                                 ValidType = "int";
                         }
                     }
@@ -119,7 +102,7 @@ namespace NClass.CSharp
                 }
                 else
                 {
-                    throw new BadSyntaxException(Strings.ErrorInvalidName);
+                    throw new BadSyntaxException( Strings.ErrorInvalidName );
                 }
             }
         }
@@ -132,23 +115,26 @@ namespace NClass.CSharp
             get { return base.Type; }
             set
             {
-                if (IsConversionOperator)
+                if ( IsConversionOperator )
                 {
-                    if (string.IsNullOrEmpty(value))
+                    if ( string.IsNullOrEmpty( value ) )
                         ValidType = value;
                     else
-                        throw new BadSyntaxException(Strings.ErrorInvalidTypeName);
+                        throw new BadSyntaxException( Strings.ErrorInvalidTypeName );
                 }
                 else
                 {
-                    if (string.IsNullOrEmpty(value))
-                        throw new BadSyntaxException(Strings.ErrorInvalidTypeName);
+                    if ( string.IsNullOrEmpty( value ) )
+                        throw new BadSyntaxException( Strings.ErrorInvalidTypeName );
                     base.Type = value;
                 }
             }
         }
 
-        protected override string DefaultType { get { return "void"; } }
+        protected override string DefaultType
+        {
+            get { return "void"; }
+        }
 
         /// <exception cref="BadSyntaxException">
         ///     Cannot set access visibility.
@@ -158,20 +144,17 @@ namespace NClass.CSharp
             get { return base.AccessModifier; }
             set
             {
-                if (value != AccessModifier.Default && IsExplicitImplementation)
+                if ( value != AccessModifier.Default && IsExplicitImplementation )
                 {
-                    throw new BadSyntaxException(
-                        Strings.ErrorExplicitImplementationAccess);
+                    throw new BadSyntaxException( Strings.ErrorExplicitImplementationAccess );
                 }
-                if (value != AccessModifier.Public && IsOperator)
+                if ( value != AccessModifier.Public && IsOperator )
                 {
-                    throw new BadSyntaxException(
-                        Strings.ErrorOperatorMustBePublic);
+                    throw new BadSyntaxException( Strings.ErrorOperatorMustBePublic );
                 }
-                if (value != AccessModifier.Default && Parent is InterfaceType)
+                if ( value != AccessModifier.Default && Parent is InterfaceType )
                 {
-                    throw new BadSyntaxException(
-                        Strings.ErrorInterfaceMemberAccess);
+                    throw new BadSyntaxException( Strings.ErrorInterfaceMemberAccess );
                 }
 
                 base.AccessModifier = value;
@@ -180,14 +163,13 @@ namespace NClass.CSharp
 
         public override bool IsAccessModifiable
         {
-            get
-            {
-                return base.IsAccessModifiable && !(Parent is InterfaceType) &&
-                       !IsOperator && !IsExplicitImplementation;
-            }
+            get { return base.IsAccessModifiable && !( Parent is InterfaceType ) && !IsOperator && !IsExplicitImplementation; }
         }
 
-        public override bool IsTypeReadonly { get { return base.IsTypeReadonly || IsConversionOperator; } }
+        public override bool IsTypeReadonly
+        {
+            get { return base.IsTypeReadonly || IsConversionOperator; }
+        }
 
         /// <exception cref="BadSyntaxException">
         ///     Cannot set static modifier.
@@ -197,8 +179,8 @@ namespace NClass.CSharp
             get { return base.IsStatic; }
             set
             {
-                if (!value && IsOperator)
-                    throw new BadSyntaxException(Strings.ErrorOperatorMustBeStatic);
+                if ( !value && IsOperator )
+                    throw new BadSyntaxException( Strings.ErrorOperatorMustBeStatic );
 
                 base.IsStatic = value;
             }
@@ -212,14 +194,17 @@ namespace NClass.CSharp
             get { return base.IsHider; }
             set
             {
-                if (value && IsOperator)
-                    throw new BadSyntaxException(Strings.ErrorInvalidModifier);
+                if ( value && IsOperator )
+                    throw new BadSyntaxException( Strings.ErrorInvalidModifier );
 
                 base.IsHider = value;
             }
         }
 
-        public override bool IsOperator { get { return isOperator; } }
+        public override bool IsOperator
+        {
+            get { return isOperator; }
+        }
 
         public bool IsConversionOperator { get; private set; }
 
@@ -228,16 +213,16 @@ namespace NClass.CSharp
             get { return isExplicitImplementation; }
             private set
             {
-                if (isExplicitImplementation != value)
+                if ( isExplicitImplementation != value )
                 {
                     try
                     {
                         RaiseChangedEvent = false;
 
-                        if (value)
+                        if ( value )
                             AccessModifier = AccessModifier.Default;
                         isExplicitImplementation = value;
-                        Changed();
+                        Changed( );
                     }
                     finally
                     {
@@ -247,75 +232,78 @@ namespace NClass.CSharp
             }
         }
 
-        public override Language Language { get { return CSharpLanguage.Instance; } }
+        public override Language Language
+        {
+            get { return CSharpLanguage.Instance; }
+        }
 
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="declaration" /> does not fit to the syntax.
         /// </exception>
-        public override void InitFromString(string declaration)
+        public override void InitFromString( string declaration )
         {
-            var match = methodRegex.Match(declaration);
+            var match = methodRegex.Match( declaration );
             RaiseChangedEvent = false;
 
             try
             {
-                if (match.Success)
+                if ( match.Success )
                 {
-                    ClearModifiers();
-                    var nameGroup = match.Groups["name"];
-                    var typeGroup = match.Groups["type"];
-                    var accessGroup = match.Groups["access"];
-                    var modifierGroup = match.Groups["modifier"];
-                    var staticGroup = match.Groups["static"];
-                    var operatorGroup = match.Groups["operator"];
-                    var convopGroup = match.Groups["convop"];
-                    var nameDotGroup = match.Groups["namedot"];
-                    var argsGroup = match.Groups["args"];
+                    ClearModifiers( );
+                    var nameGroup = match.Groups[ "name" ];
+                    var typeGroup = match.Groups[ "type" ];
+                    var accessGroup = match.Groups[ "access" ];
+                    var modifierGroup = match.Groups[ "modifier" ];
+                    var staticGroup = match.Groups[ "static" ];
+                    var operatorGroup = match.Groups[ "operator" ];
+                    var convopGroup = match.Groups[ "convop" ];
+                    var nameDotGroup = match.Groups[ "namedot" ];
+                    var argsGroup = match.Groups[ "args" ];
 
-                    if (CSharpLanguage.Instance.IsForbiddenName(nameGroup.Value))
-                        throw new BadSyntaxException(Strings.ErrorInvalidName);
-                    if (CSharpLanguage.Instance.IsForbiddenTypeName(typeGroup.Value))
-                        throw new BadSyntaxException(Strings.ErrorInvalidTypeName);
+                    if ( CSharpLanguage.Instance.IsForbiddenName( nameGroup.Value ) )
+                        throw new BadSyntaxException( Strings.ErrorInvalidName );
+                    if ( CSharpLanguage.Instance.IsForbiddenTypeName( typeGroup.Value ) )
+                        throw new BadSyntaxException( Strings.ErrorInvalidTypeName );
 
                     ValidName = nameGroup.Value;
                     ValidType = typeGroup.Value;
 
                     isOperator = operatorGroup.Success;
                     IsConversionOperator = convopGroup.Success;
-                    if (IsOperator)
+                    if ( IsOperator )
                     {
-                        ClearModifiers();
+                        ClearModifiers( );
                         IsStatic = true;
                         AccessModifier = AccessModifier.Public;
                     }
                     else
                     {
-                        AccessModifier = Language.TryParseAccessModifier(accessGroup.Value);
+                        AccessModifier = Language.TryParseAccessModifier( accessGroup.Value );
                     }
 
                     IsExplicitImplementation = nameDotGroup.Success;
-                    ArgumentList.InitFromString(argsGroup.Value);
+                    ArgumentList.InitFromString( argsGroup.Value );
 
-                    foreach (Capture modifierCapture in modifierGroup.Captures)
+                    foreach ( Capture modifierCapture in modifierGroup.Captures )
                     {
-                        if (modifierCapture.Value == "static")
+                        if ( modifierCapture.Value == "static" )
                             IsStatic = true;
-                        if (modifierCapture.Value == "virtual")
+                        if ( modifierCapture.Value == "virtual" )
                             IsVirtual = true;
-                        if (modifierCapture.Value == "abstract")
+                        if ( modifierCapture.Value == "abstract" )
                             IsAbstract = true;
-                        if (modifierCapture.Value == "override")
+                        if ( modifierCapture.Value == "override" )
                             IsOverride = true;
-                        if (modifierCapture.Value == "sealed")
+                        if ( modifierCapture.Value == "sealed" )
                             IsSealed = true;
-                        if (modifierCapture.Value == "new")
+                        if ( modifierCapture.Value == "new" )
                             IsHider = true;
                     }
                 }
                 else
                 {
-                    throw new BadSyntaxException(Strings.ErrorInvalidDeclaration);
+                    throw new BadSyntaxException( Strings.ErrorInvalidDeclaration );
                 }
             }
             finally
@@ -324,61 +312,61 @@ namespace NClass.CSharp
             }
         }
 
-        public override string GetDeclaration()
+        public override string GetDeclaration( )
         {
-            return GetDeclarationLine(true);
+            return GetDeclarationLine( true );
         }
 
-        public string GetDeclarationLine(bool withSemicolon)
+        public string GetDeclarationLine( bool withSemicolon )
         {
-            var builder = new StringBuilder(100);
+            var builder = new StringBuilder( 100 );
 
-            if (AccessModifier != AccessModifier.Default)
+            if ( AccessModifier != AccessModifier.Default )
             {
-                builder.Append(Language.GetAccessString(AccessModifier, true));
-                builder.Append(" ");
+                builder.Append( Language.GetAccessString( AccessModifier, true ) );
+                builder.Append( " " );
             }
-            if (IsHider)
-                builder.Append("new ");
-            if (IsStatic)
-                builder.Append("static ");
-            if (IsVirtual)
-                builder.Append("virtual ");
-            if (IsAbstract)
-                builder.Append("abstract ");
-            if (IsSealed)
-                builder.Append("sealed ");
-            if (IsOverride)
-                builder.Append("override ");
+            if ( IsHider )
+                builder.Append( "new " );
+            if ( IsStatic )
+                builder.Append( "static " );
+            if ( IsVirtual )
+                builder.Append( "virtual " );
+            if ( IsAbstract )
+                builder.Append( "abstract " );
+            if ( IsSealed )
+                builder.Append( "sealed " );
+            if ( IsOverride )
+                builder.Append( "override " );
 
-            if (string.IsNullOrEmpty(Type))
-                builder.AppendFormat("{0}(", Name);
+            if ( string.IsNullOrEmpty( Type ) )
+                builder.AppendFormat( "{0}(", Name );
             else
-                builder.AppendFormat("{0} {1}(", Type, Name);
+                builder.AppendFormat( "{0} {1}(", Type, Name );
 
-            for (var i = 0; i < ArgumentList.Count; i++)
+            for ( var i = 0; i < ArgumentList.Count; i++ )
             {
-                builder.Append(ArgumentList[i]);
-                if (i < ArgumentList.Count - 1)
-                    builder.Append(", ");
+                builder.Append( ArgumentList[ i ] );
+                if ( i < ArgumentList.Count - 1 )
+                    builder.Append( ", " );
             }
-            builder.Append(")");
+            builder.Append( ")" );
 
-            if (withSemicolon && !HasBody)
-                builder.Append(";");
+            if ( withSemicolon && !HasBody )
+                builder.Append( ";" );
 
-            return builder.ToString();
+            return builder.ToString( );
         }
 
-        public override string ToString()
+        public override string ToString( )
         {
-            return GetDeclarationLine(false);
+            return GetDeclarationLine( false );
         }
 
-        public override Operation Clone(CompositeType newParent)
+        public override Operation Clone( CompositeType newParent )
         {
-            var method = new CSharpMethod(newParent);
-            method.CopyFrom(this);
+            var method = new CSharpMethod( newParent );
+            method.CopyFrom( this );
             return method;
         }
     }

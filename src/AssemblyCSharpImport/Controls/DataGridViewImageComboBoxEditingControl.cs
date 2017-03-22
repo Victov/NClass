@@ -29,11 +29,11 @@ namespace NClass.AssemblyCSharpImport.Controls
         /// </returns>
         public object EditingControlFormattedValue
         {
-            get { return GetEditingControlFormattedValue(DataGridViewDataErrorContexts.Formatting); }
+            get { return GetEditingControlFormattedValue( DataGridViewDataErrorContexts.Formatting ); }
             set
             {
                 var item = value as ImageComboBoxItem;
-                if (item != null)
+                if ( item != null )
                 {
                     SelectedItem = item;
                 }
@@ -64,7 +64,10 @@ namespace NClass.AssemblyCSharpImport.Controls
         /// <returns>
         ///     Returns the default cursor.
         /// </returns>
-        public Cursor EditingPanelCursor { get { return Cursors.Default; } }
+        public Cursor EditingPanelCursor
+        {
+            get { return Cursors.Default; }
+        }
 
         /// <summary>
         ///     Gets or sets a value indicating whether the cell contents need to be repositioned whenever the value changes.
@@ -72,7 +75,10 @@ namespace NClass.AssemblyCSharpImport.Controls
         /// <returns>
         ///     <c>false</c>.
         /// </returns>
-        public bool RepositionEditingControlOnValueChange { get { return false; } }
+        public bool RepositionEditingControlOnValueChange
+        {
+            get { return false; }
+        }
 
         #endregion
 
@@ -88,11 +94,11 @@ namespace NClass.AssemblyCSharpImport.Controls
         ///     The <see cref="T:System.Windows.Forms.DataGridViewCellStyle" /> to use as the model
         ///     for the UI.
         /// </param>
-        public void ApplyCellStyleToEditingControl(DataGridViewCellStyle dataGridViewCellStyle)
+        public void ApplyCellStyleToEditingControl( DataGridViewCellStyle dataGridViewCellStyle )
         {
             Font = dataGridViewCellStyle.Font;
             // Don't use colors which are opaque.
-            BackColor = Color.FromArgb(255, dataGridViewCellStyle.BackColor);
+            BackColor = Color.FromArgb( 255, dataGridViewCellStyle.BackColor );
             ForeColor = dataGridViewCellStyle.ForeColor;
         }
 
@@ -109,11 +115,9 @@ namespace NClass.AssemblyCSharpImport.Controls
         ///     <c>true</c> when the <see cref="T:System.Windows.Forms.DataGridView" /> wants
         ///     to process the <see cref="T:System.Windows.Forms.Keys" /> in <paramref name="keyData" />; otherwise, <c>false</c>.
         /// </param>
-        public bool EditingControlWantsInputKey(Keys keyData, bool dataGridViewWantsInputKey)
+        public bool EditingControlWantsInputKey( Keys keyData, bool dataGridViewWantsInputKey )
         {
-            if ((keyData & Keys.KeyCode) == Keys.Down ||
-                (keyData & Keys.KeyCode) == Keys.Up || DroppedDown && ((keyData & Keys.KeyCode) == Keys.Escape)
-                || (keyData & Keys.KeyCode) == Keys.Enter)
+            if ( ( keyData & Keys.KeyCode ) == Keys.Down || ( keyData & Keys.KeyCode ) == Keys.Up || DroppedDown && ( ( keyData & Keys.KeyCode ) == Keys.Escape ) || ( keyData & Keys.KeyCode ) == Keys.Enter )
             {
                 return true;
             }
@@ -130,7 +134,7 @@ namespace NClass.AssemblyCSharpImport.Controls
         ///     A bitwise combination of <see cref="T:System.Windows.Forms.DataGridViewDataErrorContexts" />
         ///     values that specifies the context in which the data is needed.
         /// </param>
-        public object GetEditingControlFormattedValue(DataGridViewDataErrorContexts context)
+        public object GetEditingControlFormattedValue( DataGridViewDataErrorContexts context )
         {
             return SelectedItem;
         }
@@ -139,7 +143,7 @@ namespace NClass.AssemblyCSharpImport.Controls
         ///     Prepares the currently selected cell for editing.
         /// </summary>
         /// <param name="selectAll"><c>true</c> to select all of the cell's content; otherwise, false.</param>
-        public void PrepareEditingControlForEdit(bool selectAll)
+        public void PrepareEditingControlForEdit( bool selectAll )
         {
             DroppedDown = true;
         }
@@ -148,11 +152,11 @@ namespace NClass.AssemblyCSharpImport.Controls
         ///     Raises the <see cref="E:System.Windows.Forms.ComboBox.SelectedIndexChanged" /> event.
         /// </summary>
         /// <param name="e">An <see cref="T:System.EventArgs" /> that contains the event data. </param>
-        protected override void OnSelectedIndexChanged(EventArgs e)
+        protected override void OnSelectedIndexChanged( EventArgs e )
         {
-            base.OnSelectedIndexChanged(e);
+            base.OnSelectedIndexChanged( e );
             EditingControlValueChanged = true;
-            EditingControlDataGridView.NotifyCurrentCellDirty(true);
+            EditingControlDataGridView.NotifyCurrentCellDirty( true );
         }
 
         #endregion

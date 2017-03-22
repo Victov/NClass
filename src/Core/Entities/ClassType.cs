@@ -29,12 +29,12 @@ namespace NClass.Core
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        protected ClassType(string name)
-            : base(name)
-        {
-        }
+        protected ClassType( string name ) : base( name ) {}
 
-        public sealed override EntityType EntityType { get { return EntityType.Class; } }
+        public sealed override EntityType EntityType
+        {
+            get { return EntityType.Class; }
+        }
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="value" /> does not fit to the syntax.
@@ -44,56 +44,76 @@ namespace NClass.Core
             get { return modifier; }
             set
             {
-                if (modifier != value)
+                if ( modifier != value )
                 {
-                    if (value == ClassModifier.Static && (IsSuperClass || HasExplicitBase))
-                        throw new BadSyntaxException(Strings.ErrorInvalidModifier);
-                    if (value == ClassModifier.Sealed && IsSuperClass)
-                        throw new BadSyntaxException(Strings.ErrorInvalidModifier);
+                    if ( value == ClassModifier.Static && ( IsSuperClass || HasExplicitBase ) )
+                        throw new BadSyntaxException( Strings.ErrorInvalidModifier );
+                    if ( value == ClassModifier.Sealed && IsSuperClass )
+                        throw new BadSyntaxException( Strings.ErrorInvalidModifier );
 
                     modifier = value;
-                    Changed();
+                    Changed( );
                 }
             }
         }
 
-        public override bool SupportsFields { get { return true; } }
+        public override bool SupportsFields
+        {
+            get { return true; }
+        }
 
-        public override bool SupportsMethods { get { return true; } }
+        public override bool SupportsMethods
+        {
+            get { return true; }
+        }
 
-        public override bool SupportsConstuctors { get { return true; } }
+        public override bool SupportsConstuctors
+        {
+            get { return true; }
+        }
 
-        public override bool SupportsNesting { get { return true; } }
+        public override bool SupportsNesting
+        {
+            get { return true; }
+        }
 
         public override bool IsAllowedParent
         {
-            get
-            {
-                return Modifier != ClassModifier.Sealed &&
-                       Modifier != ClassModifier.Static;
-            }
+            get { return Modifier != ClassModifier.Sealed && Modifier != ClassModifier.Static; }
         }
 
-        public override bool IsAllowedChild { get { return Modifier != ClassModifier.Static; } }
+        public override bool IsAllowedChild
+        {
+            get { return Modifier != ClassModifier.Static; }
+        }
 
-        public override bool HasExplicitBase { get { return baseClass != null; } }
+        public override bool HasExplicitBase
+        {
+            get { return baseClass != null; }
+        }
 
-        public bool IsSuperClass { get { return derivedClassCount > 0; } }
+        public bool IsSuperClass
+        {
+            get { return derivedClassCount > 0; }
+        }
 
         public sealed override string Signature
         {
             get
             {
-                var accessString = Language.GetAccessString(Access, false);
-                var modifierString = Language.GetClassModifierString(Modifier, false);
+                var accessString = Language.GetAccessString( Access, false );
+                var modifierString = Language.GetClassModifierString( Modifier, false );
 
-                if (Modifier == ClassModifier.None)
-                    return string.Format("{0} Class", accessString);
-                return string.Format("{0} {1} Class", accessString, modifierString);
+                if ( Modifier == ClassModifier.None )
+                    return string.Format( "{0} Class", accessString );
+                return string.Format( "{0} {1} Class", accessString, modifierString );
             }
         }
 
-        public override string Stereotype { get { return null; } }
+        public override string Stereotype
+        {
+            get { return null; }
+        }
 
         /// <exception cref="RelationshipException">
         ///     The base and derived types do not equal.-or-
@@ -104,10 +124,10 @@ namespace NClass.Core
             get { return BaseClass; }
             set
             {
-                if (value != null && !(value is ClassType))
-                    throw new RelationshipException(Strings.ErrorInvalidBaseType);
+                if ( value != null && !( value is ClassType ) )
+                    throw new RelationshipException( Strings.ErrorInvalidBaseType );
 
-                BaseClass = (ClassType) value;
+                BaseClass = ( ClassType ) value;
             }
         }
 
@@ -121,77 +141,75 @@ namespace NClass.Core
             get { return baseClass; }
             set
             {
-                if (value == baseClass)
+                if ( value == baseClass )
                     return;
 
-                if (value == null)
+                if ( value == null )
                 {
                     baseClass.derivedClassCount--;
                     baseClass = null;
-                    Changed();
+                    Changed( );
                     return;
                 }
 
-                if (value == this)
-                    throw new RelationshipException(Strings.ErrorInvalidBaseType);
+                if ( value == this )
+                    throw new RelationshipException( Strings.ErrorInvalidBaseType );
 
-                if (value.Modifier == ClassModifier.Sealed ||
-                    value.Modifier == ClassModifier.Static)
+                if ( value.Modifier == ClassModifier.Sealed || value.Modifier == ClassModifier.Static )
                 {
-                    throw new RelationshipException(Strings.ErrorCannotInherit);
+                    throw new RelationshipException( Strings.ErrorCannotInherit );
                 }
-                if (value.IsAncestor(this))
+                if ( value.IsAncestor( this ) )
                 {
-                    throw new RelationshipException(string.Format(Strings.ErrorCyclicBase,
-                                                                  Strings.Class));
+                    throw new RelationshipException( string.Format( Strings.ErrorCyclicBase, Strings.Class ) );
                 }
-                if (value.Language != Language)
-                    throw new RelationshipException(Strings.ErrorLanguagesDoNotEqual);
+                if ( value.Language != Language )
+                    throw new RelationshipException( Strings.ErrorLanguagesDoNotEqual );
 
                 baseClass = value;
                 baseClass.derivedClassCount++;
-                Changed();
+                Changed( );
             }
         }
 
-        public override IEnumerable<Operation> OverridableOperations
+        public override IEnumerable< Operation > OverridableOperations
         {
             get
             {
-                for (var i = 0; i < OperationList.Count; i++)
+                for ( var i = 0; i < OperationList.Count; i++ )
                 {
-                    if (OperationList[i].Overridable)
-                        yield return OperationList[i];
+                    if ( OperationList[ i ].Overridable )
+                        yield return OperationList[ i ];
                 }
             }
         }
 
-        private bool IsAncestor(ClassType classType)
+        private bool IsAncestor( ClassType classType )
         {
-            if (BaseClass != null && BaseClass.IsAncestor(classType))
+            if ( BaseClass != null && BaseClass.IsAncestor( classType ) )
                 return true;
             return classType == this;
         }
 
-        protected override void CopyFrom(TypeBase type)
+        protected override void CopyFrom( TypeBase type )
         {
-            base.CopyFrom(type);
-            var classType = (ClassType) type;
+            base.CopyFrom( type );
+            var classType = ( ClassType ) type;
             modifier = classType.modifier;
         }
 
-        public abstract ClassType Clone();
+        public abstract ClassType Clone( );
 
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="node" /> is null.
         /// </exception>
-        protected internal override void Serialize(XmlElement node)
+        protected internal override void Serialize( XmlElement node )
         {
-            base.Serialize(node);
+            base.Serialize( node );
 
-            var child = node.OwnerDocument.CreateElement("Modifier");
-            child.InnerText = Modifier.ToString();
-            node.AppendChild(child);
+            var child = node.OwnerDocument.CreateElement( "Modifier" );
+            child.InnerText = Modifier.ToString( );
+            node.AppendChild( child );
         }
 
         /// <exception cref="BadSyntaxException">
@@ -203,15 +221,15 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="node" /> is null.
         /// </exception>
-        protected internal override void Deserialize(XmlElement node)
+        protected internal override void Deserialize( XmlElement node )
         {
             RaiseChangedEvent = false;
 
-            var child = node["Modifier"];
-            if (child != null)
-                Modifier = Language.TryParseClassModifier(child.InnerText);
+            var child = node[ "Modifier" ];
+            if ( child != null )
+                Modifier = Language.TryParseClassModifier( child.InnerText );
 
-            base.Deserialize(node);
+            base.Deserialize( node );
             RaiseChangedEvent = true;
         }
     }

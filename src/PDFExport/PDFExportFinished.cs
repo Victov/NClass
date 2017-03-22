@@ -11,17 +11,17 @@ namespace PDFExport
         /// <summary>
         ///     Initializes a new instance of PDFExportFinished.
         /// </summary>
-        public PDFExportFinished()
+        public PDFExportFinished( )
         {
-            InitializeComponent();
+            InitializeComponent( );
 
-            LocalizeComponents();
+            LocalizeComponents( );
         }
 
         /// <summary>
         ///     Displays the text for the current culture.
         /// </summary>
-        private void LocalizeComponents()
+        private void LocalizeComponents( )
         {
             Text = Strings.FinishedDialog_Title;
             lblFinished.Text = Strings.FinishedDialog_Text;

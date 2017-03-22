@@ -29,13 +29,13 @@ namespace NClass.Core
         event EventHandler Closing;
 
 
-        void Close();
+        void Close( );
 
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="node" /> is null.
         /// </exception>
         /// +
-        void Serialize(XmlElement node);
+        void Serialize( XmlElement node );
 
         /// <exception cref="InvalidDataException">
         ///     The serialized format is corrupt and could not be loaded.
@@ -43,6 +43,6 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="node" /> is null.
         /// </exception>
-        void Deserialize(XmlElement node);
+        void Deserialize( XmlElement node );
     }
 }

@@ -18,40 +18,38 @@ using System.Collections.Generic;
 
 namespace NClass.Core
 {
-    public abstract class ArgumentList : CollectionBase, IEnumerable<Parameter>
+    public abstract class ArgumentList : CollectionBase, IEnumerable< Parameter >
     {
-        protected ArgumentList()
+        protected ArgumentList( ) {}
+
+        protected ArgumentList( int capacity ) : base( capacity ) {}
+
+        public Parameter this[ int index ]
         {
+            get { return InnerList[ index ] as Parameter; }
         }
 
-        protected ArgumentList(int capacity)
-            : base(capacity)
+        IEnumerator< Parameter > IEnumerable< Parameter >.GetEnumerator( )
         {
+            for ( var i = 0; i < InnerList.Count; i++ )
+                yield return ( Parameter ) InnerList[ i ];
         }
 
-        public Parameter this[int index] { get { return InnerList[index] as Parameter; } }
-
-        IEnumerator<Parameter> IEnumerable<Parameter>.GetEnumerator()
+        public void Remove( Parameter parameter )
         {
-            for (var i = 0; i < InnerList.Count; i++)
-                yield return (Parameter) InnerList[i];
+            InnerList.Remove( parameter );
         }
 
-        public void Remove(Parameter parameter)
+        protected bool IsReservedName( string name )
         {
-            InnerList.Remove(parameter);
+            return IsReservedName( name, -1 );
         }
 
-        protected bool IsReservedName(string name)
+        protected bool IsReservedName( string name, int index )
         {
-            return IsReservedName(name, -1);
-        }
-
-        protected bool IsReservedName(string name, int index)
-        {
-            for (var i = 0; i < Count; i++)
+            for ( var i = 0; i < Count; i++ )
             {
-                if (((Parameter) InnerList[i]).Name == name && i != index)
+                if ( ( ( Parameter ) InnerList[ i ] ).Name == name && i != index )
                     return true;
             }
             return false;
@@ -63,7 +61,7 @@ namespace NClass.Core
         /// <exception cref="ReservedNameException">
         ///     The parameter name is already exists.
         /// </exception>
-        public abstract Parameter Add(string name, string type, ParameterModifier modifier, string defaultValue);
+        public abstract Parameter Add( string name, string type, ParameterModifier modifier, string defaultValue );
 
 
         /// <exception cref="BadSyntaxException">
@@ -72,7 +70,7 @@ namespace NClass.Core
         /// <exception cref="ReservedNameException">
         ///     The parameter name is already exists.
         /// </exception>
-        public abstract Parameter Add(string declaration);
+        public abstract Parameter Add( string declaration );
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="declaration" /> does not fit to the syntax.
@@ -80,13 +78,13 @@ namespace NClass.Core
         /// <exception cref="ReservedNameException">
         ///     The parameter name is already exists.
         /// </exception>
-        public abstract Parameter ModifyParameter(Parameter parmeter, string declaration);
+        public abstract Parameter ModifyParameter( Parameter parmeter, string declaration );
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="declaration" /> does not fit to the syntax.
         /// </exception>
-        public abstract void InitFromString(string declaration);
+        public abstract void InitFromString( string declaration );
 
-        public abstract ArgumentList Clone();
+        public abstract ArgumentList Clone( );
     }
 }

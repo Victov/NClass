@@ -19,11 +19,11 @@ namespace PDFExport
         /// <summary>
         ///     Initializes a new PDFExportProgress form.
         /// </summary>
-        private PDFExportProgress()
+        private PDFExportProgress( )
         {
-            InitializeComponent();
+            InitializeComponent( );
 
-            LocalizeComponents();
+            LocalizeComponents( );
         }
 
         #endregion
@@ -63,7 +63,7 @@ namespace PDFExport
         /// <summary>
         ///     Displays the text for the current culture.
         /// </summary>
-        private void LocalizeComponents()
+        private void LocalizeComponents( )
         {
             Text = Strings.Progress_Title;
             lblProgress.Text = Strings.Progress_Text;
@@ -73,32 +73,26 @@ namespace PDFExport
         ///     Shows the form asynchonously. To close it, call <see cref="CloseAsync()" />.
         /// </summary>
         /// <param name="parent">The parent form.</param>
-        public static void ShowAsync(Form parent)
+        public static void ShowAsync( Form parent )
         {
-            showThread = new Thread(Run)
-            {
-                IsBackground = true,
-                Name = "PDFExporterProgressDialogShowThread"
-            };
+            showThread = new Thread( Run ) {IsBackground = true, Name = "PDFExporterProgressDialogShowThread"};
             // Test samuel
-            showThread.SetApartmentState(ApartmentState.STA);
+            showThread.SetApartmentState( ApartmentState.STA );
 
-            var point = parent == null
-                ? new Point(Screen.PrimaryScreen.WorkingArea.Width/2, Screen.PrimaryScreen.WorkingArea.Height/2)
-                : new Point(parent.Left + parent.Width/2, parent.Top + parent.Height/2);
+            var point = parent == null ? new Point( Screen.PrimaryScreen.WorkingArea.Width / 2, Screen.PrimaryScreen.WorkingArea.Height / 2 ) : new Point( parent.Left + parent.Width / 2, parent.Top + parent.Height / 2 );
 
-            showThread.Start(point);
+            showThread.Start( point );
         }
 
         /// <summary>
         ///     Closes an opened PDFExporterProgress form if it is opened.
         /// </summary>
-        public static void CloseAsync()
+        public static void CloseAsync( )
         {
-            if (showThread != null && showThread.IsAlive)
+            if ( showThread != null && showThread.IsAlive )
             {
-                showThread.Abort();
-                showThread.Join();
+                showThread.Abort( );
+                showThread.Join( );
             }
         }
 
@@ -107,26 +101,26 @@ namespace PDFExport
         ///     for the end.
         /// </summary>
         /// <param name="center">The center of the form.</param>
-        private static void Run(object center)
+        private static void Run( object center )
         {
-            var point = (Point) center;
-            var progressForm = new PDFExportProgress();
-            progressForm.Location = new Point(point.X - progressForm.Width/2, point.Y - progressForm.Height/2);
-            progressForm.Show();
+            var point = ( Point ) center;
+            var progressForm = new PDFExportProgress( );
+            progressForm.Location = new Point( point.X - progressForm.Width / 2, point.Y - progressForm.Height / 2 );
+            progressForm.Show( );
 
             try
             {
-                while (true)
+                while ( true )
                 {
-                    Thread.Sleep(5);
-                    Application.DoEvents();
+                    Thread.Sleep( 5 );
+                    Application.DoEvents( );
                 }
             }
-            catch (ThreadAbortException)
+            catch ( ThreadAbortException )
             {
                 //We are asked to close the window
-                progressForm.Close();
-                progressForm.Dispose();
+                progressForm.Close( );
+                progressForm.Dispose( );
             }
         }
 
@@ -143,14 +137,14 @@ namespace PDFExport
         /// </summary>
         /// <param name="sender">The caller.</param>
         /// <param name="e">Additional information.</param>
-        private void timer_Tick(object sender, EventArgs e)
+        private void timer_Tick( object sender, EventArgs e )
         {
-            if (pictureBoxEntity.Left == ENTITY_END)
+            if ( pictureBoxEntity.Left == ENTITY_END )
             {
                 //Next run
                 pictureBoxEntity.Left = ENTITY_START;
-                currentImageIndex = (currentImageIndex + 1)%imageListEntities.Images.Count;
-                pictureBoxEntity.Image = imageListEntities.Images[currentImageIndex];
+                currentImageIndex = ( currentImageIndex + 1 ) % imageListEntities.Images.Count;
+                pictureBoxEntity.Image = imageListEntities.Images[ currentImageIndex ];
             }
             pictureBoxEntity.Left += 2;
         }
@@ -160,10 +154,10 @@ namespace PDFExport
         /// </summary>
         /// <param name="sender">The caller.</param>
         /// <param name="e">Additional information.</param>
-        private void PDFExportProgress_Load(object sender, EventArgs e)
+        private void PDFExportProgress_Load( object sender, EventArgs e )
         {
             timer.Enabled = true;
-            pictureBoxEntity.Image = imageListEntities.Images[currentImageIndex];
+            pictureBoxEntity.Image = imageListEntities.Images[ currentImageIndex ];
         }
 
         #endregion

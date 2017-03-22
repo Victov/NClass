@@ -22,56 +22,56 @@ using NReflect.NRRelationship;
 
 namespace NReflect
 {
-  /// <summary>
-  /// An instance of this class contains all found relationships between the reflected types
-  /// of a <see cref="NRAssembly"/>.
-  /// </summary>
-  [Serializable]
-  public class NRRelationships
-  {
-    // ========================================================================
-    // Con- / Destruction
-
-    #region === Con- / Destruction
-
     /// <summary>
-    /// Initializes a new instance of <see cref="NRRelationships"/>.
+    /// An instance of this class contains all found relationships between the reflected types
+    /// of a <see cref="NRAssembly"/>.
     /// </summary>
-    public NRRelationships()
+    [Serializable]
+    public class NRRelationships
     {
-      Nestings = new List<NRNesting>();
-      Generalizations = new List<NRGeneralization>();
-      Realizations = new List<NRRealization>();
-      Associations = new List<NRAssociation>();
+        // ========================================================================
+        // Con- / Destruction
+
+        #region === Con- / Destruction
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="NRRelationships"/>.
+        /// </summary>
+        public NRRelationships( )
+        {
+            Nestings = new List< NRNesting >( );
+            Generalizations = new List< NRGeneralization >( );
+            Realizations = new List< NRRealization >( );
+            Associations = new List< NRAssociation >( );
+        }
+
+        #endregion
+
+        // ========================================================================
+        // Properties
+
+        #region === Properties
+
+        /// <summary>
+        /// Gets a list of nesting relationships.
+        /// </summary>
+        public List< NRNesting > Nestings { get; private set; }
+
+        /// <summary>
+        /// Gets a list of generalization relationships.
+        /// </summary>
+        public List< NRGeneralization > Generalizations { get; private set; }
+
+        /// <summary>
+        /// Gets a list of realization relationships.
+        /// </summary>
+        public List< NRRealization > Realizations { get; private set; }
+
+        /// <summary>
+        /// Gets a list of association relationships.
+        /// </summary>
+        public List< NRAssociation > Associations { get; private set; }
+
+        #endregion
     }
-
-    #endregion
-
-    // ========================================================================
-    // Properties
-
-    #region === Properties
-
-    /// <summary>
-    /// Gets a list of nesting relationships.
-    /// </summary>
-    public List<NRNesting> Nestings { get; private set; }
-
-    /// <summary>
-    /// Gets a list of generalization relationships.
-    /// </summary>
-    public List<NRGeneralization> Generalizations { get; private set; }
-
-    /// <summary>
-    /// Gets a list of realization relationships.
-    /// </summary>
-    public List<NRRealization> Realizations { get; private set; }
-
-    /// <summary>
-    /// Gets a list of association relationships.
-    /// </summary>
-    public List<NRAssociation> Associations { get; private set; }
-
-    #endregion
-  }
 }

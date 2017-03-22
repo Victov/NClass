@@ -26,31 +26,33 @@ namespace NClass.CodeGenerator
 {
     internal sealed partial class Settings
     {
-        private readonly Dictionary<Language, StringCollection> importLists =
-            new Dictionary<Language, StringCollection>();
+        private readonly Dictionary< Language, StringCollection > importLists = new Dictionary< Language, StringCollection >( );
 
-        public Settings()
+        public Settings( )
         {
             SettingsLoaded += Settings_SettingsLoaded;
         }
 
-        public IDictionary<Language, StringCollection> ImportList { get { return importLists; } }
-
-        private void Settings_SettingsLoaded(object sender, SettingsLoadedEventArgs e)
+        public IDictionary< Language, StringCollection > ImportList
         {
-            if (CSharpImportList == null)
-                CSharpImportList = new StringCollection();
-            if (JavaImportList == null)
-                JavaImportList = new StringCollection();
+            get { return importLists; }
+        }
 
-            ImportList.Clear();
-            ImportList.Add(CSharpLanguage.Instance, CSharpImportList);
-            ImportList.Add(JavaLanguage.Instance, JavaImportList);
+        private void Settings_SettingsLoaded( object sender, SettingsLoadedEventArgs e )
+        {
+            if ( CSharpImportList == null )
+                CSharpImportList = new StringCollection( );
+            if ( JavaImportList == null )
+                JavaImportList = new StringCollection( );
 
-            if (string.IsNullOrEmpty(DestinationPath))
+            ImportList.Clear( );
+            ImportList.Add( CSharpLanguage.Instance, CSharpImportList );
+            ImportList.Add( JavaLanguage.Instance, JavaImportList );
+
+            if ( string.IsNullOrEmpty( DestinationPath ) )
             {
-                var myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                DestinationPath = Path.Combine(myDocuments, "NClass Generated Projects");
+                var myDocuments = Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments );
+                DestinationPath = Path.Combine( myDocuments, "NClass Generated Projects" );
             }
         }
     }

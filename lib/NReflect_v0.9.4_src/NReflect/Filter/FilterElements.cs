@@ -18,74 +18,89 @@
 
 namespace NReflect.Filter
 {
-  /// <summary>
-  /// A collection of possible elements.
-  /// </summary>
-  public enum FilterElements
-  {
     /// <summary>
-    /// Means "all ellements"
+    /// A collection of possible elements.
     /// </summary>
-    AllElements,
-    /// <summary>
-    /// Type class
-    /// </summary>
-    Class,
-    /// <summary>
-    /// Type struct
-    /// </summary>
-    Struct,
-    /// <summary>
-    /// Type interface
-    /// </summary>
-    Interface,
-    /// <summary>
-    /// Type enum
-    /// </summary>
-    Enum,
-    /// <summary>
-    /// Member enum value
-    /// </summary>
-    EnumValue,
-    /// <summary>
-    /// Type delegate
-    /// </summary>
-    Delegate,
-    /// <summary>
-    /// Member field
-    /// </summary>
-    Field,
-    /// <summary>
-    /// Member constant
-    /// </summary>
-    Constant,
-    /// <summary>
-    /// Member property
-    /// </summary>
-    Property,
-    /// <summary>
-    /// Member constructor
-    /// </summary>
-    Constructor,
-    /// <summary>
-    /// Member method
-    /// </summary>
-    Method,
-    /// <summary>
-    /// Member operator
-    /// </summary>
-    Operator,
-    /// <summary>
-    /// Member event
-    /// </summary>
-    Event,
-    /// <summary>
-    /// Attribute
-    /// </summary>
-    Attribute,
-    /// <summary>
-    /// Module
-    /// </summary>
-    Module
-  }
+    public enum FilterElements
+    {
+        /// <summary>
+        /// Means "all ellements"
+        /// </summary>
+        AllElements,
+
+        /// <summary>
+        /// Type class
+        /// </summary>
+        Class,
+
+        /// <summary>
+        /// Type struct
+        /// </summary>
+        Struct,
+
+        /// <summary>
+        /// Type interface
+        /// </summary>
+        Interface,
+
+        /// <summary>
+        /// Type enum
+        /// </summary>
+        Enum,
+
+        /// <summary>
+        /// Member enum value
+        /// </summary>
+        EnumValue,
+
+        /// <summary>
+        /// Type delegate
+        /// </summary>
+        Delegate,
+
+        /// <summary>
+        /// Member field
+        /// </summary>
+        Field,
+
+        /// <summary>
+        /// Member constant
+        /// </summary>
+        Constant,
+
+        /// <summary>
+        /// Member property
+        /// </summary>
+        Property,
+
+        /// <summary>
+        /// Member constructor
+        /// </summary>
+        Constructor,
+
+        /// <summary>
+        /// Member method
+        /// </summary>
+        Method,
+
+        /// <summary>
+        /// Member operator
+        /// </summary>
+        Operator,
+
+        /// <summary>
+        /// Member event
+        /// </summary>
+        Event,
+
+        /// <summary>
+        /// Attribute
+        /// </summary>
+        Attribute,
+
+        /// <summary>
+        /// Module
+        /// </summary>
+        Module
+    }
 }

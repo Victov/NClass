@@ -20,26 +20,26 @@ using System;
 
 namespace NReflect.NREntities
 {
-  /// <summary>
-  /// Represents an interface which is reflected by NReflect.
-  /// </summary>
-  [Serializable]
-  public class NRInterface : NRCompositeType
-  {
-    // ========================================================================
-    // Methods
-
-    #region === Methods
-
     /// <summary>
-    /// Accept an <see cref="IVisitor"/> instance on the implementing class and all its children.
+    /// Represents an interface which is reflected by NReflect.
     /// </summary>
-    /// <param name="visitor">The <see cref="IVisitor"/> instance to accept.</param>
-    public override void Accept(IVisitor visitor)
+    [Serializable]
+    public class NRInterface : NRCompositeType
     {
-      visitor.Visit(this);
-    }
+        // ========================================================================
+        // Methods
 
-    #endregion
-  }
+        #region === Methods
+
+        /// <summary>
+        /// Accept an <see cref="IVisitor"/> instance on the implementing class and all its children.
+        /// </summary>
+        /// <param name="visitor">The <see cref="IVisitor"/> instance to accept.</param>
+        public override void Accept( IVisitor visitor )
+        {
+            visitor.Visit( this );
+        }
+
+        #endregion
+    }
 }

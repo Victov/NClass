@@ -17,15 +17,15 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 {
     public abstract class EditorWindow : PopupWindow
     {
-        internal abstract void Init(DiagramElement element);
+        internal abstract void Init( DiagramElement element );
 
-        internal abstract void Relocate(DiagramElement element);
+        internal abstract void Relocate( DiagramElement element );
 
-        public abstract void ValidateData();
+        public abstract void ValidateData( );
 
-        public override void Closing()
+        public override void Closing( )
         {
-            ValidateData();
+            ValidateData( );
         }
     }
 }

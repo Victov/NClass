@@ -40,61 +40,60 @@ namespace NClass.GUI
         private int originalPosition;
 
         private readonly StringFormat stringFormat;
-        private readonly List<Tab> tabs = new List<Tab>();
+        private readonly List< Tab > tabs = new List< Tab >( );
 
-        public TabBar()
+        public TabBar( )
         {
-            InitializeComponent();
-            UpdateTexts();
+            InitializeComponent( );
+            UpdateTexts( );
             BackColor = SystemColors.Control;
-            SetStyle(ControlStyles.Selectable, false);
-            SetStyle(ControlStyles.ResizeRedraw, true);
+            SetStyle( ControlStyles.Selectable, false );
+            SetStyle( ControlStyles.ResizeRedraw, true );
 
-            stringFormat = new StringFormat(StringFormat.GenericTypographic);
+            stringFormat = new StringFormat( StringFormat.GenericTypographic );
             stringFormat.Alignment = StringAlignment.Center;
             stringFormat.LineAlignment = StringAlignment.Center;
             stringFormat.Trimming = StringTrimming.EllipsisCharacter;
             stringFormat.FormatFlags |= StringFormatFlags.NoWrap;
 
-            activeTabFont = new Font(Font, FontStyle.Bold);
+            activeTabFont = new Font( Font, FontStyle.Bold );
         }
 
-        [Browsable(false)]
+        [Browsable( false )]
         public DocumentManager DocumentManager
         {
             get { return docManager; }
             set
             {
-                if (docManager != value)
+                if ( docManager != value )
                 {
-                    if (docManager != null)
+                    if ( docManager != null )
                     {
                         docManager.ActiveDocumentChanged -= docManager_ActiveDocumentChanged;
                         docManager.DocumentAdded -= docManager_DocumentAdded;
                         docManager.DocumentRemoved -= docManager_DocumentRemoved;
                         docManager.DocumentMoved -= docManager_DocumentMoved;
-                        ClearTabs();
+                        ClearTabs( );
                     }
                     docManager = value;
-                    if (docManager != null)
+                    if ( docManager != null )
                     {
                         docManager.ActiveDocumentChanged += docManager_ActiveDocumentChanged;
                         docManager.DocumentAdded += docManager_DocumentAdded;
                         docManager.DocumentRemoved += docManager_DocumentRemoved;
                         docManager.DocumentMoved += docManager_DocumentMoved;
-                        CreateTabs();
+                        CreateTabs( );
                     }
                 }
             }
         }
 
-        [DefaultValue(typeof (Color), "Control")]
+        [DefaultValue( typeof( Color ), "Control" )]
         public override Color BackColor
         {
             get
             {
-                if (Parent != null && !DesignMode &&
-                    (docManager == null || !docManager.HasDocument))
+                if ( Parent != null && !DesignMode && ( docManager == null || !docManager.HasDocument ) )
                 {
                     return Parent.BackColor;
                 }
@@ -103,115 +102,118 @@ namespace NClass.GUI
             set { base.BackColor = value; }
         }
 
-        [DefaultValue(typeof (Color), "ControlDark")]
+        [DefaultValue( typeof( Color ), "ControlDark" )]
         public Color BorderColor { get; set; } = SystemColors.ControlDark;
 
-        [DefaultValue(typeof (Color), "White")]
+        [DefaultValue( typeof( Color ), "White" )]
         public Color ActiveTabColor { get; set; } = Color.White;
 
-        [DefaultValue(typeof (Color), "ControlLight")]
+        [DefaultValue( typeof( Color ), "ControlLight" )]
         public Color InactiveTabColor { get; set; } = SystemColors.ControlLight;
 
-        [DefaultValue(200)]
+        [DefaultValue( 200 )]
         public int MaxTabWidth
         {
             get { return maxTabWidth; }
             set
             {
                 maxTabWidth = value;
-                if (maxTabWidth < 50)
+                if ( maxTabWidth < 50 )
                     maxTabWidth = 50;
             }
         }
 
-        protected override Size DefaultSize { get { return new Size(100, 25); } }
+        protected override Size DefaultSize
+        {
+            get { return new Size( 100, 25 ); }
+        }
 
-        private void UpdateTexts()
+        private void UpdateTexts( )
         {
             mnuClose.Text = Strings.MenuCloseTab;
             mnuCloseAll.Text = Strings.MenuCloseAllTabs;
             mnuCloseAllButThis.Text = Strings.MenuCloseAllTabsButThis;
         }
 
-        private void CreateTabs()
+        private void CreateTabs( )
         {
-            foreach (var doc in docManager.Documents)
+            foreach ( var doc in docManager.Documents )
             {
-                var tab = new Tab(doc, this);
-                tabs.Add(tab);
-                if (doc == docManager.ActiveDocument)
+                var tab = new Tab( doc, this );
+                tabs.Add( tab );
+                if ( doc == docManager.ActiveDocument )
                     activeTab = tab;
             }
         }
 
-        private void ClearTabs()
+        private void ClearTabs( )
         {
-            foreach (var tab in tabs)
-                tab.Detached();
-            tabs.Clear();
+            foreach ( var tab in tabs )
+                tab.Detached( );
+            tabs.Clear( );
             activeTab = null;
         }
 
-        private void docManager_ActiveDocumentChanged(object sender, DocumentEventArgs e)
+        private void docManager_ActiveDocumentChanged( object sender, DocumentEventArgs e )
         {
-            foreach (var tab in tabs)
+            foreach ( var tab in tabs )
             {
-                if (tab.Document == docManager.ActiveDocument)
+                if ( tab.Document == docManager.ActiveDocument )
                 {
                     activeTab = tab;
                     break;
                 }
             }
-            Invalidate();
+            Invalidate( );
         }
 
-        private void docManager_DocumentAdded(object sender, DocumentEventArgs e)
+        private void docManager_DocumentAdded( object sender, DocumentEventArgs e )
         {
-            var tab = new Tab(e.Document, this);
-            tabs.Add(tab);
+            var tab = new Tab( e.Document, this );
+            tabs.Add( tab );
         }
 
-        private void docManager_DocumentRemoved(object sender, DocumentEventArgs e)
+        private void docManager_DocumentRemoved( object sender, DocumentEventArgs e )
         {
-            for (var index = 0; index < tabs.Count; index++)
+            for ( var index = 0; index < tabs.Count; index++ )
             {
-                if (tabs[index].Document == e.Document)
+                if ( tabs[ index ].Document == e.Document )
                 {
-                    tabs.RemoveAt(index);
-                    Invalidate();
+                    tabs.RemoveAt( index );
+                    Invalidate( );
                     return;
                 }
             }
         }
 
-        private void docManager_DocumentMoved(object sender, DocumentMovedEventArgs e)
+        private void docManager_DocumentMoved( object sender, DocumentMovedEventArgs e )
         {
-            var tab = tabs[e.OldPostion];
+            var tab = tabs[ e.OldPostion ];
 
-            if (e.NewPosition > e.OldPostion)
+            if ( e.NewPosition > e.OldPostion )
             {
-                for (var i = e.OldPostion; i < e.NewPosition; i++)
-                    tabs[i] = tabs[i + 1];
+                for ( var i = e.OldPostion; i < e.NewPosition; i++ )
+                    tabs[ i ] = tabs[ i + 1 ];
             }
             else // e.NewPosition < e.OldPostion
             {
-                for (var i = e.OldPostion; i > e.NewPosition; i--)
-                    tabs[i] = tabs[i - 1];
+                for ( var i = e.OldPostion; i > e.NewPosition; i-- )
+                    tabs[ i ] = tabs[ i - 1 ];
             }
-            tabs[e.NewPosition] = tab;
-            Invalidate();
+            tabs[ e.NewPosition ] = tab;
+            Invalidate( );
         }
 
-        protected override void OnMouseDown(MouseEventArgs e)
+        protected override void OnMouseDown( MouseEventArgs e )
         {
-            base.OnMouseDown(e);
+            base.OnMouseDown( e );
 
-            var selectedTab = PickTab(e.Location);
-            if (selectedTab != null)
+            var selectedTab = PickTab( e.Location );
+            if ( selectedTab != null )
             {
-                if (e.Button == MouseButtons.Middle)
+                if ( e.Button == MouseButtons.Middle )
                 {
-                    docManager.Close(selectedTab.Document);
+                    docManager.Close( selectedTab.Document );
                 }
                 else
                 {
@@ -220,208 +222,203 @@ namespace NClass.GUI
                     originalPosition = e.X;
                 }
             }
-            else if (docManager.HasDocument && IsOverClosingSign(e.Location))
+            else if ( docManager.HasDocument && IsOverClosingSign( e.Location ) )
             {
-                docManager.Close(docManager.ActiveDocument);
+                docManager.Close( docManager.ActiveDocument );
             }
         }
 
-        protected override void OnMouseDoubleClick(MouseEventArgs e)
+        protected override void OnMouseDoubleClick( MouseEventArgs e )
         {
-            base.OnMouseDoubleClick(e);
+            base.OnMouseDoubleClick( e );
 
-            var selectedTab = PickTab(e.Location);
-            if (selectedTab != null && e.Button == MouseButtons.Left)
+            var selectedTab = PickTab( e.Location );
+            if ( selectedTab != null && e.Button == MouseButtons.Left )
             {
-                docManager.Close(selectedTab.Document);
+                docManager.Close( selectedTab.Document );
             }
         }
 
-        protected override void OnMouseMove(MouseEventArgs e)
+        protected override void OnMouseMove( MouseEventArgs e )
         {
-            base.OnMouseMove(e);
+            base.OnMouseMove( e );
 
-            if (e.Button == MouseButtons.Left && grabbedTab != null)
+            if ( e.Button == MouseButtons.Left && grabbedTab != null )
             {
-                MoveTab(grabbedTab, e.Location);
+                MoveTab( grabbedTab, e.Location );
             }
 
-            var overClosingSign = IsOverClosingSign(e.Location);
-            if (activeCloseButton != overClosingSign)
+            var overClosingSign = IsOverClosingSign( e.Location );
+            if ( activeCloseButton != overClosingSign )
             {
                 activeCloseButton = overClosingSign;
-                Invalidate();
+                Invalidate( );
             }
         }
 
-        private bool IsOverClosingSign(Point location)
+        private bool IsOverClosingSign( Point location )
         {
-            var margin = (Height - ClosingSignSize)/2;
+            var margin = ( Height - ClosingSignSize ) / 2;
             var left = Width - margin - ClosingSignSize;
 
-            return location.X >= left && location.X <= left + ClosingSignSize &&
-                   location.Y >= margin && location.Y <= margin + ClosingSignSize;
+            return location.X >= left && location.X <= left + ClosingSignSize && location.Y >= margin && location.Y <= margin + ClosingSignSize;
         }
 
-        protected override void OnMouseUp(MouseEventArgs e)
+        protected override void OnMouseUp( MouseEventArgs e )
         {
-            base.OnMouseUp(e);
+            base.OnMouseUp( e );
             grabbedTab = null;
         }
 
-        protected override void OnMouseLeave(EventArgs e)
+        protected override void OnMouseLeave( EventArgs e )
         {
-            base.OnMouseLeave(e);
+            base.OnMouseLeave( e );
 
-            if (activeCloseButton)
+            if ( activeCloseButton )
             {
                 activeCloseButton = false;
-                Invalidate();
+                Invalidate( );
             }
         }
 
-        protected override void OnFontChanged(EventArgs e)
+        protected override void OnFontChanged( EventArgs e )
         {
-            base.OnFontChanged(e);
-            activeTabFont.Dispose();
-            activeTabFont = new Font(Font, FontStyle.Bold);
+            base.OnFontChanged( e );
+            activeTabFont.Dispose( );
+            activeTabFont = new Font( Font, FontStyle.Bold );
         }
 
-        protected override void OnPaint(PaintEventArgs e)
+        protected override void OnPaint( PaintEventArgs e )
         {
-            base.OnPaint(e);
+            base.OnPaint( e );
 
-            if (tabs.Count > 0)
+            if ( tabs.Count > 0 )
             {
-                DrawTabs(e.Graphics);
-                DrawCloseIcon(e.Graphics);
+                DrawTabs( e.Graphics );
+                DrawCloseIcon( e.Graphics );
             }
         }
 
-        private Tab PickTab(Point point)
+        private Tab PickTab( Point point )
         {
             var x = LeftMargin;
 
-            foreach (var tab in tabs)
+            foreach ( var tab in tabs )
             {
-                if (point.X >= x && point.X < x + tab.Width)
+                if ( point.X >= x && point.X < x + tab.Width )
                     return tab;
                 x += tab.Width;
             }
             return null;
         }
 
-        private void MoveTab(Tab grabbedTab, Point destination)
+        private void MoveTab( Tab grabbedTab, Point destination )
         {
-            var newNeighbourTab = PickTab(destination);
+            var newNeighbourTab = PickTab( destination );
 
-            if (newNeighbourTab == grabbedTab)
+            if ( newNeighbourTab == grabbedTab )
             {
                 originalPosition = destination.X;
             }
-            else if (newNeighbourTab != null)
+            else if ( newNeighbourTab != null )
             {
-                var oldIndex = tabs.IndexOf(grabbedTab);
-                var newIndex = tabs.IndexOf(newNeighbourTab);
+                var oldIndex = tabs.IndexOf( grabbedTab );
+                var newIndex = tabs.IndexOf( newNeighbourTab );
 
-                if (newIndex > oldIndex) // Moving right
+                if ( newIndex > oldIndex ) // Moving right
                 {
-                    if (destination.X >= originalPosition)
-                        docManager.MoveDocument(grabbedTab.Document, newIndex - oldIndex);
+                    if ( destination.X >= originalPosition )
+                        docManager.MoveDocument( grabbedTab.Document, newIndex - oldIndex );
                 }
-                else if (newIndex < oldIndex) // Moving left
+                else if ( newIndex < oldIndex ) // Moving left
                 {
-                    if (destination.X <= originalPosition)
-                        docManager.MoveDocument(grabbedTab.Document, newIndex - oldIndex);
+                    if ( destination.X <= originalPosition )
+                        docManager.MoveDocument( grabbedTab.Document, newIndex - oldIndex );
                 }
             }
         }
 
-        private void DrawTabs(Graphics g)
+        private void DrawTabs( Graphics g )
         {
-            var borderPen = new Pen(BorderColor);
-            Brush activeTabBrush = new SolidBrush(ActiveTabColor);
-            Brush inactiveTabBrush = new LinearGradientBrush(
-                new Rectangle(0, 5, Width, Height - 1),
-                ActiveTabColor,
-                SystemColors.ControlLight,
-                LinearGradientMode.Vertical);
+            var borderPen = new Pen( BorderColor );
+            Brush activeTabBrush = new SolidBrush( ActiveTabColor );
+            Brush inactiveTabBrush = new LinearGradientBrush( new Rectangle( 0, 5, Width, Height - 1 ), ActiveTabColor, SystemColors.ControlLight, LinearGradientMode.Vertical );
             Brush textBrush;
             var left = LeftMargin;
 
-            if (ForeColor.IsKnownColor)
-                textBrush = SystemBrushes.FromSystemColor(ForeColor);
+            if ( ForeColor.IsKnownColor )
+                textBrush = SystemBrushes.FromSystemColor( ForeColor );
             else
-                textBrush = new SolidBrush(ForeColor);
+                textBrush = new SolidBrush( ForeColor );
 
-            g.DrawLine(borderPen, 0, Height - 1, left, Height - 1);
-            foreach (var tab in tabs)
+            g.DrawLine( borderPen, 0, Height - 1, left, Height - 1 );
+            foreach ( var tab in tabs )
             {
                 //TODO: szépíteni
                 var isActiveTab = tab == activeTab;
                 var top = isActiveTab ? TopMargin : TopMargin + 2;
                 var tabBrush = isActiveTab ? activeTabBrush : inactiveTabBrush;
-                var tabRectangle = new Rectangle(left, top, tab.Width, Height - top);
+                var tabRectangle = new Rectangle( left, top, tab.Width, Height - top );
 
                 // To display bottom line for inactive tabs
-                if (!isActiveTab)
+                if ( !isActiveTab )
                     tabRectangle.Height--;
 
-                g.FillRectangle(tabBrush, tabRectangle); // Draw background
-                g.DrawRectangle(borderPen, tabRectangle); // Draw border
+                g.FillRectangle( tabBrush, tabRectangle ); // Draw background
+                g.DrawRectangle( borderPen, tabRectangle ); // Draw border
                 var font = isActiveTab ? activeTabFont : Font;
-                g.DrawString(tab.Text, font, textBrush, tabRectangle, stringFormat);
+                g.DrawString( tab.Text, font, textBrush, tabRectangle, stringFormat );
 
                 left += tab.Width;
             }
-            g.DrawLine(borderPen, left, Height - 1, Width - 1, Height - 1);
+            g.DrawLine( borderPen, left, Height - 1, Width - 1, Height - 1 );
 
-            borderPen.Dispose();
-            if (!ForeColor.IsKnownColor)
-                textBrush.Dispose();
-            activeTabBrush.Dispose();
-            inactiveTabBrush.Dispose();
+            borderPen.Dispose( );
+            if ( !ForeColor.IsKnownColor )
+                textBrush.Dispose( );
+            activeTabBrush.Dispose( );
+            inactiveTabBrush.Dispose( );
         }
 
-        private void DrawCloseIcon(Graphics g)
+        private void DrawCloseIcon( Graphics g )
         {
             var lineColor = activeCloseButton ? SystemColors.ControlText : SystemColors.ControlDark;
-            var margin = (Height - ClosingSignSize)/2;
+            var margin = ( Height - ClosingSignSize ) / 2;
             var left = Width - margin - ClosingSignSize;
-            var linePen = new Pen(lineColor, 2);
+            var linePen = new Pen( lineColor, 2 );
 
-            g.DrawLine(linePen, left, margin, left + ClosingSignSize, margin + ClosingSignSize);
-            g.DrawLine(linePen, left, margin + ClosingSignSize, left + ClosingSignSize, margin);
-            linePen.Dispose();
+            g.DrawLine( linePen, left, margin, left + ClosingSignSize, margin + ClosingSignSize );
+            g.DrawLine( linePen, left, margin + ClosingSignSize, left + ClosingSignSize, margin );
+            linePen.Dispose( );
         }
 
-        private void contextMenu_Opening(object sender, CancelEventArgs e)
+        private void contextMenu_Opening( object sender, CancelEventArgs e )
         {
-            if (docManager == null || !docManager.HasDocument)
+            if ( docManager == null || !docManager.HasDocument )
             {
                 e.Cancel = true;
             }
         }
 
-        private void mnuClose_Click(object sender, EventArgs e)
+        private void mnuClose_Click( object sender, EventArgs e )
         {
-            if (docManager != null && activeTab != null)
+            if ( docManager != null && activeTab != null )
             {
-                docManager.Close(activeTab.Document);
+                docManager.Close( activeTab.Document );
             }
         }
 
-        private void mnuCloseAll_Click(object sender, EventArgs e)
+        private void mnuCloseAll_Click( object sender, EventArgs e )
         {
-            if (docManager != null)
-                docManager.CloseAll();
+            if ( docManager != null )
+                docManager.CloseAll( );
         }
 
-        private void mnuCloseAllButThis_Click(object sender, EventArgs e)
+        private void mnuCloseAllButThis_Click( object sender, EventArgs e )
         {
-            if (docManager != null && activeTab != null)
+            if ( docManager != null && activeTab != null )
             {
-                docManager.CloseAllOthers(activeTab.Document);
+                docManager.CloseAllOthers( activeTab.Document );
             }
         }
 
@@ -433,13 +430,13 @@ namespace NClass.GUI
             private readonly TabBar parent;
             private string text;
 
-            public Tab(IDocument document, TabBar parent)
+            public Tab( IDocument document, TabBar parent )
             {
                 Document = document;
                 this.parent = parent;
                 document.Renamed += document_Renamed;
                 text = document.Name;
-                TextWidth = MeasureWidth(text);
+                TextWidth = MeasureWidth( text );
             }
 
             public IDocument Document { get; }
@@ -449,45 +446,48 @@ namespace NClass.GUI
                 get { return text; }
                 private set
                 {
-                    if (text != value)
+                    if ( text != value )
                     {
                         text = value;
-                        TextWidth = MeasureWidth(text);
-                        parent.Invalidate();
+                        TextWidth = MeasureWidth( text );
+                        parent.Invalidate( );
                     }
                 }
             }
 
             public float TextWidth { get; private set; }
 
-            public int Width { get { return Math.Max(MinWidth, (int) TextWidth + TextMargin); } }
+            public int Width
+            {
+                get { return Math.Max( MinWidth, ( int ) TextWidth + TextMargin ); }
+            }
 
-            public bool IsActive { get { return Document == parent.docManager.ActiveDocument; } }
+            public bool IsActive
+            {
+                get { return Document == parent.docManager.ActiveDocument; }
+            }
 
-            private void document_Renamed(object sender, EventArgs e)
+            private void document_Renamed( object sender, EventArgs e )
             {
                 Text = Document.Name;
             }
 
-            public void Detached()
+            public void Detached( )
             {
                 Document.Renamed -= document_Renamed;
             }
 
-            private float MeasureWidth(string text)
+            private float MeasureWidth( string text )
             {
-                var g = parent.CreateGraphics();
+                var g = parent.CreateGraphics( );
 
-                var textSize = g.MeasureString(text,
-                                               parent.activeTabFont,
-                                               parent.MaxTabWidth,
-                                               parent.stringFormat);
-                g.Dispose();
+                var textSize = g.MeasureString( text, parent.activeTabFont, parent.MaxTabWidth, parent.stringFormat );
+                g.Dispose( );
 
                 return textSize.Width;
             }
 
-            public override string ToString()
+            public override string ToString( )
             {
                 return text;
             }

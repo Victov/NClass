@@ -20,26 +20,26 @@ using System;
 
 namespace NReflect.NRMembers
 {
-  /// <summary>
-  /// Represents a constructor of a type which is reflected by NReflect.
-  /// </summary>
-  [Serializable]
-  public class NRConstructor : NROperation
-  {
-    // ========================================================================
-    // Methods
-
-    #region === Methods
-
     /// <summary>
-    /// Accept an <see cref="IVisitor"/> instance on the implementing class and all its children.
+    /// Represents a constructor of a type which is reflected by NReflect.
     /// </summary>
-    /// <param name="visitor">The <see cref="IVisitor"/> instance to accept.</param>
-    public override void Accept(IVisitor visitor)
+    [Serializable]
+    public class NRConstructor : NROperation
     {
-      visitor.Visit(this);
-    }
+        // ========================================================================
+        // Methods
 
-    #endregion
-  }
+        #region === Methods
+
+        /// <summary>
+        /// Accept an <see cref="IVisitor"/> instance on the implementing class and all its children.
+        /// </summary>
+        /// <param name="visitor">The <see cref="IVisitor"/> instance to accept.</param>
+        public override void Accept( IVisitor visitor )
+        {
+            visitor.Visit( this );
+        }
+
+        #endregion
+    }
 }

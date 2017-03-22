@@ -36,16 +36,10 @@ namespace NClass.CodeGenerator
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="type" /> is null.
         /// </exception>
-        protected SourceFileGenerator(TypeBase type,
-                                      string rootNamespace,
-                                      bool sort_using,
-                                      bool generate_document_comment,
-                                      string compagny_name,
-                                      string copyright_header,
-                                      string author)
+        protected SourceFileGenerator( TypeBase type, string rootNamespace, bool sort_using, bool generate_document_comment, string compagny_name, string copyright_header, string author )
         {
-            if (type == null)
-                throw new ArgumentNullException("type");
+            if ( type == null )
+                throw new ArgumentNullException( "type" );
 
             Type = type;
             RootNamespace = rootNamespace;
@@ -65,7 +59,7 @@ namespace NClass.CodeGenerator
             get { return indentLevel; }
             set
             {
-                if (value >= 0)
+                if ( value >= 0 )
                     indentLevel = value;
             }
         }
@@ -75,26 +69,26 @@ namespace NClass.CodeGenerator
         /// <exception cref="FileGenerationException">
         ///     An error has occured while generating the source file.
         /// </exception>
-        public string Generate(string directory)
+        public string Generate( string directory )
         {
             try
             {
-                if (!Directory.Exists(directory))
-                    Directory.CreateDirectory(directory);
+                if ( !Directory.Exists( directory ) )
+                    Directory.CreateDirectory( directory );
 
                 var fileName = Type.Name + Extension;
-                fileName = Regex.Replace(fileName, @"\<(?<type>.+)\>", @"[${type}]");
-                var path = Path.Combine(directory, fileName);
+                fileName = Regex.Replace( fileName, @"\<(?<type>.+)\>", @"[${type}]" );
+                var path = Path.Combine( directory, fileName );
 
-                using (var writer = new StreamWriter(path, false))
+                using ( var writer = new StreamWriter( path, false ) )
                 {
-                    WriteFileContent(fileName, writer);
+                    WriteFileContent( fileName, writer );
                 }
                 return fileName;
             }
-            catch (Exception ex)
+            catch ( Exception ex )
             {
-                throw new FileGenerationException(directory, ex);
+                throw new FileGenerationException( directory, ex );
             }
         }
 
@@ -104,57 +98,57 @@ namespace NClass.CodeGenerator
         /// <exception cref="ObjectDisposedException">
         ///     The <see cref="TextWriter" /> is closed.
         /// </exception>
-        private void WriteFileContent(string fileName, TextWriter writer)
+        private void WriteFileContent( string fileName, TextWriter writer )
         {
-            if (codeBuilder == null)
-                codeBuilder = new StringBuilder(DefaultBuilderCapacity);
+            if ( codeBuilder == null )
+                codeBuilder = new StringBuilder( DefaultBuilderCapacity );
             else
                 codeBuilder.Length = 0;
 
-            WriteFileContent(fileName);
-            writer.Write(codeBuilder.ToString());
+            WriteFileContent( fileName );
+            writer.Write( codeBuilder.ToString( ) );
         }
 
-        protected abstract void WriteFileContent(string fileName);
+        protected abstract void WriteFileContent( string fileName );
 
-        internal static void FinishWork()
+        internal static void FinishWork( )
         {
             codeBuilder = null;
         }
 
-        protected void AddBlankLine()
+        protected void AddBlankLine( )
         {
-            AddBlankLine(false);
+            AddBlankLine( false );
         }
 
-        protected void AddBlankLine(bool indentation)
+        protected void AddBlankLine( bool indentation )
         {
-            if (indentation)
-                AddIndent();
-            codeBuilder.AppendLine();
+            if ( indentation )
+                AddIndent( );
+            codeBuilder.AppendLine( );
         }
 
-        protected void WriteLine(string text)
+        protected void WriteLine( string text )
         {
-            WriteLine(text, true);
+            WriteLine( text, true );
         }
 
-        protected void WriteLine(string text, bool indentation)
+        protected void WriteLine( string text, bool indentation )
         {
-            if (indentation)
-                AddIndent();
-            codeBuilder.AppendLine(text);
+            if ( indentation )
+                AddIndent( );
+            codeBuilder.AppendLine( text );
         }
 
-        private void AddIndent()
+        private void AddIndent( )
         {
             string indentString;
-            if (Settings.Default.UseTabsForIndents)
-                indentString = new string('\t', IndentLevel);
+            if ( Settings.Default.UseTabsForIndents )
+                indentString = new string( '\t', IndentLevel );
             else
-                indentString = new string(' ', IndentLevel*Settings.Default.IndentSize);
+                indentString = new string( ' ', IndentLevel * Settings.Default.IndentSize );
 
-            codeBuilder.Append(indentString);
+            codeBuilder.Append( indentString );
         }
     }
 }

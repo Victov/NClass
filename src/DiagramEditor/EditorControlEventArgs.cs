@@ -15,11 +15,11 @@
 
 namespace NClass.DiagramEditor
 {
-    public delegate void PopupWindowEventHandler(object sender, PopupWindowEventArgs e);
+    public delegate void PopupWindowEventHandler( object sender, PopupWindowEventArgs e );
 
     public class PopupWindowEventArgs
     {
-        public PopupWindowEventArgs(PopupWindow window)
+        public PopupWindowEventArgs( PopupWindow window )
         {
             Window = window;
         }

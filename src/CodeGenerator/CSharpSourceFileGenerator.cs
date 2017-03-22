@@ -24,233 +24,227 @@ namespace NClass.CodeGenerator
         /// <exception cref="NullReferenceException">
         ///     <paramref name="type" /> is null.
         /// </exception>
-        public CSharpSourceFileGenerator(TypeBase type,
-                                         string rootNamespace,
-                                         bool sort_using,
-                                         bool generate_document_comment,
-                                         string compagny_name,
-                                         string copyright_header,
-                                         string author)
-            : base(type, rootNamespace, sort_using, generate_document_comment, compagny_name, copyright_header, author)
+        public CSharpSourceFileGenerator( TypeBase type, string rootNamespace, bool sort_using, bool generate_document_comment, string compagny_name, string copyright_header, string author ) : base( type, rootNamespace, sort_using, generate_document_comment, compagny_name, copyright_header, author ) {}
+
+        protected override string Extension
         {
+            get { return ".cs"; }
         }
 
-        protected override string Extension { get { return ".cs"; } }
-
-        protected override void WriteFileContent(string fileName)
+        protected override void WriteFileContent( string fileName )
         {
             //WriteCopyrights(fileName);
-            WriteUsings();
-            OpenNamespace();
-            WriteType(Type);
-            CloseNamespace();
+            WriteUsings( );
+            OpenNamespace( );
+            WriteType( Type );
+            CloseNamespace( );
         }
 
-        private void WriteCopyrights(string fileName)
+        private void WriteCopyrights( string fileName )
         {
-            WriteLine(string.Format("<copyright file=\"{0}\" company=\"{1}\">", fileName, compagny_name));
-            WriteLine(copyright_header);
-            WriteLine("</copyright>");
+            WriteLine( string.Format( "<copyright file=\"{0}\" company=\"{1}\">", fileName, compagny_name ) );
+            WriteLine( copyright_header );
+            WriteLine( "</copyright>" );
 
-            WriteLine(string.Format("<author>{0}</author>", author));
-            WriteLine(string.Format("<date></date>", DateTime.Now));
+            WriteLine( string.Format( "<author>{0}</author>", author ) );
+            WriteLine( string.Format( "<date></date>", DateTime.Now ) );
         }
 
-        private void WriteUsings()
+        private void WriteUsings( )
         {
             var importList = Settings.Default.CSharpImportList;
 
-            var str = new List<string>();
-            foreach (var usingElement in importList)
-                str.Add(usingElement);
+            var str = new List< string >( );
+            foreach ( var usingElement in importList )
+                str.Add( usingElement );
 
             // Sort using
-            if (sort_using)
-                str.Sort();
+            if ( sort_using )
+                str.Sort( );
 
-            foreach (var usingElement in str)
-                WriteLine("using " + usingElement + ";");
+            foreach ( var usingElement in str )
+                WriteLine( "using " + usingElement + ";" );
 
-            if (importList.Count > 0)
-                AddBlankLine();
+            if ( importList.Count > 0 )
+                AddBlankLine( );
         }
 
-        private void OpenNamespace()
+        private void OpenNamespace( )
         {
-            WriteLine("namespace " + RootNamespace);
-            WriteLine("{");
+            WriteLine( "namespace " + RootNamespace );
+            WriteLine( "{" );
             IndentLevel++;
         }
 
-        private void CloseNamespace()
+        private void CloseNamespace( )
         {
             IndentLevel--;
-            WriteLine("}");
+            WriteLine( "}" );
         }
 
-        private void WriteType(TypeBase type)
+        private void WriteType( TypeBase type )
         {
-            if (type is CompositeType)
-                WriteCompositeType((CompositeType) type);
-            else if (type is EnumType)
-                WriteEnum((EnumType) type);
-            else if (type is DelegateType)
-                WriteDelegate((DelegateType) type);
+            if ( type is CompositeType )
+                WriteCompositeType( ( CompositeType ) type );
+            else if ( type is EnumType )
+                WriteEnum( ( EnumType ) type );
+            else if ( type is DelegateType )
+                WriteDelegate( ( DelegateType ) type );
         }
 
-        private void WriteCompositeType(CompositeType type)
+        private void WriteCompositeType( CompositeType type )
         {
             // Writing type declaration
-            WriteLine(type.GetDeclaration());
-            WriteLine("{");
+            WriteLine( type.GetDeclaration( ) );
+            WriteLine( "{" );
             IndentLevel++;
 
-            if (type is ClassType)
+            if ( type is ClassType )
             {
-                foreach (var nestedType in ((ClassType) type).NestedChilds)
+                foreach ( var nestedType in ( ( ClassType ) type ).NestedChilds )
                 {
-                    WriteType(nestedType);
-                    AddBlankLine();
+                    WriteType( nestedType );
+                    AddBlankLine( );
                 }
             }
 
-            if (type.SupportsFields)
+            if ( type.SupportsFields )
             {
-                foreach (var field in type.Fields)
-                    WriteField(field);
+                foreach ( var field in type.Fields )
+                    WriteField( field );
             }
 
             var needBlankLine = type.FieldCount > 0 && type.OperationCount > 0;
 
-            foreach (var operation in type.Operations)
+            foreach ( var operation in type.Operations )
             {
-                if (needBlankLine)
-                    AddBlankLine();
+                if ( needBlankLine )
+                    AddBlankLine( );
                 needBlankLine = true;
 
-                WriteOperation(operation);
+                WriteOperation( operation );
             }
 
             // Writing closing bracket of the type block
             IndentLevel--;
-            WriteLine("}");
+            WriteLine( "}" );
         }
 
-        private void WriteEnum(EnumType _enum)
+        private void WriteEnum( EnumType _enum )
         {
             // Writing type declaration
-            WriteLine(_enum.GetDeclaration());
-            WriteLine("{");
+            WriteLine( _enum.GetDeclaration( ) );
+            WriteLine( "{" );
             IndentLevel++;
 
             var valuesRemained = _enum.ValueCount;
-            foreach (var value in _enum.Values)
+            foreach ( var value in _enum.Values )
             {
-                if (--valuesRemained > 0)
-                    WriteLine(value.GetDeclaration() + ",");
+                if ( --valuesRemained > 0 )
+                    WriteLine( value.GetDeclaration( ) + "," );
                 else
-                    WriteLine(value.GetDeclaration());
+                    WriteLine( value.GetDeclaration( ) );
             }
 
             // Writing closing bracket of the type block
             IndentLevel--;
-            WriteLine("}");
+            WriteLine( "}" );
         }
 
-        private void WriteDelegate(DelegateType _delegate)
+        private void WriteDelegate( DelegateType _delegate )
         {
-            WriteLine(_delegate.GetDeclaration());
+            WriteLine( _delegate.GetDeclaration( ) );
         }
 
-        private void WriteField(Field field)
+        private void WriteField( Field field )
         {
-            WriteLine(field.GetDeclaration());
+            WriteLine( field.GetDeclaration( ) );
         }
 
-        private void WriteOperation(Operation operation)
+        private void WriteOperation( Operation operation )
         {
-            WriteLine(operation.GetDeclaration());
+            WriteLine( operation.GetDeclaration( ) );
 
-            if (operation is Property)
+            if ( operation is Property )
             {
-                WriteProperty((Property) operation);
+                WriteProperty( ( Property ) operation );
             }
-            else if (operation.HasBody)
+            else if ( operation.HasBody )
             {
-                if (operation is Event)
+                if ( operation is Event )
                 {
-                    WriteLine("{");
+                    WriteLine( "{" );
                     IndentLevel++;
-                    WriteLine("add {  }");
-                    WriteLine("remove {  }");
+                    WriteLine( "add {  }" );
+                    WriteLine( "remove {  }" );
                     IndentLevel--;
-                    WriteLine("}");
+                    WriteLine( "}" );
                 }
                 else
                 {
-                    WriteLine("{");
+                    WriteLine( "{" );
                     IndentLevel++;
-                    WriteNotImplementedString();
+                    WriteNotImplementedString( );
                     IndentLevel--;
-                    WriteLine("}");
+                    WriteLine( "}" );
                 }
             }
         }
 
-        private void WriteProperty(Property property)
+        private void WriteProperty( Property property )
         {
-            WriteLine("{");
+            WriteLine( "{" );
             IndentLevel++;
 
-            if (!property.IsWriteonly)
+            if ( !property.IsWriteonly )
             {
-                if (property.HasImplementation)
+                if ( property.HasImplementation )
                 {
-                    WriteLine("get");
-                    WriteLine("{");
+                    WriteLine( "get" );
+                    WriteLine( "{" );
                     IndentLevel++;
-                    WriteNotImplementedString();
+                    WriteNotImplementedString( );
                     IndentLevel--;
-                    WriteLine("}");
+                    WriteLine( "}" );
                 }
                 else
                 {
-                    WriteLine("get;");
+                    WriteLine( "get;" );
                 }
             }
-            if (!property.IsReadonly)
+            if ( !property.IsReadonly )
             {
-                if (property.HasImplementation)
+                if ( property.HasImplementation )
                 {
-                    WriteLine("set");
-                    WriteLine("{");
+                    WriteLine( "set" );
+                    WriteLine( "{" );
                     IndentLevel++;
-                    WriteNotImplementedString();
+                    WriteNotImplementedString( );
                     IndentLevel--;
-                    WriteLine("}");
+                    WriteLine( "}" );
                 }
                 else
                 {
-                    WriteLine("set;");
+                    WriteLine( "set;" );
                 }
             }
 
             IndentLevel--;
-            WriteLine("}");
+            WriteLine( "}" );
         }
 
-        private void WriteNotImplementedString()
+        private void WriteNotImplementedString( )
         {
-            if (Settings.Default.UseNotImplementedExceptions)
+            if ( Settings.Default.UseNotImplementedExceptions )
             {
-                if (Settings.Default.CSharpImportList.Contains("System"))
-                    WriteLine("throw new NotImplementedException();");
+                if ( Settings.Default.CSharpImportList.Contains( "System" ) )
+                    WriteLine( "throw new NotImplementedException();" );
                 else
-                    WriteLine("throw new System.NotImplementedException();");
+                    WriteLine( "throw new System.NotImplementedException();" );
             }
             else
             {
-                AddBlankLine(true);
+                AddBlankLine( true );
             }
         }
     }

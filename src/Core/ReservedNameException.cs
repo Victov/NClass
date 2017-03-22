@@ -20,20 +20,17 @@ namespace NClass.Core
 {
     public class ReservedNameException : BadSyntaxException
     {
-        public ReservedNameException()
-            : base(Strings.ErrorReservedName)
+        public ReservedNameException( ) : base( Strings.ErrorReservedName )
         {
             ReservedName = null;
         }
 
-        public ReservedNameException(string name)
-            : base(Strings.ErrorReservedName)
+        public ReservedNameException( string name ) : base( Strings.ErrorReservedName )
         {
             ReservedName = name;
         }
 
-        public ReservedNameException(string name, Exception innerException)
-            : base(Strings.ErrorReservedName, innerException)
+        public ReservedNameException( string name, Exception innerException ) : base( Strings.ErrorReservedName, innerException )
         {
             ReservedName = name;
         }

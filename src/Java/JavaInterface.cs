@@ -21,42 +21,49 @@ namespace NClass.Java
 {
     internal sealed class JavaInterface : InterfaceType
     {
-        internal JavaInterface()
-            : this("NewInterface")
-        {
-        }
+        internal JavaInterface( ) : this( "NewInterface" ) {}
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        internal JavaInterface(string name)
-            : base(name)
-        {
-        }
+        internal JavaInterface( string name ) : base( name ) {}
 
         public override AccessModifier AccessModifier
         {
             get { return base.AccessModifier; }
             set
             {
-                if (IsNested ||
-                    value == AccessModifier.Default ||
-                    value == AccessModifier.Public)
+                if ( IsNested || value == AccessModifier.Default || value == AccessModifier.Public )
                 {
                     base.AccessModifier = value;
                 }
             }
         }
 
-        public override AccessModifier DefaultAccess { get { return AccessModifier.Internal; } }
+        public override AccessModifier DefaultAccess
+        {
+            get { return AccessModifier.Internal; }
+        }
 
-        public override AccessModifier DefaultMemberAccess { get { return AccessModifier.Public; } }
+        public override AccessModifier DefaultMemberAccess
+        {
+            get { return AccessModifier.Public; }
+        }
 
-        public override bool SupportsFields { get { return true; } }
+        public override bool SupportsFields
+        {
+            get { return true; }
+        }
 
-        public override bool SupportsProperties { get { return false; } }
+        public override bool SupportsProperties
+        {
+            get { return false; }
+        }
 
-        public override bool SupportsEvents { get { return false; } }
+        public override bool SupportsEvents
+        {
+            get { return false; }
+        }
 
         /// <exception cref="ArgumentException">
         ///     The <paramref name="value" /> is already a child member of the type.
@@ -71,7 +78,7 @@ namespace NClass.Java
                     RaiseChangedEvent = false;
 
                     base.NestingParent = value;
-                    if (NestingParent == null && Access != AccessModifier.Public)
+                    if ( NestingParent == null && Access != AccessModifier.Public )
                         AccessModifier = AccessModifier.Default;
                 }
                 finally
@@ -81,75 +88,78 @@ namespace NClass.Java
             }
         }
 
-        public override Language Language { get { return JavaLanguage.Instance; } }
-
-        public override Field AddField()
+        public override Language Language
         {
-            var field = new JavaField(this);
+            get { return JavaLanguage.Instance; }
+        }
+
+        public override Field AddField( )
+        {
+            var field = new JavaField( this );
 
             field.IsStatic = true;
             field.IsReadonly = true;
-            AddField(field);
+            AddField( field );
 
             return field;
         }
 
-        public override Method AddMethod()
+        public override Method AddMethod( )
         {
-            Method method = new JavaMethod(this);
+            Method method = new JavaMethod( this );
 
-            AddOperation(method);
+            AddOperation( method );
             return method;
         }
 
         /// <exception cref="InvalidOperationException">
         ///     The type does not support properties.
         /// </exception>
-        public override Property AddProperty()
+        public override Property AddProperty( )
         {
-            throw new InvalidOperationException("Java language does not support properties.");
+            throw new InvalidOperationException( "Java language does not support properties." );
         }
 
         /// <exception cref="InvalidOperationException">
         ///     The type does not support events.
         /// </exception>
-        public override Event AddEvent()
+        public override Event AddEvent( )
         {
-            throw new InvalidOperationException("Java language does not support events.");
+            throw new InvalidOperationException( "Java language does not support events." );
         }
 
-        public override string GetDeclaration()
+        public override string GetDeclaration( )
         {
-            var builder = new StringBuilder(30);
+            var builder = new StringBuilder( 30 );
 
-            if (AccessModifier != AccessModifier.Default)
+            if ( AccessModifier != AccessModifier.Default )
             {
-                builder.Append(Language.GetAccessString(AccessModifier, true));
-                builder.Append(" ");
+                builder.Append( Language.GetAccessString( AccessModifier, true ) );
+                builder.Append( " " );
             }
-            if (IsNested)
-                builder.Append("static ");
+            if ( IsNested )
+                builder.Append( "static " );
 
-            builder.AppendFormat("interface {0}", Name);
+            builder.AppendFormat( "interface {0}", Name );
 
-            if (HasExplicitBase)
+            if ( HasExplicitBase )
             {
-                builder.Append(" extends ");
-                for (var i = 0; i < BaseList.Count; i++)
+                builder.Append( " extends " );
+                for ( var i = 0; i < BaseList.Count; i++ )
                 {
-                    builder.Append(BaseList[i].Name);
-                    if (i < BaseList.Count - 1)
-                        builder.Append(", ");
+                    builder.Append( BaseList[ i ].Name );
+                    if ( i < BaseList.Count - 1 )
+                        builder.Append( ", " );
                 }
             }
 
-            return builder.ToString();
+            return builder.ToString( );
         }
 
-        public override InterfaceType Clone()
+        public override InterfaceType Clone( )
         {
-            var newInterface = new JavaInterface();
-            newInterface.CopyFrom(this);
+            var newInterface = new JavaInterface( );
+            newInterface.CopyFrom( this );
             return newInterface;
         }
     }

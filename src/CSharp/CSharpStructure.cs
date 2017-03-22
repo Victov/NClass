@@ -22,46 +22,49 @@ namespace NClass.CSharp
 {
     internal sealed class CSharpStructure : StructureType
     {
-        internal CSharpStructure()
-            : this("NewStruct")
-        {
-        }
+        internal CSharpStructure( ) : this( "NewStruct" ) {}
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        internal CSharpStructure(string name)
-            : base(name)
-        {
-        }
+        internal CSharpStructure( string name ) : base( name ) {}
 
         public override AccessModifier AccessModifier
         {
             get { return base.AccessModifier; }
             set
             {
-                if (IsNested ||
-                    value == AccessModifier.Default ||
-                    value == AccessModifier.Internal ||
-                    value == AccessModifier.Public)
+                if ( IsNested || value == AccessModifier.Default || value == AccessModifier.Internal || value == AccessModifier.Public )
                 {
                     base.AccessModifier = value;
                 }
             }
         }
 
-        public override AccessModifier DefaultAccess { get { return AccessModifier.Internal; } }
+        public override AccessModifier DefaultAccess
+        {
+            get { return AccessModifier.Internal; }
+        }
 
-        public override AccessModifier DefaultMemberAccess { get { return AccessModifier.Private; } }
+        public override AccessModifier DefaultMemberAccess
+        {
+            get { return AccessModifier.Private; }
+        }
 
-        public override bool SupportsProperties { get { return true; } }
+        public override bool SupportsProperties
+        {
+            get { return true; }
+        }
 
-        public override bool SupportsEvents { get { return true; } }
+        public override bool SupportsEvents
+        {
+            get { return true; }
+        }
 
         public override SingleInharitanceType Base
         {
             get { return CSharpLanguage.ObjectClass; }
-            set { throw new InvalidOperationException("Cannot set the base class of structures."); }
+            set { throw new InvalidOperationException( "Cannot set the base class of structures." ); }
         }
 
         /// <exception cref="ArgumentException">
@@ -77,7 +80,7 @@ namespace NClass.CSharp
                     RaiseChangedEvent = false;
 
                     base.NestingParent = value;
-                    if (NestingParent == null && Access != AccessModifier.Public)
+                    if ( NestingParent == null && Access != AccessModifier.Public )
                         AccessModifier = AccessModifier.Internal;
                 }
                 finally
@@ -87,25 +90,28 @@ namespace NClass.CSharp
             }
         }
 
-        public override Language Language { get { return CSharpLanguage.Instance; } }
+        public override Language Language
+        {
+            get { return CSharpLanguage.Instance; }
+        }
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        public override Field AddField()
+        public override Field AddField( )
         {
-            Field field = new CSharpField(this);
+            Field field = new CSharpField( this );
 
-            AddField(field);
+            AddField( field );
             return field;
         }
 
-        public override Constructor AddConstructor()
+        public override Constructor AddConstructor( )
         {
-            Constructor constructor = new CSharpConstructor(this);
+            Constructor constructor = new CSharpConstructor( this );
 
             constructor.AccessModifier = AccessModifier.Public;
-            AddOperation(constructor);
+            AddOperation( constructor );
 
             return constructor;
         }
@@ -113,12 +119,12 @@ namespace NClass.CSharp
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        public override Method AddMethod()
+        public override Method AddMethod( )
         {
-            Method method = new CSharpMethod(this);
+            Method method = new CSharpMethod( this );
 
             method.AccessModifier = AccessModifier.Public;
-            AddOperation(method);
+            AddOperation( method );
 
             return method;
         }
@@ -126,12 +132,12 @@ namespace NClass.CSharp
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        public override Property AddProperty()
+        public override Property AddProperty( )
         {
-            Property property = new CSharpProperty(this);
+            Property property = new CSharpProperty( this );
 
             property.AccessModifier = AccessModifier.Public;
-            AddOperation(property);
+            AddOperation( property );
 
             return property;
         }
@@ -139,12 +145,12 @@ namespace NClass.CSharp
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        public override Event AddEvent()
+        public override Event AddEvent( )
         {
-            Event newEvent = new CSharpEvent(this);
+            Event newEvent = new CSharpEvent( this );
 
             newEvent.AccessModifier = AccessModifier.Public;
-            AddOperation(newEvent);
+            AddOperation( newEvent );
 
             return newEvent;
         }
@@ -156,43 +162,43 @@ namespace NClass.CSharp
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="interfaceType" /> is null.
         /// </exception>
-        public override void AddInterface(InterfaceType interfaceType)
+        public override void AddInterface( InterfaceType interfaceType )
         {
-            if (!(interfaceType is CSharpInterface))
-                throw new RelationshipException(string.Format(Strings.ErrorInterfaceLanguage, "C#"));
+            if ( !( interfaceType is CSharpInterface ) )
+                throw new RelationshipException( string.Format( Strings.ErrorInterfaceLanguage, "C#" ) );
 
-            base.AddInterface(interfaceType);
+            base.AddInterface( interfaceType );
         }
 
-        public override string GetDeclaration()
+        public override string GetDeclaration( )
         {
-            var builder = new StringBuilder();
+            var builder = new StringBuilder( );
 
-            if (AccessModifier != AccessModifier.Default)
+            if ( AccessModifier != AccessModifier.Default )
             {
-                builder.Append(Language.GetAccessString(AccessModifier, true));
-                builder.Append(" ");
+                builder.Append( Language.GetAccessString( AccessModifier, true ) );
+                builder.Append( " " );
             }
-            builder.AppendFormat("struct {0}", Name);
+            builder.AppendFormat( "struct {0}", Name );
 
-            if (InterfaceList.Count > 0)
+            if ( InterfaceList.Count > 0 )
             {
-                builder.Append(" : ");
-                for (var i = 0; i < InterfaceList.Count; i++)
+                builder.Append( " : " );
+                for ( var i = 0; i < InterfaceList.Count; i++ )
                 {
-                    builder.Append(InterfaceList[i].Name);
-                    if (i < InterfaceList.Count - 1)
-                        builder.Append(", ");
+                    builder.Append( InterfaceList[ i ].Name );
+                    if ( i < InterfaceList.Count - 1 )
+                        builder.Append( ", " );
                 }
             }
 
-            return builder.ToString();
+            return builder.ToString( );
         }
 
-        public override StructureType Clone()
+        public override StructureType Clone( )
         {
-            var structure = new CSharpStructure();
-            structure.CopyFrom(this);
+            var structure = new CSharpStructure( );
+            structure.CopyFrom( this );
             return structure;
         }
     }

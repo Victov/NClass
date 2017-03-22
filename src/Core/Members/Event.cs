@@ -28,19 +28,16 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="parent" /> is null.
         /// </exception>
-        protected Event(string name, CompositeType parent)
-            : base(name, parent)
+        protected Event( string name, CompositeType parent ) : base( name, parent ) {}
+
+        public sealed override MemberType MemberType
         {
+            get { return MemberType.Event; }
         }
 
-        public sealed override MemberType MemberType { get { return MemberType.Event; } }
-
-        public sealed override string GetUmlDescription(bool getType,
-                                                        bool getParameters,
-                                                        bool getParameterNames,
-                                                        bool getInitValue)
+        public sealed override string GetUmlDescription( bool getType, bool getParameters, bool getParameterNames, bool getInitValue )
         {
-            if (getType)
+            if ( getType )
                 return Name + " : " + Type;
             return Name;
         }

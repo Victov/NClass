@@ -25,207 +25,201 @@ namespace NClass.GUI
     {
         private Project activeProject;
 
-        private readonly List<Project> projects = new List<Project>();
+        private readonly List< Project > projects = new List< Project >( );
 
-        private Workspace()
+        private Workspace( ) {}
+
+        public static Workspace Default { get; } = new Workspace( );
+
+        public IEnumerable< Project > Projects
         {
+            get { return projects; }
         }
 
-        public static Workspace Default { get; } = new Workspace();
+        public int ProjectCount
+        {
+            get { return projects.Count; }
+        }
 
-        public IEnumerable<Project> Projects { get { return projects; } }
-
-        public int ProjectCount { get { return projects.Count; } }
-
-        public bool HasProject { get { return ProjectCount > 0; } }
+        public bool HasProject
+        {
+            get { return ProjectCount > 0; }
+        }
 
         public Project ActiveProject
         {
             get { return activeProject; }
             set
             {
-                if (value == null)
+                if ( value == null )
                 {
-                    if (activeProject != null)
+                    if ( activeProject != null )
                     {
                         activeProject = null;
-                        OnActiveProjectChanged(EventArgs.Empty);
+                        OnActiveProjectChanged( EventArgs.Empty );
                     }
                 }
-                else if (activeProject != value && projects.Contains(value))
+                else if ( activeProject != value && projects.Contains( value ) )
                 {
                     activeProject = value;
-                    OnActiveProjectChanged(EventArgs.Empty);
+                    OnActiveProjectChanged( EventArgs.Empty );
                 }
             }
         }
 
-        public bool HasActiveProject { get { return activeProject != null; } }
+        public bool HasActiveProject
+        {
+            get { return activeProject != null; }
+        }
 
         public event EventHandler ActiveProjectChanged;
         public event EventHandler ActiveProjectStateChanged;
         public event ProjectEventHandler ProjectAdded;
         public event ProjectEventHandler ProjectRemoved;
 
-        public Project AddEmptyProject()
+        public Project AddEmptyProject( )
         {
-            var project = new Project();
-            projects.Add(project);
+            var project = new Project( );
+            projects.Add( project );
             project.Modified += project_StateChanged;
             project.FileStateChanged += project_StateChanged;
-            OnProjectAdded(new ProjectEventArgs(project));
+            OnProjectAdded( new ProjectEventArgs( project ) );
             return project;
         }
 
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="project" /> is null.
         /// </exception>
-        public void AddProject(Project project)
+        public void AddProject( Project project )
         {
-            if (project == null)
-                throw new ArgumentNullException("project");
+            if ( project == null )
+                throw new ArgumentNullException( "project" );
 
-            if (!projects.Contains(project))
+            if ( !projects.Contains( project ) )
             {
-                projects.Add(project);
+                projects.Add( project );
                 project.Modified += project_StateChanged;
                 project.FileStateChanged += project_StateChanged;
                 //if (project.FilePath != null)
                 //Settings.Default.AddRecentFile(project.FilePath);
-                OnProjectAdded(new ProjectEventArgs(project));
+                OnProjectAdded( new ProjectEventArgs( project ) );
             }
         }
 
-        public bool RemoveProject(Project project)
+        public bool RemoveProject( Project project )
         {
-            return RemoveProject(project, true);
+            return RemoveProject( project, true );
         }
 
-        private bool RemoveProject(Project project, bool saveConfirmation)
+        private bool RemoveProject( Project project, bool saveConfirmation )
         {
-            if (saveConfirmation && project.IsDirty)
+            if ( saveConfirmation && project.IsDirty )
             {
-                var result = MessageBox.Show(
-                    Strings.AskSaveChanges,
-                    Strings.Confirmation,
-                    MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Question);
+                var result = MessageBox.Show( Strings.AskSaveChanges, Strings.Confirmation, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question );
 
-                if (result == DialogResult.Yes)
+                if ( result == DialogResult.Yes )
                 {
-                    if (!SaveProject(project))
+                    if ( !SaveProject( project ) )
                         return false;
                 }
-                else if (result == DialogResult.Cancel)
+                else if ( result == DialogResult.Cancel )
                 {
                     return false;
                 }
             }
 
-            if (projects.Remove(project))
+            if ( projects.Remove( project ) )
             {
-                project.CloseItems();
+                project.CloseItems( );
                 project.Modified -= project_StateChanged;
                 project.FileStateChanged -= project_StateChanged;
-                OnProjectRemoved(new ProjectEventArgs(project));
-                if (ActiveProject == project)
+                OnProjectRemoved( new ProjectEventArgs( project ) );
+                if ( ActiveProject == project )
                     ActiveProject = null;
                 return true;
             }
             return false;
         }
 
-        public void RemoveActiveProject()
+        public void RemoveActiveProject( )
         {
-            RemoveActiveProject(true);
+            RemoveActiveProject( true );
         }
 
-        private void RemoveActiveProject(bool saveConfirmation)
+        private void RemoveActiveProject( bool saveConfirmation )
         {
-            if (HasActiveProject)
-                RemoveProject(ActiveProject, saveConfirmation);
+            if ( HasActiveProject )
+                RemoveProject( ActiveProject, saveConfirmation );
         }
 
-        public bool RemoveAll()
+        public bool RemoveAll( )
         {
-            return RemoveAll(true);
+            return RemoveAll( true );
         }
 
-        private bool RemoveAll(bool saveConfirmation)
+        private bool RemoveAll( bool saveConfirmation )
         {
-            if (saveConfirmation)
+            if ( saveConfirmation )
             {
-                ICollection<Project> unsavedProjects = projects.FindAll(
-                    delegate(Project project) { return project.IsDirty; }
-                    );
+                ICollection< Project > unsavedProjects = projects.FindAll( delegate( Project project ) { return project.IsDirty; } );
 
-                if (unsavedProjects.Count > 0)
+                if ( unsavedProjects.Count > 0 )
                 {
                     var message = Strings.AskSaveChanges + "\n";
-                    foreach (var project in unsavedProjects)
+                    foreach ( var project in unsavedProjects )
                         message += "\n" + project.Name;
 
-                    var result = MessageBox.Show(message,
-                                                 Strings.Confirmation,
-                                                 MessageBoxButtons.YesNoCancel,
-                                                 MessageBoxIcon.Question);
+                    var result = MessageBox.Show( message, Strings.Confirmation, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question );
 
-                    if (result == DialogResult.Yes)
+                    if ( result == DialogResult.Yes )
                     {
-                        if (!SaveAllUnsavedProjects())
+                        if ( !SaveAllUnsavedProjects( ) )
                             return false;
                     }
-                    else if (result == DialogResult.Cancel)
+                    else if ( result == DialogResult.Cancel )
                     {
                         return false;
                     }
                 }
             }
 
-            while (HasProject)
+            while ( HasProject )
             {
                 var lastIndex = projects.Count - 1;
-                var project = projects[lastIndex];
-                project.CloseItems();
-                projects.RemoveAt(lastIndex);
-                OnProjectRemoved(new ProjectEventArgs(project));
+                var project = projects[ lastIndex ];
+                project.CloseItems( );
+                projects.RemoveAt( lastIndex );
+                OnProjectRemoved( new ProjectEventArgs( project ) );
             }
             ActiveProject = null;
             return true;
         }
 
-        public Project OpenProject()
+        public Project OpenProject( )
         {
-            using (var dialog = new OpenFileDialog())
+            using ( var dialog = new OpenFileDialog( ) )
             {
-                dialog.Filter = string.Format(
-                    "{0} (*.ncp)|*.ncp|" +
-                    "{1} (*.csd; *.jd)|*.csd;*.jd",
-                    Strings.NClassProjectFiles,
-                    Strings.PreviousFileFormats);
+                dialog.Filter = string.Format( "{0} (*.ncp)|*.ncp|" + "{1} (*.csd; *.jd)|*.csd;*.jd", Strings.NClassProjectFiles, Strings.PreviousFileFormats );
 
-                if (dialog.ShowDialog() == DialogResult.OK)
-                    return OpenProject(dialog.FileName);
+                if ( dialog.ShowDialog( ) == DialogResult.OK )
+                    return OpenProject( dialog.FileName );
                 return null;
             }
 
             //return null;
         }
 
-        public Project OpenProject(string fileName)
+        public Project OpenProject( string fileName )
         {
             try
             {
-                var project = Project.Load(fileName);
-                AddProject(project);
+                var project = Project.Load( fileName );
+                AddProject( project );
                 return project;
             }
-            catch (Exception ex)
+            catch ( Exception ex )
             {
-                MessageBox.Show(Strings.Error + ": " + ex.Message,
-                                Strings.Load,
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
+                MessageBox.Show( Strings.Error + ": " + ex.Message, Strings.Load, MessageBoxButtons.OK, MessageBoxIcon.Error );
                 return null;
             }
         }
@@ -233,26 +227,23 @@ namespace NClass.GUI
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="project" /> is null.
         /// </exception>
-        public bool SaveProject(Project project)
+        public bool SaveProject( Project project )
         {
-            if (project == null)
-                throw new ArgumentNullException("project");
+            if ( project == null )
+                throw new ArgumentNullException( "project" );
 
-            if (project.FilePath == null || project.IsReadOnly)
+            if ( project.FilePath == null || project.IsReadOnly )
             {
-                return SaveProjectAs(project);
+                return SaveProjectAs( project );
             }
             try
             {
-                project.Save();
+                project.Save( );
                 return true;
             }
-            catch (Exception ex)
+            catch ( Exception ex )
             {
-                MessageBox.Show(Strings.Error + ": " + ex.Message,
-                                Strings.SaveAs,
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
+                MessageBox.Show( Strings.Error + ": " + ex.Message, Strings.SaveAs, MessageBoxButtons.OK, MessageBoxIcon.Error );
                 return false;
             }
         }
@@ -260,134 +251,131 @@ namespace NClass.GUI
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="project" /> is null.
         /// </exception>
-        public bool SaveProjectAs(Project project)
+        public bool SaveProjectAs( Project project )
         {
-            if (project == null)
-                throw new ArgumentNullException("project");
+            if ( project == null )
+                throw new ArgumentNullException( "project" );
 
-            using (var dialog = new SaveFileDialog())
+            using ( var dialog = new SaveFileDialog( ) )
             {
                 dialog.FileName = project.Name;
-                dialog.InitialDirectory = project.GetProjectDirectory();
+                dialog.InitialDirectory = project.GetProjectDirectory( );
                 dialog.Filter = Strings.NClassProjectFiles + " (*.ncp)|*.ncp";
 
-                if (dialog.ShowDialog() == DialogResult.OK)
+                if ( dialog.ShowDialog( ) == DialogResult.OK )
                 {
                     try
                     {
-                        project.Save(dialog.FileName);
-                        Settings.Default.AddRecentFile(project.FilePath);
+                        project.Save( dialog.FileName );
+                        Settings.Default.AddRecentFile( project.FilePath );
                         return true;
                     }
-                    catch (Exception ex)
+                    catch ( Exception ex )
                     {
-                        MessageBox.Show(Strings.Error + ": " + ex.Message,
-                                        Strings.SaveAs,
-                                        MessageBoxButtons.OK,
-                                        MessageBoxIcon.Error);
+                        MessageBox.Show( Strings.Error + ": " + ex.Message, Strings.SaveAs, MessageBoxButtons.OK, MessageBoxIcon.Error );
                     }
                 }
                 return false;
             }
         }
 
-        public bool SaveActiveProject()
+        public bool SaveActiveProject( )
         {
-            if (HasActiveProject)
-                return SaveProject(ActiveProject);
+            if ( HasActiveProject )
+                return SaveProject( ActiveProject );
             return false;
         }
 
-        public bool SaveActiveProjectAs()
+        public bool SaveActiveProjectAs( )
         {
-            if (HasActiveProject)
-                return SaveProjectAs(ActiveProject);
+            if ( HasActiveProject )
+                return SaveProjectAs( ActiveProject );
             return false;
         }
 
-        public bool SaveAllProjects()
+        public bool SaveAllProjects( )
         {
             var allSaved = true;
 
-            foreach (var project in projects)
+            foreach ( var project in projects )
             {
-                allSaved &= SaveProject(project);
+                allSaved &= SaveProject( project );
             }
             return allSaved;
         }
 
-        public bool SaveAllUnsavedProjects()
+        public bool SaveAllUnsavedProjects( )
         {
             var allSaved = true;
 
-            foreach (var project in projects)
+            foreach ( var project in projects )
             {
-                if (project.IsDirty)
-                    allSaved &= SaveProject(project);
+                if ( project.IsDirty )
+                    allSaved &= SaveProject( project );
             }
             return allSaved;
         }
 
-        public void Load()
+        public void Load( )
         {
-            if (HasProject)
-                RemoveAll();
+            if ( HasProject )
+                RemoveAll( );
 
-            foreach (var projectFile in Settings.Default.OpenedProjects)
+            foreach ( var projectFile in Settings.Default.OpenedProjects )
             {
-                if (!string.IsNullOrEmpty(projectFile))
+                if ( !string.IsNullOrEmpty( projectFile ) )
                 {
-                    OpenProject(projectFile);
+                    OpenProject( projectFile );
                 }
             }
         }
 
-        public void Save()
+        public void Save( )
         {
-            Settings.Default.OpenedProjects.Clear();
+            Settings.Default.OpenedProjects.Clear( );
 
-            foreach (var project in projects)
+            foreach ( var project in projects )
             {
-                if (project.FilePath != null)
-                    Settings.Default.OpenedProjects.Add(project.FilePath);
+                if ( project.FilePath != null )
+                    Settings.Default.OpenedProjects.Add( project.FilePath );
             }
         }
 
-        public bool SaveAndClose()
+        public bool SaveAndClose( )
         {
-            Save();
-            return RemoveAll();
+            Save( );
+            return RemoveAll( );
         }
 
-        private void project_StateChanged(object sender, EventArgs e)
+        private void project_StateChanged( object sender, EventArgs e )
         {
-            var project = (Project) sender;
-            if (project == ActiveProject)
-                OnActiveProjectStateChanged(EventArgs.Empty);
+            var project = ( Project ) sender;
+            if ( project == ActiveProject )
+                OnActiveProjectStateChanged( EventArgs.Empty );
         }
 
-        protected virtual void OnActiveProjectChanged(EventArgs e)
+        protected virtual void OnActiveProjectChanged( EventArgs e )
         {
-            if (ActiveProjectChanged != null)
-                ActiveProjectChanged(this, EventArgs.Empty);
+            if ( ActiveProjectChanged != null )
+                ActiveProjectChanged( this, EventArgs.Empty );
         }
 
-        protected virtual void OnActiveProjectStateChanged(EventArgs e)
+        protected virtual void OnActiveProjectStateChanged( EventArgs e )
         {
-            if (ActiveProjectStateChanged != null)
-                ActiveProjectStateChanged(this, EventArgs.Empty);
+            if ( ActiveProjectStateChanged != null )
+                ActiveProjectStateChanged( this, EventArgs.Empty );
         }
 
-        protected virtual void OnProjectAdded(ProjectEventArgs e)
+        protected virtual void OnProjectAdded( ProjectEventArgs e )
         {
-            if (ProjectAdded != null)
-                ProjectAdded(this, e);
+            if ( ProjectAdded != null )
+                ProjectAdded( this, e );
         }
 
-        protected virtual void OnProjectRemoved(ProjectEventArgs e)
+        protected virtual void OnProjectRemoved( ProjectEventArgs e )
         {
-            if (ProjectRemoved != null)
-                ProjectRemoved(this, e);
+            if ( ProjectRemoved != null )
+                ProjectRemoved( this, e );
         }
     }
 }

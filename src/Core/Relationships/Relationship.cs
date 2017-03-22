@@ -34,30 +34,33 @@ namespace NClass.Core
             get { return label; }
             set
             {
-                if (value == "")
+                if ( value == "" )
                     value = null;
 
-                if (label != value && SupportsLabel)
+                if ( label != value && SupportsLabel )
                 {
                     label = value;
-                    Changed();
+                    Changed( );
                 }
             }
         }
 
-        public virtual bool SupportsLabel { get { return false; } }
+        public virtual bool SupportsLabel
+        {
+            get { return false; }
+        }
 
         public event SerializeEventHandler Serializing;
         public event SerializeEventHandler Deserializing;
 
-        void ISerializableElement.Serialize(XmlElement node)
+        void ISerializableElement.Serialize( XmlElement node )
         {
-            Serialize(node);
+            Serialize( node );
         }
 
-        void ISerializableElement.Deserialize(XmlElement node)
+        void ISerializableElement.Deserialize( XmlElement node )
         {
-            Deserialize(node);
+            Deserialize( node );
         }
 
         public event EventHandler Attaching;
@@ -66,21 +69,21 @@ namespace NClass.Core
         /// <exception cref="RelationshipException">
         ///     Cannot finalize relationship.
         /// </exception>
-        internal void Attach()
+        internal void Attach( )
         {
-            if (!attached)
-                OnAttaching(EventArgs.Empty);
+            if ( !attached )
+                OnAttaching( EventArgs.Empty );
             attached = true;
         }
 
-        internal void Detach()
+        internal void Detach( )
         {
-            if (attached)
-                OnDetaching(EventArgs.Empty);
+            if ( attached )
+                OnDetaching( EventArgs.Empty );
             attached = false;
         }
 
-        protected virtual void CopyFrom(Relationship relationship)
+        protected virtual void CopyFrom( Relationship relationship )
         {
             label = relationship.label;
         }
@@ -88,61 +91,61 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="node" /> is null.
         /// </exception>
-        protected internal virtual void Serialize(XmlElement node)
+        protected internal virtual void Serialize( XmlElement node )
         {
-            if (node == null)
-                throw new ArgumentNullException("node");
+            if ( node == null )
+                throw new ArgumentNullException( "node" );
 
-            if (SupportsLabel && Label != null)
+            if ( SupportsLabel && Label != null )
             {
-                var labelNode = node.OwnerDocument.CreateElement("Label");
+                var labelNode = node.OwnerDocument.CreateElement( "Label" );
                 labelNode.InnerText = Label;
-                node.AppendChild(labelNode);
+                node.AppendChild( labelNode );
             }
-            OnSerializing(new SerializeEventArgs(node));
+            OnSerializing( new SerializeEventArgs( node ) );
         }
 
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="node" /> is null.
         /// </exception>
-        protected internal virtual void Deserialize(XmlElement node)
+        protected internal virtual void Deserialize( XmlElement node )
         {
-            if (node == null)
-                throw new ArgumentNullException("node");
+            if ( node == null )
+                throw new ArgumentNullException( "node" );
 
-            if (SupportsLabel)
+            if ( SupportsLabel )
             {
-                var labelNode = node["Label"];
-                if (labelNode != null)
+                var labelNode = node[ "Label" ];
+                if ( labelNode != null )
                     Label = labelNode.InnerText;
             }
-            OnDeserializing(new SerializeEventArgs(node));
+            OnDeserializing( new SerializeEventArgs( node ) );
         }
 
-        protected virtual void OnAttaching(EventArgs e)
+        protected virtual void OnAttaching( EventArgs e )
         {
-            if (Attaching != null)
-                Attaching(this, e);
+            if ( Attaching != null )
+                Attaching( this, e );
         }
 
-        protected virtual void OnDetaching(EventArgs e)
+        protected virtual void OnDetaching( EventArgs e )
         {
-            if (Detaching != null)
-                Detaching(this, e);
+            if ( Detaching != null )
+                Detaching( this, e );
         }
 
-        private void OnSerializing(SerializeEventArgs e)
+        private void OnSerializing( SerializeEventArgs e )
         {
-            if (Serializing != null)
-                Serializing(this, e);
+            if ( Serializing != null )
+                Serializing( this, e );
         }
 
-        private void OnDeserializing(SerializeEventArgs e)
+        private void OnDeserializing( SerializeEventArgs e )
         {
-            if (Deserializing != null)
-                Deserializing(this, e);
+            if ( Deserializing != null )
+                Deserializing( this, e );
         }
 
-        public abstract override string ToString();
+        public abstract override string ToString( );
     }
 }

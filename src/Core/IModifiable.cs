@@ -22,6 +22,6 @@ namespace NClass.Core
         bool IsDirty { get; }
         event EventHandler Modified;
 
-        void Clean();
+        void Clean( );
     }
 }

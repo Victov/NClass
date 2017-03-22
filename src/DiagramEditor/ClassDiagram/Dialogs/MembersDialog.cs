@@ -29,22 +29,22 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         private Member member;
         private CompositeType parent;
 
-        public MembersDialog()
+        public MembersDialog( )
         {
-            InitializeComponent();
+            InitializeComponent( );
             lstMembers.SmallImageList = Icons.IconList;
             toolStrip.Renderer = ToolStripSimplifiedRenderer.Default;
         }
 
         public event EventHandler ContentsChanged;
 
-        private void OnContentsChanged(EventArgs e)
+        private void OnContentsChanged( EventArgs e )
         {
-            if (ContentsChanged != null)
-                ContentsChanged(this, e);
+            if ( ContentsChanged != null )
+                ContentsChanged( this, e );
         }
 
-        private void UpdateTexts()
+        private void UpdateTexts( )
         {
             lblSyntax.Text = Strings.Syntax;
             lblName.Text = Strings.Name;
@@ -67,27 +67,27 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             toolMoveUp.Text = Strings.MoveUp;
             toolMoveDown.Text = Strings.MoveDown;
             toolDelete.Text = Strings.Delete;
-            lstMembers.Columns[1].Text = Strings.Name;
-            lstMembers.Columns[2].Text = Strings.Type;
-            lstMembers.Columns[3].Text = Strings.Access;
-            lstMembers.Columns[4].Text = Strings.Modifiers;
+            lstMembers.Columns[ 1 ].Text = Strings.Name;
+            lstMembers.Columns[ 2 ].Text = Strings.Type;
+            lstMembers.Columns[ 3 ].Text = Strings.Access;
+            lstMembers.Columns[ 4 ].Text = Strings.Modifiers;
             btnClose.Text = Strings.ButtonClose;
         }
 
-        public void ShowDialog(CompositeType parent)
+        public void ShowDialog( CompositeType parent )
         {
-            if (parent == null)
+            if ( parent == null )
                 return;
 
             this.parent = parent;
-            Text = string.Format(Strings.MembersOfType, parent.Name);
+            Text = string.Format( Strings.MembersOfType, parent.Name );
 
-            LanguageSpecificInitialization(parent.Language);
-            FillMembersList();
-            if (lstMembers.Items.Count > 0)
+            LanguageSpecificInitialization( parent.Language );
+            FillMembersList( );
+            if ( lstMembers.Items.Count > 0 )
             {
-                lstMembers.Items[0].Focused = true;
-                lstMembers.Items[0].Selected = true;
+                lstMembers.Items[ 0 ].Focused = true;
+                lstMembers.Items[ 0 ].Selected = true;
             }
 
             toolNewField.Visible = parent.SupportsFields;
@@ -97,30 +97,28 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             toolNewEvent.Visible = parent.SupportsEvents;
             toolOverrideList.Visible = parent is SingleInharitanceType;
             toolImplementList.Visible = parent is IInterfaceImplementer;
-            toolImplementList.Enabled = parent is IInterfaceImplementer &&
-                                        ((IInterfaceImplementer) parent).ImplementsInterface;
-            toolSepAddNew.Visible = parent is SingleInharitanceType ||
-                                    parent is IInterfaceImplementer;
+            toolImplementList.Enabled = parent is IInterfaceImplementer && ( ( IInterfaceImplementer ) parent ).ImplementsInterface;
+            toolSepAddNew.Visible = parent is SingleInharitanceType || parent is IInterfaceImplementer;
 
-            errorProvider.SetError(txtSyntax, null);
-            errorProvider.SetError(txtName, null);
-            errorProvider.SetError(cboType, null);
+            errorProvider.SetError( txtSyntax, null );
+            errorProvider.SetError( txtName, null );
+            errorProvider.SetError( cboType, null );
             error = false;
 
-            base.ShowDialog();
+            base.ShowDialog( );
         }
 
-        private void LanguageSpecificInitialization(Language language)
+        private void LanguageSpecificInitialization( Language language )
         {
-            cboAccess.Items.Clear();
-            foreach (var modifier in language.ValidAccessModifiers.Values)
-                cboAccess.Items.Add(modifier);
+            cboAccess.Items.Clear( );
+            foreach ( var modifier in language.ValidAccessModifiers.Values )
+                cboAccess.Items.Add( modifier );
 
             // chkFieldStatic
-            if (language.IsValidModifier(FieldModifier.Static))
+            if ( language.IsValidModifier( FieldModifier.Static ) )
             {
                 chkFieldStatic.Enabled = true;
-                chkFieldStatic.Text = language.ValidFieldModifiers[FieldModifier.Static];
+                chkFieldStatic.Text = language.ValidFieldModifiers[ FieldModifier.Static ];
             }
             else
             {
@@ -128,10 +126,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                 chkFieldStatic.Text = "Static";
             }
             // chkReadonly
-            if (language.IsValidModifier(FieldModifier.Readonly))
+            if ( language.IsValidModifier( FieldModifier.Readonly ) )
             {
                 chkReadonly.Enabled = true;
-                chkReadonly.Text = language.ValidFieldModifiers[FieldModifier.Readonly];
+                chkReadonly.Text = language.ValidFieldModifiers[ FieldModifier.Readonly ];
             }
             else
             {
@@ -139,10 +137,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                 chkReadonly.Text = "Readonly";
             }
             // chkConstant
-            if (language.IsValidModifier(FieldModifier.Constant))
+            if ( language.IsValidModifier( FieldModifier.Constant ) )
             {
                 chkConstant.Enabled = true;
-                chkConstant.Text = language.ValidFieldModifiers[FieldModifier.Constant];
+                chkConstant.Text = language.ValidFieldModifiers[ FieldModifier.Constant ];
             }
             else
             {
@@ -150,10 +148,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                 chkConstant.Text = "Constant";
             }
             // chkFieldHider
-            if (language.IsValidModifier(FieldModifier.Hider))
+            if ( language.IsValidModifier( FieldModifier.Hider ) )
             {
                 chkFieldHider.Enabled = true;
-                chkFieldHider.Text = language.ValidFieldModifiers[FieldModifier.Hider];
+                chkFieldHider.Text = language.ValidFieldModifiers[ FieldModifier.Hider ];
             }
             else
             {
@@ -161,10 +159,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                 chkFieldHider.Text = "Hider";
             }
             // chkVolatile
-            if (language.IsValidModifier(FieldModifier.Volatile))
+            if ( language.IsValidModifier( FieldModifier.Volatile ) )
             {
                 chkVolatile.Enabled = true;
-                chkVolatile.Text = language.ValidFieldModifiers[FieldModifier.Volatile];
+                chkVolatile.Text = language.ValidFieldModifiers[ FieldModifier.Volatile ];
             }
             else
             {
@@ -173,11 +171,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             }
 
             // chkOperationStatic
-            if (language.IsValidModifier(OperationModifier.Static))
+            if ( language.IsValidModifier( OperationModifier.Static ) )
             {
                 chkOperationStatic.Enabled = true;
-                chkOperationStatic.Text =
-                    language.ValidOperationModifiers[OperationModifier.Static];
+                chkOperationStatic.Text = language.ValidOperationModifiers[ OperationModifier.Static ];
             }
             else
             {
@@ -185,11 +182,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                 chkOperationStatic.Text = "Static";
             }
             // chkVirtual
-            if (language.IsValidModifier(OperationModifier.Virtual))
+            if ( language.IsValidModifier( OperationModifier.Virtual ) )
             {
                 chkVirtual.Enabled = true;
-                chkVirtual.Text =
-                    language.ValidOperationModifiers[OperationModifier.Virtual];
+                chkVirtual.Text = language.ValidOperationModifiers[ OperationModifier.Virtual ];
             }
             else
             {
@@ -197,11 +193,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                 chkVirtual.Text = "Virtual";
             }
             // chkAbstract
-            if (language.IsValidModifier(OperationModifier.Abstract))
+            if ( language.IsValidModifier( OperationModifier.Abstract ) )
             {
                 chkAbstract.Enabled = true;
-                chkAbstract.Text =
-                    language.ValidOperationModifiers[OperationModifier.Abstract];
+                chkAbstract.Text = language.ValidOperationModifiers[ OperationModifier.Abstract ];
             }
             else
             {
@@ -209,11 +204,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                 chkAbstract.Text = "Abstract";
             }
             // chkOverride
-            if (language.IsValidModifier(OperationModifier.Override))
+            if ( language.IsValidModifier( OperationModifier.Override ) )
             {
                 chkOverride.Enabled = true;
-                chkOverride.Text =
-                    language.ValidOperationModifiers[OperationModifier.Override];
+                chkOverride.Text = language.ValidOperationModifiers[ OperationModifier.Override ];
             }
             else
             {
@@ -221,11 +215,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                 chkOverride.Text = "Override";
             }
             // chkSealed
-            if (language.IsValidModifier(OperationModifier.Sealed))
+            if ( language.IsValidModifier( OperationModifier.Sealed ) )
             {
                 chkSealed.Enabled = true;
-                chkSealed.Text =
-                    language.ValidOperationModifiers[OperationModifier.Sealed];
+                chkSealed.Text = language.ValidOperationModifiers[ OperationModifier.Sealed ];
             }
             else
             {
@@ -233,11 +226,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                 chkSealed.Text = "Sealed";
             }
             // chkOperationHider
-            if (language.IsValidModifier(OperationModifier.Hider))
+            if ( language.IsValidModifier( OperationModifier.Hider ) )
             {
                 chkOperationHider.Enabled = true;
-                chkOperationHider.Text =
-                    language.ValidOperationModifiers[OperationModifier.Hider];
+                chkOperationHider.Text = language.ValidOperationModifiers[ OperationModifier.Hider ];
             }
             else
             {
@@ -246,37 +238,37 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             }
         }
 
-        private void FillMembersList()
+        private void FillMembersList( )
         {
-            lstMembers.Items.Clear();
+            lstMembers.Items.Clear( );
             attributeCount = 0;
 
-            foreach (var field in parent.Fields)
-                AddFieldToList(field);
+            foreach ( var field in parent.Fields )
+                AddFieldToList( field );
 
-            foreach (var operation in parent.Operations)
-                AddOperationToList(operation);
+            foreach ( var operation in parent.Operations )
+                AddOperationToList( operation );
 
-            DisableFields();
+            DisableFields( );
         }
 
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="field" /> is null.
         /// </exception>
-        private ListViewItem AddFieldToList(Field field)
+        private ListViewItem AddFieldToList( Field field )
         {
-            if (field == null)
-                throw new ArgumentNullException("field");
+            if ( field == null )
+                throw new ArgumentNullException( "field" );
 
-            var item = lstMembers.Items.Insert(attributeCount, "");
+            var item = lstMembers.Items.Insert( attributeCount, "" );
 
             item.Tag = field;
-            item.ImageIndex = Icons.GetImageIndex(field);
-            item.SubItems.Add(field.Name);
-            item.SubItems.Add(field.Type);
-            item.SubItems.Add(parent.Language.GetAccessString(field.AccessModifier));
-            item.SubItems.Add(parent.Language.GetFieldModifierString(field.Modifier));
-            item.SubItems.Add("");
+            item.ImageIndex = Icons.GetImageIndex( field );
+            item.SubItems.Add( field.Name );
+            item.SubItems.Add( field.Type );
+            item.SubItems.Add( parent.Language.GetAccessString( field.AccessModifier ) );
+            item.SubItems.Add( parent.Language.GetFieldModifierString( field.Modifier ) );
+            item.SubItems.Add( "" );
             attributeCount++;
 
             return item;
@@ -285,35 +277,35 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="operation" /> is null.
         /// </exception>
-        private ListViewItem AddOperationToList(Operation operation)
+        private ListViewItem AddOperationToList( Operation operation )
         {
-            if (operation == null)
-                throw new ArgumentNullException("operation");
+            if ( operation == null )
+                throw new ArgumentNullException( "operation" );
 
-            var item = lstMembers.Items.Add("");
+            var item = lstMembers.Items.Add( "" );
 
             item.Tag = operation;
-            item.ImageIndex = Icons.GetImageIndex(operation);
-            item.SubItems.Add(operation.Name);
-            item.SubItems.Add(operation.Type);
-            item.SubItems.Add(parent.Language.GetAccessString(operation.AccessModifier));
-            item.SubItems.Add(parent.Language.GetOperationModifierString(operation.Modifier));
+            item.ImageIndex = Icons.GetImageIndex( operation );
+            item.SubItems.Add( operation.Name );
+            item.SubItems.Add( operation.Type );
+            item.SubItems.Add( parent.Language.GetAccessString( operation.AccessModifier ) );
+            item.SubItems.Add( parent.Language.GetOperationModifierString( operation.Modifier ) );
 
             return item;
         }
 
-        private void ShowNewMember(Member actualMember)
+        private void ShowNewMember( Member actualMember )
         {
-            if (locked || actualMember == null)
+            if ( locked || actualMember == null )
                 return;
             member = actualMember;
 
-            RefreshValues();
+            RefreshValues( );
         }
 
-        private void RefreshValues()
+        private void RefreshValues( )
         {
-            if (member == null)
+            if ( member == null )
                 return;
 
             locked = true;
@@ -329,23 +321,23 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             toolSortByAccess.Enabled = true;
             toolSortByName.Enabled = true;
 
-            if (lstMembers.Items.Count > 0)
+            if ( lstMembers.Items.Count > 0 )
             {
                 toolSortByKind.Enabled = true;
                 toolSortByAccess.Enabled = true;
                 toolSortByName.Enabled = true;
             }
 
-            txtSyntax.Text = member.ToString();
+            txtSyntax.Text = member.ToString( );
             txtName.Text = member.Name;
             cboType.Text = member.Type;
 
             // Access selection
-            cboAccess.SelectedItem = member.Language.ValidAccessModifiers[member.AccessModifier];
+            cboAccess.SelectedItem = member.Language.ValidAccessModifiers[ member.AccessModifier ];
 
-            if (member is Field)
+            if ( member is Field )
             {
-                var field = (Field) member;
+                var field = ( Field ) member;
 
                 grpFieldModifiers.Enabled = true;
                 grpFieldModifiers.Visible = true;
@@ -358,9 +350,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                 chkVolatile.Checked = field.IsVolatile;
                 txtInitialValue.Text = field.InitialValue;
             }
-            else if (member is Operation)
+            else if ( member is Operation )
             {
-                var operation = (Operation) member;
+                var operation = ( Operation ) member;
 
                 grpOperationModifiers.Enabled = true;
                 grpOperationModifiers.Visible = true;
@@ -375,46 +367,44 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                 txtInitialValue.Text = string.Empty;
             }
 
-            RefreshMembersList();
+            RefreshMembersList( );
 
             locked = false;
 
-            errorProvider.SetError(txtSyntax, null);
-            errorProvider.SetError(txtName, null);
-            errorProvider.SetError(cboType, null);
-            errorProvider.SetError(cboAccess, null);
+            errorProvider.SetError( txtSyntax, null );
+            errorProvider.SetError( txtName, null );
+            errorProvider.SetError( cboType, null );
+            errorProvider.SetError( cboAccess, null );
             error = false;
         }
 
-        private void RefreshMembersList()
+        private void RefreshMembersList( )
         {
             ListViewItem item = null;
 
-            if (lstMembers.FocusedItem != null)
+            if ( lstMembers.FocusedItem != null )
                 item = lstMembers.FocusedItem;
-            else if (lstMembers.SelectedItems.Count > 0)
-                item = lstMembers.SelectedItems[0];
+            else if ( lstMembers.SelectedItems.Count > 0 )
+                item = lstMembers.SelectedItems[ 0 ];
 
-            if (item != null && member != null)
+            if ( item != null && member != null )
             {
-                item.ImageIndex = Icons.GetImageIndex(member);
-                item.SubItems[1].Text = txtName.Text;
-                item.SubItems[2].Text = cboType.Text;
-                item.SubItems[3].Text = cboAccess.Text;
-                if (member is Field)
+                item.ImageIndex = Icons.GetImageIndex( member );
+                item.SubItems[ 1 ].Text = txtName.Text;
+                item.SubItems[ 2 ].Text = cboType.Text;
+                item.SubItems[ 3 ].Text = cboAccess.Text;
+                if ( member is Field )
                 {
-                    item.SubItems[4].Text = member.Language.GetFieldModifierString(
-                        ((Field) member).Modifier);
+                    item.SubItems[ 4 ].Text = member.Language.GetFieldModifierString( ( ( Field ) member ).Modifier );
                 }
-                else if (member is Operation)
+                else if ( member is Operation )
                 {
-                    item.SubItems[4].Text = member.Language.GetOperationModifierString(
-                        ((Operation) member).Modifier);
+                    item.SubItems[ 4 ].Text = member.Language.GetOperationModifierString( ( ( Operation ) member ).Modifier );
                 }
             }
         }
 
-        private void DisableFields()
+        private void DisableFields( )
         {
             member = null;
 
@@ -435,7 +425,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             grpFieldModifiers.Enabled = false;
             grpOperationModifiers.Enabled = false;
 
-            if (lstMembers.Items.Count == 0)
+            if ( lstMembers.Items.Count == 0 )
             {
                 toolSortByKind.Enabled = false;
                 toolSortByAccess.Enabled = false;
@@ -448,7 +438,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             locked = false;
         }
 
-        private void SwapListItems(ListViewItem item1, ListViewItem item2)
+        private void SwapListItems( ListViewItem item1, ListViewItem item2 )
         {
             var image = item1.ImageIndex;
             item1.ImageIndex = item2.ImageIndex;
@@ -458,469 +448,462 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             item1.Tag = item2.Tag;
             item2.Tag = tag;
 
-            for (var i = 0; i < item1.SubItems.Count; i++)
+            for ( var i = 0; i < item1.SubItems.Count; i++ )
             {
-                var text = item1.SubItems[i].Text;
-                item1.SubItems[i].Text = item2.SubItems[i].Text;
-                item2.SubItems[i].Text = text;
+                var text = item1.SubItems[ i ].Text;
+                item1.SubItems[ i ].Text = item2.SubItems[ i ].Text;
+                item2.SubItems[ i ].Text = text;
             }
-            OnContentsChanged(EventArgs.Empty);
+            OnContentsChanged( EventArgs.Empty );
         }
 
-        private void DeleteSelectedMember()
+        private void DeleteSelectedMember( )
         {
-            if (lstMembers.SelectedItems.Count > 0)
+            if ( lstMembers.SelectedItems.Count > 0 )
             {
-                var item = lstMembers.SelectedItems[0];
+                var item = lstMembers.SelectedItems[ 0 ];
                 var index = item.Index;
 
-                if (item.Tag is Field)
+                if ( item.Tag is Field )
                     attributeCount--;
-                parent.RemoveMember(item.Tag as Member);
-                lstMembers.Items.Remove(item);
-                OnContentsChanged(EventArgs.Empty);
+                parent.RemoveMember( item.Tag as Member );
+                lstMembers.Items.Remove( item );
+                OnContentsChanged( EventArgs.Empty );
 
                 var count = lstMembers.Items.Count;
-                if (count > 0)
+                if ( count > 0 )
                 {
-                    if (index >= count)
+                    if ( index >= count )
                         index = count - 1;
-                    lstMembers.Items[index].Selected = true;
+                    lstMembers.Items[ index ].Selected = true;
                 }
                 else
                 {
-                    DisableFields();
+                    DisableFields( );
                 }
             }
         }
 
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoad( EventArgs e )
         {
-            base.OnLoad(e);
-            UpdateTexts();
-            errorProvider.SetError(grpFieldModifiers, null);
-            errorProvider.SetError(grpOperationModifiers, null);
+            base.OnLoad( e );
+            UpdateTexts( );
+            errorProvider.SetError( grpFieldModifiers, null );
+            errorProvider.SetError( grpOperationModifiers, null );
             error = false;
         }
 
-        private void PropertiesDialog_KeyDown(object sender, KeyEventArgs e)
+        private void PropertiesDialog_KeyDown( object sender, KeyEventArgs e )
         {
-            if (e.KeyCode == Keys.Escape)
+            if ( e.KeyCode == Keys.Escape )
             {
-                if (error)
-                    RefreshValues();
+                if ( error )
+                    RefreshValues( );
                 else
-                    Close();
+                    Close( );
             }
-            else if (e.KeyCode == Keys.Enter)
+            else if ( e.KeyCode == Keys.Enter )
             {
-                lstMembers.Focus();
+                lstMembers.Focus( );
             }
         }
 
-        private void txtSyntax_Validating(object sender, CancelEventArgs e)
+        private void txtSyntax_Validating( object sender, CancelEventArgs e )
         {
-            if (!locked && member != null)
+            if ( !locked && member != null )
             {
                 try
                 {
-                    var oldValue = member.ToString();
+                    var oldValue = member.ToString( );
 
-                    member.InitFromString(txtSyntax.Text);
-                    errorProvider.SetError(txtSyntax, null);
+                    member.InitFromString( txtSyntax.Text );
+                    errorProvider.SetError( txtSyntax, null );
                     error = false;
 
-                    RefreshValues();
-                    if (oldValue != txtSyntax.Text)
-                        OnContentsChanged(EventArgs.Empty);
+                    RefreshValues( );
+                    if ( oldValue != txtSyntax.Text )
+                        OnContentsChanged( EventArgs.Empty );
                 }
-                catch (BadSyntaxException ex)
+                catch ( BadSyntaxException ex )
                 {
                     e.Cancel = true;
-                    errorProvider.SetError(txtSyntax, ex.Message);
+                    errorProvider.SetError( txtSyntax, ex.Message );
                     error = true;
                 }
             }
         }
 
-        private void txtName_Validating(object sender, CancelEventArgs e)
+        private void txtName_Validating( object sender, CancelEventArgs e )
         {
-            if (!locked && member != null)
+            if ( !locked && member != null )
             {
                 try
                 {
                     var oldValue = member.Name;
 
                     member.Name = txtName.Text;
-                    errorProvider.SetError(txtName, null);
+                    errorProvider.SetError( txtName, null );
                     error = false;
 
-                    RefreshValues();
-                    if (oldValue != txtName.Text)
-                        OnContentsChanged(EventArgs.Empty);
+                    RefreshValues( );
+                    if ( oldValue != txtName.Text )
+                        OnContentsChanged( EventArgs.Empty );
                 }
-                catch (BadSyntaxException ex)
+                catch ( BadSyntaxException ex )
                 {
                     e.Cancel = true;
-                    errorProvider.SetError(txtName, ex.Message);
+                    errorProvider.SetError( txtName, ex.Message );
                     error = true;
                 }
             }
         }
 
-        private void cboType_Validating(object sender, CancelEventArgs e)
+        private void cboType_Validating( object sender, CancelEventArgs e )
         {
-            if (!locked && member != null)
+            if ( !locked && member != null )
             {
                 try
                 {
                     var oldValue = member.Type;
 
                     member.Type = cboType.Text;
-                    if (!cboType.Items.Contains(cboType.Text))
-                        cboType.Items.Add(cboType.Text);
-                    errorProvider.SetError(cboType, null);
+                    if ( !cboType.Items.Contains( cboType.Text ) )
+                        cboType.Items.Add( cboType.Text );
+                    errorProvider.SetError( cboType, null );
                     error = false;
-                    cboType.Select(0, 0);
+                    cboType.Select( 0, 0 );
 
-                    RefreshValues();
-                    if (oldValue != cboType.Text)
-                        OnContentsChanged(EventArgs.Empty);
+                    RefreshValues( );
+                    if ( oldValue != cboType.Text )
+                        OnContentsChanged( EventArgs.Empty );
                 }
-                catch (BadSyntaxException ex)
+                catch ( BadSyntaxException ex )
                 {
                     e.Cancel = true;
-                    errorProvider.SetError(cboType, ex.Message);
+                    errorProvider.SetError( cboType, ex.Message );
                     error = true;
                 }
             }
         }
 
-        private void cboAccess_SelectedIndexChanged(object sender, EventArgs e)
+        private void cboAccess_SelectedIndexChanged( object sender, EventArgs e )
         {
             var index = cboAccess.SelectedIndex;
 
-            if (!locked && member != null)
+            if ( !locked && member != null )
             {
                 try
                 {
-                    var selectedModifierString = cboAccess.SelectedItem.ToString();
+                    var selectedModifierString = cboAccess.SelectedItem.ToString( );
 
-                    foreach (var modifier in member.Language.ValidAccessModifiers.Keys)
+                    foreach ( var modifier in member.Language.ValidAccessModifiers.Keys )
                     {
-                        if (member.Language.ValidAccessModifiers[modifier] == selectedModifierString)
+                        if ( member.Language.ValidAccessModifiers[ modifier ] == selectedModifierString )
                         {
                             member.AccessModifier = modifier;
-                            RefreshValues();
-                            OnContentsChanged(EventArgs.Empty);
+                            RefreshValues( );
+                            OnContentsChanged( EventArgs.Empty );
                             break;
                         }
                     }
                 }
-                catch (BadSyntaxException ex)
+                catch ( BadSyntaxException ex )
                 {
-                    errorProvider.SetError(cboAccess, ex.Message);
+                    errorProvider.SetError( cboAccess, ex.Message );
                     error = true;
                 }
             }
         }
 
-        private void cboAccess_Validated(object sender, EventArgs e)
+        private void cboAccess_Validated( object sender, EventArgs e )
         {
-            if (!string.IsNullOrEmpty(errorProvider.GetError(cboAccess)))
+            if ( !string.IsNullOrEmpty( errorProvider.GetError( cboAccess ) ) )
             {
-                errorProvider.SetError(cboAccess, null);
-                RefreshValues();
+                errorProvider.SetError( cboAccess, null );
+                RefreshValues( );
                 error = false;
             }
         }
 
-        private void chkFieldStatic_CheckedChanged(object sender, EventArgs e)
+        private void chkFieldStatic_CheckedChanged( object sender, EventArgs e )
         {
-            if (!locked && member is Field)
+            if ( !locked && member is Field )
             {
                 try
                 {
-                    ((Field) member).IsStatic = chkFieldStatic.Checked;
-                    RefreshValues();
-                    errorProvider.SetError(grpFieldModifiers, null);
+                    ( ( Field ) member ).IsStatic = chkFieldStatic.Checked;
+                    RefreshValues( );
+                    errorProvider.SetError( grpFieldModifiers, null );
                     error = false;
-                    OnContentsChanged(EventArgs.Empty);
+                    OnContentsChanged( EventArgs.Empty );
                 }
-                catch (BadSyntaxException ex)
+                catch ( BadSyntaxException ex )
                 {
-                    RefreshValues();
-                    errorProvider.SetError(grpFieldModifiers, ex.Message);
+                    RefreshValues( );
+                    errorProvider.SetError( grpFieldModifiers, ex.Message );
                     error = true;
                 }
             }
         }
 
-        private void chkReadonly_CheckedChanged(object sender, EventArgs e)
+        private void chkReadonly_CheckedChanged( object sender, EventArgs e )
         {
-            if (!locked && member is Field)
+            if ( !locked && member is Field )
             {
                 try
                 {
-                    ((Field) member).IsReadonly = chkReadonly.Checked;
-                    RefreshValues();
-                    errorProvider.SetError(grpFieldModifiers, null);
+                    ( ( Field ) member ).IsReadonly = chkReadonly.Checked;
+                    RefreshValues( );
+                    errorProvider.SetError( grpFieldModifiers, null );
                     error = false;
-                    OnContentsChanged(EventArgs.Empty);
+                    OnContentsChanged( EventArgs.Empty );
                 }
-                catch (BadSyntaxException ex)
+                catch ( BadSyntaxException ex )
                 {
-                    RefreshValues();
-                    errorProvider.SetError(grpFieldModifiers, ex.Message);
+                    RefreshValues( );
+                    errorProvider.SetError( grpFieldModifiers, ex.Message );
                     error = true;
                 }
             }
         }
 
-        private void chkConstant_CheckedChanged(object sender, EventArgs e)
+        private void chkConstant_CheckedChanged( object sender, EventArgs e )
         {
-            if (!locked && member is Field)
+            if ( !locked && member is Field )
             {
                 try
                 {
-                    ((Field) member).IsConstant = chkConstant.Checked;
-                    RefreshValues();
-                    errorProvider.SetError(grpFieldModifiers, null);
+                    ( ( Field ) member ).IsConstant = chkConstant.Checked;
+                    RefreshValues( );
+                    errorProvider.SetError( grpFieldModifiers, null );
                     error = false;
-                    OnContentsChanged(EventArgs.Empty);
+                    OnContentsChanged( EventArgs.Empty );
                 }
-                catch (BadSyntaxException ex)
+                catch ( BadSyntaxException ex )
                 {
-                    RefreshValues();
-                    errorProvider.SetError(grpFieldModifiers, ex.Message);
+                    RefreshValues( );
+                    errorProvider.SetError( grpFieldModifiers, ex.Message );
                     error = true;
                 }
             }
         }
 
-        private void chkFieldHider_CheckedChanged(object sender, EventArgs e)
+        private void chkFieldHider_CheckedChanged( object sender, EventArgs e )
         {
-            if (!locked && member is Field)
+            if ( !locked && member is Field )
             {
                 try
                 {
-                    ((Field) member).IsHider = chkFieldHider.Checked;
-                    RefreshValues();
-                    errorProvider.SetError(grpFieldModifiers, null);
+                    ( ( Field ) member ).IsHider = chkFieldHider.Checked;
+                    RefreshValues( );
+                    errorProvider.SetError( grpFieldModifiers, null );
                     error = false;
-                    OnContentsChanged(EventArgs.Empty);
+                    OnContentsChanged( EventArgs.Empty );
                 }
-                catch (BadSyntaxException ex)
+                catch ( BadSyntaxException ex )
                 {
-                    RefreshValues();
-                    errorProvider.SetError(grpFieldModifiers, ex.Message);
+                    RefreshValues( );
+                    errorProvider.SetError( grpFieldModifiers, ex.Message );
                     error = true;
                 }
             }
         }
 
-        private void chkVolatile_CheckedChanged(object sender, EventArgs e)
+        private void chkVolatile_CheckedChanged( object sender, EventArgs e )
         {
-            if (!locked && member is Field)
+            if ( !locked && member is Field )
             {
                 try
                 {
-                    ((Field) member).IsVolatile = chkVolatile.Checked;
-                    RefreshValues();
-                    errorProvider.SetError(grpFieldModifiers, null);
+                    ( ( Field ) member ).IsVolatile = chkVolatile.Checked;
+                    RefreshValues( );
+                    errorProvider.SetError( grpFieldModifiers, null );
                     error = false;
-                    OnContentsChanged(EventArgs.Empty);
+                    OnContentsChanged( EventArgs.Empty );
                 }
-                catch (BadSyntaxException ex)
+                catch ( BadSyntaxException ex )
                 {
-                    RefreshValues();
-                    errorProvider.SetError(grpFieldModifiers, ex.Message);
+                    RefreshValues( );
+                    errorProvider.SetError( grpFieldModifiers, ex.Message );
                     error = true;
                 }
             }
         }
 
-        private void chkOperationStatic_CheckedChanged(object sender, EventArgs e)
+        private void chkOperationStatic_CheckedChanged( object sender, EventArgs e )
         {
-            if (!locked && member is Operation)
+            if ( !locked && member is Operation )
             {
                 try
                 {
-                    ((Operation) member).IsStatic = chkOperationStatic.Checked;
-                    RefreshValues();
-                    errorProvider.SetError(grpOperationModifiers, null);
+                    ( ( Operation ) member ).IsStatic = chkOperationStatic.Checked;
+                    RefreshValues( );
+                    errorProvider.SetError( grpOperationModifiers, null );
                     error = false;
-                    OnContentsChanged(EventArgs.Empty);
+                    OnContentsChanged( EventArgs.Empty );
                 }
-                catch (BadSyntaxException ex)
+                catch ( BadSyntaxException ex )
                 {
-                    RefreshValues();
-                    errorProvider.SetError(grpOperationModifiers, ex.Message);
+                    RefreshValues( );
+                    errorProvider.SetError( grpOperationModifiers, ex.Message );
                     error = true;
                 }
             }
         }
 
-        private void chkVirtual_CheckedChanged(object sender, EventArgs e)
+        private void chkVirtual_CheckedChanged( object sender, EventArgs e )
         {
-            if (!locked && member is Operation)
+            if ( !locked && member is Operation )
             {
                 try
                 {
-                    ((Operation) member).IsVirtual = chkVirtual.Checked;
-                    RefreshValues();
-                    errorProvider.SetError(grpOperationModifiers, null);
+                    ( ( Operation ) member ).IsVirtual = chkVirtual.Checked;
+                    RefreshValues( );
+                    errorProvider.SetError( grpOperationModifiers, null );
                     error = false;
-                    OnContentsChanged(EventArgs.Empty);
+                    OnContentsChanged( EventArgs.Empty );
                 }
-                catch (BadSyntaxException ex)
+                catch ( BadSyntaxException ex )
                 {
-                    RefreshValues();
-                    errorProvider.SetError(grpOperationModifiers, ex.Message);
+                    RefreshValues( );
+                    errorProvider.SetError( grpOperationModifiers, ex.Message );
                     error = true;
                 }
             }
         }
 
-        private void chkAbstract_CheckedChanged(object sender, EventArgs e)
+        private void chkAbstract_CheckedChanged( object sender, EventArgs e )
         {
-            if (!locked && member is Operation)
+            if ( !locked && member is Operation )
             {
                 try
                 {
-                    if (parent is ClassType &&
-                        ((ClassType) parent).Modifier != ClassModifier.Abstract)
+                    if ( parent is ClassType && ( ( ClassType ) parent ).Modifier != ClassModifier.Abstract )
                     {
-                        var result = MessageBox.Show(
-                            Strings.ChangingToAbstractConfirmation,
-                            Strings.Confirmation,
-                            MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Warning);
+                        var result = MessageBox.Show( Strings.ChangingToAbstractConfirmation, Strings.Confirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Warning );
 
-                        if (result == DialogResult.No)
+                        if ( result == DialogResult.No )
                         {
-                            RefreshValues();
+                            RefreshValues( );
                             return;
                         }
                     }
 
-                    ((Operation) member).IsAbstract = chkAbstract.Checked;
-                    RefreshValues();
-                    errorProvider.SetError(grpOperationModifiers, null);
+                    ( ( Operation ) member ).IsAbstract = chkAbstract.Checked;
+                    RefreshValues( );
+                    errorProvider.SetError( grpOperationModifiers, null );
                     error = false;
-                    OnContentsChanged(EventArgs.Empty);
+                    OnContentsChanged( EventArgs.Empty );
                 }
-                catch (BadSyntaxException ex)
+                catch ( BadSyntaxException ex )
                 {
-                    RefreshValues();
-                    errorProvider.SetError(grpOperationModifiers, ex.Message);
+                    RefreshValues( );
+                    errorProvider.SetError( grpOperationModifiers, ex.Message );
                     error = true;
                 }
             }
         }
 
-        private void chkOperationHider_CheckedChanged(object sender, EventArgs e)
+        private void chkOperationHider_CheckedChanged( object sender, EventArgs e )
         {
-            if (!locked && member is Operation)
+            if ( !locked && member is Operation )
             {
                 try
                 {
-                    ((Operation) member).IsHider = chkOperationHider.Checked;
-                    RefreshValues();
-                    errorProvider.SetError(grpOperationModifiers, null);
+                    ( ( Operation ) member ).IsHider = chkOperationHider.Checked;
+                    RefreshValues( );
+                    errorProvider.SetError( grpOperationModifiers, null );
                     error = false;
-                    OnContentsChanged(EventArgs.Empty);
+                    OnContentsChanged( EventArgs.Empty );
                 }
-                catch (BadSyntaxException ex)
+                catch ( BadSyntaxException ex )
                 {
-                    RefreshValues();
-                    errorProvider.SetError(grpOperationModifiers, ex.Message);
+                    RefreshValues( );
+                    errorProvider.SetError( grpOperationModifiers, ex.Message );
                     error = true;
                 }
             }
         }
 
-        private void chkOverride_CheckedChanged(object sender, EventArgs e)
+        private void chkOverride_CheckedChanged( object sender, EventArgs e )
         {
-            if (!locked && member is Operation)
+            if ( !locked && member is Operation )
             {
                 try
                 {
-                    ((Operation) member).IsOverride = chkOverride.Checked;
-                    RefreshValues();
-                    errorProvider.SetError(grpOperationModifiers, null);
+                    ( ( Operation ) member ).IsOverride = chkOverride.Checked;
+                    RefreshValues( );
+                    errorProvider.SetError( grpOperationModifiers, null );
                     error = false;
-                    OnContentsChanged(EventArgs.Empty);
+                    OnContentsChanged( EventArgs.Empty );
                 }
-                catch (BadSyntaxException ex)
+                catch ( BadSyntaxException ex )
                 {
-                    RefreshValues();
-                    errorProvider.SetError(grpOperationModifiers, ex.Message);
+                    RefreshValues( );
+                    errorProvider.SetError( grpOperationModifiers, ex.Message );
                     error = true;
                 }
             }
         }
 
-        private void chkSealed_CheckedChanged(object sender, EventArgs e)
+        private void chkSealed_CheckedChanged( object sender, EventArgs e )
         {
-            if (!locked && member is Operation)
+            if ( !locked && member is Operation )
             {
                 try
                 {
-                    ((Operation) member).IsSealed = chkSealed.Checked;
-                    RefreshValues();
-                    errorProvider.SetError(grpOperationModifiers, null);
+                    ( ( Operation ) member ).IsSealed = chkSealed.Checked;
+                    RefreshValues( );
+                    errorProvider.SetError( grpOperationModifiers, null );
                     error = false;
-                    OnContentsChanged(EventArgs.Empty);
+                    OnContentsChanged( EventArgs.Empty );
                 }
-                catch (BadSyntaxException ex)
+                catch ( BadSyntaxException ex )
                 {
-                    RefreshValues();
-                    errorProvider.SetError(grpOperationModifiers, ex.Message);
+                    RefreshValues( );
+                    errorProvider.SetError( grpOperationModifiers, ex.Message );
                     error = true;
                 }
             }
         }
 
-        private void grpFieldModifiers_Validated(object sender, EventArgs e)
+        private void grpFieldModifiers_Validated( object sender, EventArgs e )
         {
-            errorProvider.SetError(grpFieldModifiers, null);
+            errorProvider.SetError( grpFieldModifiers, null );
             error = false;
         }
 
-        private void grpOperationModifiers_Validated(object sender, EventArgs e)
+        private void grpOperationModifiers_Validated( object sender, EventArgs e )
         {
-            errorProvider.SetError(grpOperationModifiers, null);
+            errorProvider.SetError( grpOperationModifiers, null );
             error = false;
         }
 
-        private void txtInitialValue_Validating(object sender, CancelEventArgs e)
+        private void txtInitialValue_Validating( object sender, CancelEventArgs e )
         {
-            if (!locked && member is Field)
+            if ( !locked && member is Field )
             {
-                if (txtInitialValue.Text.Length > 0 && txtInitialValue.Text[0] == '"' &&
-                    !txtInitialValue.Text.EndsWith("\""))
+                if ( txtInitialValue.Text.Length > 0 && txtInitialValue.Text[ 0 ] == '"' && !txtInitialValue.Text.EndsWith( "\"" ) )
                 {
                     txtInitialValue.Text += '"';
                 }
-                var oldValue = ((Field) member).InitialValue;
-                ((Field) member).InitialValue = txtInitialValue.Text;
+                var oldValue = ( ( Field ) member ).InitialValue;
+                ( ( Field ) member ).InitialValue = txtInitialValue.Text;
 
-                RefreshValues();
-                if (oldValue != txtInitialValue.Text)
-                    OnContentsChanged(EventArgs.Empty);
+                RefreshValues( );
+                if ( oldValue != txtInitialValue.Text )
+                    OnContentsChanged( EventArgs.Empty );
             }
         }
 
-        private void lstMembers_ItemSelectionChanged(object sender,
-                                                     ListViewItemSelectionChangedEventArgs e)
+        private void lstMembers_ItemSelectionChanged( object sender, ListViewItemSelectionChangedEventArgs e )
         {
-            if (e.IsSelected && e.Item.Tag is Member)
+            if ( e.IsSelected && e.Item.Tag is Member )
             {
-                ShowNewMember((Member) e.Item.Tag);
+                ShowNewMember( ( Member ) e.Item.Tag );
 
                 toolDelete.Enabled = true;
-                if (e.ItemIndex < attributeCount)
+                if ( e.ItemIndex < attributeCount )
                 {
                     toolMoveUp.Enabled = e.ItemIndex > 0;
                     toolMoveDown.Enabled = e.ItemIndex < attributeCount - 1;
@@ -939,238 +922,230 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             }
         }
 
-        private void lstMembers_KeyDown(object sender, KeyEventArgs e)
+        private void lstMembers_KeyDown( object sender, KeyEventArgs e )
         {
-            if (e.KeyCode == Keys.Delete)
-                DeleteSelectedMember();
+            if ( e.KeyCode == Keys.Delete )
+                DeleteSelectedMember( );
         }
 
-        private void AddNewItem(ListViewItem item)
+        private void AddNewItem( ListViewItem item )
         {
             item.Focused = true;
             item.Selected = true;
-            txtName.SelectAll();
-            txtName.Focus();
+            txtName.SelectAll( );
+            txtName.Focus( );
         }
 
-        private void AddNewField(Field field)
+        private void AddNewField( Field field )
         {
-            var item = AddFieldToList(field);
-            AddNewItem(item);
-            OnContentsChanged(EventArgs.Empty);
+            var item = AddFieldToList( field );
+            AddNewItem( item );
+            OnContentsChanged( EventArgs.Empty );
         }
 
-        private void AddNewOperation(Operation operation)
+        private void AddNewOperation( Operation operation )
         {
-            var item = AddOperationToList(operation);
-            AddNewItem(item);
-            OnContentsChanged(EventArgs.Empty);
+            var item = AddOperationToList( operation );
+            AddNewItem( item );
+            OnContentsChanged( EventArgs.Empty );
         }
 
-        private void toolNewField_Click(object sender, EventArgs e)
+        private void toolNewField_Click( object sender, EventArgs e )
         {
-            if (parent.SupportsFields)
+            if ( parent.SupportsFields )
             {
-                var field = parent.AddField();
-                AddNewField(field);
+                var field = parent.AddField( );
+                AddNewField( field );
             }
         }
 
-        private void toolNewMethod_Click(object sender, EventArgs e)
+        private void toolNewMethod_Click( object sender, EventArgs e )
         {
-            var method = parent.AddMethod();
-            AddNewOperation(method);
+            var method = parent.AddMethod( );
+            AddNewOperation( method );
         }
 
-        private void toolNewProperty_Click(object sender, EventArgs e)
+        private void toolNewProperty_Click( object sender, EventArgs e )
         {
-            if (parent.SupportsProperties)
+            if ( parent.SupportsProperties )
             {
-                var property = parent.AddProperty();
-                AddNewOperation(property);
+                var property = parent.AddProperty( );
+                AddNewOperation( property );
             }
         }
 
-        private void toolNewEvent_Click(object sender, EventArgs e)
+        private void toolNewEvent_Click( object sender, EventArgs e )
         {
-            if (parent.SupportsEvents)
+            if ( parent.SupportsEvents )
             {
-                var _event = parent.AddEvent();
-                AddNewOperation(_event);
+                var _event = parent.AddEvent( );
+                AddNewOperation( _event );
             }
         }
 
-        private void toolNewConstructor_Click(object sender, EventArgs e)
+        private void toolNewConstructor_Click( object sender, EventArgs e )
         {
-            if (parent.SupportsConstuctors)
+            if ( parent.SupportsConstuctors )
             {
-                Method constructor = parent.AddConstructor();
-                var item = AddOperationToList(constructor);
+                Method constructor = parent.AddConstructor( );
+                var item = AddOperationToList( constructor );
 
                 item.Focused = true;
                 item.Selected = true;
-                OnContentsChanged(EventArgs.Empty);
+                OnContentsChanged( EventArgs.Empty );
             }
         }
 
-        private void toolNewDestructor_Click(object sender, EventArgs e)
+        private void toolNewDestructor_Click( object sender, EventArgs e )
         {
-            if (parent.SupportsDestructors)
+            if ( parent.SupportsDestructors )
             {
-                Method destructor = parent.AddDestructor();
-                var item = AddOperationToList(destructor);
+                Method destructor = parent.AddDestructor( );
+                var item = AddOperationToList( destructor );
 
                 item.Focused = true;
                 item.Selected = true;
-                OnContentsChanged(EventArgs.Empty);
+                OnContentsChanged( EventArgs.Empty );
             }
         }
 
-        private void toolOverrideList_Click(object sender, EventArgs e)
+        private void toolOverrideList_Click( object sender, EventArgs e )
         {
-            if (parent is SingleInharitanceType)
+            if ( parent is SingleInharitanceType )
             {
-                var derivedType = (SingleInharitanceType) parent;
-                using (var dialog = new OverrideDialog())
+                var derivedType = ( SingleInharitanceType ) parent;
+                using ( var dialog = new OverrideDialog( ) )
                 {
-                    if (dialog.ShowDialog(derivedType) == DialogResult.OK)
+                    if ( dialog.ShowDialog( derivedType ) == DialogResult.OK )
                     {
-                        foreach (var operation in dialog.GetSelectedOperations())
+                        foreach ( var operation in dialog.GetSelectedOperations( ) )
                         {
-                            var overridden = derivedType.Override(operation);
-                            AddOperationToList(overridden);
+                            var overridden = derivedType.Override( operation );
+                            AddOperationToList( overridden );
                         }
-                        OnContentsChanged(EventArgs.Empty);
+                        OnContentsChanged( EventArgs.Empty );
                     }
                 }
             }
         }
 
-        private void toolImplementList_Click(object sender, EventArgs e)
+        private void toolImplementList_Click( object sender, EventArgs e )
         {
-            if (parent is IInterfaceImplementer)
+            if ( parent is IInterfaceImplementer )
             {
-                using (var dialog = new ImplementDialog())
+                using ( var dialog = new ImplementDialog( ) )
                 {
-                    if (dialog.ShowDialog(parent as IInterfaceImplementer) == DialogResult.OK)
+                    if ( dialog.ShowDialog( parent as IInterfaceImplementer ) == DialogResult.OK )
                     {
-                        foreach (var operation in dialog.GetSelectedOperations())
+                        foreach ( var operation in dialog.GetSelectedOperations( ) )
                         {
-                            Implement((IInterfaceImplementer) parent,
-                                      operation,
-                                      dialog.ImplementExplicitly);
+                            Implement( ( IInterfaceImplementer ) parent, operation, dialog.ImplementExplicitly );
                         }
-                        OnContentsChanged(EventArgs.Empty);
+                        OnContentsChanged( EventArgs.Empty );
                     }
                 }
             }
         }
 
-        private void Implement(IInterfaceImplementer parent,
-                               Operation operation,
-                               bool mustExplicit)
+        private void Implement( IInterfaceImplementer parent, Operation operation, bool mustExplicit )
         {
-            var defined = parent.GetDefinedOperation(operation);
-            if (!operation.Language.SupportsExplicitImplementation)
+            var defined = parent.GetDefinedOperation( operation );
+            if ( !operation.Language.SupportsExplicitImplementation )
                 mustExplicit = false;
 
-            if (defined == null)
+            if ( defined == null )
             {
-                var implemented = parent.Implement(operation, mustExplicit);
-                AddOperationToList(implemented);
+                var implemented = parent.Implement( operation, mustExplicit );
+                AddOperationToList( implemented );
             }
-            else if (defined.Type != operation.Type)
+            else if ( defined.Type != operation.Type )
             {
-                var implemented = parent.Implement(operation, true);
-                AddOperationToList(implemented);
+                var implemented = parent.Implement( operation, true );
+                AddOperationToList( implemented );
             }
         }
 
-        private void toolSortByKind_Click(object sender, EventArgs e)
+        private void toolSortByKind_Click( object sender, EventArgs e )
         {
-            parent.SortMembers(SortingMode.ByKind);
-            FillMembersList();
-            OnContentsChanged(EventArgs.Empty);
+            parent.SortMembers( SortingMode.ByKind );
+            FillMembersList( );
+            OnContentsChanged( EventArgs.Empty );
         }
 
-        private void toolSortByAccess_Click(object sender, EventArgs e)
+        private void toolSortByAccess_Click( object sender, EventArgs e )
         {
-            parent.SortMembers(SortingMode.ByAccess);
-            FillMembersList();
-            OnContentsChanged(EventArgs.Empty);
+            parent.SortMembers( SortingMode.ByAccess );
+            FillMembersList( );
+            OnContentsChanged( EventArgs.Empty );
         }
 
-        private void toolSortByName_Click(object sender, EventArgs e)
+        private void toolSortByName_Click( object sender, EventArgs e )
         {
-            parent.SortMembers(SortingMode.ByName);
-            FillMembersList();
-            OnContentsChanged(EventArgs.Empty);
+            parent.SortMembers( SortingMode.ByName );
+            FillMembersList( );
+            OnContentsChanged( EventArgs.Empty );
         }
 
-        private void toolMoveUp_Click(object sender, EventArgs e)
+        private void toolMoveUp_Click( object sender, EventArgs e )
         {
-            if (lstMembers.SelectedItems.Count > 0)
+            if ( lstMembers.SelectedItems.Count > 0 )
             {
-                var item1 = lstMembers.SelectedItems[0];
+                var item1 = lstMembers.SelectedItems[ 0 ];
                 var index = item1.Index;
 
-                if (index > 0)
+                if ( index > 0 )
                 {
-                    var item2 = lstMembers.Items[index - 1];
+                    var item2 = lstMembers.Items[ index - 1 ];
 
-                    if (item1.Tag is Field && item2.Tag is Field ||
-                        item1.Tag is Operation && item2.Tag is Operation)
+                    if ( item1.Tag is Field && item2.Tag is Field || item1.Tag is Operation && item2.Tag is Operation )
                     {
                         locked = true;
-                        parent.MoveUpItem(item1.Tag);
-                        SwapListItems(item1, item2);
+                        parent.MoveUpItem( item1.Tag );
+                        SwapListItems( item1, item2 );
                         item2.Focused = true;
                         item2.Selected = true;
                         locked = false;
-                        OnContentsChanged(EventArgs.Empty);
+                        OnContentsChanged( EventArgs.Empty );
                     }
                 }
             }
         }
 
-        private void toolMoveDown_Click(object sender, EventArgs e)
+        private void toolMoveDown_Click( object sender, EventArgs e )
         {
-            if (lstMembers.SelectedItems.Count > 0)
+            if ( lstMembers.SelectedItems.Count > 0 )
             {
-                var item1 = lstMembers.SelectedItems[0];
+                var item1 = lstMembers.SelectedItems[ 0 ];
                 var index = item1.Index;
 
-                if (index < lstMembers.Items.Count - 1)
+                if ( index < lstMembers.Items.Count - 1 )
                 {
-                    var item2 = lstMembers.Items[index + 1];
+                    var item2 = lstMembers.Items[ index + 1 ];
 
-                    if (item1.Tag is Field && item2.Tag is Field ||
-                        item1.Tag is Operation && item2.Tag is Operation)
+                    if ( item1.Tag is Field && item2.Tag is Field || item1.Tag is Operation && item2.Tag is Operation )
                     {
                         locked = true;
-                        parent.MoveDownItem(item1.Tag);
-                        SwapListItems(item1, item2);
+                        parent.MoveDownItem( item1.Tag );
+                        SwapListItems( item1, item2 );
                         item2.Focused = true;
                         item2.Selected = true;
                         locked = false;
-                        OnContentsChanged(EventArgs.Empty);
+                        OnContentsChanged( EventArgs.Empty );
                     }
                 }
             }
         }
 
-        private void toolDelete_Click(object sender, EventArgs e)
+        private void toolDelete_Click( object sender, EventArgs e )
         {
-            DeleteSelectedMember();
+            DeleteSelectedMember( );
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
+        private void btnClose_Click( object sender, EventArgs e )
         {
-            Close();
+            Close( );
         }
 
-        private void txtSyntax_KeyDown(object sender, KeyEventArgs e)
-        {
-        }
+        private void txtSyntax_KeyDown( object sender, KeyEventArgs e ) {}
     }
 }

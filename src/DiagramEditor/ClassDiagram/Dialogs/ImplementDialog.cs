@@ -22,84 +22,84 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
 {
     public class ImplementDialog : TreeDialog
     {
-        private readonly CheckBox chkImplementExplicitly = new CheckBox();
+        private readonly CheckBox chkImplementExplicitly = new CheckBox( );
 
-        public ImplementDialog()
+        public ImplementDialog( )
         {
             chkImplementExplicitly.AutoSize = true;
-            chkImplementExplicitly.Location = new Point(12, 284);
+            chkImplementExplicitly.Location = new Point( 12, 284 );
             chkImplementExplicitly.Text = Strings.ImplementExplicitly;
             chkImplementExplicitly.Anchor = AnchorStyles.Left | AnchorStyles.Bottom;
-            Controls.Add(chkImplementExplicitly);
+            Controls.Add( chkImplementExplicitly );
         }
 
-        public bool ImplementExplicitly { get { return chkImplementExplicitly.Checked; } }
+        public bool ImplementExplicitly
+        {
+            get { return chkImplementExplicitly.Checked; }
+        }
 
-        protected override void UpdateTexts()
+        protected override void UpdateTexts( )
         {
             Text = Strings.Implementing;
-            base.UpdateTexts();
+            base.UpdateTexts( );
         }
 
-        private TreeNode CreateInterfaceNode(string interfaceName)
+        private TreeNode CreateInterfaceNode( string interfaceName )
         {
-            var node = OperationTree.Nodes.Add(interfaceName);
+            var node = OperationTree.Nodes.Add( interfaceName );
             node.SelectedImageIndex = Icons.InterfaceImageIndex;
             node.ImageIndex = Icons.InterfaceImageIndex;
 
             return node;
         }
 
-        private void AddOperations(IInterfaceImplementer implementer,
-                                   InterfaceType _interface,
-                                   TreeNode node)
+        private void AddOperations( IInterfaceImplementer implementer, InterfaceType _interface, TreeNode node )
         {
-            if (implementer == null || _interface == null || node == null)
+            if ( implementer == null || _interface == null || node == null )
                 return;
 
-            foreach (var baseInterface in _interface.Bases)
-                AddOperations(implementer, baseInterface, node);
+            foreach ( var baseInterface in _interface.Bases )
+                AddOperations( implementer, baseInterface, node );
 
-            foreach (var operation in _interface.Operations)
+            foreach ( var operation in _interface.Operations )
             {
-                var defined = implementer.GetDefinedOperation(operation);
+                var defined = implementer.GetDefinedOperation( operation );
 
-                if (defined == null)
+                if ( defined == null )
                 {
-                    CreateOperationNode(node, operation);
+                    CreateOperationNode( node, operation );
                 }
-                else if (defined.Type != operation.Type &&
-                         _interface.Language.SupportsExplicitImplementation)
+                else if ( defined.Type != operation.Type && _interface.Language.SupportsExplicitImplementation )
                 {
-                    var operationNode = CreateOperationNode(node, operation);
+                    var operationNode = CreateOperationNode( node, operation );
                     operationNode.ForeColor = Color.Gray;
                 }
             }
         }
 
-        private void AddInterface(IInterfaceImplementer implementer, InterfaceType _interface)
+        private void AddInterface( IInterfaceImplementer implementer, InterfaceType _interface )
         {
-            if (implementer == null || _interface == null)
+            if ( implementer == null || _interface == null )
                 return;
 
-            var node = CreateInterfaceNode(_interface.Name);
-            AddOperations(implementer, _interface, node);
+            var node = CreateInterfaceNode( _interface.Name );
+            AddOperations( implementer, _interface, node );
         }
 
-        public DialogResult ShowDialog(IInterfaceImplementer implementer)
+        public DialogResult ShowDialog( IInterfaceImplementer implementer )
         {
-            if (implementer == null)
+            if ( implementer == null )
                 return DialogResult.None;
 
             chkImplementExplicitly.Checked = false;
             chkImplementExplicitly.Visible = implementer.Language.SupportsExplicitImplementation;
 
-            OperationTree.Nodes.Clear();
-            foreach (var _interface in implementer.Interfaces)
-                AddInterface(implementer, _interface);
-            RemoveEmptyNodes();
+            OperationTree.Nodes.Clear( );
+            foreach ( var _interface in implementer.Interfaces )
+                AddInterface( implementer, _interface );
+            RemoveEmptyNodes( );
 
-            return ShowDialog();
+            return ShowDialog( );
         }
     }
 }

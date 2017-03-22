@@ -19,7 +19,7 @@ namespace NClass.GUI
 {
     public sealed class NClassEnvironment
     {
-        internal NClassEnvironment(Workspace workspace, DocumentManager docManager)
+        internal NClassEnvironment( Workspace workspace, DocumentManager docManager )
         {
             Workspace = workspace;
             DocumentManager = docManager;

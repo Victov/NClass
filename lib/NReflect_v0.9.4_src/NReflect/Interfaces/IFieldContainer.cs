@@ -21,14 +21,14 @@ using NReflect.NRMembers;
 
 namespace NReflect
 {
-  /// <summary>
-  /// Classes implementing this interface can contain fields.
-  /// </summary>
-  public interface IFieldContainer
-  {
     /// <summary>
-    /// Gets a list of fields of this type.
+    /// Classes implementing this interface can contain fields.
     /// </summary>
-    List<NRField> Fields { get; }
-  }
+    public interface IFieldContainer
+    {
+        /// <summary>
+        /// Gets a list of fields of this type.
+        /// </summary>
+        List< NRField > Fields { get; }
+    }
 }

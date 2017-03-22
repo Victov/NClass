@@ -17,11 +17,11 @@ using System;
 
 namespace NClass.DiagramEditor.ClassDiagram.Connections
 {
-    public delegate void BendPointEventHandler(object sender, BendPointEventArgs e);
+    public delegate void BendPointEventHandler( object sender, BendPointEventArgs e );
 
     public class BendPointEventArgs : EventArgs
     {
-        public BendPointEventArgs(BendPoint point)
+        public BendPointEventArgs( BendPoint point )
         {
             BendPoint = point;
         }

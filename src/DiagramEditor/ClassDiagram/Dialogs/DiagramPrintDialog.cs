@@ -40,27 +40,30 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         private bool selectedOnly;
         private Style selectedStyle = Style.CurrentStyle;
 
-        public DiagramPrintDialog()
+        public DiagramPrintDialog( )
         {
-            InitializeComponent();
+            InitializeComponent( );
             printPreview.AutoZoom = true;
-            printDocument.DefaultPageSettings.Margins = new Margins(50, 50, 50, 50);
+            printDocument.DefaultPageSettings.Margins = new Margins( 50, 50, 50, 50 );
         }
 
         public IDocument Document { get; set; } = null;
 
-        private int PageCount { get { return rows*columns; } }
-
-        protected override void OnLoad(EventArgs e)
+        private int PageCount
         {
-            base.OnLoad(e);
-
-            UpdateTexts();
-            LoadSettings();
-            LoadStyles();
+            get { return rows * columns; }
         }
 
-        private void UpdateTexts()
+        protected override void OnLoad( EventArgs e )
+        {
+            base.OnLoad( e );
+
+            UpdateTexts( );
+            LoadSettings( );
+            LoadStyles( );
+        }
+
+        private void UpdateTexts( )
         {
             Text = Strings.Print;
             btnPrinter.Text = Strings.ButtonSelectPrinter;
@@ -71,7 +74,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             btnPrint.Text = Strings.ButtonPrint;
             btnCancel.Text = Strings.ButtonCancel;
 
-            var buttonWidth = Math.Max(btnPrinter.Width, btnPageSetup.Width);
+            var buttonWidth = Math.Max( btnPrinter.Width, btnPageSetup.Width );
             btnPrinter.Width = buttonWidth;
             btnPageSetup.Width = buttonWidth;
 
@@ -79,7 +82,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             lblStyle.Left = minLeft;
             lblPages.Left = minLeft;
 
-            minLeft = Math.Max(lblStyle.Right, lblPages.Right);
+            minLeft = Math.Max( lblStyle.Right, lblPages.Right );
             cboStyle.Left = minLeft + 6;
             numColumns.Left = minLeft + 6;
             lblX.Left = numColumns.Right + 1;
@@ -87,10 +90,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             chkSelectedOnly.Left = numRows.Right + 14;
         }
 
-        private void LoadSettings()
+        private void LoadSettings( )
         {
             var settings = Settings.Default.PrintingSettings;
-            if (settings != null)
+            if ( settings != null )
             {
                 printDocument.DefaultPageSettings.Landscape = settings.Landscape;
                 printDocument.DefaultPageSettings.Margins = settings.Margins;
@@ -99,95 +102,82 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                 printDocument.DefaultPageSettings.PrinterSettings.PrinterName = settings.PrinterName;
             }
 
-            if (!pageSetupDialog.PrinterSettings.IsValid)
+            if ( !pageSetupDialog.PrinterSettings.IsValid )
             {
-                printDocument.PrinterSettings = new PrinterSettings();
+                printDocument.PrinterSettings = new PrinterSettings( );
                 pageSetupDialog.Document = printDocument;
             }
         }
 
-        private void LoadStyles()
+        private void LoadStyles( )
         {
-            cboStyle.Items.Clear();
-            foreach (var style in Style.AvaiableStyles)
+            cboStyle.Items.Clear( );
+            foreach ( var style in Style.AvaiableStyles )
             {
-                cboStyle.Items.Add(style);
-                if (style == Style.CurrentStyle)
+                cboStyle.Items.Add( style );
+                if ( style == Style.CurrentStyle )
                     cboStyle.SelectedItem = style;
             }
         }
 
-        private void SaveSettings()
+        private void SaveSettings( )
         {
-            Settings.Default.PrintingSettings = new PrintingSettings
-            {
-                Landscape = printDocument.DefaultPageSettings.Landscape,
-                Margins = printDocument.DefaultPageSettings.Margins,
-                PaperSize = printDocument.DefaultPageSettings.PaperSize,
-                PaperSource = printDocument.DefaultPageSettings.PaperSource,
-                PrinterName = printDocument.PrinterSettings.PrinterName
-            };
-            Settings.Default.Save();
+            Settings.Default.PrintingSettings = new PrintingSettings {Landscape = printDocument.DefaultPageSettings.Landscape, Margins = printDocument.DefaultPageSettings.Margins, PaperSize = printDocument.DefaultPageSettings.PaperSize, PaperSource = printDocument.DefaultPageSettings.PaperSource, PrinterName = printDocument.PrinterSettings.PrinterName};
+            Settings.Default.Save( );
         }
 
-        public new DialogResult ShowDialog()
+        public new DialogResult ShowDialog( )
         {
-            return ShowDialog(null);
+            return ShowDialog( null );
         }
 
-        public new DialogResult ShowDialog(IWin32Window owner)
+        public new DialogResult ShowDialog( IWin32Window owner )
         {
-            if (printDocument.PrinterSettings.IsValid)
+            if ( printDocument.PrinterSettings.IsValid )
             {
-                printPreview.InvalidatePreview();
-                return base.ShowDialog(owner);
+                printPreview.InvalidatePreview( );
+                return base.ShowDialog( owner );
             }
-            MessageBox.Show(Strings.ErrorNoPrinters,
-                            Strings.Error,
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
+            MessageBox.Show( Strings.ErrorNoPrinters, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error );
 
             return DialogResult.Cancel;
         }
 
-        private void Print()
+        private void Print( )
         {
             try
             {
-                printDocument.Print();
-                SaveSettings();
+                printDocument.Print( );
+                SaveSettings( );
             }
-            catch (InvalidPrinterException ex)
+            catch ( InvalidPrinterException ex )
             {
-                MessageBox.Show(string.Format(Strings.ErrorPrinting, ex.Message),
-                                Strings.Error,
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
+                MessageBox.Show( string.Format( Strings.ErrorPrinting, ex.Message ), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error );
             }
         }
 
-        private static Style MakeShadowsOpaque(Style selectedStyle)
+        private static Style MakeShadowsOpaque( Style selectedStyle )
         {
-            var converted = selectedStyle.Clone();
-            converted.ShadowColor = DisableTransparency(converted.ShadowColor);
+            var converted = selectedStyle.Clone( );
+            converted.ShadowColor = DisableTransparency( converted.ShadowColor );
             return converted;
         }
 
-        private static Color DisableTransparency(Color color)
+        private static Color DisableTransparency( Color color )
         {
-            var red = color.R*color.A/255 + (255 - color.A);
-            var green = color.G*color.A/255 + (255 - color.A);
-            var blue = color.B*color.A/255 + (255 - color.A);
+            var red = color.R * color.A / 255 + ( 255 - color.A );
+            var green = color.G * color.A / 255 + ( 255 - color.A );
+            var blue = color.B * color.A / 255 + ( 255 - color.A );
 
-            return Color.FromArgb(red, green, blue);
+            return Color.FromArgb( red, green, blue );
         }
 
-        private void printDocument_BeginPrint(object sender, PrintEventArgs e)
+        private void printDocument_BeginPrint( object sender, PrintEventArgs e )
         {
-            if (Document != null && printDocument.PrinterSettings.IsValid)
+            if ( Document != null && printDocument.PrinterSettings.IsValid )
             {
                 pageIndex = 0;
-                printingStyle = MakeShadowsOpaque(selectedStyle);
+                printingStyle = MakeShadowsOpaque( selectedStyle );
                 printDocument.DocumentName = Document.Name;
             }
             else
@@ -196,81 +186,77 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             }
         }
 
-        private void printDocument_PrintPage(object sender, PrintPageEventArgs e)
+        private void printDocument_PrintPage( object sender, PrintPageEventArgs e )
         {
             // Scale the page to match sizes of the screen
             e.Graphics.PageUnit = GraphicsUnit.Inch;
-            e.Graphics.PageScale = 1/DiagramElement.Graphics.DpiX;
+            e.Graphics.PageScale = 1 / DiagramElement.Graphics.DpiX;
 
             // Get the phisical page margins
-            var marginScale = DiagramElement.Graphics.DpiX/100;
+            var marginScale = DiagramElement.Graphics.DpiX / 100;
             RectangleF marginBounds = e.MarginBounds;
-            if (!printDocument.PrintController.IsPreview)
-                marginBounds.Offset(-e.PageSettings.HardMarginX, -e.PageSettings.HardMarginY);
-            marginBounds = new RectangleF(
-                marginBounds.X*marginScale,
-                marginBounds.Y*marginScale,
-                marginBounds.Width*marginScale,
-                marginBounds.Height*marginScale);
+            if ( !printDocument.PrintController.IsPreview )
+                marginBounds.Offset( -e.PageSettings.HardMarginX, -e.PageSettings.HardMarginY );
+            marginBounds = new RectangleF( marginBounds.X * marginScale, marginBounds.Y * marginScale, marginBounds.Width * marginScale, marginBounds.Height * marginScale );
 
             // Get logical area information
-            var drawingArea = Document.GetPrintingArea(selectedOnly);
-            var column = pageIndex%columns;
-            var row = pageIndex/columns;
+            var drawingArea = Document.GetPrintingArea( selectedOnly );
+            var column = pageIndex % columns;
+            var row = pageIndex / columns;
 
             // Get zooming information if diagram is too big
-            var scaleX = columns*marginBounds.Width/drawingArea.Width;
-            var scaleY = rows*marginBounds.Height/drawingArea.Height;
-            var scale = Math.Min(scaleX, scaleY);
-            if (scale > 1)
+            var scaleX = columns * marginBounds.Width / drawingArea.Width;
+            var scaleY = rows * marginBounds.Height / drawingArea.Height;
+            var scale = Math.Min( scaleX, scaleY );
+            if ( scale > 1 )
                 scale = 1; // No need for zooming in
 
             // Set the printing clip region
             var clipBounds = marginBounds;
-            if (column == 0)
+            if ( column == 0 )
             {
                 clipBounds.X = 0;
                 clipBounds.Width += marginBounds.Left;
             }
-            if (row == 0)
+            if ( row == 0 )
             {
                 clipBounds.Y = 0;
                 clipBounds.Height += marginBounds.Top;
             }
-            if (column == columns - 1)
+            if ( column == columns - 1 )
             {
                 clipBounds.Width += marginBounds.Left;
             }
-            if (row == rows - 1)
+            if ( row == rows - 1 )
             {
                 clipBounds.Height += marginBounds.Top;
             }
-            e.Graphics.SetClip(clipBounds);
+            e.Graphics.SetClip( clipBounds );
 
             // Moving the image to it's right position
-            e.Graphics.TranslateTransform(-column*marginBounds.Width, -row*marginBounds.Height);
-            e.Graphics.TranslateTransform(marginBounds.Left, marginBounds.Top);
-            e.Graphics.ScaleTransform(scale, scale);
-            e.Graphics.TranslateTransform(-drawingArea.Left, -drawingArea.Top);
+            e.Graphics.TranslateTransform( -column * marginBounds.Width, -row * marginBounds.Height );
+            e.Graphics.TranslateTransform( marginBounds.Left, marginBounds.Top );
+            e.Graphics.ScaleTransform( scale, scale );
+            e.Graphics.TranslateTransform( -drawingArea.Left, -drawingArea.Top );
 
             // Printing
-            IGraphics graphics = new GdiGraphics(e.Graphics);
-            Document.Print(graphics, selectedOnly, printingStyle);
+            IGraphics graphics = new GdiGraphics( e.Graphics );
+            Document.Print( graphics, selectedOnly, printingStyle );
             e.HasMorePages = ++pageIndex < PageCount;
         }
 
-        private void printDocument_EndPrint(object sender, PrintEventArgs e)
+        private void printDocument_EndPrint( object sender, PrintEventArgs e )
         {
-            if (printingStyle != null)
+            if ( printingStyle != null )
             {
-                printingStyle.Dispose();
+                printingStyle.Dispose( );
                 printingStyle = null;
             }
         }
 
-        private void printPreview_Click(object sender, EventArgs e)
+        private void printPreview_Click( object sender, EventArgs e )
         {
-            if (printPreview.AutoZoom)
+            if ( printPreview.AutoZoom )
             {
                 printPreview.AutoZoom = false;
                 printPreview.Zoom = 1.0;
@@ -281,70 +267,67 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             }
         }
 
-        private void btnPrint_Click(object sender, EventArgs e)
+        private void btnPrint_Click( object sender, EventArgs e )
         {
-            Print();
+            Print( );
         }
 
-        private void btnPrinter_Click(object sender, EventArgs e)
+        private void btnPrinter_Click( object sender, EventArgs e )
         {
-            if (selectPrinterDialog.ShowDialog() == DialogResult.OK)
+            if ( selectPrinterDialog.ShowDialog( ) == DialogResult.OK )
             {
-                Print();
-                Close();
+                Print( );
+                Close( );
             }
         }
 
-        private void btnPageSetup_Click(object sender, EventArgs e)
+        private void btnPageSetup_Click( object sender, EventArgs e )
         {
             var originalMargins = pageSetupDialog.PageSettings.Margins;
 
-            if (RegionInfo.CurrentRegion.IsMetric && !MonoHelper.IsRunningOnMono)
+            if ( RegionInfo.CurrentRegion.IsMetric && !MonoHelper.IsRunningOnMono )
             {
                 // This is necessary because of a bug in PageSetupDialog control.
                 // More information: http://support.microsoft.com/?id=814355
-                pageSetupDialog.PageSettings.Margins = PrinterUnitConvert.Convert(
-                    pageSetupDialog.PageSettings.Margins,
-                    PrinterUnit.Display,
-                    PrinterUnit.TenthsOfAMillimeter);
+                pageSetupDialog.PageSettings.Margins = PrinterUnitConvert.Convert( pageSetupDialog.PageSettings.Margins, PrinterUnit.Display, PrinterUnit.TenthsOfAMillimeter );
             }
 
-            if (pageSetupDialog.ShowDialog() == DialogResult.OK)
-                printPreview.InvalidatePreview();
+            if ( pageSetupDialog.ShowDialog( ) == DialogResult.OK )
+                printPreview.InvalidatePreview( );
             else
                 pageSetupDialog.PageSettings.Margins = originalMargins;
         }
 
-        private void cboStyle_SelectedIndexChanged(object sender, EventArgs e)
+        private void cboStyle_SelectedIndexChanged( object sender, EventArgs e )
         {
             var style = cboStyle.SelectedItem as Style;
-            if (style != null)
+            if ( style != null )
             {
                 selectedStyle = style;
-                printPreview.InvalidatePreview();
+                printPreview.InvalidatePreview( );
             }
         }
 
-        private void numColumns_ValueChanged(object sender, EventArgs e)
+        private void numColumns_ValueChanged( object sender, EventArgs e )
         {
-            columns = (int) numColumns.Value;
+            columns = ( int ) numColumns.Value;
             printPreview.Columns = columns;
             printPreview.AutoZoom = true;
-            printPreview.InvalidatePreview();
+            printPreview.InvalidatePreview( );
         }
 
-        private void numRows_ValueChanged(object sender, EventArgs e)
+        private void numRows_ValueChanged( object sender, EventArgs e )
         {
-            rows = (int) numRows.Value;
+            rows = ( int ) numRows.Value;
             printPreview.Rows = rows;
             printPreview.AutoZoom = true;
-            printPreview.InvalidatePreview();
+            printPreview.InvalidatePreview( );
         }
 
-        private void chkSelectedOnly_CheckedChanged(object sender, EventArgs e)
+        private void chkSelectedOnly_CheckedChanged( object sender, EventArgs e )
         {
             selectedOnly = chkSelectedOnly.Checked;
-            printPreview.InvalidatePreview();
+            printPreview.InvalidatePreview( );
         }
     }
 }

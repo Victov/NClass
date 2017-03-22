@@ -28,8 +28,7 @@ namespace NClass.CodeGenerator
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="model" /> is null.
         /// </exception>
-        public CSharpProjectGenerator(Model model, SolutionType solutionType)
-            : base(model)
+        public CSharpProjectGenerator( Model model, SolutionType solutionType ) : base( model )
         {
             this.solutionType = solutionType;
         }
@@ -41,92 +40,78 @@ namespace NClass.CodeGenerator
                 var fileName = ProjectName + ".csproj";
                 var directoryName = ProjectName;
 
-                return Path.Combine(directoryName, fileName);
+                return Path.Combine( directoryName, fileName );
             }
         }
 
-        protected override SourceFileGenerator CreateSourceFileGenerator(TypeBase type,
-                                                                         bool sort_using,
-                                                                         bool generate_document_comment,
-                                                                         string compagny_name,
-                                                                         string copyright_header,
-                                                                         string author)
+        protected override SourceFileGenerator CreateSourceFileGenerator( TypeBase type, bool sort_using, bool generate_document_comment, string compagny_name, string copyright_header, string author )
         {
-            return new CSharpSourceFileGenerator(type,
-                                                 RootNamespace,
-                                                 sort_using,
-                                                 generate_document_comment,
-                                                 compagny_name,
-                                                 copyright_header,
-                                                 author);
+            return new CSharpSourceFileGenerator( type, RootNamespace, sort_using, generate_document_comment, compagny_name, copyright_header, author );
         }
 
-        protected override bool GenerateProjectFiles(string location)
+        protected override bool GenerateProjectFiles( string location )
         {
             try
             {
-                var templateDir = Path.Combine(Application.StartupPath, "Templates");
-                var templateFile = Path.Combine(templateDir, "csproj.template");
-                var projectFile = Path.Combine(location, RelativeProjectFileName);
+                var templateDir = Path.Combine( Application.StartupPath, "Templates" );
+                var templateFile = Path.Combine( templateDir, "csproj.template" );
+                var projectFile = Path.Combine( location, RelativeProjectFileName );
 
-                using (var reader = new StreamReader(templateFile))
-                using (var writer = new StreamWriter(
-                    projectFile,
-                    false,
-                    reader.CurrentEncoding))
-                {
-                    while (!reader.EndOfStream)
+                using ( var reader = new StreamReader( templateFile ) )
+                    using ( var writer = new StreamWriter( projectFile, false, reader.CurrentEncoding ) )
                     {
-                        var line = reader.ReadLine();
-
-                        line = line.Replace("${RootNamespace}", RootNamespace);
-                        line = line.Replace("${AssemblyName}", ProjectName);
-
-                        if (line.Contains("${VS2005:"))
+                        while ( !reader.EndOfStream )
                         {
-                            if (solutionType == SolutionType.VisualStudio2005)
-                                line = Regex.Replace(line, @"\${VS2005:(?<content>.+?)}", "${content}");
-                            else
-                                line = Regex.Replace(line, @"\${VS2005:(?<content>.+?)}", "");
+                            var line = reader.ReadLine( );
 
-                            if (line.Length == 0)
-                                continue;
-                        }
-                        if (line.Contains("${VS2008:"))
-                        {
-                            if (solutionType == SolutionType.VisualStudio2008)
-                                line = Regex.Replace(line, @"\${VS2008:(?<content>.+?)}", "${content}");
-                            else
-                                line = Regex.Replace(line, @"\${VS2008:(?<content>.+?)}", "");
+                            line = line.Replace( "${RootNamespace}", RootNamespace );
+                            line = line.Replace( "${AssemblyName}", ProjectName );
 
-                            if (line.Length == 0)
-                                continue;
-                        }
-                        if (line.Contains("${VS2015:"))
-                        {
-                            if (solutionType == SolutionType.VisualStudio2015)
-                                line = Regex.Replace(line, @"\${VS2015:(?<content>.+?)}", "${content}");
-                            else
-                                line = Regex.Replace(line, @"\${VS2015:(?<content>.+?)}", "");
-
-                            if (line.Length == 0)
-                                continue;
-                        }
-
-                        if (line.Contains("${SourceFile}"))
-                        {
-                            foreach (var fileName in FileNames)
+                            if ( line.Contains( "${VS2005:" ) )
                             {
-                                var newLine = line.Replace("${SourceFile}", fileName);
-                                writer.WriteLine(newLine);
+                                if ( solutionType == SolutionType.VisualStudio2005 )
+                                    line = Regex.Replace( line, @"\${VS2005:(?<content>.+?)}", "${content}" );
+                                else
+                                    line = Regex.Replace( line, @"\${VS2005:(?<content>.+?)}", "" );
+
+                                if ( line.Length == 0 )
+                                    continue;
+                            }
+                            if ( line.Contains( "${VS2008:" ) )
+                            {
+                                if ( solutionType == SolutionType.VisualStudio2008 )
+                                    line = Regex.Replace( line, @"\${VS2008:(?<content>.+?)}", "${content}" );
+                                else
+                                    line = Regex.Replace( line, @"\${VS2008:(?<content>.+?)}", "" );
+
+                                if ( line.Length == 0 )
+                                    continue;
+                            }
+                            if ( line.Contains( "${VS2015:" ) )
+                            {
+                                if ( solutionType == SolutionType.VisualStudio2015 )
+                                    line = Regex.Replace( line, @"\${VS2015:(?<content>.+?)}", "${content}" );
+                                else
+                                    line = Regex.Replace( line, @"\${VS2015:(?<content>.+?)}", "" );
+
+                                if ( line.Length == 0 )
+                                    continue;
+                            }
+
+                            if ( line.Contains( "${SourceFile}" ) )
+                            {
+                                foreach ( var fileName in FileNames )
+                                {
+                                    var newLine = line.Replace( "${SourceFile}", fileName );
+                                    writer.WriteLine( newLine );
+                                }
+                            }
+                            else
+                            {
+                                writer.WriteLine( line );
                             }
                         }
-                        else
-                        {
-                            writer.WriteLine(line);
-                        }
                     }
-                }
 
                 return true;
             }

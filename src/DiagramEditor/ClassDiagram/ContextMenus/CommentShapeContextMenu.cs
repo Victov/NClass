@@ -25,47 +25,40 @@ namespace NClass.DiagramEditor.ClassDiagram.ContextMenus
     {
         private ToolStripMenuItem mnuEditComment;
 
-        private CommentShapeContextMenu()
+        private CommentShapeContextMenu( )
         {
-            InitMenuItems();
+            InitMenuItems( );
         }
 
-        public static CommentShapeContextMenu Default { get; } = new CommentShapeContextMenu();
+        public static CommentShapeContextMenu Default { get; } = new CommentShapeContextMenu( );
 
-        private void UpdateTexts()
+        private void UpdateTexts( )
         {
             mnuEditComment.Text = Strings.MenuEditComment;
         }
 
-        public override void ValidateMenuItems(Diagram diagram)
+        public override void ValidateMenuItems( Diagram diagram )
         {
-            base.ValidateMenuItems(diagram);
-            ShapeContextMenu.Default.ValidateMenuItems(diagram);
+            base.ValidateMenuItems( diagram );
+            ShapeContextMenu.Default.ValidateMenuItems( diagram );
             mnuEditComment.Enabled = diagram.SelectedElementCount == 1;
         }
 
-        private void InitMenuItems()
+        private void InitMenuItems( )
         {
-            mnuEditComment = new ToolStripMenuItem(
-                Strings.MenuEditComment,
-                Resources.EditComment,
-                mnuEditComment_Click);
+            mnuEditComment = new ToolStripMenuItem( Strings.MenuEditComment, Resources.EditComment, mnuEditComment_Click );
 
-            MenuList.AddRange(ShapeContextMenu.Default.MenuItems);
-            MenuList.AddRange(new ToolStripItem[]
-            {
-                new ToolStripSeparator(),
-                mnuEditComment
-            });
+            MenuList.AddRange( ShapeContextMenu.Default.MenuItems );
+            MenuList.AddRange( new ToolStripItem[] {new ToolStripSeparator( ), mnuEditComment} );
         }
 
-        private void mnuEditComment_Click(object sender, EventArgs e)
+        private void mnuEditComment_Click( object sender, EventArgs e )
         {
-            if (Diagram != null)
+            if ( Diagram != null )
             {
                 var commentShape = Diagram.TopSelectedElement as CommentShape;
-                if (commentShape != null)
-                    commentShape.EditText();
+                if ( commentShape != null )
+                    commentShape.EditText( );
             }
         }
     }

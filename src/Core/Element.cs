@@ -28,13 +28,13 @@ namespace NClass.Core
             get { return dontRaiseRequestCount == 0; }
             set
             {
-                if (!value)
+                if ( !value )
                     dontRaiseRequestCount++;
-                else if (dontRaiseRequestCount > 0)
+                else if ( dontRaiseRequestCount > 0 )
                     dontRaiseRequestCount--;
 
-                if (RaiseChangedEvent && IsDirty)
-                    OnModified(EventArgs.Empty);
+                if ( RaiseChangedEvent && IsDirty )
+                    OnModified( EventArgs.Empty );
             }
         }
 
@@ -42,28 +42,28 @@ namespace NClass.Core
 
         public bool IsDirty { get; private set; }
 
-        public virtual void Clean()
+        public virtual void Clean( )
         {
             IsDirty = false;
             //TODO: tagok tisztítása
         }
 
-        protected void Changed()
+        protected void Changed( )
         {
-            if (!Initializing)
+            if ( !Initializing )
             {
-                if (RaiseChangedEvent)
-                    OnModified(EventArgs.Empty);
+                if ( RaiseChangedEvent )
+                    OnModified( EventArgs.Empty );
                 else
                     IsDirty = true;
             }
         }
 
-        private void OnModified(EventArgs e)
+        private void OnModified( EventArgs e )
         {
             IsDirty = true;
-            if (Modified != null)
-                Modified(this, e);
+            if ( Modified != null )
+                Modified( this, e );
         }
     }
 }

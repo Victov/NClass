@@ -27,66 +27,54 @@ namespace NClass.CodeGenerator
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="project" /> is null.
         /// </exception>
-        protected SolutionGenerator(Project project)
+        protected SolutionGenerator( Project project )
         {
-            if (project == null)
-                throw new ArgumentNullException("project");
+            if ( project == null )
+                throw new ArgumentNullException( "project" );
 
             Project = project;
         }
 
-        public string SolutionName { get { return Project.Name; } }
+        public string SolutionName
+        {
+            get { return Project.Name; }
+        }
 
         protected Project Project { get; }
 
-        protected List<ProjectGenerator> ProjectGenerators { get; } = new List<ProjectGenerator>();
+        protected List< ProjectGenerator > ProjectGenerators { get; } = new List< ProjectGenerator >( );
 
         /// <exception cref="ArgumentException">
         ///     <paramref name="location" /> contains invalid path characters.
         /// </exception>
-        internal GenerationResult Generate(string location,
-                                           bool sort_using,
-                                           bool generate_document_comment,
-                                           string compagny_name,
-                                           string copyright_header,
-                                           string author)
+        internal GenerationResult Generate( string location, bool sort_using, bool generate_document_comment, string compagny_name, string copyright_header, string author )
         {
-            var result = CheckDestination(location);
-            if (result != GenerationResult.Success)
+            var result = CheckDestination( location );
+            if ( result != GenerationResult.Success )
                 return result;
 
-            if (
-                !GenerateProjectFiles(location,
-                                      sort_using,
-                                      generate_document_comment,
-                                      compagny_name,
-                                      copyright_header,
-                                      author))
+            if ( !GenerateProjectFiles( location, sort_using, generate_document_comment, compagny_name, copyright_header, author ) )
                 return GenerationResult.Error;
-            if (!GenerateSolutionFile(location))
+            if ( !GenerateSolutionFile( location ) )
                 return GenerationResult.Error;
 
             return GenerationResult.Success;
         }
 
-        private GenerationResult CheckDestination(string location)
+        private GenerationResult CheckDestination( string location )
         {
             try
             {
-                location = Path.Combine(location, SolutionName);
-                if (Directory.Exists(location))
+                location = Path.Combine( location, SolutionName );
+                if ( Directory.Exists( location ) )
                 {
-                    var result = MessageBox.Show(
-                        Strings.CodeGenerationOverwriteConfirmation,
-                        Strings.Confirmation,
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Warning);
+                    var result = MessageBox.Show( Strings.CodeGenerationOverwriteConfirmation, Strings.Confirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Warning );
 
-                    if (result == DialogResult.Yes)
+                    if ( result == DialogResult.Yes )
                         return GenerationResult.Success;
                     return GenerationResult.Cancelled;
                 }
-                Directory.CreateDirectory(location);
+                Directory.CreateDirectory( location );
                 return GenerationResult.Success;
             }
             catch
@@ -95,36 +83,26 @@ namespace NClass.CodeGenerator
             }
         }
 
-        private bool GenerateProjectFiles(string location,
-                                          bool sort_using,
-                                          bool generate_document_comment,
-                                          string compagny_name,
-                                          string copyright_header,
-                                          string author)
+        private bool GenerateProjectFiles( string location, bool sort_using, bool generate_document_comment, string compagny_name, string copyright_header, string author )
         {
             var success = true;
-            location = Path.Combine(location, Project.Name);
+            location = Path.Combine( location, Project.Name );
 
-            ProjectGenerators.Clear();
-            foreach (var projectItem in Project.Items)
+            ProjectGenerators.Clear( );
+            foreach ( var projectItem in Project.Items )
             {
                 var model = projectItem as Model;
 
-                if (model != null)
+                if ( model != null )
                 {
-                    var projectGenerator = CreateProjectGenerator(model);
-                    ProjectGenerators.Add(projectGenerator);
+                    var projectGenerator = CreateProjectGenerator( model );
+                    ProjectGenerators.Add( projectGenerator );
 
                     try
                     {
-                        projectGenerator.Generate(location,
-                                                  sort_using,
-                                                  generate_document_comment,
-                                                  compagny_name,
-                                                  copyright_header,
-                                                  author);
+                        projectGenerator.Generate( location, sort_using, generate_document_comment, compagny_name, copyright_header, author );
                     }
-                    catch (FileGenerationException)
+                    catch ( FileGenerationException )
                     {
                         success = false;
                     }
@@ -137,8 +115,8 @@ namespace NClass.CodeGenerator
         /// <exception cref="ArgumentException">
         ///     The <paramref name="model" /> is invalid.
         /// </exception>
-        protected abstract ProjectGenerator CreateProjectGenerator(Model model);
+        protected abstract ProjectGenerator CreateProjectGenerator( Model model );
 
-        protected abstract bool GenerateSolutionFile(string location);
+        protected abstract bool GenerateSolutionFile( string location );
     }
 }

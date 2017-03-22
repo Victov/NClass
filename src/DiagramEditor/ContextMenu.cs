@@ -20,20 +20,23 @@ namespace NClass.DiagramEditor
 {
     public abstract class ContextMenu
     {
-        internal static readonly ContextMenuStrip MenuStrip = new ContextMenuStrip();
+        internal static readonly ContextMenuStrip MenuStrip = new ContextMenuStrip( );
 
         protected abstract IDocument Document { get; }
 
-        internal IEnumerable<ToolStripItem> MenuItems { get { return MenuList; } }
-
-        protected List<ToolStripItem> MenuList { get; } = new List<ToolStripItem>();
-
-        public IEnumerable<ToolStripItem> GetMenuItems(IDocument document)
+        internal IEnumerable< ToolStripItem > MenuItems
         {
-            ValidateMenuItems(document);
+            get { return MenuList; }
+        }
+
+        protected List< ToolStripItem > MenuList { get; } = new List< ToolStripItem >( );
+
+        public IEnumerable< ToolStripItem > GetMenuItems( IDocument document )
+        {
+            ValidateMenuItems( document );
             return MenuList;
         }
 
-        public abstract void ValidateMenuItems(IDocument document);
+        public abstract void ValidateMenuItems( IDocument document );
     }
 }

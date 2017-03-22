@@ -21,14 +21,14 @@ using NReflect.NRMembers;
 
 namespace NReflect
 {
-  /// <summary>
-  /// Classes implementing this interface can contain methods.
-  /// </summary>
-  public interface IMethodContainer
-  {
     /// <summary>
-    /// Gets a list of methods of this type.
+    /// Classes implementing this interface can contain methods.
     /// </summary>
-    List<NRMethod> Methods { get; }
-  }
+    public interface IMethodContainer
+    {
+        /// <summary>
+        /// Gets a list of methods of this type.
+        /// </summary>
+        List< NRMethod > Methods { get; }
+    }
 }

@@ -17,11 +17,11 @@ using System;
 
 namespace NClass.Core
 {
-    public delegate void RelationshipEventHandler(object sender, RelationshipEventArgs e);
+    public delegate void RelationshipEventHandler( object sender, RelationshipEventArgs e );
 
     public class RelationshipEventArgs : EventArgs
     {
-        public RelationshipEventArgs(Relationship relationship)
+        public RelationshipEventArgs( Relationship relationship )
         {
             Relationship = relationship;
         }

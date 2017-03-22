@@ -32,14 +32,14 @@ namespace NClass.DiagramEditor.ClassDiagram.ContextMenus
         private ToolStripMenuItem mnuAutoWidth;
         private ToolStripMenuItem mnuAutoHeight;
 
-        private TypeShapeContextMenu()
+        private TypeShapeContextMenu( )
         {
-            InitMenuItems();
+            InitMenuItems( );
         }
 
-        public static TypeShapeContextMenu Default { get; } = new TypeShapeContextMenu();
+        public static TypeShapeContextMenu Default { get; } = new TypeShapeContextMenu( );
 
-        private void UpdateTexts()
+        private void UpdateTexts( )
         {
             mnuSize.Text = Strings.MenuSize;
             mnuAutoSize.Text = Strings.MenuAutoSize;
@@ -50,93 +50,66 @@ namespace NClass.DiagramEditor.ClassDiagram.ContextMenus
             mnuEditMembers.Text = Strings.MenuEditMembers;
         }
 
-        public override void ValidateMenuItems(Diagram diagram)
+        public override void ValidateMenuItems( Diagram diagram )
         {
-            base.ValidateMenuItems(diagram);
-            ShapeContextMenu.Default.ValidateMenuItems(diagram);
+            base.ValidateMenuItems( diagram );
+            ShapeContextMenu.Default.ValidateMenuItems( diagram );
             mnuEditMembers.Enabled = diagram.SelectedElementCount == 1;
         }
 
-        private void InitMenuItems()
+        private void InitMenuItems( )
         {
-            mnuEditMembers = new ToolStripMenuItem(Strings.MenuEditMembers,
-                                                   Resources.EditMembers,
-                                                   mnuEditMembers_Click);
-            mnuAutoSize = new ToolStripMenuItem(Strings.MenuAutoSize,
-                                                null,
-                                                mnuAutoSize_Click);
-            mnuAutoWidth = new ToolStripMenuItem(Strings.MenuAutoWidth,
-                                                 null,
-                                                 mnuAutoWidth_Click);
-            mnuAutoHeight = new ToolStripMenuItem(Strings.MenuAutoHeight,
-                                                  null,
-                                                  mnuAutoHeight_Click);
-            mnuCollapseAllSelected = new ToolStripMenuItem(
-                Strings.MenuCollapseAllSelected,
-                null,
-                mnuCollapseAllSelected_Click);
-            mnuExpandAllSelected = new ToolStripMenuItem(
-                Strings.MenuExpandAllSelected,
-                null,
-                mnuExpandAllSelected_Click);
-            mnuSize = new ToolStripMenuItem(Strings.MenuSize,
-                                            null,
-                                            mnuAutoSize,
-                                            mnuAutoWidth,
-                                            mnuAutoHeight,
-                                            new ToolStripSeparator(),
-                                            mnuCollapseAllSelected,
-                                            mnuExpandAllSelected
-                );
+            mnuEditMembers = new ToolStripMenuItem( Strings.MenuEditMembers, Resources.EditMembers, mnuEditMembers_Click );
+            mnuAutoSize = new ToolStripMenuItem( Strings.MenuAutoSize, null, mnuAutoSize_Click );
+            mnuAutoWidth = new ToolStripMenuItem( Strings.MenuAutoWidth, null, mnuAutoWidth_Click );
+            mnuAutoHeight = new ToolStripMenuItem( Strings.MenuAutoHeight, null, mnuAutoHeight_Click );
+            mnuCollapseAllSelected = new ToolStripMenuItem( Strings.MenuCollapseAllSelected, null, mnuCollapseAllSelected_Click );
+            mnuExpandAllSelected = new ToolStripMenuItem( Strings.MenuExpandAllSelected, null, mnuExpandAllSelected_Click );
+            mnuSize = new ToolStripMenuItem( Strings.MenuSize, null, mnuAutoSize, mnuAutoWidth, mnuAutoHeight, new ToolStripSeparator( ), mnuCollapseAllSelected, mnuExpandAllSelected );
 
-            MenuList.AddRange(ShapeContextMenu.Default.MenuItems);
-            MenuList.AddRange(new ToolStripItem[]
-            {
-                mnuSize,
-                new ToolStripSeparator(),
-                mnuEditMembers
-            });
+            MenuList.AddRange( ShapeContextMenu.Default.MenuItems );
+            MenuList.AddRange( new ToolStripItem[] {mnuSize, new ToolStripSeparator( ), mnuEditMembers} );
         }
 
-        private void mnuAutoSize_Click(object sender, EventArgs e)
+        private void mnuAutoSize_Click( object sender, EventArgs e )
         {
-            if (Diagram != null)
-                Diagram.AutoSizeOfSelectedShapes();
+            if ( Diagram != null )
+                Diagram.AutoSizeOfSelectedShapes( );
         }
 
-        private void mnuAutoWidth_Click(object sender, EventArgs e)
+        private void mnuAutoWidth_Click( object sender, EventArgs e )
         {
-            if (Diagram != null)
-                Diagram.AutoWidthOfSelectedShapes();
+            if ( Diagram != null )
+                Diagram.AutoWidthOfSelectedShapes( );
         }
 
-        private void mnuAutoHeight_Click(object sender, EventArgs e)
+        private void mnuAutoHeight_Click( object sender, EventArgs e )
         {
-            if (Diagram != null)
-                Diagram.AutoHeightOfSelectedShapes();
+            if ( Diagram != null )
+                Diagram.AutoHeightOfSelectedShapes( );
         }
 
-        private void mnuCollapseAllSelected_Click(object sender, EventArgs e)
+        private void mnuCollapseAllSelected_Click( object sender, EventArgs e )
         {
-            if (Diagram != null)
-                Diagram.CollapseAll(true);
+            if ( Diagram != null )
+                Diagram.CollapseAll( true );
         }
 
-        private void mnuExpandAllSelected_Click(object sender, EventArgs e)
+        private void mnuExpandAllSelected_Click( object sender, EventArgs e )
         {
-            if (Diagram != null)
-                Diagram.ExpandAll(true);
+            if ( Diagram != null )
+                Diagram.ExpandAll( true );
         }
 
-        private void mnuEditMembers_Click(object sender, EventArgs e)
+        private void mnuEditMembers_Click( object sender, EventArgs e )
         {
-            if (Diagram != null)
+            if ( Diagram != null )
             {
                 var typeShape = Diagram.TopSelectedElement as TypeShape;
-                if (typeShape != null)
+                if ( typeShape != null )
                 {
                     typeShape.IsActive = false;
-                    typeShape.EditMembers();
+                    typeShape.EditMembers( );
                 }
             }
         }

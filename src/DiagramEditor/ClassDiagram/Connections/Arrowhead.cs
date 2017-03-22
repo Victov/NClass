@@ -25,28 +25,18 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         public const int OpenArrowWidth = 10;
         public const int OpenArrowHeight = 16;
-        public static readonly Size ClosedArrowSize = new Size(ClosedArrowWidth, ClosedArrowHeight);
-        public static readonly Size OpenArrowSize = new Size(OpenArrowWidth, OpenArrowHeight);
+        public static readonly Size ClosedArrowSize = new Size( ClosedArrowWidth, ClosedArrowHeight );
+        public static readonly Size OpenArrowSize = new Size( OpenArrowWidth, OpenArrowHeight );
 
-        static Arrowhead()
+        static Arrowhead( )
         {
-            OpenArrowPoints = new[]
-            {
-                new Point(-OpenArrowWidth/2, OpenArrowHeight),
-                new Point(0, 0),
-                new Point(OpenArrowWidth/2, OpenArrowHeight)
-            };
+            OpenArrowPoints = new[] {new Point( -OpenArrowWidth / 2, OpenArrowHeight ), new Point( 0, 0 ), new Point( OpenArrowWidth / 2, OpenArrowHeight )};
 
-            ClosedArrowPath.AddLines(new[]
-            {
-                new Point(0, 0),
-                new Point(ClosedArrowWidth/2, ClosedArrowHeight),
-                new Point(-ClosedArrowWidth/2, ClosedArrowHeight)
-            });
-            ClosedArrowPath.CloseFigure();
+            ClosedArrowPath.AddLines( new[] {new Point( 0, 0 ), new Point( ClosedArrowWidth / 2, ClosedArrowHeight ), new Point( -ClosedArrowWidth / 2, ClosedArrowHeight )} );
+            ClosedArrowPath.CloseFigure( );
         }
 
-        public static GraphicsPath ClosedArrowPath { get; } = new GraphicsPath();
+        public static GraphicsPath ClosedArrowPath { get; } = new GraphicsPath( );
 
         public static Point[] OpenArrowPoints { get; }
     }

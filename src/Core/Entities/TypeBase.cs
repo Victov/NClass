@@ -29,7 +29,7 @@ namespace NClass.Core
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        protected TypeBase(string name)
+        protected TypeBase( string name )
         {
             Initializing = true;
             Name = name;
@@ -44,13 +44,13 @@ namespace NClass.Core
             get { return access; }
             set
             {
-                if (!Language.IsValidModifier(value))
-                    throw new BadSyntaxException(Strings.ErrorInvalidModifier);
+                if ( !Language.IsValidModifier( value ) )
+                    throw new BadSyntaxException( Strings.ErrorInvalidModifier );
 
-                if (access != value)
+                if ( access != value )
                 {
                     access = value;
-                    Changed();
+                    Changed( );
                 }
             }
         }
@@ -61,7 +61,7 @@ namespace NClass.Core
         {
             get
             {
-                if (AccessModifier == AccessModifier.Default)
+                if ( AccessModifier == AccessModifier.Default )
                     return DefaultAccess;
                 return AccessModifier;
             }
@@ -77,32 +77,35 @@ namespace NClass.Core
             get { return nestingParent; }
             protected internal set
             {
-                if (nestingParent != value)
+                if ( nestingParent != value )
                 {
-                    if (value == this)
+                    if ( value == this )
                     {
-                        throw new RelationshipException(Strings.ErrorRecursiveNesting);
+                        throw new RelationshipException( Strings.ErrorRecursiveNesting );
                     }
-                    if (value != null && !value.SupportsNesting)
+                    if ( value != null && !value.SupportsNesting )
                     {
-                        throw new RelationshipException(Strings.ErrorNestingNotSupported);
+                        throw new RelationshipException( Strings.ErrorNestingNotSupported );
                     }
-                    if (value != null && value.IsNestedAncestor(this))
+                    if ( value != null && value.IsNestedAncestor( this ) )
                     {
-                        throw new RelationshipException(Strings.ErrorCyclicNesting);
+                        throw new RelationshipException( Strings.ErrorCyclicNesting );
                     }
 
-                    if (nestingParent != null)
-                        nestingParent.RemoveNestedChild(this);
+                    if ( nestingParent != null )
+                        nestingParent.RemoveNestedChild( this );
                     nestingParent = value;
-                    if (nestingParent != null)
-                        nestingParent.AddNestedChild(this);
-                    Changed();
+                    if ( nestingParent != null )
+                        nestingParent.AddNestedChild( this );
+                    Changed( );
                 }
             }
         }
 
-        public bool IsNested { get { return NestingParent != null; } }
+        public bool IsNested
+        {
+            get { return NestingParent != null; }
+        }
 
         public abstract Language Language { get; }
 
@@ -121,72 +124,72 @@ namespace NClass.Core
             get { return name; }
             set
             {
-                var newName = Language.GetValidName(value, true);
+                var newName = Language.GetValidName( value, true );
 
-                if (newName != name)
+                if ( newName != name )
                 {
                     name = newName;
-                    Changed();
+                    Changed( );
                 }
             }
         }
 
         public abstract EntityType EntityType { get; }
 
-        void ISerializableElement.Serialize(XmlElement node)
+        void ISerializableElement.Serialize( XmlElement node )
         {
-            Serialize(node);
+            Serialize( node );
         }
 
-        void ISerializableElement.Deserialize(XmlElement node)
+        void ISerializableElement.Deserialize( XmlElement node )
         {
-            Deserialize(node);
+            Deserialize( node );
         }
 
-        private bool IsNestedAncestor(TypeBase type)
+        private bool IsNestedAncestor( TypeBase type )
         {
-            if (NestingParent != null && NestingParent.IsNestedAncestor(type))
+            if ( NestingParent != null && NestingParent.IsNestedAncestor( type ) )
                 return true;
             return type == this;
         }
 
-        public abstract bool MoveUpItem(object item);
+        public abstract bool MoveUpItem( object item );
 
-        public abstract bool MoveDownItem(object item);
+        public abstract bool MoveDownItem( object item );
 
-        protected static bool MoveUp(IList list, object item)
+        protected static bool MoveUp( IList list, object item )
         {
-            if (item == null)
+            if ( item == null )
                 return false;
 
-            var index = list.IndexOf(item);
-            if (index > 0)
+            var index = list.IndexOf( item );
+            if ( index > 0 )
             {
-                var temp = list[index - 1];
-                list[index - 1] = list[index];
-                list[index] = temp;
+                var temp = list[ index - 1 ];
+                list[ index - 1 ] = list[ index ];
+                list[ index ] = temp;
                 return true;
             }
             return false;
         }
 
-        protected static bool MoveDown(IList list, object item)
+        protected static bool MoveDown( IList list, object item )
         {
-            if (item == null)
+            if ( item == null )
                 return false;
 
-            var index = list.IndexOf(item);
-            if (index >= 0 && index < list.Count - 1)
+            var index = list.IndexOf( item );
+            if ( index >= 0 && index < list.Count - 1 )
             {
-                var temp = list[index + 1];
-                list[index + 1] = list[index];
-                list[index] = temp;
+                var temp = list[ index + 1 ];
+                list[ index + 1 ] = list[ index ];
+                list[ index ] = temp;
                 return true;
             }
             return false;
         }
 
-        protected virtual void CopyFrom(TypeBase type)
+        protected virtual void CopyFrom( TypeBase type )
         {
             name = type.name;
             access = type.access;
@@ -195,22 +198,22 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="node" /> is null.
         /// </exception>
-        protected internal virtual void Serialize(XmlElement node)
+        protected internal virtual void Serialize( XmlElement node )
         {
-            if (node == null)
-                throw new ArgumentNullException("node");
+            if ( node == null )
+                throw new ArgumentNullException( "node" );
 
             XmlElement child;
 
-            child = node.OwnerDocument.CreateElement("Name");
+            child = node.OwnerDocument.CreateElement( "Name" );
             child.InnerText = Name;
-            node.AppendChild(child);
+            node.AppendChild( child );
 
-            child = node.OwnerDocument.CreateElement("Access");
-            child.InnerText = AccessModifier.ToString();
-            node.AppendChild(child);
+            child = node.OwnerDocument.CreateElement( "Access" );
+            child.InnerText = AccessModifier.ToString( );
+            node.AppendChild( child );
 
-            OnSerializing(new SerializeEventArgs(node));
+            OnSerializing( new SerializeEventArgs( node ) );
         }
 
         /// <exception cref="BadSyntaxException">
@@ -222,37 +225,37 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="node" /> is null.
         /// </exception>
-        protected internal virtual void Deserialize(XmlElement node)
+        protected internal virtual void Deserialize( XmlElement node )
         {
-            if (node == null)
-                throw new ArgumentNullException("node");
+            if ( node == null )
+                throw new ArgumentNullException( "node" );
 
             RaiseChangedEvent = false;
-            var nameChild = node["Name"];
-            if (nameChild != null)
+            var nameChild = node[ "Name" ];
+            if ( nameChild != null )
                 Name = nameChild.InnerText;
 
-            var accessChild = node["Access"];
-            if (accessChild != null)
-                AccessModifier = Language.TryParseAccessModifier(accessChild.InnerText);
+            var accessChild = node[ "Access" ];
+            if ( accessChild != null )
+                AccessModifier = Language.TryParseAccessModifier( accessChild.InnerText );
 
             RaiseChangedEvent = true;
-            OnDeserializing(new SerializeEventArgs(node));
+            OnDeserializing( new SerializeEventArgs( node ) );
         }
 
-        private void OnSerializing(SerializeEventArgs e)
+        private void OnSerializing( SerializeEventArgs e )
         {
-            if (Serializing != null)
-                Serializing(this, e);
+            if ( Serializing != null )
+                Serializing( this, e );
         }
 
-        private void OnDeserializing(SerializeEventArgs e)
+        private void OnDeserializing( SerializeEventArgs e )
         {
-            if (Deserializing != null)
-                Deserializing(this, e);
+            if ( Deserializing != null )
+                Deserializing( this, e );
         }
 
-        public override string ToString()
+        public override string ToString( )
         {
             return Name + ": " + Signature;
         }

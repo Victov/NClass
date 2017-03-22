@@ -26,152 +26,159 @@ namespace NClass.DiagramEditor
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="graphics" /> is null.
         /// </exception>
-        public GdiGraphics(Graphics graphics)
+        public GdiGraphics( Graphics graphics )
         {
-            if (graphics == null)
-                throw new ArgumentNullException("graphics");
+            if ( graphics == null )
+                throw new ArgumentNullException( "graphics" );
 
             this.graphics = graphics;
         }
 
-        public Region Clip { get { return graphics.Clip; } set { graphics.Clip = value; } }
-
-        public RectangleF ClipBounds { get { return graphics.ClipBounds; } }
-
-        public Matrix Transform { get { return graphics.Transform; } set { graphics.Transform = value; } }
-
-        public void DrawEllipse(Pen pen, int x, int y, int width, int height)
+        public Region Clip
         {
-            graphics.DrawEllipse(pen, x, y, width, height);
+            get { return graphics.Clip; }
+            set { graphics.Clip = value; }
         }
 
-        public void DrawImage(Image image, int x, int y)
+        public RectangleF ClipBounds
         {
-            graphics.DrawImage(image, x, y, image.Width, image.Height);
+            get { return graphics.ClipBounds; }
         }
 
-        public void DrawImage(Image image, Point point)
+        public Matrix Transform
         {
-            graphics.DrawImage(image, point.X, point.Y, image.Width, image.Height);
+            get { return graphics.Transform; }
+            set { graphics.Transform = value; }
         }
 
-        public void DrawLine(Pen pen, int x1, int y1, int x2, int y2)
+        public void DrawEllipse( Pen pen, int x, int y, int width, int height )
         {
-            graphics.DrawLine(pen, x1, y1, x2, y2);
+            graphics.DrawEllipse( pen, x, y, width, height );
         }
 
-        public void DrawLine(Pen pen, Point pt1, Point pt2)
+        public void DrawImage( Image image, int x, int y )
         {
-            graphics.DrawLine(pen, pt1, pt2);
+            graphics.DrawImage( image, x, y, image.Width, image.Height );
         }
 
-        public void DrawLines(Pen pen, Point[] points)
+        public void DrawImage( Image image, Point point )
         {
-            graphics.DrawLines(pen, points);
+            graphics.DrawImage( image, point.X, point.Y, image.Width, image.Height );
         }
 
-        public void DrawPath(Pen pen, GraphicsPath path)
+        public void DrawLine( Pen pen, int x1, int y1, int x2, int y2 )
         {
-            graphics.DrawPath(pen, path);
+            graphics.DrawLine( pen, x1, y1, x2, y2 );
         }
 
-        public void DrawPolygon(Pen pen, Point[] points)
+        public void DrawLine( Pen pen, Point pt1, Point pt2 )
         {
-            graphics.DrawPolygon(pen, points);
+            graphics.DrawLine( pen, pt1, pt2 );
         }
 
-        public void DrawRectangle(Pen pen, Rectangle rect)
+        public void DrawLines( Pen pen, Point[] points )
         {
-            graphics.DrawRectangle(pen, rect);
+            graphics.DrawLines( pen, points );
         }
 
-        public void DrawString(string s, Font font, Brush brush, PointF point)
+        public void DrawPath( Pen pen, GraphicsPath path )
         {
-            graphics.DrawString(s, font, brush, point);
+            graphics.DrawPath( pen, path );
         }
 
-        public void DrawString(string s, Font font, Brush brush, RectangleF layoutRectangle)
+        public void DrawPolygon( Pen pen, Point[] points )
         {
-            graphics.DrawString(s, font, brush, layoutRectangle);
+            graphics.DrawPolygon( pen, points );
         }
 
-        public void DrawString(string s, Font font, Brush brush, PointF point, StringFormat format)
+        public void DrawRectangle( Pen pen, Rectangle rect )
         {
-            graphics.DrawString(s, font, brush, point, format);
+            graphics.DrawRectangle( pen, rect );
         }
 
-        public void DrawString(string s,
-                               Font font,
-                               Brush brush,
-                               RectangleF layoutRectangle,
-                               StringFormat format)
+        public void DrawString( string s, Font font, Brush brush, PointF point )
         {
-            graphics.DrawString(s, font, brush, layoutRectangle, format);
+            graphics.DrawString( s, font, brush, point );
         }
 
-        public void FillEllipse(Brush brush, Rectangle rect)
+        public void DrawString( string s, Font font, Brush brush, RectangleF layoutRectangle )
         {
-            graphics.FillEllipse(brush, rect);
+            graphics.DrawString( s, font, brush, layoutRectangle );
         }
 
-        public void FillEllipse(Brush brush, int x, int y, int width, int height)
+        public void DrawString( string s, Font font, Brush brush, PointF point, StringFormat format )
         {
-            graphics.FillEllipse(brush, x, y, width, height);
+            graphics.DrawString( s, font, brush, point, format );
         }
 
-        public void FillPath(Brush brush, GraphicsPath path)
+        public void DrawString( string s, Font font, Brush brush, RectangleF layoutRectangle, StringFormat format )
         {
-            graphics.FillPath(brush, path);
+            graphics.DrawString( s, font, brush, layoutRectangle, format );
         }
 
-        public void FillPolygon(Brush brush, Point[] points)
+        public void FillEllipse( Brush brush, Rectangle rect )
         {
-            graphics.FillPolygon(brush, points);
+            graphics.FillEllipse( brush, rect );
         }
 
-        public void FillRectangle(Brush brush, Rectangle rect)
+        public void FillEllipse( Brush brush, int x, int y, int width, int height )
         {
-            graphics.FillRectangle(brush, rect);
+            graphics.FillEllipse( brush, x, y, width, height );
         }
 
-        public void SetClip(GraphicsPath path, CombineMode combineMode)
+        public void FillPath( Brush brush, GraphicsPath path )
         {
-            graphics.SetClip(path, combineMode);
+            graphics.FillPath( brush, path );
         }
 
-        public void SetClip(Rectangle rect, CombineMode combineMode)
+        public void FillPolygon( Brush brush, Point[] points )
         {
-            graphics.SetClip(rect, combineMode);
+            graphics.FillPolygon( brush, points );
         }
 
-        public void SetClip(RectangleF rect, CombineMode combineMode)
+        public void FillRectangle( Brush brush, Rectangle rect )
         {
-            graphics.SetClip(rect, combineMode);
+            graphics.FillRectangle( brush, rect );
         }
 
-        public void SetClip(Region region, CombineMode combineMode)
+        public void SetClip( GraphicsPath path, CombineMode combineMode )
         {
-            graphics.SetClip(region, combineMode);
+            graphics.SetClip( path, combineMode );
         }
 
-        public void ResetTransform()
+        public void SetClip( Rectangle rect, CombineMode combineMode )
         {
-            graphics.ResetTransform();
+            graphics.SetClip( rect, combineMode );
         }
 
-        public void RotateTransform(float angle)
+        public void SetClip( RectangleF rect, CombineMode combineMode )
         {
-            graphics.RotateTransform(angle);
+            graphics.SetClip( rect, combineMode );
         }
 
-        public void ScaleTransform(float sx, float sy)
+        public void SetClip( Region region, CombineMode combineMode )
         {
-            graphics.TranslateTransform(sx, sy);
+            graphics.SetClip( region, combineMode );
         }
 
-        public void TranslateTransform(float dx, float dy)
+        public void ResetTransform( )
         {
-            graphics.TranslateTransform(dx, dy);
+            graphics.ResetTransform( );
+        }
+
+        public void RotateTransform( float angle )
+        {
+            graphics.RotateTransform( angle );
+        }
+
+        public void ScaleTransform( float sx, float sy )
+        {
+            graphics.TranslateTransform( sx, sy );
+        }
+
+        public void TranslateTransform( float dx, float dy )
+        {
+            graphics.TranslateTransform( dx, dy );
         }
     }
 }

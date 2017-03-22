@@ -23,44 +23,38 @@ namespace NClass.DiagramEditor.ClassDiagram.ContextMenus
     {
         private ToolStripMenuItem mnuAutoRouting;
 
-        private ConnectionContextMenu()
+        private ConnectionContextMenu( )
         {
-            InitMenuItems();
+            InitMenuItems( );
         }
 
-        public static ConnectionContextMenu Default { get; } = new ConnectionContextMenu();
+        public static ConnectionContextMenu Default { get; } = new ConnectionContextMenu( );
 
-        private void UpdateTexts()
+        private void UpdateTexts( )
         {
             mnuAutoRouting.Text = Strings.MenuAutoRouting;
         }
 
-        public override void ValidateMenuItems(Diagram diagram)
+        public override void ValidateMenuItems( Diagram diagram )
         {
-            base.ValidateMenuItems(diagram);
-            GeneralContextMenu.Default.ValidateMenuItems(diagram);
+            base.ValidateMenuItems( diagram );
+            GeneralContextMenu.Default.ValidateMenuItems( diagram );
         }
 
-        private void InitMenuItems()
+        private void InitMenuItems( )
         {
-            mnuAutoRouting = new ToolStripMenuItem(Strings.MenuAutoRouting,
-                                                   null,
-                                                   mnuAutoRouting_Click);
+            mnuAutoRouting = new ToolStripMenuItem( Strings.MenuAutoRouting, null, mnuAutoRouting_Click );
 
-            MenuList.AddRange(GeneralContextMenu.Default.MenuItems);
-            MenuList.AddRange(new ToolStripItem[]
-            {
-                new ToolStripSeparator(),
-                mnuAutoRouting
-            });
+            MenuList.AddRange( GeneralContextMenu.Default.MenuItems );
+            MenuList.AddRange( new ToolStripItem[] {new ToolStripSeparator( ), mnuAutoRouting} );
         }
 
-        private void mnuAutoRouting_Click(object sender, EventArgs e)
+        private void mnuAutoRouting_Click( object sender, EventArgs e )
         {
-            if (Diagram != null)
+            if ( Diagram != null )
             {
-                foreach (var connection in Diagram.GetSelectedConnections())
-                    connection.AutoRoute();
+                foreach ( var connection in Diagram.GetSelectedConnections( ) )
+                    connection.AutoRoute( );
             }
         }
     }

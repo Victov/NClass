@@ -21,58 +21,55 @@ namespace NClass.GUI.ModelExplorer
     {
         private bool deleted;
 
-        public ModelView ModelView { get { return TreeView as ModelView; } }
+        public ModelView ModelView
+        {
+            get { return TreeView as ModelView; }
+        }
 
         public bool EditingLabel { get; private set; }
 
-        public virtual void BeforeDelete()
+        public virtual void BeforeDelete( )
         {
-            foreach (ModelNode node in Nodes)
+            foreach ( ModelNode node in Nodes )
             {
-                node.BeforeDelete();
+                node.BeforeDelete( );
             }
         }
 
-        public void Delete()
+        public void Delete( )
         {
-            if (!deleted)
+            if ( !deleted )
             {
-                BeforeDelete();
-                Remove();
+                BeforeDelete( );
+                Remove( );
                 deleted = true;
             }
         }
 
-        public void EditLabel()
+        public void EditLabel( )
         {
-            if (!EditingLabel)
+            if ( !EditingLabel )
             {
                 EditingLabel = true;
-                BeginEdit();
+                BeginEdit( );
             }
         }
 
-        internal void LabelEdited()
+        internal void LabelEdited( )
         {
             EditingLabel = false;
         }
 
-        public virtual void LabelModified(NodeLabelEditEventArgs e)
-        {
-        }
+        public virtual void LabelModified( NodeLabelEditEventArgs e ) {}
 
-        public virtual void DoubleClick()
-        {
-        }
+        public virtual void DoubleClick( ) {}
 
-        public virtual void EnterPressed()
-        {
-        }
+        public virtual void EnterPressed( ) {}
 
-        protected internal virtual void AfterInitialized()
+        protected internal virtual void AfterInitialized( )
         {
-            foreach (ModelNode node in Nodes)
-                node.AfterInitialized();
+            foreach ( ModelNode node in Nodes )
+                node.AfterInitialized( );
         }
     }
 }

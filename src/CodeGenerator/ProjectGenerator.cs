@@ -65,32 +65,17 @@ namespace NClass.CodeGenerator
         /// <exception cref="ArgumentException">
         ///     <paramref name="location" /> contains invalid path characters.
         /// </exception>
-        internal bool Generate( string location,
-                                bool sort_using,
-                                bool generate_document_comment,
-                                string compagny_name,
-                                string copyright_header,
-                                string author )
+        internal bool Generate( string location, bool sort_using, bool generate_document_comment, string compagny_name, string copyright_header, string author )
         {
             var success = true;
 
-            success &= GenerateSourceFiles( location,
-                sort_using,
-                generate_document_comment,
-                compagny_name,
-                copyright_header,
-                author );
+            success &= GenerateSourceFiles( location, sort_using, generate_document_comment, compagny_name, copyright_header, author );
             success &= GenerateProjectFiles( location );
 
             return success;
         }
 
-        private bool GenerateSourceFiles( string location,
-                                          bool sort_using,
-                                          bool generate_document_comment,
-                                          string compagny_name,
-                                          string copyright_header,
-                                          string author )
+        private bool GenerateSourceFiles( string location, bool sort_using, bool generate_document_comment, string compagny_name, string copyright_header, string author )
         {
             var success = true;
             location = Path.Combine( location, ProjectName );
@@ -102,12 +87,7 @@ namespace NClass.CodeGenerator
 
                 if ( type != null && !type.IsNested )
                 {
-                    var sourceFile = CreateSourceFileGenerator( type,
-                        sort_using,
-                        generate_document_comment,
-                        compagny_name,
-                        copyright_header,
-                        author );
+                    var sourceFile = CreateSourceFileGenerator( type, sort_using, generate_document_comment, compagny_name, copyright_header, author );
 
                     try
                     {
@@ -124,12 +104,7 @@ namespace NClass.CodeGenerator
             return success;
         }
 
-        protected abstract SourceFileGenerator CreateSourceFileGenerator( TypeBase type,
-                                                                          bool sort_using,
-                                                                          bool generate_document_comment,
-                                                                          string compagny_name,
-                                                                          string copyright_header,
-                                                                          string author );
+        protected abstract SourceFileGenerator CreateSourceFileGenerator( TypeBase type, bool sort_using, bool generate_document_comment, string compagny_name, string copyright_header, string author );
 
         protected abstract bool GenerateProjectFiles( string location );
     }

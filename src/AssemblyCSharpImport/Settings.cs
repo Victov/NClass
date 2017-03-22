@@ -10,12 +10,12 @@ namespace NClass.AssemblyCSharpImport.Properties
     //  L'événement SettingsSaving est déclenché avant l'enregistrement des valeurs de paramètre.
     internal sealed partial class Settings
     {
-        private void SettingChangingEventHandler(object sender, SettingChangingEventArgs e)
+        private void SettingChangingEventHandler( object sender, SettingChangingEventArgs e )
         {
             // Ajouter du code pour gérer l'événement SettingChangingEvent ici.
         }
 
-        private void SettingsSavingEventHandler(object sender, CancelEventArgs e)
+        private void SettingsSavingEventHandler( object sender, CancelEventArgs e )
         {
             // Ajouter du code pour gérer l'événement SettingsSaving ici.
         }

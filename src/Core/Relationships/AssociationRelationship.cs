@@ -32,36 +32,40 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="first" /> or <paramref name="second" /> is null.
         /// </exception>
-        internal AssociationRelationship(TypeBase first, TypeBase second)
-            : base(first, second)
+        internal AssociationRelationship( TypeBase first, TypeBase second ) : base( first, second )
         {
-            Attach();
+            Attach( );
         }
 
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="first" /> is null.-or-
         ///     <paramref name="second" /> is null.
         /// </exception>
-        internal AssociationRelationship(TypeBase first, TypeBase second, AssociationType type)
-            : base(first, second)
+        internal AssociationRelationship( TypeBase first, TypeBase second, AssociationType type ) : base( first, second )
         {
             associationType = type;
-            Attach();
+            Attach( );
         }
 
-        public override RelationshipType RelationshipType { get { return RelationshipType.Association; } }
+        public override RelationshipType RelationshipType
+        {
+            get { return RelationshipType.Association; }
+        }
 
-        public override bool SupportsLabel { get { return true; } }
+        public override bool SupportsLabel
+        {
+            get { return true; }
+        }
 
         public Direction Direction
         {
             get { return direction; }
             set
             {
-                if (direction != value)
+                if ( direction != value )
                 {
                     direction = value;
-                    Changed();
+                    Changed( );
                 }
             }
         }
@@ -71,30 +75,36 @@ namespace NClass.Core
             get { return associationType; }
             set
             {
-                if (associationType != value)
+                if ( associationType != value )
                 {
                     associationType = value;
-                    Changed();
+                    Changed( );
                 }
             }
         }
 
-        public bool IsAggregation { get { return associationType == AssociationType.Aggregation; } }
+        public bool IsAggregation
+        {
+            get { return associationType == AssociationType.Aggregation; }
+        }
 
-        public bool IsComposition { get { return associationType == AssociationType.Composition; } }
+        public bool IsComposition
+        {
+            get { return associationType == AssociationType.Composition; }
+        }
 
         public string StartRole
         {
             get { return startRole; }
             set
             {
-                if (value == "")
+                if ( value == "" )
                     value = null;
 
-                if (startRole != value)
+                if ( startRole != value )
                 {
                     startRole = value;
-                    Changed();
+                    Changed( );
                 }
             }
         }
@@ -104,13 +114,13 @@ namespace NClass.Core
             get { return endRole; }
             set
             {
-                if (value == "")
+                if ( value == "" )
                     value = null;
 
-                if (endRole != value)
+                if ( endRole != value )
                 {
                     endRole = value;
-                    Changed();
+                    Changed( );
                 }
             }
         }
@@ -120,13 +130,13 @@ namespace NClass.Core
             get { return startMultiplicity; }
             set
             {
-                if (value == "")
+                if ( value == "" )
                     value = null;
 
-                if (startMultiplicity != value)
+                if ( startMultiplicity != value )
                 {
                     startMultiplicity = value;
-                    Changed();
+                    Changed( );
                 }
             }
         }
@@ -136,35 +146,35 @@ namespace NClass.Core
             get { return endMultiplicity; }
             set
             {
-                if (value == "")
+                if ( value == "" )
                     value = null;
 
-                if (endMultiplicity != value)
+                if ( endMultiplicity != value )
                 {
                     endMultiplicity = value;
-                    Changed();
+                    Changed( );
                 }
             }
         }
 
         public event EventHandler Reversed;
 
-        public void Reverse()
+        public void Reverse( )
         {
             //TODO: ne az õsosztályon kereszül érje el, egyszerûbb lenne saját taggal
             var first = First;
             First = Second;
             Second = first;
 
-            OnReversed(EventArgs.Empty);
-            Changed();
+            OnReversed( EventArgs.Empty );
+            Changed( );
         }
 
-        protected override void CopyFrom(Relationship relationship)
+        protected override void CopyFrom( Relationship relationship )
         {
-            base.CopyFrom(relationship);
+            base.CopyFrom( relationship );
 
-            var association = (AssociationRelationship) relationship;
+            var association = ( AssociationRelationship ) relationship;
             associationType = association.associationType;
             direction = association.direction;
             startRole = association.startRole;
@@ -173,68 +183,68 @@ namespace NClass.Core
             endMultiplicity = association.endMultiplicity;
         }
 
-        public AssociationRelationship Clone(TypeBase first, TypeBase second)
+        public AssociationRelationship Clone( TypeBase first, TypeBase second )
         {
-            var association = new AssociationRelationship(first, second);
-            association.CopyFrom(this);
+            var association = new AssociationRelationship( first, second );
+            association.CopyFrom( this );
             return association;
         }
 
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="node" /> is null.
         /// </exception>
-        protected internal override void Serialize(XmlElement node)
+        protected internal override void Serialize( XmlElement node )
         {
-            base.Serialize(node);
+            base.Serialize( node );
 
-            var directionNode = node.OwnerDocument.CreateElement("Direction");
-            directionNode.InnerText = Direction.ToString();
-            node.AppendChild(directionNode);
+            var directionNode = node.OwnerDocument.CreateElement( "Direction" );
+            directionNode.InnerText = Direction.ToString( );
+            node.AppendChild( directionNode );
 
-            var aggregationNode = node.OwnerDocument.CreateElement("AssociationType");
-            aggregationNode.InnerText = AssociationType.ToString();
-            node.AppendChild(aggregationNode);
+            var aggregationNode = node.OwnerDocument.CreateElement( "AssociationType" );
+            aggregationNode.InnerText = AssociationType.ToString( );
+            node.AppendChild( aggregationNode );
 
-            if (StartRole != null)
+            if ( StartRole != null )
             {
-                var roleNode = node.OwnerDocument.CreateElement("StartRole");
+                var roleNode = node.OwnerDocument.CreateElement( "StartRole" );
                 roleNode.InnerText = StartRole;
-                node.AppendChild(roleNode);
+                node.AppendChild( roleNode );
             }
-            if (EndRole != null)
+            if ( EndRole != null )
             {
-                var roleNode = node.OwnerDocument.CreateElement("EndRole");
+                var roleNode = node.OwnerDocument.CreateElement( "EndRole" );
                 roleNode.InnerText = EndRole;
-                node.AppendChild(roleNode);
+                node.AppendChild( roleNode );
             }
-            if (StartMultiplicity != null)
+            if ( StartMultiplicity != null )
             {
-                var multiplicityNode = node.OwnerDocument.CreateElement("StartMultiplicity");
+                var multiplicityNode = node.OwnerDocument.CreateElement( "StartMultiplicity" );
                 multiplicityNode.InnerText = StartMultiplicity;
-                node.AppendChild(multiplicityNode);
+                node.AppendChild( multiplicityNode );
             }
-            if (EndMultiplicity != null)
+            if ( EndMultiplicity != null )
             {
-                var multiplicityNode = node.OwnerDocument.CreateElement("EndMultiplicity");
+                var multiplicityNode = node.OwnerDocument.CreateElement( "EndMultiplicity" );
                 multiplicityNode.InnerText = EndMultiplicity;
-                node.AppendChild(multiplicityNode);
+                node.AppendChild( multiplicityNode );
             }
         }
 
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="node" /> is null.
         /// </exception>
-        protected internal override void Deserialize(XmlElement node)
+        protected internal override void Deserialize( XmlElement node )
         {
-            base.Deserialize(node);
+            base.Deserialize( node );
 
-            var child = node["Direction"];
+            var child = node[ "Direction" ];
 
             RaiseChangedEvent = false;
-            if (child != null)
+            if ( child != null )
             {
                 // Old file format
-                if (child.InnerText == "Unidirectional" || child.InnerText == "SourceDestination")
+                if ( child.InnerText == "Unidirectional" || child.InnerText == "SourceDestination" )
                     Direction = Direction.Unidirectional;
                 else
                     Direction = Direction.Bidirectional;
@@ -244,89 +254,89 @@ namespace NClass.Core
             {
                 // Old file format
                 {
-                    child = node["IsAggregation"];
-                    if (child != null && bool.Parse(child.InnerText))
+                    child = node[ "IsAggregation" ];
+                    if ( child != null && bool.Parse( child.InnerText ) )
                         associationType = AssociationType.Aggregation;
 
-                    child = node["IsComposition"];
-                    if (child != null && bool.Parse(child.InnerText))
+                    child = node[ "IsComposition" ];
+                    if ( child != null && bool.Parse( child.InnerText ) )
                         associationType = AssociationType.Composition;
                 }
 
-                child = node["AssociationType"];
-                if (child != null)
+                child = node[ "AssociationType" ];
+                if ( child != null )
                 {
-                    if (child.InnerText == "Aggregation")
+                    if ( child.InnerText == "Aggregation" )
                         associationType = AssociationType.Aggregation;
-                    else if (child.InnerText == "Composition")
+                    else if ( child.InnerText == "Composition" )
                         associationType = AssociationType.Composition;
                     else
                         associationType = AssociationType.Association;
                 }
 
-                child = node["StartRole"];
-                if (child != null)
+                child = node[ "StartRole" ];
+                if ( child != null )
                     startRole = child.InnerText;
 
-                child = node["EndRole"];
-                if (child != null)
+                child = node[ "EndRole" ];
+                if ( child != null )
                     endRole = child.InnerText;
 
-                child = node["StartMultiplicity"];
-                if (child != null)
+                child = node[ "StartMultiplicity" ];
+                if ( child != null )
                     startMultiplicity = child.InnerText;
 
-                child = node["EndMultiplicity"];
-                if (child != null)
+                child = node[ "EndMultiplicity" ];
+                if ( child != null )
                     endMultiplicity = child.InnerText;
             }
-            catch (ArgumentException)
+            catch ( ArgumentException )
             {
                 // Wrong format
             }
             RaiseChangedEvent = true;
         }
 
-        private void OnReversed(EventArgs e)
+        private void OnReversed( EventArgs e )
         {
-            if (Reversed != null)
-                Reversed(this, e);
+            if ( Reversed != null )
+                Reversed( this, e );
         }
 
-        public override string ToString()
+        public override string ToString( )
         {
-            var builder = new StringBuilder(50);
+            var builder = new StringBuilder( 50 );
 
-            if (IsAggregation)
-                builder.Append(Strings.Aggregation);
-            else if (IsComposition)
-                builder.Append(Strings.Composition);
+            if ( IsAggregation )
+                builder.Append( Strings.Aggregation );
+            else if ( IsComposition )
+                builder.Append( Strings.Composition );
             else
-                builder.Append(Strings.Association);
-            builder.Append(": ");
-            builder.Append(First.Name);
+                builder.Append( Strings.Association );
+            builder.Append( ": " );
+            builder.Append( First.Name );
 
-            switch (Direction)
+            switch ( Direction )
             {
                 case Direction.Bidirectional:
-                    if (AssociationType == AssociationType.Association)
-                        builder.Append(" --- ");
+                    if ( AssociationType == AssociationType.Association )
+                        builder.Append( " --- " );
                     else
-                        builder.Append(" <>-- ");
+                        builder.Append( " <>-- " );
                     break;
                 case Direction.Unidirectional:
-                    if (AssociationType == AssociationType.Association)
-                        builder.Append(" --> ");
+                    if ( AssociationType == AssociationType.Association )
+                        builder.Append( " --> " );
                     else
-                        builder.Append(" <>-> ");
+                        builder.Append( " <>-> " );
                     break;
                 default:
-                    builder.Append(", ");
+                    builder.Append( ", " );
                     break;
             }
-            builder.Append(Second.Name);
+            builder.Append( Second.Name );
 
-            return builder.ToString();
+            return builder.ToString( );
         }
     }
 }

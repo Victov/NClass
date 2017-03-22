@@ -32,102 +32,16 @@ namespace NClass.DiagramEditor.ClassDiagram
 
         private static Bitmap[] images;
 
-        static Icons()
+        static Icons( )
         {
-            LoadImages();
+            LoadImages( );
         }
 
         public static ImageList IconList { get; private set; }
 
-        private static void LoadImages()
+        private static void LoadImages( )
         {
-            images = new[]
-            {
-                Resources.DefaultConst,
-                Resources.PublicConst,
-                Resources.ProtintConst,
-                Resources.InternalConst,
-                Resources.ProtectedConst,
-                Resources.PrivateConst,
-                Resources.DefaultField,
-                Resources.PublicField,
-                Resources.ProtintField,
-                Resources.InternalField,
-                Resources.ProtectedField,
-                Resources.PrivateField,
-                Resources.DefaultConstructor,
-                Resources.PublicConstructor,
-                Resources.ProtintConstructor,
-                Resources.InternalConstructor,
-                Resources.ProtectedConstructor,
-                Resources.PrivateConstructor,
-                Resources.DefaultOperator,
-                Resources.PublicOperator,
-                Resources.ProtintOperator,
-                Resources.InternalOperator,
-                Resources.ProtectedOperator,
-                Resources.PrivateOperator,
-                Resources.DefaultMethod,
-                Resources.PublicMethod,
-                Resources.ProtintMethod,
-                Resources.InternalMethod,
-                Resources.ProtectedMethod,
-                Resources.PrivateMethod,
-                Resources.DefaultReadonly,
-                Resources.PublicReadonly,
-                Resources.ProtintReadonly,
-                Resources.InternalReadonly,
-                Resources.ProtectedReadonly,
-                Resources.PrivateReadonly,
-                Resources.DefaultWriteonly,
-                Resources.PublicWriteonly,
-                Resources.ProtintWriteonly,
-                Resources.InternalWriteoly,
-                Resources.ProtectedWriteonly,
-                Resources.PrivateWriteonly,
-                Resources.DefaultProperty,
-                Resources.PublicProperty,
-                Resources.ProtintProperty,
-                Resources.InternalProperty,
-                Resources.ProtectedProperty,
-                Resources.PrivateProperty,
-                Resources.DefaultEvent,
-                Resources.PublicEvent,
-                Resources.ProtintEvent,
-                Resources.InternalEvent,
-                Resources.ProtectedEvent,
-                Resources.PrivateEvent,
-                Resources.DefaultClass,
-                Resources.PublicClass,
-                Resources.ProtintClass,
-                Resources.InternalClass,
-                Resources.ProtectedClass,
-                Resources.PrivateClass,
-                Resources.DefaultStructure,
-                Resources.PublicStructure,
-                Resources.ProtintStructure,
-                Resources.InternalStructure,
-                Resources.ProtectedStructure,
-                Resources.PrivateStructure,
-                Resources.DefaultInterface,
-                Resources.PublicInterface,
-                Resources.ProtintInterface,
-                Resources.InternalInterface,
-                Resources.ProtectedInterface,
-                Resources.PrivateInterface,
-                Resources.DefaultEnum,
-                Resources.PublicEnum,
-                Resources.ProtintEnum,
-                Resources.InternalEnum,
-                Resources.ProtectedEnum,
-                Resources.PrivateEnum,
-                Resources.DefaultDelegate,
-                Resources.PublicDelegate,
-                Resources.ProtintDelegate,
-                Resources.InternalDelegate,
-                Resources.ProtectedDelegate,
-                Resources.PrivateDelegate,
-                Resources.DefaultDestructor, // 84.
+            images = new[] {Resources.DefaultConst, Resources.PublicConst, Resources.ProtintConst, Resources.InternalConst, Resources.ProtectedConst, Resources.PrivateConst, Resources.DefaultField, Resources.PublicField, Resources.ProtintField, Resources.InternalField, Resources.ProtectedField, Resources.PrivateField, Resources.DefaultConstructor, Resources.PublicConstructor, Resources.ProtintConstructor, Resources.InternalConstructor, Resources.ProtectedConstructor, Resources.PrivateConstructor, Resources.DefaultOperator, Resources.PublicOperator, Resources.ProtintOperator, Resources.InternalOperator, Resources.ProtectedOperator, Resources.PrivateOperator, Resources.DefaultMethod, Resources.PublicMethod, Resources.ProtintMethod, Resources.InternalMethod, Resources.ProtectedMethod, Resources.PrivateMethod, Resources.DefaultReadonly, Resources.PublicReadonly, Resources.ProtintReadonly, Resources.InternalReadonly, Resources.ProtectedReadonly, Resources.PrivateReadonly, Resources.DefaultWriteonly, Resources.PublicWriteonly, Resources.ProtintWriteonly, Resources.InternalWriteoly, Resources.ProtectedWriteonly, Resources.PrivateWriteonly, Resources.DefaultProperty, Resources.PublicProperty, Resources.ProtintProperty, Resources.InternalProperty, Resources.ProtectedProperty, Resources.PrivateProperty, Resources.DefaultEvent, Resources.PublicEvent, Resources.ProtintEvent, Resources.InternalEvent, Resources.ProtectedEvent, Resources.PrivateEvent, Resources.DefaultClass, Resources.PublicClass, Resources.ProtintClass, Resources.InternalClass, Resources.ProtectedClass, Resources.PrivateClass, Resources.DefaultStructure, Resources.PublicStructure, Resources.ProtintStructure, Resources.InternalStructure, Resources.ProtectedStructure, Resources.PrivateStructure, Resources.DefaultInterface, Resources.PublicInterface, Resources.ProtintInterface, Resources.InternalInterface, Resources.ProtectedInterface, Resources.PrivateInterface, Resources.DefaultEnum, Resources.PublicEnum, Resources.ProtintEnum, Resources.InternalEnum, Resources.ProtectedEnum, Resources.PrivateEnum, Resources.DefaultDelegate, Resources.PublicDelegate, Resources.ProtintDelegate, Resources.InternalDelegate, Resources.ProtectedDelegate, Resources.PrivateDelegate, Resources.DefaultDestructor, // 84.
                 Resources.PrivateDestructor, // 85.
                 Resources.Interface24, // 86.
                 Resources.EnumItem, // 87.
@@ -135,24 +49,24 @@ namespace NClass.DiagramEditor.ClassDiagram
                 Resources.Class // 89.
             };
 
-            IconList = new ImageList();
+            IconList = new ImageList( );
             IconList.ColorDepth = ColorDepth.Depth32Bit;
-            IconList.Images.AddRange(images);
+            IconList.Images.AddRange( images );
         }
 
         /// <exception cref="ArgumentNullException">
         ///     A <paramref name="member" /> nem lehet null.
         /// </exception>
-        public static int GetImageIndex(Member member)
+        public static int GetImageIndex( Member member )
         {
-            if (member == null)
-                throw new ArgumentNullException("member");
+            if ( member == null )
+                throw new ArgumentNullException( "member" );
 
             var group = 0;
 
-            if (member is Field)
+            if ( member is Field )
             {
-                if (((Field) member).IsConstant)
+                if ( ( ( Field ) member ).IsConstant )
                 {
                     group = 0;
                 }
@@ -161,17 +75,17 @@ namespace NClass.DiagramEditor.ClassDiagram
                     group = 1;
                 }
             }
-            else if (member is Method)
+            else if ( member is Method )
             {
-                if (member is Destructor)
+                if ( member is Destructor )
                 {
                     return PrivateDestructorIndex;
                 }
-                if (member is Constructor)
+                if ( member is Constructor )
                 {
                     @group = 2;
                 }
-                else if (((Method) member).IsOperator)
+                else if ( ( ( Method ) member ).IsOperator )
                 {
                     @group = 3;
                 }
@@ -180,15 +94,15 @@ namespace NClass.DiagramEditor.ClassDiagram
                     @group = 4;
                 }
             }
-            else if (member is Property)
+            else if ( member is Property )
             {
-                var property = (Property) member;
+                var property = ( Property ) member;
 
-                if (property.IsReadonly)
+                if ( property.IsReadonly )
                 {
                     group = 5;
                 }
-                else if (property.IsWriteonly)
+                else if ( property.IsWriteonly )
                 {
                     group = 6;
                 }
@@ -197,34 +111,34 @@ namespace NClass.DiagramEditor.ClassDiagram
                     group = 7;
                 }
             }
-            else if (member is Event)
+            else if ( member is Event )
             {
                 group = 8;
             }
 
-            return group*6 + (int) member.Access;
+            return group * 6 + ( int ) member.Access;
         }
 
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="member" /> is null.
         /// </exception>
-        public static Image GetImage(Member member)
+        public static Image GetImage( Member member )
         {
-            var imageIndex = GetImageIndex(member);
-            return images[imageIndex];
+            var imageIndex = GetImageIndex( member );
+            return images[ imageIndex ];
         }
 
-        public static Image GetImage(MemberType type, AccessModifier access)
+        public static Image GetImage( MemberType type, AccessModifier access )
         {
-            if (type == MemberType.Destructor)
+            if ( type == MemberType.Destructor )
             {
-                if (access == AccessModifier.Default)
+                if ( access == AccessModifier.Default )
                     return Resources.DefaultDestructor;
                 return Resources.PrivateDestructor;
             }
 
             var group = 0;
-            switch (type)
+            switch ( type )
             {
                 case MemberType.Field:
                     group = 1;
@@ -247,27 +161,27 @@ namespace NClass.DiagramEditor.ClassDiagram
                     break;
             }
 
-            return images[group*6 + (int) access];
+            return images[ group * 6 + ( int ) access ];
         }
 
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="type" /> is null.
         /// </exception>
-        public static Image GetImage(TypeBase type)
+        public static Image GetImage( TypeBase type )
         {
-            if (type == null)
-                throw new ArgumentNullException("type");
+            if ( type == null )
+                throw new ArgumentNullException( "type" );
 
-            return GetImage(type.EntityType, type.AccessModifier);
+            return GetImage( type.EntityType, type.AccessModifier );
         }
 
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="type" /> is null.
         /// </exception>
-        public static Image GetImage(EntityType type, AccessModifier access)
+        public static Image GetImage( EntityType type, AccessModifier access )
         {
             var group = 0;
-            switch (type)
+            switch ( type )
             {
                 case EntityType.Class:
                     group = 9;
@@ -290,7 +204,7 @@ namespace NClass.DiagramEditor.ClassDiagram
                     break;
             }
 
-            return images[group*6 + (int) access];
+            return images[ group * 6 + ( int ) access ];
         }
     }
 }

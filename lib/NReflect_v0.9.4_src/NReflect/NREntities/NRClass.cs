@@ -21,38 +21,38 @@ using NReflect.Modifier;
 
 namespace NReflect.NREntities
 {
-  /// <summary>
-  /// Represents a class which is reflected by NReflect.
-  /// </summary>
-  [Serializable]
-  public class NRClass : NRSingleInheritanceType
-  {
-    // ========================================================================
-    // Properties
-
-    #region === Properties
-
     /// <summary>
-    /// Gets or sets the modifier for this class.
+    /// Represents a class which is reflected by NReflect.
     /// </summary>
-    public ClassModifier ClassModifier { get; set; }
-
-    #endregion
-
-    // ========================================================================
-    // Methods
-
-    #region === Methods
-
-    /// <summary>
-    /// Accept an <see cref="IVisitor"/> instance on the implementing class and all its children.
-    /// </summary>
-    /// <param name="visitor">The <see cref="IVisitor"/> instance to accept.</param>
-    public override void Accept(IVisitor visitor)
+    [Serializable]
+    public class NRClass : NRSingleInheritanceType
     {
-      visitor.Visit(this);
-    }
+        // ========================================================================
+        // Properties
 
-    #endregion
-  }
+        #region === Properties
+
+        /// <summary>
+        /// Gets or sets the modifier for this class.
+        /// </summary>
+        public ClassModifier ClassModifier { get; set; }
+
+        #endregion
+
+        // ========================================================================
+        // Methods
+
+        #region === Methods
+
+        /// <summary>
+        /// Accept an <see cref="IVisitor"/> instance on the implementing class and all its children.
+        /// </summary>
+        /// <param name="visitor">The <see cref="IVisitor"/> instance to accept.</param>
+        public override void Accept( IVisitor visitor )
+        {
+            visitor.Visit( this );
+        }
+
+        #endregion
+    }
 }

@@ -22,6 +22,6 @@ namespace NClass.GUI.ModelExplorer
     {
         public abstract IProjectItem ProjectItem { get; }
 
-        public abstract override void LabelModified(NodeLabelEditEventArgs e);
+        public abstract override void LabelModified( NodeLabelEditEventArgs e );
     }
 }

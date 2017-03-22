@@ -22,16 +22,16 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
 {
     public abstract partial class ListDialog : Form
     {
-        public ListDialog()
+        public ListDialog( )
         {
-            InitializeComponent();
+            InitializeComponent( );
             lstItems.SmallImageList = Icons.IconList;
             toolStrip1.Renderer = ToolStripSimplifiedRenderer.Default;
         }
 
         public bool Changed { get; private set; }
 
-        protected abstract void FillList();
+        protected abstract void FillList( );
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="text" /> does not fit to the syntax.
@@ -39,7 +39,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         /// <exception cref="ReservedNameException">
         ///     The <paramref name="text" /> contains a reserved name.
         /// </exception>
-        protected abstract void AddToList(string text);
+        protected abstract void AddToList( string text );
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="text" /> does not fit to the syntax.
@@ -47,19 +47,19 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         /// <exception cref="ReservedNameException">
         ///     The <paramref name="text" /> contains a reserved name.
         /// </exception>
-        protected abstract void Modify(ListViewItem item, string text);
+        protected abstract void Modify( ListViewItem item, string text );
 
-        protected virtual void MoveUpItem(ListViewItem item)
+        protected virtual void MoveUpItem( ListViewItem item )
         {
-            if (item != null)
+            if ( item != null )
             {
                 var index = item.Index;
 
-                if (index > 0)
+                if ( index > 0 )
                 {
-                    var item2 = lstItems.Items[index - 1];
+                    var item2 = lstItems.Items[ index - 1 ];
 
-                    SwapListItems(item, item2);
+                    SwapListItems( item, item2 );
                     item2.Focused = true;
                     item2.Selected = true;
                     Changed = true;
@@ -67,17 +67,17 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             }
         }
 
-        protected virtual void MoveDownItem(ListViewItem item)
+        protected virtual void MoveDownItem( ListViewItem item )
         {
-            if (item != null)
+            if ( item != null )
             {
                 var index = item.Index;
 
-                if (index < lstItems.Items.Count - 1)
+                if ( index < lstItems.Items.Count - 1 )
                 {
-                    var item2 = lstItems.Items[index + 1];
+                    var item2 = lstItems.Items[ index + 1 ];
 
-                    SwapListItems(item, item2);
+                    SwapListItems( item, item2 );
                     item2.Focused = true;
                     item2.Selected = true;
                     Changed = true;
@@ -85,13 +85,13 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             }
         }
 
-        protected virtual void Remove(ListViewItem item)
+        protected virtual void Remove( ListViewItem item )
         {
-            lstItems.Items.Remove(item);
+            lstItems.Items.Remove( item );
             Changed = true;
         }
 
-        private void SwapListItems(ListViewItem item1, ListViewItem item2)
+        private void SwapListItems( ListViewItem item1, ListViewItem item2 )
         {
             var text = item1.Text;
             item1.Text = item2.Text;
@@ -104,36 +104,36 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             Changed = true;
         }
 
-        private void Accept()
+        private void Accept( )
         {
             try
             {
-                if (lstItems.SelectedItems.Count == 0)
-                    AddToList(txtItem.Text);
+                if ( lstItems.SelectedItems.Count == 0 )
+                    AddToList( txtItem.Text );
                 else
-                    Modify(lstItems.SelectedItems[0], txtItem.Text);
+                    Modify( lstItems.SelectedItems[ 0 ], txtItem.Text );
 
-                ClearInput();
+                ClearInput( );
                 Changed = true;
-                txtItem.Focus();
+                txtItem.Focus( );
             }
-            catch (BadSyntaxException ex)
+            catch ( BadSyntaxException ex )
             {
-                errorProvider.SetError(txtItem, ex.Message);
+                errorProvider.SetError( txtItem, ex.Message );
             }
         }
 
-        private void ItemSelected()
+        private void ItemSelected( )
         {
             toolMoveUp.Enabled = true;
             toolMoveDown.Enabled = true;
             toolDelete.Enabled = true;
             btnAccept.Text = Strings.ButtonModify;
             lblItemCaption.Text = Strings.ModifyItem;
-            txtItem.Text = lstItems.SelectedItems[0].Text;
+            txtItem.Text = lstItems.SelectedItems[ 0 ].Text;
         }
 
-        private void ClearInput()
+        private void ClearInput( )
         {
             toolMoveUp.Enabled = false;
             toolMoveDown.Enabled = false;
@@ -141,98 +141,97 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             btnAccept.Text = Strings.ButtonAddItem;
             lblItemCaption.Text = Strings.AddNewItem;
             txtItem.Text = null;
-            errorProvider.SetError(txtItem, null);
-            if (lstItems.SelectedItems.Count > 0)
-                lstItems.SelectedItems[0].Selected = false;
+            errorProvider.SetError( txtItem, null );
+            if ( lstItems.SelectedItems.Count > 0 )
+                lstItems.SelectedItems[ 0 ].Selected = false;
         }
 
-        private void DeleteSelectedItem()
+        private void DeleteSelectedItem( )
         {
-            if (lstItems.SelectedItems.Count > 0)
+            if ( lstItems.SelectedItems.Count > 0 )
             {
-                var index = lstItems.SelectedItems[0].Index;
+                var index = lstItems.SelectedItems[ 0 ].Index;
 
-                Remove(lstItems.SelectedItems[0]);
+                Remove( lstItems.SelectedItems[ 0 ] );
 
                 var count = lstItems.Items.Count;
-                if (count > 0)
+                if ( count > 0 )
                 {
-                    if (index >= count)
+                    if ( index >= count )
                         index = count - 1;
-                    lstItems.Items[index].Selected = true;
+                    lstItems.Items[ index ].Selected = true;
                 }
                 else
                 {
-                    txtItem.Focus();
+                    txtItem.Focus( );
                 }
             }
         }
 
-        private void UpdateTexts()
+        private void UpdateTexts( )
         {
             toolMoveUp.Text = Strings.MoveUp;
             toolMoveDown.Text = Strings.MoveDown;
             toolDelete.Text = Strings.Delete;
-            lstItems.Columns[0].Text = Strings.Item;
+            lstItems.Columns[ 0 ].Text = Strings.Item;
             btnClose.Text = Strings.ButtonClose;
         }
 
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoad( EventArgs e )
         {
-            base.OnLoad(e);
-            UpdateTexts();
-            ClearInput();
-            txtItem.Select();
+            base.OnLoad( e );
+            UpdateTexts( );
+            ClearInput( );
+            txtItem.Select( );
         }
 
-        private void txtItem_KeyDown(object sender, KeyEventArgs e)
+        private void txtItem_KeyDown( object sender, KeyEventArgs e )
         {
-            if (e.KeyCode == Keys.Enter)
-                Accept();
-            else if (e.KeyCode == Keys.Escape)
-                ClearInput();
+            if ( e.KeyCode == Keys.Enter )
+                Accept( );
+            else if ( e.KeyCode == Keys.Escape )
+                ClearInput( );
         }
 
-        private void btnAccept_Click(object sender, EventArgs e)
+        private void btnAccept_Click( object sender, EventArgs e )
         {
-            Accept();
+            Accept( );
         }
 
-        private void lstItems_ItemSelectionChanged(object sender,
-                                                   ListViewItemSelectionChangedEventArgs e)
+        private void lstItems_ItemSelectionChanged( object sender, ListViewItemSelectionChangedEventArgs e )
         {
-            if (lstItems.SelectedItems.Count == 0)
-                ClearInput();
+            if ( lstItems.SelectedItems.Count == 0 )
+                ClearInput( );
             else
-                ItemSelected();
+                ItemSelected( );
         }
 
-        private void lstItems_KeyDown(object sender, KeyEventArgs e)
+        private void lstItems_KeyDown( object sender, KeyEventArgs e )
         {
-            if (e.KeyCode == Keys.Delete)
-                DeleteSelectedItem();
+            if ( e.KeyCode == Keys.Delete )
+                DeleteSelectedItem( );
         }
 
-        private void toolMoveUp_Click(object sender, EventArgs e)
+        private void toolMoveUp_Click( object sender, EventArgs e )
         {
-            if (lstItems.SelectedItems.Count > 0)
-                MoveUpItem(lstItems.SelectedItems[0]);
+            if ( lstItems.SelectedItems.Count > 0 )
+                MoveUpItem( lstItems.SelectedItems[ 0 ] );
         }
 
-        private void toolMoveDown_Click(object sender, EventArgs e)
+        private void toolMoveDown_Click( object sender, EventArgs e )
         {
-            if (lstItems.SelectedItems.Count > 0)
-                MoveDownItem(lstItems.SelectedItems[0]);
+            if ( lstItems.SelectedItems.Count > 0 )
+                MoveDownItem( lstItems.SelectedItems[ 0 ] );
         }
 
-        private void toolDelete_Click(object sender, EventArgs e)
+        private void toolDelete_Click( object sender, EventArgs e )
         {
-            DeleteSelectedItem();
+            DeleteSelectedItem( );
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
+        private void btnClose_Click( object sender, EventArgs e )
         {
-            Close();
+            Close( );
         }
     }
 }

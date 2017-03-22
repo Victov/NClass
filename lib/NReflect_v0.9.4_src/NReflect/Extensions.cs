@@ -23,33 +23,30 @@ using System.Reflection;
 
 namespace NReflect
 {
-  /// <summary>
-  /// This class contains some extension methods.
-  /// </summary>
-  public static class Extensions
-  {
-    // ========================================================================
-    // Methods
-
-    #region === Methods
-
     /// <summary>
-    /// Gets the methods with the specified <paramref name="name"/> and
-    /// <paramref name="parameterTypes"/> of the <see cref="Type"/> <paramref name="type"/>
-    /// regardless if the methods are generic or not.
+    /// This class contains some extension methods.
     /// </summary>
-    /// <param name="type">The type to get the methods from.</param>
-    /// <param name="name">The name of the methods to get.</param>
-    /// <param name="parameterTypes">The parameters of the method.</param>
-    /// <returns>The <see cref="MethodInfo"/>s of the found methods.</returns>
-    public static IEnumerable<MethodInfo> GetMethods(this Type type, string name, params Type[] parameterTypes)
+    public static class Extensions
     {
-      return (from method in type.GetMethods()
-              where method.Name == name
-              where parameterTypes.SequenceEqual(method.GetParameters().Select(p => p.ParameterType))
-              select method);
-    }
+        // ========================================================================
+        // Methods
 
-    #endregion
-  }
+        #region === Methods
+
+        /// <summary>
+        /// Gets the methods with the specified <paramref name="name"/> and
+        /// <paramref name="parameterTypes"/> of the <see cref="Type"/> <paramref name="type"/>
+        /// regardless if the methods are generic or not.
+        /// </summary>
+        /// <param name="type">The type to get the methods from.</param>
+        /// <param name="name">The name of the methods to get.</param>
+        /// <param name="parameterTypes">The parameters of the method.</param>
+        /// <returns>The <see cref="MethodInfo"/>s of the found methods.</returns>
+        public static IEnumerable< MethodInfo > GetMethods( this Type type, string name, params Type[] parameterTypes )
+        {
+            return ( from method in type.GetMethods( ) where method.Name == name where parameterTypes.SequenceEqual( method.GetParameters( ).Select( p => p.ParameterType ) ) select method );
+        }
+
+        #endregion
+    }
 }

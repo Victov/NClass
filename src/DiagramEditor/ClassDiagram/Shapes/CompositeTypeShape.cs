@@ -25,14 +25,14 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
     {
         private const int AccessSpacing = 12;
 
-        private static readonly CompositeTypeEditor typeEditor = new CompositeTypeEditor();
-        private static readonly MemberEditor memberEditor = new MemberEditor();
-        private static readonly MembersDialog membersDialog = new MembersDialog();
-        private static readonly SolidBrush memberBrush = new SolidBrush(Color.Black);
-        private static readonly StringFormat accessFormat = new StringFormat(StringFormat.GenericTypographic);
-        private static readonly Pen selectionPen = new Pen(Color.Black);
+        private static readonly CompositeTypeEditor typeEditor = new CompositeTypeEditor( );
+        private static readonly MemberEditor memberEditor = new MemberEditor( );
+        private static readonly MembersDialog membersDialog = new MembersDialog( );
+        private static readonly SolidBrush memberBrush = new SolidBrush( Color.Black );
+        private static readonly StringFormat accessFormat = new StringFormat( StringFormat.GenericTypographic );
+        private static readonly Pen selectionPen = new Pen( Color.Black );
 
-        static CompositeTypeShape()
+        static CompositeTypeShape( )
         {
             accessFormat.Alignment = StringAlignment.Center;
             accessFormat.LineAlignment = StringAlignment.Center;
@@ -42,30 +42,36 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="compositeType" /> is null.
         /// </exception>
-        protected CompositeTypeShape(CompositeType compositeType)
-            : base(compositeType)
-        {
-        }
+        protected CompositeTypeShape( CompositeType compositeType ) : base( compositeType ) {}
 
-        public sealed override TypeBase TypeBase { get { return CompositeType; } }
+        public sealed override TypeBase TypeBase
+        {
+            get { return CompositeType; }
+        }
 
         public abstract CompositeType CompositeType { get; }
 
-        protected override TypeEditor HeaderEditor { get { return typeEditor; } }
+        protected override TypeEditor HeaderEditor
+        {
+            get { return typeEditor; }
+        }
 
-        protected override EditorWindow ContentEditor { get { return memberEditor; } }
+        protected override EditorWindow ContentEditor
+        {
+            get { return memberEditor; }
+        }
 
         protected internal Member ActiveMember
         {
             get
             {
-                if (ActiveMemberIndex >= 0 && ActiveMemberIndex < CompositeType.FieldCount)
+                if ( ActiveMemberIndex >= 0 && ActiveMemberIndex < CompositeType.FieldCount )
                 {
-                    return CompositeType.GetField(ActiveMemberIndex);
+                    return CompositeType.GetField( ActiveMemberIndex );
                 }
-                if (ActiveMemberIndex >= CompositeType.FieldCount)
+                if ( ActiveMemberIndex >= CompositeType.FieldCount )
                 {
-                    return CompositeType.GetOperation(ActiveMemberIndex - CompositeType.FieldCount);
+                    return CompositeType.GetOperation( ActiveMemberIndex - CompositeType.FieldCount );
                 }
                 return null;
             }
@@ -78,107 +84,103 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             {
                 var oldMember = ActiveMember;
 
-                if (value < CompositeType.MemberCount)
+                if ( value < CompositeType.MemberCount )
                     base.ActiveMemberIndex = value;
                 else
                     base.ActiveMemberIndex = CompositeType.MemberCount - 1;
 
-                if (oldMember != ActiveMember)
-                    OnActiveMemberChanged(EventArgs.Empty);
+                if ( oldMember != ActiveMember )
+                    OnActiveMemberChanged( EventArgs.Empty );
             }
         }
 
-        public override void MoveUp()
+        public override void MoveUp( )
         {
-            if (ActiveMember != null && CompositeType.MoveUpItem(ActiveMember))
+            if ( ActiveMember != null && CompositeType.MoveUpItem( ActiveMember ) )
             {
                 ActiveMemberIndex--;
             }
         }
 
-        public override void MoveDown()
+        public override void MoveDown( )
         {
-            if (ActiveMember != null && CompositeType.MoveDownItem(ActiveMember))
+            if ( ActiveMember != null && CompositeType.MoveDownItem( ActiveMember ) )
             {
                 ActiveMemberIndex++;
             }
         }
 
-        protected internal override void EditMembers()
+        protected internal override void EditMembers( )
         {
-            membersDialog.ShowDialog(CompositeType);
+            membersDialog.ShowDialog( CompositeType );
         }
 
-        protected override EditorWindow GetEditorWindow()
+        protected override EditorWindow GetEditorWindow( )
         {
-            if (IsActive)
+            if ( IsActive )
             {
-                if (ActiveMember == null)
+                if ( ActiveMember == null )
                     return HeaderEditor;
                 return memberEditor;
             }
             return null;
         }
 
-        protected internal sealed override bool DeleteSelectedMember(bool showConfirmation)
+        protected internal sealed override bool DeleteSelectedMember( bool showConfirmation )
         {
-            if (IsActive && ActiveMember != null)
+            if ( IsActive && ActiveMember != null )
             {
-                if (!showConfirmation || ConfirmMemberDelete())
-                    DeleteActiveMember();
+                if ( !showConfirmation || ConfirmMemberDelete( ) )
+                    DeleteActiveMember( );
                 return true;
             }
             return false;
         }
 
-        protected override void OnMouseDown(AbsoluteMouseEventArgs e)
+        protected override void OnMouseDown( AbsoluteMouseEventArgs e )
         {
-            base.OnMouseDown(e);
-            SelectMember(e.Location);
+            base.OnMouseDown( e );
+            SelectMember( e.Location );
         }
 
-        internal Rectangle GetMemberRectangle(int memberIndex)
+        internal Rectangle GetMemberRectangle( int memberIndex )
         {
-            var record = new Rectangle(
-                Left + MarginSize,
-                Top + HeaderHeight + MarginSize,
-                Width - MarginSize*2,
-                MemberHeight);
+            var record = new Rectangle( Left + MarginSize, Top + HeaderHeight + MarginSize, Width - MarginSize * 2, MemberHeight );
 
-            record.Y += memberIndex*MemberHeight;
-            if (CompositeType.SupportsFields && memberIndex >= CompositeType.FieldCount)
+            record.Y += memberIndex * MemberHeight;
+            if ( CompositeType.SupportsFields && memberIndex >= CompositeType.FieldCount )
             {
-                record.Y += MarginSize*2;
+                record.Y += MarginSize * 2;
             }
             return record;
         }
 
-        private void SelectMember(PointF location)
+        private void SelectMember( PointF location )
         {
-            if (Contains(location))
+            if ( Contains( location ) )
             {
                 int index;
-                var y = (int) location.Y;
+                var y = ( int ) location.Y;
                 var top = Top + HeaderHeight + MarginSize;
 
-                if (top <= y)
+                if ( top <= y )
                 {
-                    if (CompositeType.SupportsFields)
+                    if ( CompositeType.SupportsFields )
                     {
-                        index = (y - top)/MemberHeight;
-                        if (index < CompositeType.FieldCount)
+                        index = ( y - top ) / MemberHeight;
+                        if ( index < CompositeType.FieldCount )
                         {
                             ActiveMemberIndex = index;
                             return;
                         }
-                        top += MarginSize*2;
+                        top += MarginSize * 2;
                     }
 
-                    var operationTop = top + CompositeType.FieldCount*MemberHeight;
-                    if (operationTop <= y)
+                    var operationTop = top + CompositeType.FieldCount * MemberHeight;
+                    if ( operationTop <= y )
                     {
-                        index = (y - top)/MemberHeight;
-                        if (index < CompositeType.MemberCount)
+                        index = ( y - top ) / MemberHeight;
+                        if ( index < CompositeType.MemberCount )
                         {
                             ActiveMemberIndex = index;
                             return;
@@ -189,19 +191,19 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             }
         }
 
-        internal void DeleteActiveMember()
+        internal void DeleteActiveMember( )
         {
-            if (ActiveMemberIndex >= 0)
+            if ( ActiveMemberIndex >= 0 )
             {
                 int newIndex;
                 var fieldCount = CompositeType.FieldCount;
                 var memberCount = CompositeType.MemberCount;
 
-                if (ActiveMemberIndex == fieldCount - 1 && fieldCount >= 2) // Last field
+                if ( ActiveMemberIndex == fieldCount - 1 && fieldCount >= 2 ) // Last field
                 {
                     newIndex = fieldCount - 2;
                 }
-                else if (ActiveMemberIndex == memberCount - 1) // Last member
+                else if ( ActiveMemberIndex == memberCount - 1 ) // Last member
                 {
                     newIndex = ActiveMemberIndex - 1;
                 }
@@ -210,79 +212,78 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
                     newIndex = ActiveMemberIndex;
                 }
 
-                CompositeType.RemoveMember(ActiveMember);
+                CompositeType.RemoveMember( ActiveMember );
                 ActiveMemberIndex = newIndex;
-                OnActiveMemberChanged(EventArgs.Empty);
+                OnActiveMemberChanged( EventArgs.Empty );
             }
         }
 
-        internal void InsertNewMember(MemberType type)
+        internal void InsertNewMember( MemberType type )
         {
             var fieldCount = CompositeType.FieldCount;
-            switch (type)
+            switch ( type )
             {
                 case MemberType.Field:
-                    if (CompositeType.SupportsFields)
+                    if ( CompositeType.SupportsFields )
                     {
-                        var index = Math.Min(ActiveMemberIndex + 1, fieldCount);
-                        var changing = index == fieldCount &&
-                                       ActiveMember.MemberType != MemberType.Field;
+                        var index = Math.Min( ActiveMemberIndex + 1, fieldCount );
+                        var changing = index == fieldCount && ActiveMember.MemberType != MemberType.Field;
 
-                        CompositeType.InsertMember(MemberType.Field, index);
+                        CompositeType.InsertMember( MemberType.Field, index );
                         ActiveMemberIndex = index;
                     }
                     break;
 
                 case MemberType.Method:
-                    if (CompositeType.SupportsMethods)
+                    if ( CompositeType.SupportsMethods )
                     {
-                        var index = Math.Max(ActiveMemberIndex + 1, fieldCount);
-                        CompositeType.InsertMember(MemberType.Method, index);
+                        var index = Math.Max( ActiveMemberIndex + 1, fieldCount );
+                        CompositeType.InsertMember( MemberType.Method, index );
                         ActiveMemberIndex = index;
                     }
                     break;
 
                 case MemberType.Constructor:
-                    if (CompositeType.SupportsConstuctors)
+                    if ( CompositeType.SupportsConstuctors )
                     {
-                        var index = Math.Max(ActiveMemberIndex + 1, fieldCount);
-                        CompositeType.InsertMember(MemberType.Constructor, index);
+                        var index = Math.Max( ActiveMemberIndex + 1, fieldCount );
+                        CompositeType.InsertMember( MemberType.Constructor, index );
                         ActiveMemberIndex = index;
                     }
                     break;
 
                 case MemberType.Destructor:
-                    if (CompositeType.SupportsDestructors)
+                    if ( CompositeType.SupportsDestructors )
                     {
-                        var index = Math.Max(ActiveMemberIndex + 1, fieldCount);
-                        CompositeType.InsertMember(MemberType.Destructor, index);
+                        var index = Math.Max( ActiveMemberIndex + 1, fieldCount );
+                        CompositeType.InsertMember( MemberType.Destructor, index );
                         ActiveMemberIndex = index;
                     }
                     break;
 
                 case MemberType.Property:
-                    if (CompositeType.SupportsProperties)
+                    if ( CompositeType.SupportsProperties )
                     {
-                        var index = Math.Max(ActiveMemberIndex + 1, fieldCount);
-                        CompositeType.InsertMember(MemberType.Property, index);
+                        var index = Math.Max( ActiveMemberIndex + 1, fieldCount );
+                        CompositeType.InsertMember( MemberType.Property, index );
                         ActiveMemberIndex = index;
                     }
                     break;
 
                 case MemberType.Event:
-                    if (CompositeType.SupportsEvents)
+                    if ( CompositeType.SupportsEvents )
                     {
-                        var index = Math.Max(ActiveMemberIndex + 1, fieldCount);
-                        CompositeType.InsertMember(MemberType.Event, index);
+                        var index = Math.Max( ActiveMemberIndex + 1, fieldCount );
+                        CompositeType.InsertMember( MemberType.Event, index );
                         ActiveMemberIndex = index;
                     }
                     break;
             }
         }
 
-        private static string GetAccessString(Member member)
+        private static string GetAccessString( Member member )
         {
-            switch (member.Access)
+            switch ( member.Access )
             {
                 case AccessModifier.Public:
                     return "+";
@@ -300,181 +301,146 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             }
         }
 
-        private static string GetMemberString(Member member)
+        private static string GetMemberString( Member member )
         {
-            return member.GetUmlDescription(
-                Settings.Default.ShowType,
-                Settings.Default.ShowParameters,
-                Settings.Default.ShowParameterNames,
-                Settings.Default.ShowInitialValue);
+            return member.GetUmlDescription( Settings.Default.ShowType, Settings.Default.ShowParameters, Settings.Default.ShowParameterNames, Settings.Default.ShowInitialValue );
         }
 
-        private Font GetMemberFont(Member member, Style style)
+        private Font GetMemberFont( Member member, Style style )
         {
             Font memberFont;
-            if (member.IsStatic)
+            if ( member.IsStatic )
             {
                 memberFont = style.StaticMemberFont;
             }
-            else if (member is Operation &&
-                     (((Operation) member).IsAbstract || member.Parent is InterfaceType))
+            else if ( member is Operation && ( ( ( Operation ) member ).IsAbstract || member.Parent is InterfaceType ) )
             {
                 memberFont = style.AbstractMemberFont;
             }
             else
             {
-                memberFont = GetFont(style);
+                memberFont = GetFont( style );
             }
 
             return memberFont;
         }
 
-        private void DrawMember(IGraphics g, Member member, Rectangle record, Style style)
+        private void DrawMember( IGraphics g, Member member, Rectangle record, Style style )
         {
-            var memberFont = GetMemberFont(member, style);
+            var memberFont = GetMemberFont( member, style );
 
-            if (member is Field)
+            if ( member is Field )
                 memberBrush.Color = style.AttributeColor;
             else
                 memberBrush.Color = style.OperationColor;
 
-            if (style.UseIcons)
+            if ( style.UseIcons )
             {
-                var icon = Icons.GetImage(member);
-                g.DrawImage(icon, record.X, record.Y);
+                var icon = Icons.GetImage( member );
+                g.DrawImage( icon, record.X, record.Y );
 
-                var textBounds = new Rectangle(
-                    record.X + IconSpacing,
-                    record.Y,
-                    record.Width - IconSpacing,
-                    record.Height);
+                var textBounds = new Rectangle( record.X + IconSpacing, record.Y, record.Width - IconSpacing, record.Height );
 
-                var memberString = GetMemberString(member);
-                g.DrawString(memberString, memberFont, memberBrush, textBounds, memberFormat);
+                var memberString = GetMemberString( member );
+                g.DrawString( memberString, memberFont, memberBrush, textBounds, memberFormat );
             }
             else
             {
-                var accessBounds = new Rectangle(
-                    record.X,
-                    record.Y,
-                    AccessSpacing,
-                    record.Height);
-                var textBounds = new Rectangle(
-                    record.X + AccessSpacing,
-                    record.Y,
-                    record.Width - AccessSpacing,
-                    record.Height);
+                var accessBounds = new Rectangle( record.X, record.Y, AccessSpacing, record.Height );
+                var textBounds = new Rectangle( record.X + AccessSpacing, record.Y, record.Width - AccessSpacing, record.Height );
 
-                g.DrawString(GetAccessString(member),
-                             GetFont(style),
-                             memberBrush,
-                             accessBounds,
-                             accessFormat);
-                g.DrawString(GetMemberString(member),
-                             memberFont,
-                             memberBrush,
-                             textBounds,
-                             memberFormat);
+                g.DrawString( GetAccessString( member ), GetFont( style ), memberBrush, accessBounds, accessFormat );
+                g.DrawString( GetMemberString( member ), memberFont, memberBrush, textBounds, memberFormat );
             }
         }
 
-        protected internal override void DrawSelectionLines(Graphics g, float zoom, Point offset)
+        protected internal override void DrawSelectionLines( Graphics g, float zoom, Point offset )
         {
-            base.DrawSelectionLines(g, zoom, offset);
+            base.DrawSelectionLines( g, zoom, offset );
 
             // Draw selected member rectangle
-            if (IsActive && ActiveMember != null)
+            if ( IsActive && ActiveMember != null )
             {
-                var record = GetMemberRectangle(ActiveMemberIndex);
-                record = TransformRelativeToAbsolute(record, zoom, offset);
-                record.Inflate(2, 0);
-                g.DrawRectangle(Diagram.SelectionPen, record);
+                var record = GetMemberRectangle( ActiveMemberIndex );
+                record = TransformRelativeToAbsolute( record, zoom, offset );
+                record.Inflate( 2, 0 );
+                g.DrawRectangle( Diagram.SelectionPen, record );
             }
         }
 
-        protected override void DrawContent(IGraphics g, Style style)
+        protected override void DrawContent( IGraphics g, Style style )
         {
-            var record = new Rectangle(
-                Left + MarginSize,
-                Top + HeaderHeight + MarginSize,
-                Width - MarginSize*2,
-                MemberHeight);
+            var record = new Rectangle( Left + MarginSize, Top + HeaderHeight + MarginSize, Width - MarginSize * 2, MemberHeight );
 
             // Draw fields
-            foreach (var field in CompositeType.Fields)
+            foreach ( var field in CompositeType.Fields )
             {
-                DrawMember(g, field, record, style);
+                DrawMember( g, field, record, style );
                 record.Y += MemberHeight;
             }
 
             //Draw separator line 
-            if (CompositeType.SupportsFields)
+            if ( CompositeType.SupportsFields )
             {
-                DrawSeparatorLine(g, record.Top + MarginSize);
-                record.Y += MarginSize*2;
+                DrawSeparatorLine( g, record.Top + MarginSize );
+                record.Y += MarginSize * 2;
             }
 
             // Draw operations
-            foreach (var operation in CompositeType.Operations)
+            foreach ( var operation in CompositeType.Operations )
             {
-                DrawMember(g, operation, record, style);
+                DrawMember( g, operation, record, style );
                 record.Y += MemberHeight;
             }
         }
 
-        protected override float GetRequiredWidth(Graphics g, Style style)
+        protected override float GetRequiredWidth( Graphics g, Style style )
         {
             float requiredWidth = 0;
 
-            foreach (var field in CompositeType.Fields)
+            foreach ( var field in CompositeType.Fields )
             {
-                var fieldWidth = g.MeasureString(GetMemberString(field),
-                                                 GetMemberFont(field, style),
-                                                 PointF.Empty,
-                                                 memberFormat).Width;
-                requiredWidth = Math.Max(requiredWidth, fieldWidth);
+                var fieldWidth = g.MeasureString( GetMemberString( field ), GetMemberFont( field, style ), PointF.Empty, memberFormat ).Width;
+                requiredWidth = Math.Max( requiredWidth, fieldWidth );
             }
-            foreach (var operation in CompositeType.Operations)
+            foreach ( var operation in CompositeType.Operations )
             {
-                var operationWidth = g.MeasureString(GetMemberString(operation),
-                                                     GetMemberFont(operation, style),
-                                                     PointF.Empty,
-                                                     memberFormat).Width;
-                requiredWidth = Math.Max(requiredWidth, operationWidth);
+                var operationWidth = g.MeasureString( GetMemberString( operation ), GetMemberFont( operation, style ), PointF.Empty, memberFormat ).Width;
+                requiredWidth = Math.Max( requiredWidth, operationWidth );
             }
             requiredWidth += style.UseIcons ? IconSpacing : AccessSpacing;
-            requiredWidth += MarginSize*2;
+            requiredWidth += MarginSize * 2;
 
-            return Math.Max(requiredWidth, base.GetRequiredWidth(g, style));
+            return Math.Max( requiredWidth, base.GetRequiredWidth( g, style ) );
         }
 
-        protected override int GetRequiredHeight()
+        protected override int GetRequiredHeight( )
         {
             var memberCount = 0;
             var spacingHeight = 0;
 
-            if (CompositeType.SupportsFields)
+            if ( CompositeType.SupportsFields )
             {
                 memberCount += CompositeType.FieldCount;
-                spacingHeight += MarginSize*2;
+                spacingHeight += MarginSize * 2;
             }
-            if (CompositeType.SupportsOperations)
+            if ( CompositeType.SupportsOperations )
             {
                 memberCount += CompositeType.OperationCount;
-                spacingHeight += MarginSize*2;
+                spacingHeight += MarginSize * 2;
             }
 
-            return HeaderHeight + spacingHeight + memberCount*MemberHeight;
+            return HeaderHeight + spacingHeight + memberCount * MemberHeight;
         }
 
-        private int GetRowIndex(int height)
+        private int GetRowIndex( int height )
         {
             height -= HeaderHeight + MarginSize;
 
-            if (CompositeType.SupportsFields && (height > CompositeType.FieldCount*MemberHeight))
-                height -= MarginSize*2;
+            if ( CompositeType.SupportsFields && ( height > CompositeType.FieldCount * MemberHeight ) )
+                height -= MarginSize * 2;
 
-            return height/MemberHeight;
+            return height / MemberHeight;
         }
     }
 }

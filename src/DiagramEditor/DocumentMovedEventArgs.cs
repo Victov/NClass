@@ -15,12 +15,11 @@
 
 namespace NClass.DiagramEditor
 {
-    public delegate void DocumentMovedEventHandler(object sender, DocumentMovedEventArgs e);
+    public delegate void DocumentMovedEventHandler( object sender, DocumentMovedEventArgs e );
 
     public class DocumentMovedEventArgs : DocumentEventArgs
     {
-        public DocumentMovedEventArgs(IDocument document, int oldPostion, int newPosition)
-            : base(document)
+        public DocumentMovedEventArgs( IDocument document, int oldPostion, int newPosition ) : base( document )
         {
             OldPostion = oldPostion;
             NewPosition = newPosition;

@@ -20,67 +20,67 @@ namespace NClass.CSharp
 {
     internal sealed class CSharpDelegate : DelegateType
     {
-        internal CSharpDelegate()
-            : this("NewDelegate")
-        {
-        }
+        internal CSharpDelegate( ) : this( "NewDelegate" ) {}
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        internal CSharpDelegate(string name)
-            : base(name)
-        {
-        }
+        internal CSharpDelegate( string name ) : base( name ) {}
 
         public override AccessModifier AccessModifier
         {
             get { return base.AccessModifier; }
             set
             {
-                if (IsNested ||
-                    value == AccessModifier.Default ||
-                    value == AccessModifier.Internal ||
-                    value == AccessModifier.Public)
+                if ( IsNested || value == AccessModifier.Default || value == AccessModifier.Internal || value == AccessModifier.Public )
                 {
                     base.AccessModifier = value;
                 }
             }
         }
 
-        public override AccessModifier DefaultAccess { get { return AccessModifier.Internal; } }
-
-        protected override string DefaultReturnType { get { return "void"; } }
-
-        public override Language Language { get { return CSharpLanguage.Instance; } }
-
-        public override string GetDeclaration()
+        public override AccessModifier DefaultAccess
         {
-            var builder = new StringBuilder();
-
-            if (AccessModifier != AccessModifier.Default)
-            {
-                builder.Append(Language.GetAccessString(AccessModifier, true));
-                builder.Append(" ");
-            }
-            builder.AppendFormat("delegate {0} {1}(", ReturnType, Name);
-
-            var parameterIndex = 0;
-            foreach (var parameter in Arguments)
-            {
-                builder.Append(parameter);
-                if (parameterIndex++ < ArgumentCount - 1)
-                    builder.Append(", ");
-            }
-            builder.Append(");");
-
-            return builder.ToString();
+            get { return AccessModifier.Internal; }
         }
 
-        public override DelegateType Clone()
+        protected override string DefaultReturnType
         {
-            var newDelegate = new CSharpDelegate();
-            newDelegate.CopyFrom(this);
+            get { return "void"; }
+        }
+
+        public override Language Language
+        {
+            get { return CSharpLanguage.Instance; }
+        }
+
+        public override string GetDeclaration( )
+        {
+            var builder = new StringBuilder( );
+
+            if ( AccessModifier != AccessModifier.Default )
+            {
+                builder.Append( Language.GetAccessString( AccessModifier, true ) );
+                builder.Append( " " );
+            }
+            builder.AppendFormat( "delegate {0} {1}(", ReturnType, Name );
+
+            var parameterIndex = 0;
+            foreach ( var parameter in Arguments )
+            {
+                builder.Append( parameter );
+                if ( parameterIndex++ < ArgumentCount - 1 )
+                    builder.Append( ", " );
+            }
+            builder.Append( ");" );
+
+            return builder.ToString( );
+        }
+
+        public override DelegateType Clone( )
+        {
+            var newDelegate = new CSharpDelegate( );
+            newDelegate.CopyFrom( this );
             return newDelegate;
         }
     }

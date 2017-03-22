@@ -31,14 +31,14 @@ namespace NClass.DiagramEditor
         event EventHandler ClipboardAvailabilityChanged;
 
 
-        void Cut();
+        void Cut( );
 
-        void Copy();
+        void Copy( );
 
-        void Paste();
+        void Paste( );
 
-        void SelectAll();
+        void SelectAll( );
 
-        void DeleteSelectedElements();
+        void DeleteSelectedElements( );
     }
 }

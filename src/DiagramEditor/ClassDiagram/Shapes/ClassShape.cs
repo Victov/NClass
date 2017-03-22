@@ -24,35 +24,37 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="classType" /> is null.
         /// </exception>
-        internal ClassShape(ClassType classType)
-            : base(classType)
+        internal ClassShape( ClassType classType ) : base( classType )
         {
             ClassType = classType;
-            UpdateMinSize();
+            UpdateMinSize( );
         }
 
-        public override CompositeType CompositeType { get { return ClassType; } }
+        public override CompositeType CompositeType
+        {
+            get { return ClassType; }
+        }
 
         public ClassType ClassType { get; }
 
-        protected override bool CloneEntity(Diagram diagram)
+        protected override bool CloneEntity( Diagram diagram )
         {
-            return diagram.InsertClass(ClassType.Clone());
+            return diagram.InsertClass( ClassType.Clone( ) );
         }
 
-        protected override Color GetBackgroundColor(Style style)
+        protected override Color GetBackgroundColor( Style style )
         {
             return style.ClassBackgroundColor;
         }
 
-        protected override Color GetBorderColor(Style style)
+        protected override Color GetBorderColor( Style style )
         {
             return style.ClassBorderColor;
         }
 
-        protected override int GetBorderWidth(Style style)
+        protected override int GetBorderWidth( Style style )
         {
-            switch (ClassType.Modifier)
+            switch ( ClassType.Modifier )
             {
                 case ClassModifier.Abstract:
                     return style.AbstractClassBorderWidth;
@@ -69,9 +71,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             }
         }
 
-        protected override bool IsBorderDashed(Style style)
+        protected override bool IsBorderDashed( Style style )
         {
-            switch (ClassType.Modifier)
+            switch ( ClassType.Modifier )
             {
                 case ClassModifier.Abstract:
                     return style.IsAbstractClassBorderDashed;
@@ -88,24 +90,24 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             }
         }
 
-        protected override Color GetHeaderColor(Style style)
+        protected override Color GetHeaderColor( Style style )
         {
             return style.ClassHeaderColor;
         }
 
-        protected override Font GetNameFont(Style style)
+        protected override Font GetNameFont( Style style )
         {
-            if (ClassType.Modifier == ClassModifier.Abstract)
+            if ( ClassType.Modifier == ClassModifier.Abstract )
                 return style.AbstractNameFont;
-            return base.GetNameFont(style);
+            return base.GetNameFont( style );
         }
 
-        protected override int GetRoundingSize(Style style)
+        protected override int GetRoundingSize( Style style )
         {
             return style.ClassRoundingSize;
         }
 
-        protected override GradientStyle GetGradientHeaderStyle(Style style)
+        protected override GradientStyle GetGradientHeaderStyle( Style style )
         {
             return style.ClassGradientHeaderStyle;
         }

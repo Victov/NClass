@@ -27,10 +27,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 
         private static readonly Color darkStartColor = Color.Blue;
         private static readonly Color darkEndColor = Color.Red;
-        private static readonly Color lightStartColor = Color.FromArgb(178, 178, 255);
-        private static readonly Color lightEndColor = Color.FromArgb(255, 178, 178);
-        private static readonly Pen squarePen = new Pen(Color.Black);
-        private static readonly SolidBrush squareBrush = new SolidBrush(Color.Black);
+        private static readonly Color lightStartColor = Color.FromArgb( 178, 178, 255 );
+        private static readonly Color lightEndColor = Color.FromArgb( 255, 178, 178 );
+        private static readonly Pen squarePen = new Pen( Color.Black );
+        private static readonly SolidBrush squareBrush = new SolidBrush( Color.Black );
         private Size relativePosition = Size.Empty;
 
         private readonly Shape relativeShape;
@@ -38,10 +38,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="relativeShape" /> is null.
         /// </exception>
-        public BendPoint(Shape relativeShape, bool relativeToStartShape)
+        public BendPoint( Shape relativeShape, bool relativeToStartShape )
         {
-            if (relativeShape == null)
-                throw new ArgumentNullException("relativeShape");
+            if ( relativeShape == null )
+                throw new ArgumentNullException( "relativeShape" );
 
             this.relativeShape = relativeShape;
             RelativeToStartShape = relativeToStartShape;
@@ -50,8 +50,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="relativeShape" /> is null.
         /// </exception>
-        public BendPoint(Shape relativeShape, bool relativeToStartShape, bool autoPosition)
-            : this(relativeShape, relativeToStartShape)
+        public BendPoint( Shape relativeShape, bool relativeToStartShape, bool autoPosition ) : this( relativeShape, relativeToStartShape )
         {
             AutoPosition = autoPosition;
         }
@@ -77,22 +76,19 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
             get { return relativeShape.Location + relativePosition; }
             set
             {
-                if (value.X > relativeShape.Left - Spacing &&
-                    value.X < relativeShape.Right + Spacing &&
-                    value.Y > relativeShape.Top - Spacing &&
-                    value.Y < relativeShape.Bottom + Spacing)
+                if ( value.X > relativeShape.Left - Spacing && value.X < relativeShape.Right + Spacing && value.Y > relativeShape.Top - Spacing && value.Y < relativeShape.Bottom + Spacing )
                 {
-                    if (X <= relativeShape.Left - Spacing)
+                    if ( X <= relativeShape.Left - Spacing )
                     {
                         X = relativeShape.Left - Spacing;
                         Y = value.Y;
                     }
-                    else if (X >= relativeShape.Right + Spacing)
+                    else if ( X >= relativeShape.Right + Spacing )
                     {
                         X = relativeShape.Right + Spacing;
                         Y = value.Y;
                     }
-                    else if (Y <= relativeShape.Top - Spacing)
+                    else if ( Y <= relativeShape.Top - Spacing )
                     {
                         X = value.X;
                         Y = relativeShape.Top - Spacing;
@@ -111,76 +107,75 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
             }
         }
 
-        public object Clone()
+        public object Clone( )
         {
-            return MemberwiseClone();
+            return MemberwiseClone( );
         }
 
-        internal void Draw(Graphics g, bool onScreen, float zoom, Point offset)
+        internal void Draw( Graphics g, bool onScreen, float zoom, Point offset )
         {
-            var x = (int) (X*zoom) - SquareSize/2 - offset.X;
-            var y = (int) (Y*zoom) - SquareSize/2 - offset.Y;
-            var square = new Rectangle(x, y, SquareSize, SquareSize);
+            var x = ( int ) ( X * zoom ) - SquareSize / 2 - offset.X;
+            var y = ( int ) ( Y * zoom ) - SquareSize / 2 - offset.Y;
+            var square = new Rectangle( x, y, SquareSize, SquareSize );
 
-            if (AutoPosition)
+            if ( AutoPosition )
             {
                 squarePen.Color = RelativeToStartShape ? lightStartColor : lightEndColor;
-                g.DrawRectangle(squarePen, square.X, square.Y, square.Width, square.Height);
+                g.DrawRectangle( squarePen, square.X, square.Y, square.Width, square.Height );
             }
             else
             {
                 squarePen.Color = RelativeToStartShape ? darkStartColor : darkEndColor;
                 squareBrush.Color = RelativeToStartShape ? lightStartColor : lightEndColor;
 
-                g.FillRectangle(squareBrush, square);
-                g.DrawRectangle(squarePen, square);
+                g.FillRectangle( squareBrush, square );
+                g.DrawRectangle( squarePen, square );
             }
         }
 
-        internal bool Contains(PointF point, float zoom)
+        internal bool Contains( PointF point, float zoom )
         {
-            var halfSize = SquareSize/zoom/2;
+            var halfSize = SquareSize / zoom / 2;
 
-            return point.X >= X - halfSize && point.X <= X + halfSize &&
-                   point.Y >= Y - halfSize && point.Y <= Y + halfSize;
+            return point.X >= X - halfSize && point.X <= X + halfSize && point.Y >= Y - halfSize && point.Y <= Y + halfSize;
         }
 
-        internal void ShapeResized(Size size)
+        internal void ShapeResized( Size size )
         {
-            if (X >= relativeShape.Left && X <= relativeShape.Right && Y > relativeShape.Top)
+            if ( X >= relativeShape.Left && X <= relativeShape.Right && Y > relativeShape.Top )
                 Y += size.Height;
 
-            if (Y >= relativeShape.Top && Y <= relativeShape.Bottom && X > relativeShape.Left)
+            if ( Y >= relativeShape.Top && Y <= relativeShape.Bottom && X > relativeShape.Left )
                 X += size.Width;
         }
 
-        internal void Serialize(XmlElement node)
+        internal void Serialize( XmlElement node )
         {
             var document = node.OwnerDocument;
 
-            var xNode = document.CreateElement("X");
-            xNode.InnerText = X.ToString();
-            node.AppendChild(xNode);
+            var xNode = document.CreateElement( "X" );
+            xNode.InnerText = X.ToString( );
+            node.AppendChild( xNode );
 
-            var yNode = document.CreateElement("Y");
-            yNode.InnerText = Y.ToString();
-            node.AppendChild(yNode);
+            var yNode = document.CreateElement( "Y" );
+            yNode.InnerText = Y.ToString( );
+            node.AppendChild( yNode );
         }
 
-        internal void Deserialize(XmlElement node)
+        internal void Deserialize( XmlElement node )
         {
-            var xNode = node["X"];
-            if (xNode != null)
+            var xNode = node[ "X" ];
+            if ( xNode != null )
             {
                 int x;
-                int.TryParse(xNode.InnerText, out x);
+                int.TryParse( xNode.InnerText, out x );
                 X = x;
             }
-            var yNode = node["Y"];
-            if (yNode != null)
+            var yNode = node[ "Y" ];
+            if ( yNode != null )
             {
                 int y;
-                int.TryParse(yNode.InnerText, out y);
+                int.TryParse( yNode.InnerText, out y );
                 Y = y;
             }
         }

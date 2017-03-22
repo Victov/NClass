@@ -24,11 +24,9 @@ using NClass.GUI.Properties;
 
 namespace NClass.GUI
 {
-    [ToolStripItemDesignerAvailability(
-        ToolStripItemDesignerAvailability.ToolStrip |
-        ToolStripItemDesignerAvailability.StatusStrip)]
-    [DefaultEvent("ZoomValueChanged")]
-    [DefaultProperty("ZoomValue")]
+    [ToolStripItemDesignerAvailability( ToolStripItemDesignerAvailability.ToolStrip | ToolStripItemDesignerAvailability.StatusStrip )]
+    [DefaultEvent( "ZoomValueChanged" )]
+    [DefaultProperty( "ZoomValue" )]
     public class ZoomingToolStrip : ToolStripItem
     {
         private const float MaxValue = Canvas.MaxZoom;
@@ -44,138 +42,139 @@ namespace NClass.GUI
 
         private float zoomValue = DefaultValue;
 
-        [DefaultValue(DefaultValue)]
+        [DefaultValue( DefaultValue )]
         public float ZoomValue
         {
             get { return zoomValue; }
             set
             {
-                if (value > MaxValue)
+                if ( value > MaxValue )
                     value = MaxValue;
-                if (value < MinValue)
+                if ( value < MinValue )
                     value = MinValue;
 
-                if (zoomValue != value)
+                if ( zoomValue != value )
                 {
                     zoomValue = value;
-                    OnZoomValueChanged(EventArgs.Empty);
-                    Invalidate();
+                    OnZoomValueChanged( EventArgs.Empty );
+                    Invalidate( );
                 }
             }
         }
 
-        protected override Size DefaultSize { get { return new Size(MinWidth, base.DefaultSize.Height); } }
+        protected override Size DefaultSize
+        {
+            get { return new Size( MinWidth, base.DefaultSize.Height ); }
+        }
 
         public event EventHandler ZoomValueChanged;
 
-        public override Size GetPreferredSize(Size constrainingSize)
+        public override Size GetPreferredSize( Size constrainingSize )
         {
-            return new Size(
-                Math.Max(MinWidth, Size.Width),
-                Size.Height);
+            return new Size( Math.Max( MinWidth, Size.Width ), Size.Height );
         }
 
-        private void MoveSlider(int location, bool snapToCenter)
+        private void MoveSlider( int location, bool snapToCenter )
         {
-            var center = Width/2;
+            var center = Width / 2;
 
             // Mono hack for a ToolStripItem layout problem
-            if (MonoHelper.IsRunningOnMono)
+            if ( MonoHelper.IsRunningOnMono )
                 location -= Bounds.Left;
 
-            if (snapToCenter && Math.Abs(location - center) <= PrecisionSize)
+            if ( snapToCenter && Math.Abs( location - center ) <= PrecisionSize )
                 location = center;
 
-            if (location < center)
+            if ( location < center )
             {
-                var left = SliderWidth/2;
-                var scale = (DefaultValue - MinValue)/(center - left);
-                ZoomValue = (location - left)*scale + MinValue;
+                var left = SliderWidth / 2;
+                var scale = ( DefaultValue - MinValue ) / ( center - left );
+                ZoomValue = ( location - left ) * scale + MinValue;
             }
             else // location >= center
             {
-                var right = Width - SliderWidth/2;
-                var scale = (MaxValue - DefaultValue)/(right - center);
-                ZoomValue = (location - center)*scale + DefaultValue;
+                var right = Width - SliderWidth / 2;
+                var scale = ( MaxValue - DefaultValue ) / ( right - center );
+                ZoomValue = ( location - center ) * scale + DefaultValue;
             }
         }
 
-        protected virtual void OnZoomValueChanged(EventArgs e)
+        protected virtual void OnZoomValueChanged( EventArgs e )
         {
-            if (ZoomValueChanged != null)
-                ZoomValueChanged(this, e);
+            if ( ZoomValueChanged != null )
+                ZoomValueChanged( this, e );
         }
 
-        protected override void OnMouseDown(MouseEventArgs e)
+        protected override void OnMouseDown( MouseEventArgs e )
         {
-            base.OnMouseDown(e);
+            base.OnMouseDown( e );
 
-            if (Enabled && e.Button == MouseButtons.Left)
+            if ( Enabled && e.Button == MouseButtons.Left )
             {
                 var snapToCenter = Control.ModifierKeys == Keys.None;
-                MoveSlider(e.X, snapToCenter);
+                MoveSlider( e.X, snapToCenter );
             }
         }
 
-        protected override void OnMouseMove(MouseEventArgs e)
+        protected override void OnMouseMove( MouseEventArgs e )
         {
-            base.OnMouseDown(e);
+            base.OnMouseDown( e );
 
-            if (Enabled && e.Button == MouseButtons.Left)
+            if ( Enabled && e.Button == MouseButtons.Left )
             {
                 var snapToCenter = Control.ModifierKeys == Keys.None;
-                MoveSlider(e.X, snapToCenter);
+                MoveSlider( e.X, snapToCenter );
             }
         }
 
-        protected override void OnPaint(PaintEventArgs e)
+        protected override void OnPaint( PaintEventArgs e )
         {
-            base.OnPaint(e);
+            base.OnPaint( e );
             var g = e.Graphics;
 
-            var center = new Point(Width/2, Height/2);
-            var left = SliderWidth/2;
-            var right = Width - SliderWidth/2;
+            var center = new Point( Width / 2, Height / 2 );
+            var left = SliderWidth / 2;
+            var right = Width - SliderWidth / 2;
             var top = center.Y - 3;
             var bottom = center.Y + 3;
 
             // Draw horizontal and vertical lines
             var pen = Enabled ? linePen : disabledPen;
-            g.DrawLine(pen, left, center.Y, right, center.Y);
-            g.DrawLine(pen, center.X, top, center.X, bottom);
+            g.DrawLine( pen, left, center.Y, right, center.Y );
+            g.DrawLine( pen, center.X, top, center.X, bottom );
 
-            if (Enabled)
-                DrawSlider(g, TrackBarThumbState.Normal);
+            if ( Enabled )
+                DrawSlider( g, TrackBarThumbState.Normal );
             else
-                DrawSlider(g, TrackBarThumbState.Disabled);
+                DrawSlider( g, TrackBarThumbState.Disabled );
         }
 
-        private void DrawSlider(Graphics g, TrackBarThumbState state)
+        private void DrawSlider( Graphics g, TrackBarThumbState state )
         {
             int sliderLocation;
 
-            if (ZoomValue < DefaultValue)
+            if ( ZoomValue < DefaultValue )
             {
-                var regionWidth = Width/2 - SliderWidth/2;
-                var scale = regionWidth/(DefaultValue - MinValue);
-                sliderLocation = (int) Math.Round(scale*(ZoomValue - MinValue)) + SliderWidth/2;
+                var regionWidth = Width / 2 - SliderWidth / 2;
+                var scale = regionWidth / ( DefaultValue - MinValue );
+                sliderLocation = ( int ) Math.Round( scale * ( ZoomValue - MinValue ) ) + SliderWidth / 2;
             }
             else
             {
-                var regionWidth = Width/2 - SliderWidth/2;
-                var scale = regionWidth/(MaxValue - DefaultValue);
-                sliderLocation = (int) Math.Round(scale*(ZoomValue - DefaultValue)) + Width/2;
+                var regionWidth = Width / 2 - SliderWidth / 2;
+                var scale = regionWidth / ( MaxValue - DefaultValue );
+                sliderLocation = ( int ) Math.Round( scale * ( ZoomValue - DefaultValue ) ) + Width / 2;
             }
 
             Image slider;
-            if (state == TrackBarThumbState.Disabled)
+            if ( state == TrackBarThumbState.Disabled )
                 slider = Resources.DisabledSlider;
             else
                 slider = Resources.Slider;
-            var top = Height/2 - SliderHeight/2;
-            var left = sliderLocation - SliderWidth/2;
+            var top = Height / 2 - SliderHeight / 2;
+            var left = sliderLocation - SliderWidth / 2;
 
-            g.DrawImage(slider, left, top, SliderWidth, SliderHeight);
+            g.DrawImage( slider, left, top, SliderWidth, SliderHeight );
         }
     }
 }

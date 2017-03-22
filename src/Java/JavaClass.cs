@@ -22,18 +22,12 @@ namespace NClass.Java
 {
     internal sealed class JavaClass : ClassType
     {
-        internal JavaClass()
-            : this("NewClass")
-        {
-        }
+        internal JavaClass( ) : this( "NewClass" ) {}
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        internal JavaClass(string name)
-            : base(name)
-        {
-        }
+        internal JavaClass( string name ) : base( name ) {}
 
         /// <exception cref="BadSyntaxException">
         ///     The type visibility is not valid in the current context.
@@ -43,9 +37,7 @@ namespace NClass.Java
             get { return base.AccessModifier; }
             set
             {
-                if (IsNested ||
-                    value == AccessModifier.Default ||
-                    value == AccessModifier.Public)
+                if ( IsNested || value == AccessModifier.Default || value == AccessModifier.Public )
                 {
                     base.AccessModifier = value;
                 }
@@ -56,27 +48,42 @@ namespace NClass.Java
         {
             get
             {
-                if (base.BaseClass == null && this != JavaLanguage.ObjectClass)
+                if ( base.BaseClass == null && this != JavaLanguage.ObjectClass )
                     return JavaLanguage.ObjectClass;
                 return base.BaseClass;
             }
             set { base.BaseClass = value; }
         }
 
-        public override AccessModifier DefaultAccess { get { return AccessModifier.Internal; } }
+        public override AccessModifier DefaultAccess
+        {
+            get { return AccessModifier.Internal; }
+        }
 
-        public override AccessModifier DefaultMemberAccess { get { return AccessModifier.Internal; } }
+        public override AccessModifier DefaultMemberAccess
+        {
+            get { return AccessModifier.Internal; }
+        }
 
-        public override bool SupportsProperties { get { return false; } }
+        public override bool SupportsProperties
+        {
+            get { return false; }
+        }
 
         public override bool SupportsConstuctors
         {
             get { return base.SupportsConstuctors && Modifier != ClassModifier.Static; }
         }
 
-        public override bool SupportsDestructors { get { return false; } }
+        public override bool SupportsDestructors
+        {
+            get { return false; }
+        }
 
-        public override bool SupportsEvents { get { return false; } }
+        public override bool SupportsEvents
+        {
+            get { return false; }
+        }
 
         /// <exception cref="ArgumentException">
         ///     The <paramref name="value" /> is already a child member of the type.
@@ -91,7 +98,7 @@ namespace NClass.Java
                     RaiseChangedEvent = false;
 
                     base.NestingParent = value;
-                    if (NestingParent == null && Access != AccessModifier.Public)
+                    if ( NestingParent == null && Access != AccessModifier.Public )
                         AccessModifier = AccessModifier.Internal;
                 }
                 finally
@@ -101,7 +108,10 @@ namespace NClass.Java
             }
         }
 
-        public override Language Language { get { return JavaLanguage.Instance; } }
+        public override Language Language
+        {
+            get { return JavaLanguage.Instance; }
+        }
 
         /// <exception cref="ArgumentException">
         ///     The language of <paramref name="interfaceType" /> does not equal.-or-
@@ -110,39 +120,38 @@ namespace NClass.Java
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="interfaceType" /> is null.
         /// </exception>
-        public override void AddInterface(InterfaceType interfaceType)
+        public override void AddInterface( InterfaceType interfaceType )
         {
-            if (!(interfaceType is JavaInterface))
+            if ( !( interfaceType is JavaInterface ) )
             {
-                throw new RelationshipException(
-                    string.Format(Strings.ErrorInterfaceLanguage, "Java"));
+                throw new RelationshipException( string.Format( Strings.ErrorInterfaceLanguage, "Java" ) );
             }
 
-            base.AddInterface(interfaceType);
+            base.AddInterface( interfaceType );
         }
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        public override Field AddField()
+        public override Field AddField( )
         {
-            Field field = new JavaField(this);
+            Field field = new JavaField( this );
 
             field.AccessModifier = AccessModifier.Private;
-            AddField(field);
+            AddField( field );
 
             return field;
         }
 
-        public override Constructor AddConstructor()
+        public override Constructor AddConstructor( )
         {
-            Constructor constructor = new JavaConstructor(this);
+            Constructor constructor = new JavaConstructor( this );
 
-            if (Modifier == ClassModifier.Abstract)
+            if ( Modifier == ClassModifier.Abstract )
                 constructor.AccessModifier = AccessModifier.Protected;
             else
                 constructor.AccessModifier = AccessModifier.Public;
-            AddOperation(constructor);
+            AddOperation( constructor );
 
             return constructor;
         }
@@ -150,20 +159,20 @@ namespace NClass.Java
         /// <exception cref="InvalidOperationException">
         ///     The type does not support destructors.
         /// </exception>
-        public override Destructor AddDestructor()
+        public override Destructor AddDestructor( )
         {
-            throw new InvalidOperationException("Java class does not support destructors.");
+            throw new InvalidOperationException( "Java class does not support destructors." );
         }
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        public override Method AddMethod()
+        public override Method AddMethod( )
         {
-            Method method = new JavaMethod(this);
+            Method method = new JavaMethod( this );
 
             method.AccessModifier = AccessModifier.Public;
-            AddOperation(method);
+            AddOperation( method );
 
             return method;
         }
@@ -171,63 +180,63 @@ namespace NClass.Java
         /// <exception cref="InvalidOperationException">
         ///     The type does not support properties.
         /// </exception>
-        public override Property AddProperty()
+        public override Property AddProperty( )
         {
-            throw new InvalidOperationException("Java language does not support properties.");
+            throw new InvalidOperationException( "Java language does not support properties." );
         }
 
         /// <exception cref="InvalidOperationException">
         ///     The type does not support events.
         /// </exception>
-        public override Event AddEvent()
+        public override Event AddEvent( )
         {
-            throw new InvalidOperationException("Java language does not support events.");
+            throw new InvalidOperationException( "Java language does not support events." );
         }
 
-        public override string GetDeclaration()
+        public override string GetDeclaration( )
         {
-            var builder = new StringBuilder();
+            var builder = new StringBuilder( );
 
-            if (AccessModifier != AccessModifier.Default)
+            if ( AccessModifier != AccessModifier.Default )
             {
-                builder.Append(Language.GetAccessString(AccessModifier, true));
-                builder.Append(" ");
+                builder.Append( Language.GetAccessString( AccessModifier, true ) );
+                builder.Append( " " );
             }
-            if (IsNested || Modifier == ClassModifier.Static)
+            if ( IsNested || Modifier == ClassModifier.Static )
             {
-                builder.Append("static ");
+                builder.Append( "static " );
             }
-            if (Modifier != ClassModifier.None && Modifier != ClassModifier.Static)
+            if ( Modifier != ClassModifier.None && Modifier != ClassModifier.Static )
             {
-                builder.Append(Language.GetClassModifierString(Modifier, true));
-                builder.Append(" ");
+                builder.Append( Language.GetClassModifierString( Modifier, true ) );
+                builder.Append( " " );
             }
 
-            builder.AppendFormat("class {0}", Name);
+            builder.AppendFormat( "class {0}", Name );
 
-            if (HasExplicitBase)
+            if ( HasExplicitBase )
             {
-                builder.Append(" extends ");
-                builder.Append(BaseClass.Name);
+                builder.Append( " extends " );
+                builder.Append( BaseClass.Name );
             }
-            if (InterfaceList.Count > 0)
+            if ( InterfaceList.Count > 0 )
             {
-                builder.Append(" implements ");
-                for (var i = 0; i < InterfaceList.Count; i++)
+                builder.Append( " implements " );
+                for ( var i = 0; i < InterfaceList.Count; i++ )
                 {
-                    builder.Append(InterfaceList[i].Name);
-                    if (i < InterfaceList.Count - 1)
-                        builder.Append(", ");
+                    builder.Append( InterfaceList[ i ].Name );
+                    if ( i < InterfaceList.Count - 1 )
+                        builder.Append( ", " );
                 }
             }
 
-            return builder.ToString();
+            return builder.ToString( );
         }
 
-        public override ClassType Clone()
+        public override ClassType Clone( )
         {
-            var newClass = new JavaClass();
-            newClass.CopyFrom(this);
+            var newClass = new JavaClass( );
+            newClass.CopyFrom( this );
             return newClass;
         }
     }

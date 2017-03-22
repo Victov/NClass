@@ -18,29 +18,29 @@
 
 namespace NReflect.Modifier
 {
-  /// <summary>
-  /// This enumeration contains all possible class modifiers.
-  /// </summary>
-  public enum ClassModifier
-  {
     /// <summary>
-    /// None of the other modifiers is set.
+    /// This enumeration contains all possible class modifiers.
     /// </summary>
-    None,
+    public enum ClassModifier
+    {
+        /// <summary>
+        /// None of the other modifiers is set.
+        /// </summary>
+        None,
 
-    /// <summary>
-    /// Indicates that a class is intended only to be a base class of other classes.
-    /// </summary>
-    Abstract,
+        /// <summary>
+        /// Indicates that a class is intended only to be a base class of other classes.
+        /// </summary>
+        Abstract,
 
-    /// <summary>
-    /// Specifies that a class cannot be inherited.
-    /// </summary>
-    Sealed,
+        /// <summary>
+        /// Specifies that a class cannot be inherited.
+        /// </summary>
+        Sealed,
 
-    /// <summary>
-    /// Indicates that a class contains only static members.
-    /// </summary>
-    Static
-  }
+        /// <summary>
+        /// Indicates that a class contains only static members.
+        /// </summary>
+        Static
+    }
 }

@@ -17,40 +17,40 @@ using System.Collections.Generic;
 
 namespace NClass.DiagramEditor.ClassDiagram
 {
-    public class ElementList<T> : OrderedList<T> where T : DiagramElement
+    public class ElementList< T > : OrderedList< T > where T : DiagramElement
     {
-        public IEnumerable<T> GetSelectedElements()
+        public IEnumerable< T > GetSelectedElements( )
         {
-            foreach (var element in GetModifiableList())
+            foreach ( var element in GetModifiableList( ) )
             {
-                if (element.IsSelected)
+                if ( element.IsSelected )
                     yield return element;
             }
         }
 
-        public IEnumerable<T> GetUnselectedElements()
+        public IEnumerable< T > GetUnselectedElements( )
         {
-            foreach (var element in GetModifiableList())
+            foreach ( var element in GetModifiableList( ) )
             {
-                if (!element.IsSelected)
+                if ( !element.IsSelected )
                     yield return element;
             }
         }
 
-        public IEnumerable<T> GetSelectedElementsReversed()
+        public IEnumerable< T > GetSelectedElementsReversed( )
         {
-            foreach (var element in GetReversedList())
+            foreach ( var element in GetReversedList( ) )
             {
-                if (element.IsSelected)
+                if ( element.IsSelected )
                     yield return element;
             }
         }
 
-        public IEnumerable<T> GetUnselectedElementsReversed()
+        public IEnumerable< T > GetUnselectedElementsReversed( )
         {
-            foreach (var element in GetReversedList())
+            foreach ( var element in GetReversedList( ) )
             {
-                if (!element.IsSelected)
+                if ( !element.IsSelected )
                     yield return element;
             }
         }

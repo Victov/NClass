@@ -34,121 +34,105 @@ namespace NClass.GUI
         /// <exception cref="InvalidDataException">
         ///     Could not read the version informations.
         /// </exception>
-        private static VersionInfo GetVersionManifestInfo()
+        private static VersionInfo GetVersionManifestInfo( )
         {
             try
             {
-                var document = new XmlDocument();
-                document.Load(VersionUrl);
+                var document = new XmlDocument( );
+                document.Load( VersionUrl );
                 var root = document.DocumentElement;
 
                 // Get main version information
-                var versionElement = root["Version"];
+                var versionElement = root[ "Version" ];
                 var version = versionElement.InnerText;
 
                 // Get translation version information
-                var translationElements = root.SelectNodes(
-                    "TranslationVersions/" + Strings.TranslationName);
+                var translationElements = root.SelectNodes( "TranslationVersions/" + Strings.TranslationName );
                 string translationVersion;
-                if (translationElements.Count == 0)
+                if ( translationElements.Count == 0 )
                     translationVersion = Strings.TranslationVersion;
                 else
-                    translationVersion = translationElements[0].InnerText;
+                    translationVersion = translationElements[ 0 ].InnerText;
 
                 // Get other informations
-                var name = root["VersionName"].InnerText;
-                var url = root["DownloadPageUrl"].InnerText;
-                var notes = root["Notes"].InnerText.Trim();
+                var name = root[ "VersionName" ].InnerText;
+                var url = root[ "DownloadPageUrl" ].InnerText;
+                var notes = root[ "Notes" ].InnerText.Trim( );
 
-                return new VersionInfo(version, translationVersion, name, url, notes);
+                return new VersionInfo( version, translationVersion, name, url, notes );
             }
-            catch (WebException)
+            catch ( WebException )
             {
                 throw;
             }
             catch
             {
-                throw new InvalidDataException();
+                throw new InvalidDataException( );
             }
         }
 
-        private static void OpenUrl(string url)
+        private static void OpenUrl( string url )
         {
-            Process.Start(url);
+            Process.Start( url );
         }
 
-        public static void CheckForUpdates()
+        public static void CheckForUpdates( )
         {
             try
             {
-                var info = GetVersionManifestInfo();
-                ShowNewVersionInfo(info);
+                var info = GetVersionManifestInfo( );
+                ShowNewVersionInfo( info );
             }
-            catch (WebException)
+            catch ( WebException )
             {
-                MessageBox.Show(Strings.ErrorConnectToServer,
-                                Strings.Error,
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
+                MessageBox.Show( Strings.ErrorConnectToServer, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error );
             }
-            catch (InvalidDataException)
+            catch ( InvalidDataException )
             {
-                MessageBox.Show(Strings.ErrorReadVersionData,
-                                Strings.Error,
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
+                MessageBox.Show( Strings.ErrorReadVersionData, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error );
             }
         }
 
-        private static void ShowNewVersionInfo(VersionInfo info)
+        private static void ShowNewVersionInfo( VersionInfo info )
         {
-            if (info.IsUpdated)
+            if ( info.IsUpdated )
             {
-                var text = GetVersionDescription(info);
+                var text = GetVersionDescription( info );
                 var caption = Strings.CheckingForUpdates;
 
-                var result = MessageBox.Show(text,
-                                             caption,
-                                             MessageBoxButtons.YesNo,
-                                             MessageBoxIcon.Information);
+                var result = MessageBox.Show( text, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Information );
 
-                if (result == DialogResult.Yes)
-                    OpenUrl(info.DownloadPageUrl);
+                if ( result == DialogResult.Yes )
+                    OpenUrl( info.DownloadPageUrl );
             }
             else
             {
-                MessageBox.Show(
-                    Strings.NoUpdates,
-                    Strings.CheckingForUpdates,
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                MessageBox.Show( Strings.NoUpdates, Strings.CheckingForUpdates, MessageBoxButtons.OK, MessageBoxIcon.Information );
             }
         }
 
-        private static string GetVersionDescription(VersionInfo info)
+        private static string GetVersionDescription( VersionInfo info )
         {
-            var builder = new StringBuilder(512);
+            var builder = new StringBuilder( 512 );
 
-            if (info.IsMainProgramUpdated)
+            if ( info.IsMainProgramUpdated )
             {
                 // Header text
-                builder.AppendFormat("{0}: {1}\n\n",
-                                     Strings.NewVersion,
-                                     info.VersionName);
+                builder.AppendFormat( "{0}: {1}\n\n", Strings.NewVersion, info.VersionName );
 
                 // Main program's changes
-                builder.Append(info.Notes);
-                builder.Append("\n\n");
+                builder.Append( info.Notes );
+                builder.Append( "\n\n" );
             }
-            else if (info.IsTranslationUpdated)
+            else if ( info.IsTranslationUpdated )
             {
-                builder.AppendFormat("{0}\n\n", Strings.TranslationUpdated);
+                builder.AppendFormat( "{0}\n\n", Strings.TranslationUpdated );
             }
 
             // Download text
-            builder.Append(Strings.ProgramDownload);
+            builder.Append( Strings.ProgramDownload );
 
-            return builder.ToString();
+            return builder.ToString( );
         }
 
         private class VersionInfo
@@ -161,30 +145,26 @@ namespace NClass.GUI
             ///     <paramref name="versionName" />, <paramref name="downloadPageUrl" />, or
             ///     <paramref name="notes" /> is null.
             /// </exception>
-            public VersionInfo(string version,
-                               string translationVersion,
-                               string versionName,
-                               string downloadPageUrl,
-                               string notes)
+            public VersionInfo( string version, string translationVersion, string versionName, string downloadPageUrl, string notes )
             {
-                if (version == null)
-                    throw new ArgumentNullException("version");
-                if (translationVersion == null)
-                    throw new ArgumentNullException("translationVersion");
-                if (versionName == null)
-                    throw new ArgumentNullException("versionName");
-                if (downloadPageUrl == null)
-                    throw new ArgumentNullException("downloadPageUrl");
-                if (notes == null)
-                    throw new ArgumentNullException("notes");
+                if ( version == null )
+                    throw new ArgumentNullException( "version" );
+                if ( translationVersion == null )
+                    throw new ArgumentNullException( "translationVersion" );
+                if ( versionName == null )
+                    throw new ArgumentNullException( "versionName" );
+                if ( downloadPageUrl == null )
+                    throw new ArgumentNullException( "downloadPageUrl" );
+                if ( notes == null )
+                    throw new ArgumentNullException( "notes" );
 
                 try
                 {
-                    MainVersion = new Version(version);
+                    MainVersion = new Version( version );
                 }
                 catch
                 {
-                    throw new ArgumentException("Version string is invalid.", "version");
+                    throw new ArgumentException( "Version string is invalid.", "version" );
                 }
                 TranslationVersion = translationVersion;
                 VersionName = versionName;
@@ -202,24 +182,30 @@ namespace NClass.GUI
 
             public string Notes { get; }
 
-            public bool IsUpdated { get { return IsMainProgramUpdated || IsTranslationUpdated; } }
+            public bool IsUpdated
+            {
+                get { return IsMainProgramUpdated || IsTranslationUpdated; }
+            }
 
-            public bool IsMainProgramUpdated { get { return MainVersion.CompareTo(Program.CurrentVersion) > 0; } }
+            public bool IsMainProgramUpdated
+            {
+                get { return MainVersion.CompareTo( Program.CurrentVersion ) > 0; }
+            }
 
             public bool IsTranslationUpdated
             {
                 get
                 {
                     var currentTranslationVersion = Strings.TranslationVersion;
-                    return TranslationVersion.CompareTo(currentTranslationVersion) > 0;
+                    return TranslationVersion.CompareTo( currentTranslationVersion ) > 0;
                 }
             }
 
-            public override string ToString()
+            public override string ToString( )
             {
-                if (VersionName == null)
-                    return MainVersion.ToString();
-                return string.Format("{0} ({1})", VersionName, MainVersion);
+                if ( VersionName == null )
+                    return MainVersion.ToString( );
+                return string.Format( "{0} ({1})", VersionName, MainVersion );
             }
         }
     }

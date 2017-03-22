@@ -18,30 +18,34 @@
 
 namespace NReflect.Modifier
 {
-  /// <summary>
-  /// This enumeration contains all possible modifiers for a parameter.
-  /// </summary>
-  public enum ParameterModifier
-  {
     /// <summary>
-    /// The parameter is an in parameter.
+    /// This enumeration contains all possible modifiers for a parameter.
     /// </summary>
-    In,
-    /// <summary>
-    /// The parameter is an in/out parameter.
-    /// </summary>
-    InOut,
-    /// <summary>
-    /// The parameter is an out parameter.
-    /// </summary>
-    Out,
-    /// <summary>
-    /// The parameter is the parameter containing a params-array.
-    /// </summary>
-    Params,
-    /// <summary>
-    /// The parameter is optional.
-    /// </summary>
-    Optional
-  }
+    public enum ParameterModifier
+    {
+        /// <summary>
+        /// The parameter is an in parameter.
+        /// </summary>
+        In,
+
+        /// <summary>
+        /// The parameter is an in/out parameter.
+        /// </summary>
+        InOut,
+
+        /// <summary>
+        /// The parameter is an out parameter.
+        /// </summary>
+        Out,
+
+        /// <summary>
+        /// The parameter is the parameter containing a params-array.
+        /// </summary>
+        Params,
+
+        /// <summary>
+        /// The parameter is optional.
+        /// </summary>
+        Optional
+    }
 }

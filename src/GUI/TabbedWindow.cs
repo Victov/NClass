@@ -8,26 +8,26 @@ namespace NClass.GUI
     {
         private DocumentManager docManager;
 
-        public TabbedWindow()
+        public TabbedWindow( )
         {
-            InitializeComponent();
+            InitializeComponent( );
         }
 
-        [Browsable(false)]
+        [Browsable( false )]
         public DocumentManager DocumentManager
         {
             get { return docManager; }
             set
             {
-                if (docManager != value)
+                if ( docManager != value )
                 {
                     docManager = value;
 
-                    if (docManager != null)
+                    if ( docManager != null )
                         docManager.ActiveDocumentChanged -= docManager_ActiveDocumentChanged;
                     docManager = value;
 
-                    if (docManager != null)
+                    if ( docManager != null )
                     {
                         docManager.ActiveDocumentChanged += docManager_ActiveDocumentChanged;
                         Canvas.Document = docManager.ActiveDocument;
@@ -41,13 +41,13 @@ namespace NClass.GUI
             }
         }
 
-        [Browsable(false)]
+        [Browsable( false )]
         public TabBar TabBar { get; private set; }
 
-        [Browsable(false)]
+        [Browsable( false )]
         public Canvas Canvas { get; private set; }
 
-        private void docManager_ActiveDocumentChanged(object sender, DocumentEventArgs e)
+        private void docManager_ActiveDocumentChanged( object sender, DocumentEventArgs e )
         {
             Canvas.Document = docManager.ActiveDocument;
         }

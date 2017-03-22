@@ -17,70 +17,70 @@ using System.Collections.Generic;
 
 namespace NClass.DiagramEditor
 {
-    internal sealed class Intersector<T>
+    internal sealed class Intersector< T >
     {
-        private readonly List<DomainElement> domain = new List<DomainElement>();
+        private readonly List< DomainElement > domain = new List< DomainElement >( );
         private int domainIndex;
 
         private int setCount;
 
-        public void ClearSets()
+        public void ClearSets( )
         {
             setCount = 0;
             domainIndex = 0;
-            domain.Clear();
+            domain.Clear( );
         }
 
-        public void AddSet(IEnumerable<T> values)
+        public void AddSet( IEnumerable< T > values )
         {
-            foreach (var value in values)
-                AddToDomain(value);
+            foreach ( var value in values )
+                AddToDomain( value );
             setCount++;
         }
 
-        private void AddToDomain(T value)
+        private void AddToDomain( T value )
         {
             var found = false;
 
-            for (var i = domainIndex; i < domain.Count && !found; i++)
+            for ( var i = domainIndex; i < domain.Count && !found; i++ )
             {
-                if (EqualityComparer<T>.Default.Equals(domain[i].Value, value))
+                if ( EqualityComparer< T >.Default.Equals( domain[ i ].Value, value ) )
                 {
-                    domain[i].Count++;
-                    domainIndex = (i + 1)%domain.Count;
+                    domain[ i ].Count++;
+                    domainIndex = ( i + 1 ) % domain.Count;
                     found = true;
                 }
             }
-            for (var i = 0; i < domainIndex && !found; i++)
+            for ( var i = 0; i < domainIndex && !found; i++ )
             {
-                if (EqualityComparer<T>.Default.Equals(domain[i].Value, value))
+                if ( EqualityComparer< T >.Default.Equals( domain[ i ].Value, value ) )
                 {
-                    domain[i].Count++;
-                    domainIndex = (i + 1)%domain.Count;
+                    domain[ i ].Count++;
+                    domainIndex = ( i + 1 ) % domain.Count;
                     found = true;
                 }
             }
 
-            if (!found)
+            if ( !found )
             {
-                var newElement = new DomainElement(value);
-                domain.Add(newElement);
+                var newElement = new DomainElement( value );
+                domain.Add( newElement );
                 domainIndex = 0;
             }
         }
 
-        public IEnumerable<T> GetIntersection()
+        public IEnumerable< T > GetIntersection( )
         {
-            for (var i = 0; i < domain.Count; i++)
+            for ( var i = 0; i < domain.Count; i++ )
             {
-                if (domain[i].Count == setCount)
-                    yield return domain[i].Value;
+                if ( domain[ i ].Count == setCount )
+                    yield return domain[ i ].Value;
             }
         }
 
         private class DomainElement
         {
-            public DomainElement(T value)
+            public DomainElement( T value )
             {
                 Value = value;
             }

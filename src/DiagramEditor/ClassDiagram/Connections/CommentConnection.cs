@@ -26,25 +26,30 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
         ///     <paramref name="startShape" /> is null.-or-
         ///     <paramref name="endShape" /> is null.
         /// </exception>
-        public CommentConnection(CommentRelationship relationship, Shape startShape, Shape endShape)
-            : base(relationship, startShape, endShape)
+        public CommentConnection( CommentRelationship relationship, Shape startShape, Shape endShape ) : base( relationship, startShape, endShape )
         {
             CommentRelationship = relationship;
         }
 
         internal CommentRelationship CommentRelationship { get; }
 
-        protected internal override Relationship Relationship { get { return CommentRelationship; } }
+        protected internal override Relationship Relationship
+        {
+            get { return CommentRelationship; }
+        }
 
-        protected override bool IsDashed { get { return true; } }
+        protected override bool IsDashed
+        {
+            get { return true; }
+        }
 
-        protected override bool CloneRelationship(Diagram diagram, Shape first, Shape second)
+        protected override bool CloneRelationship( Diagram diagram, Shape first, Shape second )
         {
             var comment = first.Entity as Comment;
-            if (comment != null)
+            if ( comment != null )
             {
-                var clone = CommentRelationship.Clone(comment, second.Entity);
-                return diagram.InsertCommentRelationship(clone);
+                var clone = CommentRelationship.Clone( comment, second.Entity );
+                return diagram.InsertCommentRelationship( clone );
             }
             return false;
         }

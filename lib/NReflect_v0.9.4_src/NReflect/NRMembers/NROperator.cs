@@ -20,38 +20,38 @@ using System;
 
 namespace NReflect.NRMembers
 {
-  /// <summary>
-  /// Represents an operator of a type which is reflected by NReflect.
-  /// </summary>
-  [Serializable]
-  public class NROperator : NRReturnValueOperation
-  {
-    // ========================================================================
-    // Properties
-
-    #region === Properties
-
     /// <summary>
-    /// Gets or sets the <see cref="OperatorType"/> for the operator.
+    /// Represents an operator of a type which is reflected by NReflect.
     /// </summary>
-    public OperatorType OperatorType { get; set; }
-
-    #endregion
-
-    // ========================================================================
-    // Methods
-
-    #region === Methods
-
-    /// <summary>
-    /// Accept an <see cref="IVisitor"/> instance on the implementing class and all its children.
-    /// </summary>
-    /// <param name="visitor">The <see cref="IVisitor"/> instance to accept.</param>
-    public override void Accept(IVisitor visitor)
+    [Serializable]
+    public class NROperator : NRReturnValueOperation
     {
-      visitor.Visit(this);
-    }
+        // ========================================================================
+        // Properties
 
-    #endregion
-  }
+        #region === Properties
+
+        /// <summary>
+        /// Gets or sets the <see cref="OperatorType"/> for the operator.
+        /// </summary>
+        public OperatorType OperatorType { get; set; }
+
+        #endregion
+
+        // ========================================================================
+        // Methods
+
+        #region === Methods
+
+        /// <summary>
+        /// Accept an <see cref="IVisitor"/> instance on the implementing class and all its children.
+        /// </summary>
+        /// <param name="visitor">The <see cref="IVisitor"/> instance to accept.</param>
+        public override void Accept( IVisitor visitor )
+        {
+            visitor.Visit( this );
+        }
+
+        #endregion
+    }
 }

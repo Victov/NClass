@@ -30,20 +30,22 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="parent" /> is null.
         /// </exception>
-        protected Operation(string name, CompositeType parent)
-            : base(name, parent)
+        protected Operation( string name, CompositeType parent ) : base( name, parent )
         {
-            argumentList = Language.CreateParameterCollection();
+            argumentList = Language.CreateParameterCollection( );
         }
 
-        public bool HasParameter { get { return ArgumentList != null && ArgumentList.Count > 0; } }
+        public bool HasParameter
+        {
+            get { return ArgumentList != null && ArgumentList.Count > 0; }
+        }
 
         public ArgumentList ArgumentList
         {
             protected get { return argumentList; }
             set
             {
-                if (argumentList.Equals(value))
+                if ( argumentList.Equals( value ) )
                     return;
 
                 argumentList = value;
@@ -58,7 +60,7 @@ namespace NClass.Core
             get { return base.AccessModifier; }
             set
             {
-                if (value == AccessModifier)
+                if ( value == AccessModifier )
                     return;
 
                 var previousAccess = base.AccessModifier;
@@ -68,7 +70,7 @@ namespace NClass.Core
                     RaiseChangedEvent = false;
 
                     base.AccessModifier = value;
-                    Language.ValidateOperation(this);
+                    Language.ValidateOperation( this );
                 }
                 catch
                 {
@@ -84,29 +86,32 @@ namespace NClass.Core
 
         public OperationModifier Modifier { get; private set; } = OperationModifier.None;
 
-        public sealed override bool IsModifierless { get { return Modifier == OperationModifier.None; } }
+        public sealed override bool IsModifierless
+        {
+            get { return Modifier == OperationModifier.None; }
+        }
 
         /// <exception cref="BadSyntaxException">
         ///     Cannot set static modifier.
         /// </exception>
         public override bool IsStatic
         {
-            get { return (Modifier & OperationModifier.Static) != 0; }
+            get { return ( Modifier & OperationModifier.Static ) != 0; }
             set
             {
-                if (value == IsStatic)
+                if ( value == IsStatic )
                     return;
 
                 var previousModifier = Modifier;
 
                 try
                 {
-                    if (value)
+                    if ( value )
                         Modifier |= OperationModifier.Static;
                     else
                         Modifier &= ~OperationModifier.Static;
-                    Language.ValidateOperation(this);
-                    Changed();
+                    Language.ValidateOperation( this );
+                    Changed( );
                 }
                 catch
                 {
@@ -121,22 +126,22 @@ namespace NClass.Core
         /// </exception>
         public override bool IsHider
         {
-            get { return (Modifier & OperationModifier.Hider) != 0; }
+            get { return ( Modifier & OperationModifier.Hider ) != 0; }
             set
             {
-                if (value == IsHider)
+                if ( value == IsHider )
                     return;
 
                 var previousModifier = Modifier;
 
                 try
                 {
-                    if (value)
+                    if ( value )
                         Modifier |= OperationModifier.Hider;
                     else
                         Modifier &= ~OperationModifier.Hider;
-                    Language.ValidateOperation(this);
-                    Changed();
+                    Language.ValidateOperation( this );
+                    Changed( );
                 }
                 catch
                 {
@@ -151,22 +156,22 @@ namespace NClass.Core
         /// </exception>
         public virtual bool IsVirtual
         {
-            get { return (Modifier & OperationModifier.Virtual) != 0; }
+            get { return ( Modifier & OperationModifier.Virtual ) != 0; }
             set
             {
-                if (value == IsVirtual)
+                if ( value == IsVirtual )
                     return;
 
                 var previousModifier = Modifier;
 
                 try
                 {
-                    if (value)
+                    if ( value )
                         Modifier |= OperationModifier.Virtual;
                     else
                         Modifier &= ~OperationModifier.Virtual;
-                    Language.ValidateOperation(this);
-                    Changed();
+                    Language.ValidateOperation( this );
+                    Changed( );
                 }
                 catch
                 {
@@ -181,22 +186,22 @@ namespace NClass.Core
         /// </exception>
         public virtual bool IsAbstract
         {
-            get { return (Modifier & OperationModifier.Abstract) != 0; }
+            get { return ( Modifier & OperationModifier.Abstract ) != 0; }
             set
             {
-                if (value == IsAbstract)
+                if ( value == IsAbstract )
                     return;
 
                 var previousModifier = Modifier;
 
                 try
                 {
-                    if (value)
+                    if ( value )
                         Modifier |= OperationModifier.Abstract;
                     else
                         Modifier &= ~OperationModifier.Abstract;
-                    Language.ValidateOperation(this);
-                    Changed();
+                    Language.ValidateOperation( this );
+                    Changed( );
                 }
                 catch
                 {
@@ -211,22 +216,22 @@ namespace NClass.Core
         /// </exception>
         public virtual bool IsOverride
         {
-            get { return (Modifier & OperationModifier.Override) != 0; }
+            get { return ( Modifier & OperationModifier.Override ) != 0; }
             set
             {
-                if (value == IsOverride)
+                if ( value == IsOverride )
                     return;
 
                 var previousModifier = Modifier;
 
                 try
                 {
-                    if (value)
+                    if ( value )
                         Modifier |= OperationModifier.Override;
                     else
                         Modifier &= ~OperationModifier.Override;
-                    Language.ValidateOperation(this);
-                    Changed();
+                    Language.ValidateOperation( this );
+                    Changed( );
                 }
                 catch
                 {
@@ -241,22 +246,22 @@ namespace NClass.Core
         /// </exception>
         public virtual bool IsSealed
         {
-            get { return (Modifier & OperationModifier.Sealed) != 0; }
+            get { return ( Modifier & OperationModifier.Sealed ) != 0; }
             set
             {
-                if (value == IsSealed)
+                if ( value == IsSealed )
                     return;
 
                 var previousModifier = Modifier;
 
                 try
                 {
-                    if (value)
+                    if ( value )
                         Modifier |= OperationModifier.Sealed;
                     else
                         Modifier &= ~OperationModifier.Sealed;
-                    Language.ValidateOperation(this);
-                    Changed();
+                    Language.ValidateOperation( this );
+                    Changed( );
                 }
                 catch
                 {
@@ -266,54 +271,55 @@ namespace NClass.Core
             }
         }
 
-        public virtual bool HasBody { get { return !IsAbstract && !(Parent is InterfaceType); } }
+        public virtual bool HasBody
+        {
+            get { return !IsAbstract && !( Parent is InterfaceType ); }
+        }
 
         public virtual bool Overridable
         {
             get
             {
-                if (Language.ExplicitVirtualMethods)
+                if ( Language.ExplicitVirtualMethods )
                 {
-                    return IsVirtual || IsAbstract || (IsOverride && !IsSealed);
+                    return IsVirtual || IsAbstract || ( IsOverride && !IsSealed );
                 }
-                return Access != AccessModifier.Private &&
-                       (IsModifierless || IsAbstract || IsHider);
+                return Access != AccessModifier.Private && ( IsModifierless || IsAbstract || IsHider );
             }
         }
 
-        public virtual void ClearModifiers()
+        public virtual void ClearModifiers( )
         {
-            if (Modifier != OperationModifier.None)
+            if ( Modifier != OperationModifier.None )
             {
                 Modifier = OperationModifier.None;
-                Changed();
+                Changed( );
             }
         }
 
-        protected override void CopyFrom(Member member)
+        protected override void CopyFrom( Member member )
         {
-            base.CopyFrom(member);
+            base.CopyFrom( member );
 
-            var operation = (Operation) member;
+            var operation = ( Operation ) member;
             Modifier = operation.Modifier;
-            argumentList = operation.argumentList.Clone();
+            argumentList = operation.argumentList.Clone( );
         }
 
-        public abstract Operation Clone(CompositeType newParent);
+        public abstract Operation Clone( CompositeType newParent );
 
-        public virtual bool HasSameSignatureAs(Operation operation)
+        public virtual bool HasSameSignatureAs( Operation operation )
         {
-            if (operation == null || Name != operation.Name)
+            if ( operation == null || Name != operation.Name )
                 return false;
 
             // Names and types are the same and the parameter counts do not equal
-            if (ArgumentList.Count != operation.ArgumentList.Count)
+            if ( ArgumentList.Count != operation.ArgumentList.Count )
                 return false;
 
-            for (var i = 0; i < ArgumentList.Count; i++)
+            for ( var i = 0; i < ArgumentList.Count; i++ )
             {
-                if (ArgumentList[i].Type != operation.ArgumentList[i].Type ||
-                    ArgumentList[i].Modifier != operation.ArgumentList[i].Modifier)
+                if ( ArgumentList[ i ].Type != operation.ArgumentList[ i ].Type || ArgumentList[ i ].Modifier != operation.ArgumentList[ i ].Modifier )
                 {
                     return false;
                 }

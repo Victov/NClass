@@ -5,24 +5,24 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("AssemblyCSharpImport")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("AssemblyCSharpImport")]
-[assembly: AssemblyCopyright("Copyright © Malte Ried 2011 & Samuel DIDIER 2014")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyTitle( "AssemblyCSharpImport" )]
+[assembly: AssemblyDescription( "" )]
+[assembly: AssemblyConfiguration( "" )]
+[assembly: AssemblyCompany( "" )]
+[assembly: AssemblyProduct( "AssemblyCSharpImport" )]
+[assembly: AssemblyCopyright( "Copyright © Malte Ried 2011 & Samuel DIDIER 2014" )]
+[assembly: AssemblyTrademark( "" )]
+[assembly: AssemblyCulture( "" )]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
 // COM, set the ComVisible attribute to true on that type.
 
-[assembly: ComVisible(false)]
+[assembly: ComVisible( false )]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 
-[assembly: Guid("8e637e0d-5d60-4a39-8bee-406564453b98")]
+[assembly: Guid( "8e637e0d-5d60-4a39-8bee-406564453b98" )]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -35,5 +35,5 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("3.0.0.0")]
-[assembly: AssemblyFileVersion("3.0.0.0")]
+[assembly: AssemblyVersion( "3.0.0.0" )]
+[assembly: AssemblyFileVersion( "3.0.0.0" )]

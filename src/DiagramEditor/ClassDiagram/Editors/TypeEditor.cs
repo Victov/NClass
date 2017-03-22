@@ -20,20 +20,18 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 {
     public abstract class TypeEditor : FloatingEditor
     {
-        internal sealed override void Relocate(DiagramElement element)
+        internal sealed override void Relocate( DiagramElement element )
         {
-            Relocate((TypeShape) element);
+            Relocate( ( TypeShape ) element );
         }
 
-        internal void Relocate(TypeShape shape)
+        internal void Relocate( TypeShape shape )
         {
             var diagram = shape.Diagram;
-            if (diagram != null)
+            if ( diagram != null )
             {
-                var absolute = new Point(shape.Right, shape.Top);
-                var relative = new Size(
-                    (int) (absolute.X*diagram.Zoom) - diagram.Offset.X + MarginSize,
-                    (int) (absolute.Y*diagram.Zoom) - diagram.Offset.Y);
+                var absolute = new Point( shape.Right, shape.Top );
+                var relative = new Size( ( int ) ( absolute.X * diagram.Zoom ) - diagram.Offset.X + MarginSize, ( int ) ( absolute.Y * diagram.Zoom ) - diagram.Offset.Y );
 
                 Location = ParentLocation + relative;
             }

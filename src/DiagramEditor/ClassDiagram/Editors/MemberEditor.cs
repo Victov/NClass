@@ -29,16 +29,16 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
         private bool needValidation;
         private CompositeTypeShape shape;
 
-        public MemberEditor()
+        public MemberEditor( )
         {
-            InitializeComponent();
+            InitializeComponent( );
             toolStrip.Renderer = ToolStripSimplifiedRenderer.Default;
-            UpdateTexts();
-            if (MonoHelper.IsRunningOnMono)
+            UpdateTexts( );
+            if ( MonoHelper.IsRunningOnMono )
                 toolNewMember.Alignment = ToolStripItemAlignment.Left;
         }
 
-        private void UpdateTexts()
+        private void UpdateTexts( )
         {
             toolFieldNone.Text = Strings.None;
             toolOperationNone.Text = Strings.None;
@@ -56,31 +56,31 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
             toolDelete.ToolTipText = Strings.Delete;
         }
 
-        internal override void Init(DiagramElement element)
+        internal override void Init( DiagramElement element )
         {
-            shape = (CompositeTypeShape) element;
-            RefreshValues();
+            shape = ( CompositeTypeShape ) element;
+            RefreshValues( );
         }
 
-        private void RefreshValues()
+        private void RefreshValues( )
         {
-            if (shape.ActiveMember != null)
+            if ( shape.ActiveMember != null )
             {
                 var member = shape.ActiveMember;
-                SuspendLayout();
-                RefreshModifiers();
+                SuspendLayout( );
+                RefreshModifiers( );
                 var language = shape.CompositeType.Language;
 
                 var cursorPosition = txtDeclaration.SelectionStart;
-                txtDeclaration.Text = member.ToString();
+                txtDeclaration.Text = member.ToString( );
                 txtDeclaration.SelectionStart = cursorPosition;
                 txtDeclaration.ReadOnly = member.MemberType == MemberType.Destructor;
 
-                SetError(null);
+                SetError( null );
                 needValidation = false;
 
                 // Visibility
-                RefreshVisibility();
+                RefreshVisibility( );
 
                 // Static and New modifiers
                 toolStatic.Checked = member.IsStatic;
@@ -90,43 +90,40 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
                 // Field modifiers
                 var field = member as Field;
-                if (field != null)
+                if ( field != null )
                 {
-                    var modifier = field.Modifier &
-                                   (FieldModifier.Constant | FieldModifier.Readonly | FieldModifier.Volatile);
+                    var modifier = field.Modifier & ( FieldModifier.Constant | FieldModifier.Readonly | FieldModifier.Volatile );
 
-                    if (modifier == FieldModifier.None)
+                    if ( modifier == FieldModifier.None )
                         toolFieldModifiers.Text = Strings.None;
                     else
-                        toolFieldModifiers.Text = language.ValidFieldModifiers[modifier];
+                        toolFieldModifiers.Text = language.ValidFieldModifiers[ modifier ];
                 }
 
                 // Operation modifiers
                 var operation = member as Operation;
-                if (operation != null)
+                if ( operation != null )
                 {
-                    var modifier = operation.Modifier &
-                                   (OperationModifier.Abstract | OperationModifier.Override |
-                                    OperationModifier.Sealed | OperationModifier.Virtual);
+                    var modifier = operation.Modifier & ( OperationModifier.Abstract | OperationModifier.Override | OperationModifier.Sealed | OperationModifier.Virtual );
 
-                    if (modifier == OperationModifier.None)
+                    if ( modifier == OperationModifier.None )
                         toolOperationModifiers.Text = Strings.None;
                     else
-                        toolOperationModifiers.Text = language.ValidOperationModifiers[modifier];
+                        toolOperationModifiers.Text = language.ValidOperationModifiers[ modifier ];
 
                     toolOperationModifiers.Enabled = member.MemberType != MemberType.Destructor;
                 }
 
                 // Property accessor
                 var property = member as Property;
-                if (property != null)
+                if ( property != null )
                 {
-                    if (property.IsReadonly)
+                    if ( property.IsReadonly )
                     {
                         toolAccessor.Image = Resources.PublicReadonly;
                         toolAccessor.ToolTipText = Strings.ReadOnly;
                     }
-                    else if (property.IsWriteonly)
+                    else if ( property.IsWriteonly )
                     {
                         toolAccessor.Image = Resources.PublicWriteonly;
                         toolAccessor.ToolTipText = Strings.WriteOnly;
@@ -138,82 +135,82 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                     }
                 }
 
-                RefreshNewMembers();
-                RefreshMoveUpDownTools();
-                ResumeLayout();
+                RefreshNewMembers( );
+                RefreshMoveUpDownTools( );
+                ResumeLayout( );
             }
         }
 
-        private void RefreshVisibility()
+        private void RefreshVisibility( )
         {
             var member = shape.ActiveMember;
             var language = shape.ActiveMember.Language;
 
-            toolVisibility.Image = Icons.GetImage(member.MemberType, member.AccessModifier);
-            toolVisibility.Text = language.ValidAccessModifiers[member.AccessModifier];
+            toolVisibility.Image = Icons.GetImage( member.MemberType, member.AccessModifier );
+            toolVisibility.Text = language.ValidAccessModifiers[ member.AccessModifier ];
             toolVisibility.Enabled = member.MemberType != MemberType.Destructor;
 
             // Public
-            if (language.ValidAccessModifiers.ContainsKey(AccessModifier.Public))
+            if ( language.ValidAccessModifiers.ContainsKey( AccessModifier.Public ) )
             {
                 toolPublic.Visible = true;
-                toolPublic.Text = language.ValidAccessModifiers[AccessModifier.Public];
-                toolPublic.Image = Icons.GetImage(member.MemberType, AccessModifier.Public);
+                toolPublic.Text = language.ValidAccessModifiers[ AccessModifier.Public ];
+                toolPublic.Image = Icons.GetImage( member.MemberType, AccessModifier.Public );
             }
             else
             {
                 toolPublic.Visible = false;
             }
             // Protected Internal
-            if (language.ValidAccessModifiers.ContainsKey(AccessModifier.ProtectedInternal))
+            if ( language.ValidAccessModifiers.ContainsKey( AccessModifier.ProtectedInternal ) )
             {
                 toolProtint.Visible = true;
-                toolProtint.Text = language.ValidAccessModifiers[AccessModifier.ProtectedInternal];
-                toolProtint.Image = Icons.GetImage(member.MemberType, AccessModifier.ProtectedInternal);
+                toolProtint.Text = language.ValidAccessModifiers[ AccessModifier.ProtectedInternal ];
+                toolProtint.Image = Icons.GetImage( member.MemberType, AccessModifier.ProtectedInternal );
             }
             else
             {
                 toolProtint.Visible = false;
             }
             // Internal
-            if (language.ValidAccessModifiers.ContainsKey(AccessModifier.Internal))
+            if ( language.ValidAccessModifiers.ContainsKey( AccessModifier.Internal ) )
             {
                 toolInternal.Visible = true;
-                toolInternal.Text = language.ValidAccessModifiers[AccessModifier.Internal];
-                toolInternal.Image = Icons.GetImage(member.MemberType, AccessModifier.Internal);
+                toolInternal.Text = language.ValidAccessModifiers[ AccessModifier.Internal ];
+                toolInternal.Image = Icons.GetImage( member.MemberType, AccessModifier.Internal );
             }
             else
             {
                 toolInternal.Visible = false;
             }
             // Protected
-            if (language.ValidAccessModifiers.ContainsKey(AccessModifier.Protected))
+            if ( language.ValidAccessModifiers.ContainsKey( AccessModifier.Protected ) )
             {
                 toolProtected.Visible = true;
-                toolProtected.Text = language.ValidAccessModifiers[AccessModifier.Protected];
-                toolProtected.Image = Icons.GetImage(member.MemberType, AccessModifier.Protected);
+                toolProtected.Text = language.ValidAccessModifiers[ AccessModifier.Protected ];
+                toolProtected.Image = Icons.GetImage( member.MemberType, AccessModifier.Protected );
             }
             else
             {
                 toolProtected.Visible = false;
             }
             // Private
-            if (language.ValidAccessModifiers.ContainsKey(AccessModifier.Private))
+            if ( language.ValidAccessModifiers.ContainsKey( AccessModifier.Private ) )
             {
                 toolPrivate.Visible = true;
-                toolPrivate.Text = language.ValidAccessModifiers[AccessModifier.Private];
-                toolPrivate.Image = Icons.GetImage(member.MemberType, AccessModifier.Private);
+                toolPrivate.Text = language.ValidAccessModifiers[ AccessModifier.Private ];
+                toolPrivate.Image = Icons.GetImage( member.MemberType, AccessModifier.Private );
             }
             else
             {
                 toolPrivate.Visible = false;
             }
             // Default
-            if (language.ValidAccessModifiers.ContainsKey(AccessModifier.Default))
+            if ( language.ValidAccessModifiers.ContainsKey( AccessModifier.Default ) )
             {
                 toolDefault.Visible = true;
-                toolDefault.Text = language.ValidAccessModifiers[AccessModifier.Default];
-                toolDefault.Image = Icons.GetImage(member.MemberType, AccessModifier.Default);
+                toolDefault.Text = language.ValidAccessModifiers[ AccessModifier.Default ];
+                toolDefault.Image = Icons.GetImage( member.MemberType, AccessModifier.Default );
             }
             else
             {
@@ -221,61 +218,61 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
             }
         }
 
-        private void RefreshModifiers()
+        private void RefreshModifiers( )
         {
             var language = shape.CompositeType.Language;
 
-            if (shape.ActiveMember is Field)
+            if ( shape.ActiveMember is Field )
             {
                 toolFieldModifiers.Visible = true;
                 toolOperationModifiers.Visible = false;
                 toolAccessor.Visible = false;
 
                 // Static modifier
-                if (language.ValidFieldModifiers.ContainsKey(FieldModifier.Static))
+                if ( language.ValidFieldModifiers.ContainsKey( FieldModifier.Static ) )
                 {
                     toolStatic.Visible = true;
-                    toolStatic.Text = language.ValidFieldModifiers[FieldModifier.Static];
+                    toolStatic.Text = language.ValidFieldModifiers[ FieldModifier.Static ];
                 }
                 else
                 {
                     toolStatic.Visible = false;
                 }
                 // New modifier
-                if (language.ValidFieldModifiers.ContainsKey(FieldModifier.Hider))
+                if ( language.ValidFieldModifiers.ContainsKey( FieldModifier.Hider ) )
                 {
                     toolHider.Visible = true;
-                    toolNewField.Text = language.ValidFieldModifiers[FieldModifier.Hider];
+                    toolNewField.Text = language.ValidFieldModifiers[ FieldModifier.Hider ];
                 }
                 else
                 {
                     toolHider.Visible = false;
                 }
                 // Readonly modifier
-                if (language.ValidFieldModifiers.ContainsKey(FieldModifier.Readonly))
+                if ( language.ValidFieldModifiers.ContainsKey( FieldModifier.Readonly ) )
                 {
                     toolReadonlyField.Visible = true;
-                    toolReadonlyField.Text = language.ValidFieldModifiers[FieldModifier.Readonly];
+                    toolReadonlyField.Text = language.ValidFieldModifiers[ FieldModifier.Readonly ];
                 }
                 else
                 {
                     toolReadonlyField.Visible = false;
                 }
                 // Const modifier
-                if (language.ValidFieldModifiers.ContainsKey(FieldModifier.Constant))
+                if ( language.ValidFieldModifiers.ContainsKey( FieldModifier.Constant ) )
                 {
                     toolConst.Visible = true;
-                    toolConst.Text = language.ValidFieldModifiers[FieldModifier.Constant];
+                    toolConst.Text = language.ValidFieldModifiers[ FieldModifier.Constant ];
                 }
                 else
                 {
                     toolConst.Visible = false;
                 }
                 // Volatile modifier
-                if (language.ValidFieldModifiers.ContainsKey(FieldModifier.Volatile))
+                if ( language.ValidFieldModifiers.ContainsKey( FieldModifier.Volatile ) )
                 {
                     toolVolatile.Visible = true;
-                    toolVolatile.Text = language.ValidFieldModifiers[FieldModifier.Volatile];
+                    toolVolatile.Text = language.ValidFieldModifiers[ FieldModifier.Volatile ];
                 }
                 else
                 {
@@ -289,79 +286,75 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                 toolOperationModifiers.Visible = true;
 
                 // Static modifier
-                if (language.ValidOperationModifiers.ContainsKey(OperationModifier.Static))
+                if ( language.ValidOperationModifiers.ContainsKey( OperationModifier.Static ) )
                 {
                     toolStatic.Visible = true;
-                    toolStatic.Text = language.ValidOperationModifiers[OperationModifier.Static];
+                    toolStatic.Text = language.ValidOperationModifiers[ OperationModifier.Static ];
                 }
                 else
                 {
                     toolStatic.Visible = false;
                 }
                 // New modifier
-                if (language.ValidOperationModifiers.ContainsKey(OperationModifier.Hider))
+                if ( language.ValidOperationModifiers.ContainsKey( OperationModifier.Hider ) )
                 {
                     toolHider.Visible = true;
-                    toolHider.Text = language.ValidOperationModifiers[OperationModifier.Hider];
+                    toolHider.Text = language.ValidOperationModifiers[ OperationModifier.Hider ];
                 }
                 else
                 {
                     toolHider.Visible = false;
                 }
                 // Abstract modifier
-                if (language.ValidOperationModifiers.ContainsKey(OperationModifier.Abstract))
+                if ( language.ValidOperationModifiers.ContainsKey( OperationModifier.Abstract ) )
                 {
                     toolAbstract.Visible = true;
-                    toolAbstract.Text = language.ValidOperationModifiers[OperationModifier.Abstract];
+                    toolAbstract.Text = language.ValidOperationModifiers[ OperationModifier.Abstract ];
                 }
                 else
                 {
                     toolAbstract.Visible = false;
                 }
                 // Virtual modifier
-                if (language.ValidOperationModifiers.ContainsKey(OperationModifier.Virtual))
+                if ( language.ValidOperationModifiers.ContainsKey( OperationModifier.Virtual ) )
                 {
                     toolVirtual.Visible = true;
-                    toolVirtual.Text = language.ValidOperationModifiers[OperationModifier.Virtual];
+                    toolVirtual.Text = language.ValidOperationModifiers[ OperationModifier.Virtual ];
                 }
                 else
                 {
                     toolVirtual.Visible = false;
                 }
                 // Override modifier
-                if (language.ValidOperationModifiers.ContainsKey(OperationModifier.Override))
+                if ( language.ValidOperationModifiers.ContainsKey( OperationModifier.Override ) )
                 {
                     toolOverride.Visible = true;
-                    toolOverride.Text = language.ValidOperationModifiers[OperationModifier.Override];
+                    toolOverride.Text = language.ValidOperationModifiers[ OperationModifier.Override ];
                 }
                 else
                 {
                     toolOverride.Visible = false;
                 }
                 // Sealed modifier
-                if (language.ValidOperationModifiers.ContainsKey(
-                    OperationModifier.Sealed | OperationModifier.Override))
+                if ( language.ValidOperationModifiers.ContainsKey( OperationModifier.Sealed | OperationModifier.Override ) )
                 {
                     toolSealed.Visible = true;
-                    toolSealed.Text = language.ValidOperationModifiers[
-                        OperationModifier.Sealed | OperationModifier.Override];
+                    toolSealed.Text = language.ValidOperationModifiers[ OperationModifier.Sealed | OperationModifier.Override ];
                 }
-                else if (language.ValidOperationModifiers.ContainsKey(OperationModifier.Sealed))
+                else if ( language.ValidOperationModifiers.ContainsKey( OperationModifier.Sealed ) )
                 {
                     toolSealed.Visible = true;
-                    toolSealed.Text = language.ValidOperationModifiers[OperationModifier.Sealed];
+                    toolSealed.Text = language.ValidOperationModifiers[ OperationModifier.Sealed ];
                 }
                 else
                 {
                     toolSealed.Visible = false;
                 }
                 // Abstract-Override modifier
-                if (language.ValidOperationModifiers.ContainsKey(
-                    OperationModifier.Abstract | OperationModifier.Override))
+                if ( language.ValidOperationModifiers.ContainsKey( OperationModifier.Abstract | OperationModifier.Override ) )
                 {
                     toolAbstractOverride.Visible = true;
-                    toolAbstractOverride.Text = language.ValidOperationModifiers[
-                        OperationModifier.Abstract | OperationModifier.Override];
+                    toolAbstractOverride.Text = language.ValidOperationModifiers[ OperationModifier.Abstract | OperationModifier.Override ];
                 }
                 else
                 {
@@ -370,13 +363,13 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
             }
         }
 
-        private void RefreshNewMembers()
+        private void RefreshNewMembers( )
         {
             var valid = false;
-            switch (NewMemberType)
+            switch ( NewMemberType )
             {
                 case MemberType.Field:
-                    if (shape.CompositeType.SupportsFields)
+                    if ( shape.CompositeType.SupportsFields )
                     {
                         toolNewMember.Image = Resources.NewField;
                         toolNewMember.Text = Strings.NewField;
@@ -385,7 +378,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                     break;
 
                 case MemberType.Method:
-                    if (shape.CompositeType.SupportsMethods)
+                    if ( shape.CompositeType.SupportsMethods )
                     {
                         toolNewMember.Image = Resources.NewMethod;
                         toolNewMember.Text = Strings.NewMethod;
@@ -394,7 +387,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                     break;
 
                 case MemberType.Constructor:
-                    if (shape.CompositeType.SupportsConstuctors)
+                    if ( shape.CompositeType.SupportsConstuctors )
                     {
                         toolNewMember.Image = Resources.NewConstructor;
                         toolNewMember.Text = Strings.NewConstructor;
@@ -403,7 +396,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                     break;
 
                 case MemberType.Destructor:
-                    if (shape.CompositeType.SupportsDestructors)
+                    if ( shape.CompositeType.SupportsDestructors )
                     {
                         toolNewMember.Image = Resources.NewDestructor;
                         toolNewMember.Text = Strings.NewDestructor;
@@ -412,7 +405,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                     break;
 
                 case MemberType.Property:
-                    if (shape.CompositeType.SupportsProperties)
+                    if ( shape.CompositeType.SupportsProperties )
                     {
                         toolNewMember.Image = Resources.NewProperty;
                         toolNewMember.Text = Strings.NewProperty;
@@ -421,7 +414,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                     break;
 
                 case MemberType.Event:
-                    if (shape.CompositeType.SupportsEvents)
+                    if ( shape.CompositeType.SupportsEvents )
                     {
                         toolNewMember.Image = Resources.NewEvent;
                         toolNewMember.Text = Strings.NewEvent;
@@ -430,7 +423,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                     break;
             }
 
-            if (!valid)
+            if ( !valid )
             {
                 NewMemberType = MemberType.Method;
                 toolNewMember.Image = Resources.NewMethod;
@@ -445,136 +438,129 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
             toolNewEvent.Visible = shape.CompositeType.SupportsEvents;
         }
 
-        private void RefreshMoveUpDownTools()
+        private void RefreshMoveUpDownTools( )
         {
             var index = shape.ActiveMemberIndex;
             var fieldCount = shape.CompositeType.FieldCount;
             var memberCount = shape.CompositeType.MemberCount;
 
-            toolMoveUp.Enabled = (index < fieldCount && index > 0) || index > fieldCount;
-            toolMoveDown.Enabled = index < fieldCount - 1 ||
-                                   (index >= fieldCount && index < memberCount - 1);
+            toolMoveUp.Enabled = ( index < fieldCount && index > 0 ) || index > fieldCount;
+            toolMoveDown.Enabled = index < fieldCount - 1 || ( index >= fieldCount && index < memberCount - 1 );
         }
 
-        internal override void Relocate(DiagramElement element)
+        internal override void Relocate( DiagramElement element )
         {
-            Relocate((CompositeTypeShape) element);
+            Relocate( ( CompositeTypeShape ) element );
         }
 
-        internal void Relocate(CompositeTypeShape shape)
+        internal void Relocate( CompositeTypeShape shape )
         {
             var diagram = shape.Diagram;
-            if (diagram != null)
+            if ( diagram != null )
             {
-                var record = shape.GetMemberRectangle(shape.ActiveMemberIndex);
+                var record = shape.GetMemberRectangle( shape.ActiveMemberIndex );
 
-                var absolute = new Point(shape.Right, record.Top);
-                var relative = new Size(
-                    (int) (absolute.X*diagram.Zoom) - diagram.Offset.X + MarginSize,
-                    (int) (absolute.Y*diagram.Zoom) - diagram.Offset.Y);
-                relative.Height -= (Height - (int) (record.Height*diagram.Zoom))/2;
+                var absolute = new Point( shape.Right, record.Top );
+                var relative = new Size( ( int ) ( absolute.X * diagram.Zoom ) - diagram.Offset.X + MarginSize, ( int ) ( absolute.Y * diagram.Zoom ) - diagram.Offset.Y );
+                relative.Height -= ( Height - ( int ) ( record.Height * diagram.Zoom ) ) / 2;
 
                 Location = ParentLocation + relative;
             }
         }
 
-        public override void ValidateData()
+        public override void ValidateData( )
         {
-            ValidateDeclarationLine();
-            SetError(null);
+            ValidateDeclarationLine( );
+            SetError( null );
         }
 
-        private bool ValidateDeclarationLine()
+        private bool ValidateDeclarationLine( )
         {
-            if (needValidation && shape.ActiveMember != null)
+            if ( needValidation && shape.ActiveMember != null )
             {
                 try
                 {
-                    shape.ActiveMember.InitFromString(txtDeclaration.Text);
-                    RefreshValues();
+                    shape.ActiveMember.InitFromString( txtDeclaration.Text );
+                    RefreshValues( );
                 }
-                catch (BadSyntaxException ex)
+                catch ( BadSyntaxException ex )
                 {
-                    SetError(ex.Message);
+                    SetError( ex.Message );
                     return false;
                 }
             }
             return true;
         }
 
-        private void SetError(string message)
+        private void SetError( string message )
         {
-            if (MonoHelper.IsRunningOnMono && MonoHelper.IsOlderVersionThan("2.4"))
+            if ( MonoHelper.IsRunningOnMono && MonoHelper.IsOlderVersionThan( "2.4" ) )
                 return;
 
-            errorProvider.SetError(this, message);
+            errorProvider.SetError( this, message );
         }
 
-        private void ChangeAccess(AccessModifier access)
+        private void ChangeAccess( AccessModifier access )
         {
-            if (shape.ActiveMember != null && ValidateDeclarationLine())
+            if ( shape.ActiveMember != null && ValidateDeclarationLine( ) )
             {
                 try
                 {
                     shape.ActiveMember.AccessModifier = access;
-                    RefreshValues();
+                    RefreshValues( );
                 }
-                catch (BadSyntaxException ex)
+                catch ( BadSyntaxException ex )
                 {
-                    RefreshValues();
-                    SetError(ex.Message);
+                    RefreshValues( );
+                    SetError( ex.Message );
                 }
             }
         }
 
-        private void ChangeModifier(FieldModifier modifier)
+        private void ChangeModifier( FieldModifier modifier )
         {
-            if (ValidateDeclarationLine())
+            if ( ValidateDeclarationLine( ) )
             {
                 var field = shape.ActiveMember as Field;
-                if (field != null)
+                if ( field != null )
                 {
                     try
                     {
                         // Clear other modifiers
-                        field.ClearModifiers();
+                        field.ClearModifiers( );
 
                         // Set new values
-                        field.IsReadonly = (modifier & FieldModifier.Readonly) != 0;
-                        field.IsConstant = (modifier & FieldModifier.Constant) != 0;
-                        field.IsVolatile = (modifier & FieldModifier.Volatile) != 0;
+                        field.IsReadonly = ( modifier & FieldModifier.Readonly ) != 0;
+                        field.IsConstant = ( modifier & FieldModifier.Constant ) != 0;
+                        field.IsVolatile = ( modifier & FieldModifier.Volatile ) != 0;
 
-                        RefreshValues();
+                        RefreshValues( );
                     }
-                    catch (BadSyntaxException ex)
+                    catch ( BadSyntaxException ex )
                     {
-                        RefreshValues();
-                        SetError(ex.Message);
+                        RefreshValues( );
+                        SetError( ex.Message );
                     }
                 }
             }
         }
 
-        private void ChangeModifier(OperationModifier modifier)
+        private void ChangeModifier( OperationModifier modifier )
         {
-            if (shape.ActiveMember != null && ValidateDeclarationLine())
+            if ( shape.ActiveMember != null && ValidateDeclarationLine( ) )
             {
                 var operation = shape.ActiveMember as Operation;
-                if (operation != null)
+                if ( operation != null )
                 {
                     // Class changing to abstract
-                    if ((modifier & OperationModifier.Abstract) != 0)
+                    if ( ( modifier & OperationModifier.Abstract ) != 0 )
                     {
                         var classType = shape.CompositeType as ClassType;
-                        if (classType != null && classType.Modifier != ClassModifier.Abstract)
+                        if ( classType != null && classType.Modifier != ClassModifier.Abstract )
                         {
-                            var result = MessageBox.Show(
-                                Strings.ChangingToAbstractConfirmation,
-                                Strings.Confirmation,
-                                MessageBoxButtons.YesNo,
-                                MessageBoxIcon.Warning);
+                            var result = MessageBox.Show( Strings.ChangingToAbstractConfirmation, Strings.Confirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Warning );
 
-                            if (result == DialogResult.No)
+                            if ( result == DialogResult.No )
                                 return;
                         }
                     }
@@ -582,420 +568,420 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
                     try
                     {
                         // Clear other modifiers
-                        operation.ClearModifiers();
+                        operation.ClearModifiers( );
 
                         // Set new values
-                        operation.IsAbstract = (modifier & OperationModifier.Abstract) != 0;
-                        operation.IsVirtual = (modifier & OperationModifier.Virtual) != 0;
-                        operation.IsOverride = (modifier & OperationModifier.Override) != 0;
-                        operation.IsSealed = (modifier & OperationModifier.Sealed) != 0;
+                        operation.IsAbstract = ( modifier & OperationModifier.Abstract ) != 0;
+                        operation.IsVirtual = ( modifier & OperationModifier.Virtual ) != 0;
+                        operation.IsOverride = ( modifier & OperationModifier.Override ) != 0;
+                        operation.IsSealed = ( modifier & OperationModifier.Sealed ) != 0;
 
-                        RefreshValues();
+                        RefreshValues( );
                     }
-                    catch (BadSyntaxException ex)
+                    catch ( BadSyntaxException ex )
                     {
-                        RefreshValues();
-                        SetError(ex.Message);
+                        RefreshValues( );
+                        SetError( ex.Message );
                     }
                 }
             }
         }
 
-        private void SelectPrevious()
+        private void SelectPrevious( )
         {
-            if (ValidateDeclarationLine())
+            if ( ValidateDeclarationLine( ) )
             {
-                shape.SelectPrevious();
+                shape.SelectPrevious( );
             }
         }
 
-        private void SelectNext()
+        private void SelectNext( )
         {
-            if (ValidateDeclarationLine())
+            if ( ValidateDeclarationLine( ) )
             {
-                shape.SelectNext();
+                shape.SelectNext( );
             }
         }
 
-        private void MoveUp()
+        private void MoveUp( )
         {
-            if (ValidateDeclarationLine())
+            if ( ValidateDeclarationLine( ) )
             {
-                shape.MoveUp();
+                shape.MoveUp( );
             }
         }
 
-        private void MoveDown()
+        private void MoveDown( )
         {
-            if (ValidateDeclarationLine())
+            if ( ValidateDeclarationLine( ) )
             {
-                shape.MoveDown();
+                shape.MoveDown( );
             }
         }
 
-        protected override void OnVisibleChanged(EventArgs e)
+        protected override void OnVisibleChanged( EventArgs e )
         {
-            base.OnVisibleChanged(e);
+            base.OnVisibleChanged( e );
             txtDeclaration.SelectionStart = 0;
         }
 
-        private void txtDeclaration_KeyDown(object sender, KeyEventArgs e)
+        private void txtDeclaration_KeyDown( object sender, KeyEventArgs e )
         {
-            switch (e.KeyCode)
+            switch ( e.KeyCode )
             {
                 case Keys.Enter:
-                    if (e.Modifiers == Keys.Control || e.Modifiers == Keys.Shift)
-                        OpenNewMemberDropDown();
+                    if ( e.Modifiers == Keys.Control || e.Modifiers == Keys.Shift )
+                        OpenNewMemberDropDown( );
                     else
-                        ValidateDeclarationLine();
+                        ValidateDeclarationLine( );
                     e.Handled = true;
                     break;
 
                 case Keys.Escape:
                     needValidation = false;
-                    shape.HideEditor();
+                    shape.HideEditor( );
                     e.Handled = true;
                     break;
 
                 case Keys.Up:
-                    if (e.Shift || e.Control)
-                        MoveUp();
+                    if ( e.Shift || e.Control )
+                        MoveUp( );
                     else
-                        SelectPrevious();
+                        SelectPrevious( );
                     e.Handled = true;
                     break;
 
                 case Keys.Down:
-                    if (e.Shift || e.Control)
-                        MoveDown();
+                    if ( e.Shift || e.Control )
+                        MoveDown( );
                     else
-                        SelectNext();
+                        SelectNext( );
                     e.Handled = true;
                     break;
             }
 
-            if (e.Modifiers == (Keys.Control | Keys.Shift))
+            if ( e.Modifiers == ( Keys.Control | Keys.Shift ) )
             {
-                switch (e.KeyCode)
+                switch ( e.KeyCode )
                 {
                     case Keys.A:
-                        AddNewMember();
+                        AddNewMember( );
                         break;
 
                     case Keys.F:
-                        AddNewMember(MemberType.Field);
+                        AddNewMember( MemberType.Field );
                         break;
 
                     case Keys.M:
-                        AddNewMember(MemberType.Method);
+                        AddNewMember( MemberType.Method );
                         break;
 
                     case Keys.C:
-                        AddNewMember(MemberType.Constructor);
+                        AddNewMember( MemberType.Constructor );
                         break;
 
                     case Keys.D:
-                        AddNewMember(MemberType.Destructor);
+                        AddNewMember( MemberType.Destructor );
                         break;
 
                     case Keys.P:
-                        AddNewMember(MemberType.Property);
+                        AddNewMember( MemberType.Property );
                         break;
 
                     case Keys.E:
-                        AddNewMember(MemberType.Event);
+                        AddNewMember( MemberType.Event );
                         break;
                 }
             }
         }
 
-        private void OpenNewMemberDropDown()
+        private void OpenNewMemberDropDown( )
         {
-            toolNewMember.ShowDropDown();
+            toolNewMember.ShowDropDown( );
 
-            switch (NewMemberType)
+            switch ( NewMemberType )
             {
                 case MemberType.Field:
-                    toolNewField.Select();
+                    toolNewField.Select( );
                     break;
 
                 case MemberType.Method:
-                    toolNewMethod.Select();
+                    toolNewMethod.Select( );
                     break;
 
                 case MemberType.Constructor:
-                    toolNewConstructor.Select();
+                    toolNewConstructor.Select( );
                     break;
 
                 case MemberType.Destructor:
-                    toolNewDestructor.Select();
+                    toolNewDestructor.Select( );
                     break;
 
                 case MemberType.Property:
-                    toolNewProperty.Select();
+                    toolNewProperty.Select( );
                     break;
 
                 case MemberType.Event:
-                    toolNewEvent.Select();
+                    toolNewEvent.Select( );
                     break;
             }
         }
 
-        private void txtDeclaration_TextChanged(object sender, EventArgs e)
+        private void txtDeclaration_TextChanged( object sender, EventArgs e )
         {
             needValidation = true;
         }
 
-        private void txtDeclaration_Validating(object sender, CancelEventArgs e)
+        private void txtDeclaration_Validating( object sender, CancelEventArgs e )
         {
-            ValidateDeclarationLine();
+            ValidateDeclarationLine( );
         }
 
-        private void toolPublic_Click(object sender, EventArgs e)
+        private void toolPublic_Click( object sender, EventArgs e )
         {
-            ChangeAccess(AccessModifier.Public);
+            ChangeAccess( AccessModifier.Public );
         }
 
-        private void toolProtint_Click(object sender, EventArgs e)
+        private void toolProtint_Click( object sender, EventArgs e )
         {
-            ChangeAccess(AccessModifier.ProtectedInternal);
+            ChangeAccess( AccessModifier.ProtectedInternal );
         }
 
-        private void toolInternal_Click(object sender, EventArgs e)
+        private void toolInternal_Click( object sender, EventArgs e )
         {
-            ChangeAccess(AccessModifier.Internal);
+            ChangeAccess( AccessModifier.Internal );
         }
 
-        private void toolProtected_Click(object sender, EventArgs e)
+        private void toolProtected_Click( object sender, EventArgs e )
         {
-            ChangeAccess(AccessModifier.Protected);
+            ChangeAccess( AccessModifier.Protected );
         }
 
-        private void toolPrivate_Click(object sender, EventArgs e)
+        private void toolPrivate_Click( object sender, EventArgs e )
         {
-            ChangeAccess(AccessModifier.Private);
+            ChangeAccess( AccessModifier.Private );
         }
 
-        private void toolDefault_Click(object sender, EventArgs e)
+        private void toolDefault_Click( object sender, EventArgs e )
         {
-            ChangeAccess(AccessModifier.Default);
+            ChangeAccess( AccessModifier.Default );
         }
 
-        private void toolStatic_CheckedChanged(object sender, EventArgs e)
+        private void toolStatic_CheckedChanged( object sender, EventArgs e )
         {
             var checkedState = toolStatic.Checked;
 
-            if (shape.ActiveMember != null && ValidateDeclarationLine())
+            if ( shape.ActiveMember != null && ValidateDeclarationLine( ) )
             {
                 try
                 {
                     shape.ActiveMember.IsStatic = checkedState;
-                    RefreshValues();
+                    RefreshValues( );
                 }
-                catch (BadSyntaxException ex)
+                catch ( BadSyntaxException ex )
                 {
-                    RefreshValues();
-                    SetError(ex.Message);
+                    RefreshValues( );
+                    SetError( ex.Message );
                 }
             }
         }
 
-        private void toolHider_CheckedChanged(object sender, EventArgs e)
+        private void toolHider_CheckedChanged( object sender, EventArgs e )
         {
             var checkedState = toolHider.Checked;
 
-            if (shape.ActiveMember != null && ValidateDeclarationLine())
+            if ( shape.ActiveMember != null && ValidateDeclarationLine( ) )
             {
                 try
                 {
                     shape.ActiveMember.IsHider = checkedState;
-                    RefreshValues();
+                    RefreshValues( );
                 }
-                catch (BadSyntaxException ex)
+                catch ( BadSyntaxException ex )
                 {
-                    RefreshValues();
-                    SetError(ex.Message);
+                    RefreshValues( );
+                    SetError( ex.Message );
                 }
             }
         }
 
-        private void toolFieldNone_Click(object sender, EventArgs e)
+        private void toolFieldNone_Click( object sender, EventArgs e )
         {
-            ChangeModifier(FieldModifier.None);
+            ChangeModifier( FieldModifier.None );
         }
 
-        private void toolReadonlyField_Click(object sender, EventArgs e)
+        private void toolReadonlyField_Click( object sender, EventArgs e )
         {
-            ChangeModifier(FieldModifier.Readonly);
+            ChangeModifier( FieldModifier.Readonly );
         }
 
-        private void toolConst_Click(object sender, EventArgs e)
+        private void toolConst_Click( object sender, EventArgs e )
         {
-            ChangeModifier(FieldModifier.Constant);
+            ChangeModifier( FieldModifier.Constant );
         }
 
-        private void toolVolatile_Click(object sender, EventArgs e)
+        private void toolVolatile_Click( object sender, EventArgs e )
         {
-            ChangeModifier(FieldModifier.Volatile);
+            ChangeModifier( FieldModifier.Volatile );
         }
 
-        private void toolOperationNone_Click(object sender, EventArgs e)
+        private void toolOperationNone_Click( object sender, EventArgs e )
         {
-            ChangeModifier(OperationModifier.None);
+            ChangeModifier( OperationModifier.None );
         }
 
-        private void toolAbstract_Click(object sender, EventArgs e)
+        private void toolAbstract_Click( object sender, EventArgs e )
         {
-            ChangeModifier(OperationModifier.Abstract);
+            ChangeModifier( OperationModifier.Abstract );
         }
 
-        private void toolVirtual_Click(object sender, EventArgs e)
+        private void toolVirtual_Click( object sender, EventArgs e )
         {
-            ChangeModifier(OperationModifier.Virtual);
+            ChangeModifier( OperationModifier.Virtual );
         }
 
-        private void toolOverride_Click(object sender, EventArgs e)
+        private void toolOverride_Click( object sender, EventArgs e )
         {
-            ChangeModifier(OperationModifier.Override);
+            ChangeModifier( OperationModifier.Override );
         }
 
-        private void toolSealed_Click(object sender, EventArgs e)
+        private void toolSealed_Click( object sender, EventArgs e )
         {
-            ChangeModifier(OperationModifier.Sealed);
+            ChangeModifier( OperationModifier.Sealed );
         }
 
-        private void toolAbstractOverride_Click(object sender, EventArgs e)
+        private void toolAbstractOverride_Click( object sender, EventArgs e )
         {
-            ChangeModifier(OperationModifier.Abstract | OperationModifier.Override);
+            ChangeModifier( OperationModifier.Abstract | OperationModifier.Override );
         }
 
-        private void toolReadWrite_Click(object sender, EventArgs e)
+        private void toolReadWrite_Click( object sender, EventArgs e )
         {
-            if (ValidateDeclarationLine())
+            if ( ValidateDeclarationLine( ) )
             {
                 var property = shape.ActiveMember as Property;
-                if (property != null)
+                if ( property != null )
                 {
                     try
                     {
                         property.IsReadonly = false;
                         property.IsWriteonly = false;
-                        RefreshValues();
+                        RefreshValues( );
                     }
-                    catch (BadSyntaxException ex)
+                    catch ( BadSyntaxException ex )
                     {
-                        RefreshValues();
-                        SetError(ex.Message);
+                        RefreshValues( );
+                        SetError( ex.Message );
                     }
                 }
             }
         }
 
-        private void toolReadOnly_Click(object sender, EventArgs e)
+        private void toolReadOnly_Click( object sender, EventArgs e )
         {
-            if (ValidateDeclarationLine())
+            if ( ValidateDeclarationLine( ) )
             {
                 var property = shape.ActiveMember as Property;
-                if (property != null)
+                if ( property != null )
                 {
                     try
                     {
                         property.IsReadonly = true;
-                        RefreshValues();
+                        RefreshValues( );
                     }
-                    catch (BadSyntaxException ex)
+                    catch ( BadSyntaxException ex )
                     {
-                        RefreshValues();
-                        SetError(ex.Message);
+                        RefreshValues( );
+                        SetError( ex.Message );
                     }
                 }
             }
         }
 
-        private void toolWriteOnly_Click(object sender, EventArgs e)
+        private void toolWriteOnly_Click( object sender, EventArgs e )
         {
-            if (ValidateDeclarationLine())
+            if ( ValidateDeclarationLine( ) )
             {
                 var property = shape.ActiveMember as Property;
-                if (property != null)
+                if ( property != null )
                 {
                     try
                     {
                         property.IsWriteonly = true;
-                        RefreshValues();
+                        RefreshValues( );
                     }
-                    catch (BadSyntaxException ex)
+                    catch ( BadSyntaxException ex )
                     {
-                        RefreshValues();
-                        SetError(ex.Message);
+                        RefreshValues( );
+                        SetError( ex.Message );
                     }
                 }
             }
         }
 
-        private void AddNewMember()
+        private void AddNewMember( )
         {
-            AddNewMember(NewMemberType);
+            AddNewMember( NewMemberType );
         }
 
-        private void AddNewMember(MemberType type)
+        private void AddNewMember( MemberType type )
         {
-            if (!ValidateDeclarationLine())
+            if ( !ValidateDeclarationLine( ) )
                 return;
 
             NewMemberType = type;
-            shape.InsertNewMember(type);
+            shape.InsertNewMember( type );
             txtDeclaration.SelectionStart = 0;
         }
 
-        private void toolNewMember_ButtonClick(object sender, EventArgs e)
+        private void toolNewMember_ButtonClick( object sender, EventArgs e )
         {
-            AddNewMember();
+            AddNewMember( );
         }
 
-        private void toolNewField_Click(object sender, EventArgs e)
+        private void toolNewField_Click( object sender, EventArgs e )
         {
-            AddNewMember(MemberType.Field);
+            AddNewMember( MemberType.Field );
         }
 
-        private void toolNewMethod_Click(object sender, EventArgs e)
+        private void toolNewMethod_Click( object sender, EventArgs e )
         {
-            AddNewMember(MemberType.Method);
+            AddNewMember( MemberType.Method );
         }
 
-        private void toolNewConstructor_Click(object sender, EventArgs e)
+        private void toolNewConstructor_Click( object sender, EventArgs e )
         {
-            AddNewMember(MemberType.Constructor);
+            AddNewMember( MemberType.Constructor );
         }
 
-        private void toolNewDestructor_Click(object sender, EventArgs e)
+        private void toolNewDestructor_Click( object sender, EventArgs e )
         {
-            AddNewMember(MemberType.Destructor);
+            AddNewMember( MemberType.Destructor );
         }
 
-        private void toolNewProperty_Click(object sender, EventArgs e)
+        private void toolNewProperty_Click( object sender, EventArgs e )
         {
-            AddNewMember(MemberType.Property);
+            AddNewMember( MemberType.Property );
         }
 
-        private void toolNewEvent_Click(object sender, EventArgs e)
+        private void toolNewEvent_Click( object sender, EventArgs e )
         {
-            AddNewMember(MemberType.Event);
+            AddNewMember( MemberType.Event );
         }
 
-        private void toolMoveUp_Click(object sender, EventArgs e)
+        private void toolMoveUp_Click( object sender, EventArgs e )
         {
-            MoveUp();
+            MoveUp( );
         }
 
-        private void toolMoveDown_Click(object sender, EventArgs e)
+        private void toolMoveDown_Click( object sender, EventArgs e )
         {
-            MoveDown();
+            MoveDown( );
         }
 
-        private void toolDelete_Click(object sender, EventArgs e)
+        private void toolDelete_Click( object sender, EventArgs e )
         {
-            shape.DeleteActiveMember();
+            shape.DeleteActiveMember( );
         }
     }
 }

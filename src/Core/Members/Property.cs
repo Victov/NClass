@@ -34,28 +34,34 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="parent" /> is null.
         /// </exception>
-        protected Property(string name, CompositeType parent)
-            : base(name, parent)
+        protected Property( string name, CompositeType parent ) : base( name, parent ) {}
+
+        public sealed override MemberType MemberType
         {
+            get { return MemberType.Property; }
         }
 
-        public sealed override MemberType MemberType { get { return MemberType.Property; } }
+        public override bool HasBody
+        {
+            get { return true; }
+        }
 
-        public override bool HasBody { get { return true; } }
-
-        public bool HasImplementation { get { return !IsAbstract && !(Parent is InterfaceType); } }
+        public bool HasImplementation
+        {
+            get { return !IsAbstract && !( Parent is InterfaceType ); }
+        }
 
         public bool IsReadonly
         {
             get { return isReadonly; }
             set
             {
-                if (isReadonly != value)
+                if ( isReadonly != value )
                 {
-                    if (value)
+                    if ( value )
                         isWriteonly = false;
                     isReadonly = value;
-                    Changed();
+                    Changed( );
                 }
             }
         }
@@ -65,12 +71,12 @@ namespace NClass.Core
             get { return isWriteonly; }
             set
             {
-                if (isWriteonly != value)
+                if ( isWriteonly != value )
                 {
-                    if (value)
+                    if ( value )
                         isReadonly = false;
                     isWriteonly = value;
-                    Changed();
+                    Changed( );
                 }
             }
         }
@@ -83,19 +89,17 @@ namespace NClass.Core
             get { return readAccess; }
             protected set
             {
-                if (value == readAccess)
+                if ( value == readAccess )
                     return;
 
-                if (value == AccessModifier.Default || (value != Access &&
-                                                        WriteAccess == AccessModifier.Default && !IsReadonly
-                                                        && !IsWriteonly))
+                if ( value == AccessModifier.Default || ( value != Access && WriteAccess == AccessModifier.Default && !IsReadonly && !IsWriteonly ) )
                 {
                     readAccess = value;
-                    Changed();
+                    Changed( );
                 }
                 else
                 {
-                    throw new BadSyntaxException(Strings.ErrorAccessorModifier);
+                    throw new BadSyntaxException( Strings.ErrorAccessorModifier );
                 }
             }
         }
@@ -108,28 +112,26 @@ namespace NClass.Core
             get { return writeAccess; }
             protected set
             {
-                if (value == writeAccess)
+                if ( value == writeAccess )
                     return;
 
-                if (value == AccessModifier.Default || (value != Access &&
-                                                        ReadAccess == AccessModifier.Default && !IsReadonly
-                                                        && !IsWriteonly))
+                if ( value == AccessModifier.Default || ( value != Access && ReadAccess == AccessModifier.Default && !IsReadonly && !IsWriteonly ) )
                 {
                     writeAccess = value;
-                    Changed();
+                    Changed( );
                 }
                 else
                 {
-                    throw new BadSyntaxException(Strings.ErrorAccessorModifier);
+                    throw new BadSyntaxException( Strings.ErrorAccessorModifier );
                 }
             }
         }
 
-        protected override void CopyFrom(Member member)
+        protected override void CopyFrom( Member member )
         {
-            base.CopyFrom(member);
+            base.CopyFrom( member );
 
-            var property = (Property) member;
+            var property = ( Property ) member;
             isReadonly = property.isReadonly;
             isWriteonly = property.isWriteonly;
             readAccess = property.readAccess;

@@ -27,27 +27,27 @@ namespace NClass.GUI
     {
         private IDocumentVisualizer visualizer;
 
-        public DiagramNavigator()
+        public DiagramNavigator( )
         {
-            SetStyle(ControlStyles.UserPaint, true);
+            SetStyle( ControlStyles.UserPaint, true );
             DoubleBuffered = true;
         }
 
-        [Browsable(false)]
+        [Browsable( false )]
         public IDocumentVisualizer DocumentVisualizer
         {
             get { return visualizer; }
             set
             {
-                if (visualizer != value)
+                if ( visualizer != value )
                 {
-                    if (visualizer != null)
+                    if ( visualizer != null )
                     {
                         visualizer.DocumentRedrawed -= visualizer_DocumentRedrawed;
                         visualizer.VisibleAreaChanged -= visualizer_VisibleAreaChanged;
                     }
                     visualizer = value;
-                    if (visualizer != null)
+                    if ( visualizer != null )
                     {
                         visualizer.DocumentRedrawed += visualizer_DocumentRedrawed;
                         visualizer.VisibleAreaChanged += visualizer_VisibleAreaChanged;
@@ -56,109 +56,100 @@ namespace NClass.GUI
             }
         }
 
-        [DefaultValue(typeof (Color), "ControlDarkDark")]
+        [DefaultValue( typeof( Color ), "ControlDarkDark" )]
         public Color FrameColor { get; set; } = SystemColors.ControlDarkDark;
 
-        private void visualizer_DocumentRedrawed(object sender, EventArgs e)
+        private void visualizer_DocumentRedrawed( object sender, EventArgs e )
         {
-            Invalidate();
+            Invalidate( );
         }
 
-        private void visualizer_VisibleAreaChanged(object sender, EventArgs e)
+        private void visualizer_VisibleAreaChanged( object sender, EventArgs e )
         {
-            Invalidate(); //TODO: ezt lehetne tán optimalizálni, hogy ne hívja meg annyiszor...
+            Invalidate( ); //TODO: ezt lehetne tán optimalizálni, hogy ne hívja meg annyiszor...
         }
 
-        protected override void OnMouseDown(MouseEventArgs e)
+        protected override void OnMouseDown( MouseEventArgs e )
         {
-            if (e.Button == MouseButtons.Left)
-                MoveVisibleArea(e.Location);
-            base.OnMouseDown(e);
+            if ( e.Button == MouseButtons.Left )
+                MoveVisibleArea( e.Location );
+            base.OnMouseDown( e );
         }
 
-        protected override void OnMouseMove(MouseEventArgs e)
+        protected override void OnMouseMove( MouseEventArgs e )
         {
-            if (e.Button == MouseButtons.Left)
-                MoveVisibleArea(e.Location);
-            base.OnMouseMove(e);
+            if ( e.Button == MouseButtons.Left )
+                MoveVisibleArea( e.Location );
+            base.OnMouseMove( e );
         }
 
-        private void MoveVisibleArea(Point location)
+        private void MoveVisibleArea( Point location )
         {
-            if (DocumentVisualizer != null && DocumentVisualizer.HasDocument)
+            if ( DocumentVisualizer != null && DocumentVisualizer.HasDocument )
             {
-                var zoom = GetZoom()/DocumentVisualizer.Zoom;
-                var frameWidth = DocumentVisualizer.VisibleArea.Width*DocumentVisualizer.Zoom;
-                var frameHeight = DocumentVisualizer.VisibleArea.Height*DocumentVisualizer.Zoom;
+                var zoom = GetZoom( ) / DocumentVisualizer.Zoom;
+                var frameWidth = DocumentVisualizer.VisibleArea.Width * DocumentVisualizer.Zoom;
+                var frameHeight = DocumentVisualizer.VisibleArea.Height * DocumentVisualizer.Zoom;
 
-                DocumentVisualizer.Offset = new Point(
-                    (int) (location.X/zoom - frameWidth/2),
-                    (int) (location.Y/zoom - frameHeight/2)
-                    );
+                DocumentVisualizer.Offset = new Point( ( int ) ( location.X / zoom - frameWidth / 2 ), ( int ) ( location.Y / zoom - frameHeight / 2 ) );
             }
         }
 
-        private float GetZoom()
+        private float GetZoom( )
         {
             var borders = ClientRectangle;
-            var zoom1 = (float) borders.Width/DocumentVisualizer.DocumentSize.Width;
-            var zoom2 = (float) borders.Height/DocumentVisualizer.DocumentSize.Height;
+            var zoom1 = ( float ) borders.Width / DocumentVisualizer.DocumentSize.Width;
+            var zoom2 = ( float ) borders.Height / DocumentVisualizer.DocumentSize.Height;
 
-            return Math.Min(zoom1, zoom2);
+            return Math.Min( zoom1, zoom2 );
         }
 
-        private void DrawDocument(Graphics g)
+        private void DrawDocument( Graphics g )
         {
-            if (DocumentVisualizer != null && DocumentVisualizer.HasDocument)
+            if ( DocumentVisualizer != null && DocumentVisualizer.HasDocument )
             {
                 g.SmoothingMode = SmoothingMode.AntiAlias;
                 g.TextRenderingHint = TextRenderingHint.AntiAlias;
 
                 var borders = ClientRectangle;
-                var zoom = GetZoom();
-                g.ScaleTransform(zoom, zoom);
+                var zoom = GetZoom( );
+                g.ScaleTransform( zoom, zoom );
 
-                DocumentVisualizer.DrawDocument(g);
+                DocumentVisualizer.DrawDocument( g );
 
-                g.ResetTransform();
+                g.ResetTransform( );
 
-                if (DocumentVisualizer.VisibleArea.Width < DocumentVisualizer.DocumentSize.Width ||
-                    DocumentVisualizer.VisibleArea.Height < DocumentVisualizer.DocumentSize.Height)
+                if ( DocumentVisualizer.VisibleArea.Width < DocumentVisualizer.DocumentSize.Width || DocumentVisualizer.VisibleArea.Height < DocumentVisualizer.DocumentSize.Height )
                 {
                     g.SmoothingMode = SmoothingMode.None;
-                    var frame = new Rectangle(
-                        (int) (DocumentVisualizer.VisibleArea.X*zoom),
-                        (int) (DocumentVisualizer.VisibleArea.Y*zoom),
-                        (int) (DocumentVisualizer.VisibleArea.Width*zoom),
-                        (int) (DocumentVisualizer.VisibleArea.Height*zoom)
-                        );
-                    if (frame.Right > ClientRectangle.Right)
+                    var frame = new Rectangle( ( int ) ( DocumentVisualizer.VisibleArea.X * zoom ), ( int ) ( DocumentVisualizer.VisibleArea.Y * zoom ), ( int ) ( DocumentVisualizer.VisibleArea.Width * zoom ), ( int ) ( DocumentVisualizer.VisibleArea.Height * zoom ) );
+                    if ( frame.Right > ClientRectangle.Right )
                         frame.Width = ClientRectangle.Right - frame.Left - 1;
-                    if (frame.Bottom > ClientRectangle.Bottom)
+                    if ( frame.Bottom > ClientRectangle.Bottom )
                         frame.Height = ClientRectangle.Bottom - frame.Top - 1;
-                    DrawFrame(g, frame);
+                    DrawFrame( g, frame );
                 }
             }
         }
 
-        private void DrawFrame(Graphics g, Rectangle frame)
+        private void DrawFrame( Graphics g, Rectangle frame )
         {
-            FrameColor = Color.FromArgb(80, 100, 150);
-            var pen = new Pen(FrameColor);
+            FrameColor = Color.FromArgb( 80, 100, 150 );
+            var pen = new Pen( FrameColor );
 
-            for (var alpha = 256; alpha >= 4; alpha /= 2)
+            for ( var alpha = 256; alpha >= 4; alpha /= 2 )
             {
-                pen.Color = Color.FromArgb(alpha - 1, FrameColor);
-                g.DrawRectangle(pen, frame);
-                frame.Inflate(1, 1);
+                pen.Color = Color.FromArgb( alpha - 1, FrameColor );
+                g.DrawRectangle( pen, frame );
+                frame.Inflate( 1, 1 );
             }
-            pen.Dispose();
+            pen.Dispose( );
         }
 
-        protected override void OnPaint(PaintEventArgs e)
+        protected override void OnPaint( PaintEventArgs e )
         {
-            base.OnPaint(e);
-            DrawDocument(e.Graphics);
+            base.OnPaint( e );
+            DrawDocument( e.Graphics );
         }
     }
 }

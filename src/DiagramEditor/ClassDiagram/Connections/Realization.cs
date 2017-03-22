@@ -23,9 +23,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
 {
     internal sealed class Realization : Connection
     {
-        private static readonly Pen linePen = new Pen(Color.Black);
+        private static readonly Pen linePen = new Pen( Color.Black );
 
-        static Realization()
+        static Realization( )
         {
             linePen.MiterLimit = 2.0F;
             linePen.LineJoin = LineJoin.MiterClipped;
@@ -36,40 +36,51 @@ namespace NClass.DiagramEditor.ClassDiagram.Connections
         ///     <paramref name="startShape" /> is null.-or-
         ///     <paramref name="endShape" /> is null.
         /// </exception>
-        public Realization(RealizationRelationship realization, Shape startShape, Shape endShape)
-            : base(realization, startShape, endShape)
+        public Realization( RealizationRelationship realization, Shape startShape, Shape endShape ) : base( realization, startShape, endShape )
         {
             RealizationRelationship = realization;
         }
 
         internal RealizationRelationship RealizationRelationship { get; }
 
-        protected internal override Relationship Relationship { get { return RealizationRelationship; } }
+        protected internal override Relationship Relationship
+        {
+            get { return RealizationRelationship; }
+        }
 
-        protected override bool IsDashed { get { return true; } }
+        protected override bool IsDashed
+        {
+            get { return true; }
+        }
 
-        protected override Size EndCapSize { get { return Arrowhead.ClosedArrowSize; } }
+        protected override Size EndCapSize
+        {
+            get { return Arrowhead.ClosedArrowSize; }
+        }
 
-        protected override int EndSelectionOffset { get { return Arrowhead.ClosedArrowHeight; } }
+        protected override int EndSelectionOffset
+        {
+            get { return Arrowhead.ClosedArrowHeight; }
+        }
 
-        protected override void DrawEndCap(IGraphics g, bool onScreen, Style style)
+        protected override void DrawEndCap( IGraphics g, bool onScreen, Style style )
         {
             linePen.Color = style.RelationshipColor;
             linePen.Width = style.RelationshipWidth;
 
-            g.FillPath(Brushes.White, Arrowhead.ClosedArrowPath);
-            g.DrawPath(linePen, Arrowhead.ClosedArrowPath);
+            g.FillPath( Brushes.White, Arrowhead.ClosedArrowPath );
+            g.DrawPath( linePen, Arrowhead.ClosedArrowPath );
         }
 
-        protected override bool CloneRelationship(Diagram diagram, Shape first, Shape second)
+        protected override bool CloneRelationship( Diagram diagram, Shape first, Shape second )
         {
             var firstType = first.Entity as TypeBase;
             var secondType = second.Entity as InterfaceType;
 
-            if (firstType != null && secondType != null)
+            if ( firstType != null && secondType != null )
             {
-                var clone = RealizationRelationship.Clone(firstType, secondType);
-                return diagram.InsertRealization(clone);
+                var clone = RealizationRelationship.Clone( firstType, secondType );
+                return diagram.InsertRealization( clone );
             }
             return false;
         }

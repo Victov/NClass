@@ -22,37 +22,37 @@ using NReflect.NRAttributes;
 
 namespace NReflect.NRMembers
 {
-  /// <summary>
-  /// Represents an operation which has a return value of a type which is reflected by NReflect.
-  /// </summary>
-  [Serializable]
-  public abstract class NRReturnValueOperation : NROperation
-  {
-    // ========================================================================
-    // Con- / Destruction
-
-    #region === Con- / Destruction
-
     /// <summary>
-    /// Initializes a new instance of <see cref="NRReturnValueOperation"/>.
+    /// Represents an operation which has a return value of a type which is reflected by NReflect.
     /// </summary>
-    protected NRReturnValueOperation()
+    [Serializable]
+    public abstract class NRReturnValueOperation : NROperation
     {
-      ReturnValueAttributes = new List<NRAttribute>();
+        // ========================================================================
+        // Con- / Destruction
+
+        #region === Con- / Destruction
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="NRReturnValueOperation"/>.
+        /// </summary>
+        protected NRReturnValueOperation( )
+        {
+            ReturnValueAttributes = new List< NRAttribute >( );
+        }
+
+        #endregion
+
+        // ========================================================================
+        // Properties
+
+        #region === Properties
+
+        /// <summary>
+        /// Gets a list of attributes bound to the return value of the method.
+        /// </summary>
+        public List< NRAttribute > ReturnValueAttributes { get; private set; }
+
+        #endregion
     }
-
-    #endregion
-
-    // ========================================================================
-    // Properties
-
-    #region === Properties
-
-    /// <summary>
-    /// Gets a list of attributes bound to the return value of the method.
-    /// </summary>
-    public List<NRAttribute> ReturnValueAttributes { get; private set; } 
-
-    #endregion
-  }
 }

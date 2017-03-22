@@ -22,55 +22,55 @@ using NReflect.NRMembers;
 
 namespace NReflect.NREntities
 {
-  /// <summary>
-  /// Represents a type which can contain fields and methods which is reflected by NReflect.
-  /// </summary>
-  [Serializable]
-  public abstract class NRCompositeType : NRGenericType, IMethodContainer
-  {
-    // ========================================================================
-    // Con- / Destruction
-
-    #region === Con- / Destruction
-
     /// <summary>
-    /// Initializes a new instance of <see cref="NRCompositeType"/>.
+    /// Represents a type which can contain fields and methods which is reflected by NReflect.
     /// </summary>
-    protected NRCompositeType()
+    [Serializable]
+    public abstract class NRCompositeType : NRGenericType, IMethodContainer
     {
-      ImplementedInterfaces = new List<NRTypeUsage>();
-      Properties = new List<NRProperty>();
-      Events = new List<NREvent>();
-      Methods = new List<NRMethod>();
+        // ========================================================================
+        // Con- / Destruction
+
+        #region === Con- / Destruction
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="NRCompositeType"/>.
+        /// </summary>
+        protected NRCompositeType( )
+        {
+            ImplementedInterfaces = new List< NRTypeUsage >( );
+            Properties = new List< NRProperty >( );
+            Events = new List< NREvent >( );
+            Methods = new List< NRMethod >( );
+        }
+
+        #endregion
+
+        // ========================================================================
+        // Properties
+
+        #region === Properties
+
+        /// <summary>
+        /// Gets a list which contains the full names of all implemented interfaces.
+        /// </summary>
+        public List< NRTypeUsage > ImplementedInterfaces { get; private set; }
+
+        /// <summary>
+        /// Gets a list of properties of this type.
+        /// </summary>
+        public List< NRProperty > Properties { get; private set; }
+
+        /// <summary>
+        /// Gets a list of events of this type.
+        /// </summary>
+        public List< NREvent > Events { get; private set; }
+
+        /// <summary>
+        /// Gets a list of methods of this type.
+        /// </summary>
+        public List< NRMethod > Methods { get; private set; }
+
+        #endregion
     }
-
-    #endregion
-
-    // ========================================================================
-    // Properties
-
-    #region === Properties
-
-    /// <summary>
-    /// Gets a list which contains the full names of all implemented interfaces.
-    /// </summary>
-    public List<NRTypeUsage> ImplementedInterfaces { get; private set; }
-
-    /// <summary>
-    /// Gets a list of properties of this type.
-    /// </summary>
-    public List<NRProperty> Properties { get; private set; }
-
-    /// <summary>
-    /// Gets a list of events of this type.
-    /// </summary>
-    public List<NREvent> Events { get; private set; }
-
-    /// <summary>
-    /// Gets a list of methods of this type.
-    /// </summary>
-    public List<NRMethod> Methods { get; private set; }
-
-    #endregion
-  }
 }

@@ -27,12 +27,12 @@ namespace NClass.AssemblyCSharpImport
         /// <summary>
         ///     Initializes a new instance of <see cref="NETImport" />.
         /// </summary>
-        public NETImport(Diagram diagram, ImportSettings settings)
+        public NETImport( Diagram diagram, ImportSettings settings )
         {
             this.diagram = diagram;
             this.settings = settings;
 
-            types = new Dictionary<NRTypeBase, TypeBase>();
+            types = new Dictionary< NRTypeBase, TypeBase >( );
         }
 
         #endregion
@@ -63,7 +63,7 @@ namespace NClass.AssemblyCSharpImport
         ///     A mapping from NReflects <see cref="NRTypeBase" /> objects to the
         ///     corresponding NClass <see cref="TypeBase" /> objects.
         /// </summary>
-        private readonly Dictionary<NRTypeBase, TypeBase> types;
+        private readonly Dictionary< NRTypeBase, TypeBase > types;
 
         #endregion
 
@@ -85,90 +85,67 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         /// <param name="fileName">The file name and path of the assembly to import.</param>
         /// <returns><c>True</c>, if the import was successful.</returns>
-        public bool ImportAssembly(string fileName)
+        public bool ImportAssembly( string fileName )
         {
-            if (string.IsNullOrEmpty(fileName))
+            if ( string.IsNullOrEmpty( fileName ) )
             {
-                MessageBox.Show(Strings.Error_NoAssembly,
-                                Strings.Error_MessageBoxTitle,
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
+                MessageBox.Show( Strings.Error_NoAssembly, Strings.Error_MessageBoxTitle, MessageBoxButtons.OK, MessageBoxIcon.Error );
                 return false;
             }
             try
             {
-                diagram.Name = Path.GetFileName(fileName);
+                diagram.Name = Path.GetFileName( fileName );
                 diagram.RedrawSuspended = true;
 
-                var includeFilter = new IncludeFilter();
-                includeFilter.Rules.AddRange(settings.FilterRules);
+                var includeFilter = new IncludeFilter( );
+                includeFilter.Rules.AddRange( settings.FilterRules );
                 IFilter filter = includeFilter;
-                if (!settings.UseAsWhiteList)
+                if ( !settings.UseAsWhiteList )
                 {
-                    filter = new InvertFilter(includeFilter);
+                    filter = new InvertFilter( includeFilter );
                 }
 
-                var nClassImportFilter = new NClassImportFilter(filter);
-                var reflector = new Reflector();
+                var nClassImportFilter = new NClassImportFilter( filter );
+                var reflector = new Reflector( );
                 filter = nClassImportFilter;
-                var nrAssembly = reflector.Reflect(fileName, ref filter);
-                nClassImportFilter = (NClassImportFilter) filter;
+                var nrAssembly = reflector.Reflect( fileName, ref filter );
+                nClassImportFilter = ( NClassImportFilter ) filter;
 
-                AddInterfaces(nrAssembly.Interfaces);
-                AddClasses(nrAssembly.Classes);
-                AddStrcts(nrAssembly.Structs);
-                AddDelegates(nrAssembly.Delegates);
-                AddEnums(nrAssembly.Enums);
+                AddInterfaces( nrAssembly.Interfaces );
+                AddClasses( nrAssembly.Classes );
+                AddStrcts( nrAssembly.Structs );
+                AddDelegates( nrAssembly.Delegates );
+                AddEnums( nrAssembly.Enums );
 
-                ArrangeTypes();
+                ArrangeTypes( );
 
-                var relationshipCreator = new RelationshipCreator();
-                var nrRelationships = relationshipCreator.CreateRelationships(nrAssembly,
-                                                                              settings.CreateNestings,
-                                                                              settings.CreateGeneralizations,
-                                                                              settings.CreateRealizations,
-                                                                              settings.CreateAssociations);
-                AddRelationships(nrRelationships);
+                var relationshipCreator = new RelationshipCreator( );
+                var nrRelationships = relationshipCreator.CreateRelationships( nrAssembly, settings.CreateNestings, settings.CreateGeneralizations, settings.CreateRealizations, settings.CreateAssociations );
+                AddRelationships( nrRelationships );
 
-                if (nClassImportFilter.UnsafeTypesPresent)
+                if ( nClassImportFilter.UnsafeTypesPresent )
                 {
-                    MessageBox.Show(null,
-                                    Strings.UnsafeTypesPresent,
-                                    Strings.WarningTitle,
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Warning);
+                    MessageBox.Show( null, Strings.UnsafeTypesPresent, Strings.WarningTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning );
                 }
             }
-            catch (ReflectionTypeLoadException)
+            catch ( ReflectionTypeLoadException )
             {
-                MessageBox.Show(Strings.Error_MissingReferencedAssemblies,
-                                Strings.Error_MessageBoxTitle,
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
+                MessageBox.Show( Strings.Error_MissingReferencedAssemblies, Strings.Error_MessageBoxTitle, MessageBoxButtons.OK, MessageBoxIcon.Error );
                 return false;
             }
-            catch (FileLoadException)
+            catch ( FileLoadException )
             {
-                MessageBox.Show(Strings.Error_MissingReferencedAssemblies,
-                                Strings.Error_MessageBoxTitle,
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
+                MessageBox.Show( Strings.Error_MissingReferencedAssemblies, Strings.Error_MessageBoxTitle, MessageBoxButtons.OK, MessageBoxIcon.Error );
                 return false;
             }
-            catch (BadImageFormatException)
+            catch ( BadImageFormatException )
             {
-                MessageBox.Show(Strings.Error_BadImageFormat,
-                                Strings.Error_MessageBoxTitle,
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
+                MessageBox.Show( Strings.Error_BadImageFormat, Strings.Error_MessageBoxTitle, MessageBoxButtons.OK, MessageBoxIcon.Error );
                 return false;
             }
-            catch (Exception ex)
+            catch ( Exception ex )
             {
-                MessageBox.Show(string.Format(Strings.Error_GeneralException, ex),
-                                Strings.Error_MessageBoxTitle,
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
+                MessageBox.Show( string.Format( Strings.Error_GeneralException, ex ), Strings.Error_MessageBoxTitle, MessageBoxButtons.OK, MessageBoxIcon.Error );
                 return false;
             }
             finally
@@ -184,45 +161,45 @@ namespace NClass.AssemblyCSharpImport
         ///     diagram.
         /// </summary>
         /// <param name="nrRelationships">The relationships to add.</param>
-        private void AddRelationships(NRRelationships nrRelationships)
+        private void AddRelationships( NRRelationships nrRelationships )
         {
-            foreach (var nrNesting in nrRelationships.Nestings)
+            foreach ( var nrNesting in nrRelationships.Nestings )
             {
-                var parentType = types[nrNesting.ParentType] as CompositeType;
-                var innerType = types[nrNesting.InnerType];
-                if (parentType != null && innerType != null)
+                var parentType = types[ nrNesting.ParentType ] as CompositeType;
+                var innerType = types[ nrNesting.InnerType ];
+                if ( parentType != null && innerType != null )
                 {
-                    diagram.AddNesting(parentType, innerType);
+                    diagram.AddNesting( parentType, innerType );
                 }
             }
 
-            foreach (var nrGeneralization in nrRelationships.Generalizations)
+            foreach ( var nrGeneralization in nrRelationships.Generalizations )
             {
-                var derivedType = types[nrGeneralization.DerivedType] as CompositeType;
-                var baseType = types[nrGeneralization.BaseType] as CompositeType;
-                if (derivedType != null && baseType != null)
+                var derivedType = types[ nrGeneralization.DerivedType ] as CompositeType;
+                var baseType = types[ nrGeneralization.BaseType ] as CompositeType;
+                if ( derivedType != null && baseType != null )
                 {
-                    diagram.AddGeneralization(derivedType, baseType);
+                    diagram.AddGeneralization( derivedType, baseType );
                 }
             }
 
-            foreach (var nrRealization in nrRelationships.Realizations)
+            foreach ( var nrRealization in nrRelationships.Realizations )
             {
-                var implementingType = types[nrRealization.ImplementingType] as CompositeType;
-                var interfaceType = types[nrRealization.BaseType] as InterfaceType;
-                if (implementingType != null && interfaceType != null)
+                var implementingType = types[ nrRealization.ImplementingType ] as CompositeType;
+                var interfaceType = types[ nrRealization.BaseType ] as InterfaceType;
+                if ( implementingType != null && interfaceType != null )
                 {
-                    diagram.AddRealization(implementingType, interfaceType);
+                    diagram.AddRealization( implementingType, interfaceType );
                 }
             }
 
-            foreach (var nrAssociation in nrRelationships.Associations)
+            foreach ( var nrAssociation in nrRelationships.Associations )
             {
-                var first = types[nrAssociation.StartType];
-                var second = types[nrAssociation.EndType];
-                if (first != null && second != null)
+                var first = types[ nrAssociation.StartType ];
+                var second = types[ nrAssociation.EndType ];
+                if ( first != null && second != null )
                 {
-                    var associationRelationship = diagram.AddAssociation(first, second);
+                    var associationRelationship = diagram.AddAssociation( first, second );
                     associationRelationship.EndMultiplicity = nrAssociation.EndMultiplicity;
                     associationRelationship.StartMultiplicity = nrAssociation.StartMultiplicity;
                     associationRelationship.EndRole = nrAssociation.EndRole;
@@ -234,27 +211,25 @@ namespace NClass.AssemblyCSharpImport
         /// <summary>
         ///     Creates a nice arrangement for each entity.
         /// </summary>
-        private void ArrangeTypes()
+        private void ArrangeTypes( )
         {
-            const int Margin = Connection.Spacing*2;
+            const int Margin = Connection.Spacing * 2;
             const int DiagramPadding = Shape.SelectionMargin;
 
             var shapeCount = diagram.ShapeCount;
-            var columns = (int) Math.Ceiling(Math.Sqrt(shapeCount*2));
+            var columns = ( int ) Math.Ceiling( Math.Sqrt( shapeCount * 2 ) );
             var shapeIndex = 0;
             var top = Shape.SelectionMargin;
             var maxHeight = 0;
 
-            foreach (var shape in diagram.Shapes)
+            foreach ( var shape in diagram.Shapes )
             {
-                var column = shapeIndex%columns;
+                var column = shapeIndex % columns;
 
-                shape.Location = new Point(
-                    (TypeShape.DefaultWidth + Margin)*column + DiagramPadding,
-                    top);
+                shape.Location = new Point( ( TypeShape.DefaultWidth + Margin ) * column + DiagramPadding, top );
 
-                maxHeight = Math.Max(maxHeight, shape.Height);
-                if (column == columns - 1)
+                maxHeight = Math.Max( maxHeight, shape.Height );
+                if ( column == columns - 1 )
                 {
                     top += maxHeight + Margin;
                     maxHeight = 0;
@@ -269,23 +244,23 @@ namespace NClass.AssemblyCSharpImport
         ///     Adds the submitted classes to the diagram.
         /// </summary>
         /// <param name="classes">A list of classes to add.</param>
-        private void AddClasses(IEnumerable<NRClass> classes)
+        private void AddClasses( IEnumerable< NRClass > classes )
         {
-            foreach (var nrClass in classes)
+            foreach ( var nrClass in classes )
             {
-                var classType = diagram.AddClass();
+                var classType = diagram.AddClass( );
                 classType.Name = nrClass.Name;
-                classType.AccessModifier = nrClass.AccessModifier.ToNClass();
-                classType.Modifier = nrClass.ClassModifier.ToNClass();
+                classType.AccessModifier = nrClass.AccessModifier.ToNClass( );
+                classType.Modifier = nrClass.ClassModifier.ToNClass( );
 
-                AddFields(classType, nrClass.Fields);
-                AddProperties(classType, nrClass.Properties);
-                AddEvents(classType, nrClass.Events);
-                AddConstructors(classType, nrClass.Constructors);
-                AddMethods(classType, nrClass.Methods);
-                AddOperators(classType, nrClass.Operators);
+                AddFields( classType, nrClass.Fields );
+                AddProperties( classType, nrClass.Properties );
+                AddEvents( classType, nrClass.Events );
+                AddConstructors( classType, nrClass.Constructors );
+                AddMethods( classType, nrClass.Methods );
+                AddOperators( classType, nrClass.Operators );
 
-                types.Add(nrClass, classType);
+                types.Add( nrClass, classType );
             }
         }
 
@@ -293,22 +268,22 @@ namespace NClass.AssemblyCSharpImport
         ///     Adds the submitted structs to the diagram.
         /// </summary>
         /// <param name="structs">A list of structs to add.</param>
-        private void AddStrcts(IEnumerable<NRStruct> structs)
+        private void AddStrcts( IEnumerable< NRStruct > structs )
         {
-            foreach (var nrStruct in structs)
+            foreach ( var nrStruct in structs )
             {
-                var structureType = diagram.AddStructure();
+                var structureType = diagram.AddStructure( );
                 structureType.Name = nrStruct.Name;
-                structureType.AccessModifier = nrStruct.AccessModifier.ToNClass();
+                structureType.AccessModifier = nrStruct.AccessModifier.ToNClass( );
 
-                AddFields(structureType, nrStruct.Fields);
-                AddProperties(structureType, nrStruct.Properties);
-                AddEvents(structureType, nrStruct.Events);
-                AddConstructors(structureType, nrStruct.Constructors);
-                AddMethods(structureType, nrStruct.Methods);
-                AddOperators(structureType, nrStruct.Operators);
+                AddFields( structureType, nrStruct.Fields );
+                AddProperties( structureType, nrStruct.Properties );
+                AddEvents( structureType, nrStruct.Events );
+                AddConstructors( structureType, nrStruct.Constructors );
+                AddMethods( structureType, nrStruct.Methods );
+                AddOperators( structureType, nrStruct.Operators );
 
-                types.Add(nrStruct, structureType);
+                types.Add( nrStruct, structureType );
             }
         }
 
@@ -316,19 +291,19 @@ namespace NClass.AssemblyCSharpImport
         ///     Adds the submitted interfaces to the diagram.
         /// </summary>
         /// <param name="interfaces">A list of interfaces to add.</param>
-        private void AddInterfaces(IEnumerable<NRInterface> interfaces)
+        private void AddInterfaces( IEnumerable< NRInterface > interfaces )
         {
-            foreach (var nrInterface in interfaces)
+            foreach ( var nrInterface in interfaces )
             {
-                var interfaceType = diagram.AddInterface();
+                var interfaceType = diagram.AddInterface( );
                 interfaceType.Name = nrInterface.Name;
-                interfaceType.AccessModifier = nrInterface.AccessModifier.ToNClass();
+                interfaceType.AccessModifier = nrInterface.AccessModifier.ToNClass( );
 
-                AddProperties(interfaceType, nrInterface.Properties);
-                AddEvents(interfaceType, nrInterface.Events);
-                AddMethods(interfaceType, nrInterface.Methods);
+                AddProperties( interfaceType, nrInterface.Properties );
+                AddEvents( interfaceType, nrInterface.Events );
+                AddMethods( interfaceType, nrInterface.Methods );
 
-                types.Add(nrInterface, interfaceType);
+                types.Add( nrInterface, interfaceType );
             }
         }
 
@@ -336,20 +311,20 @@ namespace NClass.AssemblyCSharpImport
         ///     Adds the submitted delegates to the diagram.
         /// </summary>
         /// <param name="delegates">A list of delegates to add.</param>
-        private void AddDelegates(IEnumerable<NRDelegate> delegates)
+        private void AddDelegates( IEnumerable< NRDelegate > delegates )
         {
-            foreach (var nrDelegate in delegates)
+            foreach ( var nrDelegate in delegates )
             {
-                var delegateType = diagram.AddDelegate();
+                var delegateType = diagram.AddDelegate( );
                 delegateType.Name = nrDelegate.Name;
-                delegateType.AccessModifier = nrDelegate.AccessModifier.ToNClass();
+                delegateType.AccessModifier = nrDelegate.AccessModifier.ToNClass( );
                 delegateType.ReturnType = nrDelegate.ReturnType.Name;
-                foreach (var nrParameter in nrDelegate.Parameters)
+                foreach ( var nrParameter in nrDelegate.Parameters )
                 {
-                    delegateType.AddParameter(nrParameter.Declaration());
+                    delegateType.AddParameter( nrParameter.Declaration( ) );
                 }
 
-                types.Add(nrDelegate, delegateType);
+                types.Add( nrDelegate, delegateType );
             }
         }
 
@@ -357,17 +332,17 @@ namespace NClass.AssemblyCSharpImport
         ///     Adds the submitted enums to the diagram.
         /// </summary>
         /// <param name="enums">A list of enums to add.</param>
-        private void AddEnums(IEnumerable<NREnum> enums)
+        private void AddEnums( IEnumerable< NREnum > enums )
         {
-            foreach (var nrEnum in enums)
+            foreach ( var nrEnum in enums )
             {
-                var enumType = diagram.AddEnum();
+                var enumType = diagram.AddEnum( );
                 enumType.Name = nrEnum.Name;
-                enumType.AccessModifier = nrEnum.AccessModifier.ToNClass();
+                enumType.AccessModifier = nrEnum.AccessModifier.ToNClass( );
 
-                AddEnumValues(enumType, nrEnum.Values);
+                AddEnumValues( enumType, nrEnum.Values );
 
-                types.Add(nrEnum, enumType);
+                types.Add( nrEnum, enumType );
             }
         }
 
@@ -380,11 +355,11 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         /// <param name="type">The enum to add the enum values to.</param>
         /// <param name="values">A list of enum values to add.</param>
-        private void AddEnumValues(EnumType type, IEnumerable<NREnumValue> values)
+        private void AddEnumValues( EnumType type, IEnumerable< NREnumValue > values )
         {
-            foreach (var nrEnumValue in values)
+            foreach ( var nrEnumValue in values )
             {
-                type.AddValue(nrEnumValue.Declaration());
+                type.AddValue( nrEnumValue.Declaration( ) );
             }
         }
 
@@ -393,11 +368,11 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         /// <param name="type">The entity to add the fields to.</param>
         /// <param name="fields">A list of fields to add.</param>
-        private void AddFields(SingleInharitanceType type, IEnumerable<NRField> fields)
+        private void AddFields( SingleInharitanceType type, IEnumerable< NRField > fields )
         {
-            foreach (var nrField in fields)
+            foreach ( var nrField in fields )
             {
-                type.AddField().InitFromString(nrField.Declaration());
+                type.AddField( ).InitFromString( nrField.Declaration( ) );
             }
         }
 
@@ -406,11 +381,11 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         /// <param name="type">The entity to add the properties to.</param>
         /// <param name="properties">A list of properties to add.</param>
-        private void AddProperties(CompositeType type, IEnumerable<NRProperty> properties)
+        private void AddProperties( CompositeType type, IEnumerable< NRProperty > properties )
         {
-            foreach (var nrProperty in properties)
+            foreach ( var nrProperty in properties )
             {
-                type.AddProperty().InitFromString(nrProperty.Declaration());
+                type.AddProperty( ).InitFromString( nrProperty.Declaration( ) );
             }
         }
 
@@ -419,11 +394,11 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         /// <param name="type">The entity to add the methods to.</param>
         /// <param name="methods">A list of methods to add.</param>
-        private void AddMethods(CompositeType type, IEnumerable<NRMethod> methods)
+        private void AddMethods( CompositeType type, IEnumerable< NRMethod > methods )
         {
-            foreach (var nrMethod in methods)
+            foreach ( var nrMethod in methods )
             {
-                type.AddMethod().InitFromString(nrMethod.Declaration());
+                type.AddMethod( ).InitFromString( nrMethod.Declaration( ) );
             }
         }
 
@@ -432,11 +407,11 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         /// <param name="type">The entity to add the constructors to.</param>
         /// <param name="constructors">A list of constructors to add.</param>
-        private void AddConstructors(SingleInharitanceType type, IEnumerable<NRConstructor> constructors)
+        private void AddConstructors( SingleInharitanceType type, IEnumerable< NRConstructor > constructors )
         {
-            foreach (var nrConstructor in constructors)
+            foreach ( var nrConstructor in constructors )
             {
-                type.AddConstructor().InitFromString(nrConstructor.Declaration());
+                type.AddConstructor( ).InitFromString( nrConstructor.Declaration( ) );
             }
         }
 
@@ -445,11 +420,11 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         /// <param name="type">The entity to add the operators to.</param>
         /// <param name="operators">A list of operators to add.</param>
-        private void AddOperators(SingleInharitanceType type, IEnumerable<NROperator> operators)
+        private void AddOperators( SingleInharitanceType type, IEnumerable< NROperator > operators )
         {
-            foreach (var nrOperator in operators)
+            foreach ( var nrOperator in operators )
             {
-                type.AddMethod().InitFromString(nrOperator.Declaration());
+                type.AddMethod( ).InitFromString( nrOperator.Declaration( ) );
             }
         }
 
@@ -458,11 +433,11 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         /// <param name="type">The entity to add the events to.</param>
         /// <param name="events">A list of events to add.</param>
-        private void AddEvents(CompositeType type, IEnumerable<NREvent> events)
+        private void AddEvents( CompositeType type, IEnumerable< NREvent > events )
         {
-            foreach (var nrEvent in events)
+            foreach ( var nrEvent in events )
             {
-                type.AddEvent().InitFromString(nrEvent.Declaration());
+                type.AddEvent( ).InitFromString( nrEvent.Declaration( ) );
             }
         }
 

@@ -34,23 +34,23 @@ namespace NClass.DiagramEditor
         private static readonly Pen borderPen;
 
         private IDocument document;
-        private readonly List<PopupWindow> windows = new List<PopupWindow>();
+        private readonly List< PopupWindow > windows = new List< PopupWindow >( );
 
-        static Canvas()
+        static Canvas( )
         {
-            borderPen = new Pen(Color.FromArgb(128, Color.Black));
+            borderPen = new Pen( Color.FromArgb( 128, Color.Black ) );
             borderPen.DashPattern = new float[] {5, 5};
         }
 
-        public Canvas()
+        public Canvas( )
         {
-            InitializeComponent();
-            SetStyle(ControlStyles.UserPaint, true);
+            InitializeComponent( );
+            SetStyle( ControlStyles.UserPaint, true );
             DoubleBuffered = true;
 
-            if (DiagramElement.Graphics == null)
+            if ( DiagramElement.Graphics == null )
             {
-                DiagramElement.Graphics = CreateGraphics();
+                DiagramElement.Graphics = CreateGraphics( );
             }
         }
 
@@ -58,20 +58,20 @@ namespace NClass.DiagramEditor
         {
             get
             {
-                if (HasDocument)
+                if ( HasDocument )
                     return Document.BackColor;
                 return base.BackColor;
             }
             set { base.BackColor = value; }
         }
 
-        [Browsable(false)]
+        [Browsable( false )]
         public int ZoomPercentage
         {
             get
             {
-                if (HasDocument)
-                    return (int) Math.Round(Document.Zoom*100);
+                if ( HasDocument )
+                    return ( int ) Math.Round( Document.Zoom * 100 );
                 return 100;
             }
         }
@@ -79,20 +79,23 @@ namespace NClass.DiagramEditor
         public event EventHandler DocumentRedrawed;
         public event EventHandler VisibleAreaChanged;
 
-        [Browsable(false)]
-        public bool HasDocument { get { return document != null; } }
+        [Browsable( false )]
+        public bool HasDocument
+        {
+            get { return document != null; }
+        }
 
-        [Browsable(false)]
+        [Browsable( false )]
         public IDocument Document
         {
             get { return document; }
             set
             {
-                if (document != value)
+                if ( document != value )
                 {
-                    if (document != null)
+                    if ( document != null )
                     {
-                        document.CloseWindows();
+                        document.CloseWindows( );
                         document.OffsetChanged -= document_OffsetChanged;
                         document.SizeChanged -= document_SizeChanged;
                         document.ZoomChanged -= document_ZoomChanged;
@@ -102,7 +105,7 @@ namespace NClass.DiagramEditor
                     }
                     document = value;
 
-                    if (document != null)
+                    if ( document != null )
                     {
                         document.OffsetChanged += document_OffsetChanged;
                         document.SizeChanged += document_SizeChanged;
@@ -112,24 +115,24 @@ namespace NClass.DiagramEditor
                         document.HidingWindow += document_HidingWindow;
                     }
 
-                    SetScrolls();
-                    Invalidate();
+                    SetScrolls( );
+                    Invalidate( );
 
-                    OnDocumentRedrawed(EventArgs.Empty);
-                    OnZoomChanged(EventArgs.Empty);
-                    OnVisibleAreaChanged(EventArgs.Empty);
+                    OnDocumentRedrawed( EventArgs.Empty );
+                    OnZoomChanged( EventArgs.Empty );
+                    OnVisibleAreaChanged( EventArgs.Empty );
                 }
             }
         }
 
-        [Browsable(false)]
+        [Browsable( false )]
         public Point Offset
         {
-            get { return new Point(HorizontalScroll.Value, VerticalScroll.Value); }
+            get { return new Point( HorizontalScroll.Value, VerticalScroll.Value ); }
             set
             {
                 AutoScrollPosition = value;
-                UpdateDocumentOffset();
+                UpdateDocumentOffset( );
             }
         }
 
@@ -137,258 +140,233 @@ namespace NClass.DiagramEditor
         {
             get
             {
-                if (HasDocument)
+                if ( HasDocument )
                     return Document.Size;
                 return Size.Empty;
             }
         }
 
-        [Browsable(false)]
+        [Browsable( false )]
         public Rectangle VisibleArea
         {
             get
             {
-                if (HasDocument)
+                if ( HasDocument )
                 {
-                    return new Rectangle(
-                        (int) (Document.Offset.X/Document.Zoom),
-                        (int) (Document.Offset.Y/Document.Zoom),
-                        (int) (ClientSize.Width/Document.Zoom),
-                        (int) (ClientSize.Height/Document.Zoom)
-                        );
+                    return new Rectangle( ( int ) ( Document.Offset.X / Document.Zoom ), ( int ) ( Document.Offset.Y / Document.Zoom ), ( int ) ( ClientSize.Width / Document.Zoom ), ( int ) ( ClientSize.Height / Document.Zoom ) );
                 }
                 return Rectangle.Empty;
             }
         }
 
-        [Browsable(false)]
+        [Browsable( false )]
         public float Zoom
         {
             get
             {
-                if (HasDocument)
+                if ( HasDocument )
                     return Document.Zoom;
                 return 1.0F;
             }
-            set { ChangeZoom(value); }
+            set { ChangeZoom( value ); }
         }
 
-        public void ChangeZoom(bool enlarge)
+        public void ChangeZoom( bool enlarge )
         {
-            if (HasDocument)
+            if ( HasDocument )
             {
-                if (Document.HasSelectedElement)
-                    ChangeZoom(enlarge, Document.GetPrintingArea(true));
+                if ( Document.HasSelectedElement )
+                    ChangeZoom( enlarge, Document.GetPrintingArea( true ) );
                 else
-                    ChangeZoom(enlarge, GetAbsoluteCenterPoint());
+                    ChangeZoom( enlarge, GetAbsoluteCenterPoint( ) );
             }
         }
 
-        public void ChangeZoom(float zoom)
+        public void ChangeZoom( float zoom )
         {
-            if (HasDocument)
+            if ( HasDocument )
             {
-                if (Document.HasSelectedElement)
-                    ChangeZoom(zoom, Document.GetPrintingArea(true));
+                if ( Document.HasSelectedElement )
+                    ChangeZoom( zoom, Document.GetPrintingArea( true ) );
                 else
-                    ChangeZoom(zoom, GetAbsoluteCenterPoint());
+                    ChangeZoom( zoom, GetAbsoluteCenterPoint( ) );
             }
         }
 
-        public void AutoZoom()
+        public void AutoZoom( )
         {
-            AutoZoom(true);
+            AutoZoom( true );
         }
 
-        public void AutoZoom(bool selectedOnly)
+        public void AutoZoom( bool selectedOnly )
         {
-            if (HasDocument && !Document.IsEmpty)
+            if ( HasDocument && !Document.IsEmpty )
             {
                 const int Margin = Shape.SelectionMargin;
                 selectedOnly &= Document.HasSelectedElement;
 
                 var visibleRectangle = ClientRectangle;
-                var diagramRectangle = document.GetPrintingArea(selectedOnly);
-                visibleRectangle.Inflate(-Margin, -Margin);
+                var diagramRectangle = document.GetPrintingArea( selectedOnly );
+                visibleRectangle.Inflate( -Margin, -Margin );
 
-                var scaleX = visibleRectangle.Width/diagramRectangle.Width;
-                var scaleY = visibleRectangle.Height/diagramRectangle.Height;
-                var scale = Math.Min(scaleX, scaleY);
+                var scaleX = visibleRectangle.Width / diagramRectangle.Width;
+                var scaleY = visibleRectangle.Height / diagramRectangle.Height;
+                var scale = Math.Min( scaleX, scaleY );
 
                 Document.Zoom = scale;
 
-                var offsetX = (visibleRectangle.Width - diagramRectangle.Width*Zoom)/2;
-                var offsetY = (visibleRectangle.Height - diagramRectangle.Height*Zoom)/2;
-                Offset = new Point(
-                    (int) (diagramRectangle.X*Zoom - Margin - offsetX),
-                    (int) (diagramRectangle.Y*Zoom - Margin - offsetY)
-                    );
+                var offsetX = ( visibleRectangle.Width - diagramRectangle.Width * Zoom ) / 2;
+                var offsetY = ( visibleRectangle.Height - diagramRectangle.Height * Zoom ) / 2;
+                Offset = new Point( ( int ) ( diagramRectangle.X * Zoom - Margin - offsetX ), ( int ) ( diagramRectangle.Y * Zoom - Margin - offsetY ) );
             }
         }
 
-        void IDocumentVisualizer.DrawDocument(Graphics g)
+        void IDocumentVisualizer.DrawDocument( Graphics g )
         {
-            if (HasDocument)
+            if ( HasDocument )
             {
-                IGraphics graphics = new GdiGraphics(g);
-                Document.Print(graphics, false, Style.CurrentStyle);
+                IGraphics graphics = new GdiGraphics( g );
+                Document.Print( graphics, false, Style.CurrentStyle );
             }
         }
 
         public event EventHandler ZoomChanged;
         public event EventHandler MouseHWheel;
 
-        private void document_OffsetChanged(object sender, EventArgs e)
+        private void document_OffsetChanged( object sender, EventArgs e )
         {
-            SetScrolls();
-            OnVisibleAreaChanged(EventArgs.Empty);
+            SetScrolls( );
+            OnVisibleAreaChanged( EventArgs.Empty );
         }
 
-        private void document_SizeChanged(object sender, EventArgs e)
+        private void document_SizeChanged( object sender, EventArgs e )
         {
-            SetScrolls();
-            OnVisibleAreaChanged(EventArgs.Empty);
+            SetScrolls( );
+            OnVisibleAreaChanged( EventArgs.Empty );
         }
 
-        private void document_ZoomChanged(object sender, EventArgs e)
+        private void document_ZoomChanged( object sender, EventArgs e )
         {
-            Invalidate();
-            SetScrolls();
-            OnZoomChanged(EventArgs.Empty);
-            OnVisibleAreaChanged(EventArgs.Empty);
+            Invalidate( );
+            SetScrolls( );
+            OnZoomChanged( EventArgs.Empty );
+            OnVisibleAreaChanged( EventArgs.Empty );
         }
 
-        private void document_NeedsRedraw(object sender, EventArgs e)
+        private void document_NeedsRedraw( object sender, EventArgs e )
         {
-            Invalidate();
-            OnDocumentRedrawed(EventArgs.Empty);
+            Invalidate( );
+            OnDocumentRedrawed( EventArgs.Empty );
         }
 
-        private void document_ShowingWindow(object sender, PopupWindowEventArgs e)
+        private void document_ShowingWindow( object sender, PopupWindowEventArgs e )
         {
             var window = e.Window;
-            if (!windows.Contains(window))
+            if ( !windows.Contains( window ) )
             {
-                windows.Add(window);
-                if (ParentForm != null)
+                windows.Add( window );
+                if ( ParentForm != null )
                 {
-                    ParentForm.Controls.Add(window);
-                    var point = PointToScreen(Point.Empty);
-                    var absPos = ParentForm.PointToClient(point);
+                    ParentForm.Controls.Add( window );
+                    var point = PointToScreen( Point.Empty );
+                    var absPos = ParentForm.PointToClient( point );
                     window.ParentLocation = absPos;
-                    window.BringToFront();
+                    window.BringToFront( );
                 }
             }
         }
 
-        private void document_HidingWindow(object sender, PopupWindowEventArgs e)
+        private void document_HidingWindow( object sender, PopupWindowEventArgs e )
         {
             var window = e.Window;
-            if (windows.Contains(window))
+            if ( windows.Contains( window ) )
             {
-                windows.Remove(window);
-                if (ParentForm != null)
+                windows.Remove( window );
+                if ( ParentForm != null )
                 {
-                    ParentForm.Controls.Remove(window);
+                    ParentForm.Controls.Remove( window );
                 }
             }
         }
 
-        private PointF GetAbsoluteCenterPoint()
+        private PointF GetAbsoluteCenterPoint( )
         {
-            return ConvertRelativeToAbsolute(new Point(Width/2, Height/2));
+            return ConvertRelativeToAbsolute( new Point( Width / 2, Height / 2 ) );
         }
 
-        private PointF ConvertRelativeToAbsolute(Point location)
+        private PointF ConvertRelativeToAbsolute( Point location )
         {
-            return new PointF(
-                (location.X + Offset.X)/Zoom,
-                (location.Y + Offset.Y)/Zoom
-                );
+            return new PointF( ( location.X + Offset.X ) / Zoom, ( location.Y + Offset.Y ) / Zoom );
         }
 
-        private Point ConvertAbsoluteToRelative(PointF location)
+        private Point ConvertAbsoluteToRelative( PointF location )
         {
-            return new Point(
-                (int) (location.X*Zoom - Offset.X),
-                (int) (location.Y*Zoom - Offset.Y)
-                );
+            return new Point( ( int ) ( location.X * Zoom - Offset.X ), ( int ) ( location.Y * Zoom - Offset.Y ) );
         }
 
-        public void ZoomIn()
+        public void ZoomIn( )
         {
-            ChangeZoom(true);
+            ChangeZoom( true );
         }
 
-        public void ZoomOut()
+        public void ZoomOut( )
         {
-            ChangeZoom(false);
+            ChangeZoom( false );
         }
 
-        public void ChangeZoom(bool enlarge, PointF zoomingCenter)
+        public void ChangeZoom( bool enlarge, PointF zoomingCenter )
         {
-            if (HasDocument)
+            if ( HasDocument )
             {
-                var zoomValue = CalculateZoomValue(enlarge);
-                ChangeZoom(zoomValue, zoomingCenter);
+                var zoomValue = CalculateZoomValue( enlarge );
+                ChangeZoom( zoomValue, zoomingCenter );
             }
         }
 
-        private void ChangeZoom(bool enlarge, RectangleF zoomingCenter)
+        private void ChangeZoom( bool enlarge, RectangleF zoomingCenter )
         {
-            if (HasDocument)
+            if ( HasDocument )
             {
-                var zoomValue = CalculateZoomValue(enlarge);
-                ChangeZoom(zoomValue, zoomingCenter);
+                var zoomValue = CalculateZoomValue( enlarge );
+                ChangeZoom( zoomValue, zoomingCenter );
             }
         }
 
-        private float CalculateZoomValue(bool enlarge)
+        private float CalculateZoomValue( bool enlarge )
         {
-            if (enlarge)
-                return ((int) Math.Round(Document.Zoom*100) + 10)/10/10F;
-            return ((int) Math.Round(Document.Zoom*100) - 1)/10/10F;
+            if ( enlarge )
+                return ( ( int ) Math.Round( Document.Zoom * 100 ) + 10 ) / 10 / 10F;
+            return ( ( int ) Math.Round( Document.Zoom * 100 ) - 1 ) / 10 / 10F;
         }
 
-        public void ChangeZoom(float zoomValue, PointF zoomingCenter)
+        public void ChangeZoom( float zoomValue, PointF zoomingCenter )
         {
-            if (HasDocument)
+            if ( HasDocument )
             {
-                var oldLocation = ConvertAbsoluteToRelative(zoomingCenter);
+                var oldLocation = ConvertAbsoluteToRelative( zoomingCenter );
                 Document.Zoom = zoomValue;
-                var newLocation = ConvertAbsoluteToRelative(zoomingCenter);
+                var newLocation = ConvertAbsoluteToRelative( zoomingCenter );
 
-                Offset += new Size(
-                    newLocation.X - oldLocation.X,
-                    newLocation.Y - oldLocation.Y
-                    );
+                Offset += new Size( newLocation.X - oldLocation.X, newLocation.Y - oldLocation.Y );
             }
         }
 
-        private void ChangeZoom(float zoomValue, RectangleF zoomingCenter)
+        private void ChangeZoom( float zoomValue, RectangleF zoomingCenter )
         {
-            var centerPoint = new PointF(
-                zoomingCenter.Left + zoomingCenter.Width/2,
-                zoomingCenter.Top + zoomingCenter.Height/2);
+            var centerPoint = new PointF( zoomingCenter.Left + zoomingCenter.Width / 2, zoomingCenter.Top + zoomingCenter.Height / 2 );
 
             Document.Zoom = zoomValue;
-            var newLocation = ConvertAbsoluteToRelative(centerPoint);
-            var desiredLocation = new Point(Width/2, Height/2);
+            var newLocation = ConvertAbsoluteToRelative( centerPoint );
+            var desiredLocation = new Point( Width / 2, Height / 2 );
 
-            Offset += new Size(
-                newLocation.X - desiredLocation.X,
-                newLocation.Y - desiredLocation.Y
-                );
+            Offset += new Size( newLocation.X - desiredLocation.X, newLocation.Y - desiredLocation.Y );
         }
 
-        private void SetScrolls()
+        private void SetScrolls( )
         {
-            if (HasDocument)
+            if ( HasDocument )
             {
-                AutoScrollMinSize = new Size(
-                    (int) Math.Ceiling(Document.Size.Width*Document.Zoom),
-                    (int) Math.Ceiling(Document.Size.Height*Document.Zoom)
-                    );
+                AutoScrollMinSize = new Size( ( int ) Math.Ceiling( Document.Size.Width * Document.Zoom ), ( int ) Math.Ceiling( Document.Size.Height * Document.Zoom ) );
                 AutoScrollPosition = Document.Offset;
             }
             else
@@ -398,35 +376,34 @@ namespace NClass.DiagramEditor
             }
         }
 
-        protected override Point ScrollToControl(Control activeControl)
+        protected override Point ScrollToControl( Control activeControl )
         {
-            if (activeControl.Parent != null && activeControl.Parent != this)
+            if ( activeControl.Parent != null && activeControl.Parent != this )
             {
-                return ScrollToControl(activeControl.Parent);
+                return ScrollToControl( activeControl.Parent );
             }
-            var point = base.ScrollToControl(activeControl);
-            if (HasDocument)
-                Document.Offset = new Point(-point.X, -point.Y);
+            var point = base.ScrollToControl( activeControl );
+            if ( HasDocument )
+                Document.Offset = new Point( -point.X, -point.Y );
             return point;
         }
 
-        private void DrawContent(Graphics g)
+        private void DrawContent( Graphics g )
         {
-            if (HasDocument)
+            if ( HasDocument )
             {
                 // Set the drawing quality
                 g.SmoothingMode = SmoothingMode.AntiAlias;
-                if (Document.Zoom == 1.0F)
+                if ( Document.Zoom == 1.0F )
                 {
-                    if (Settings.Default.UseClearType == ClearTypeMode.Always)
+                    if ( Settings.Default.UseClearType == ClearTypeMode.Always )
                         g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
                     else
                         g.TextRenderingHint = TextRenderingHint.SingleBitPerPixelGridFit;
                 }
                 else
                 {
-                    if (Settings.Default.UseClearType == ClearTypeMode.WhenZoomed ||
-                        Settings.Default.UseClearType == ClearTypeMode.Always)
+                    if ( Settings.Default.UseClearType == ClearTypeMode.WhenZoomed || Settings.Default.UseClearType == ClearTypeMode.Always )
                     {
                         g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
                     }
@@ -437,224 +414,224 @@ namespace NClass.DiagramEditor
                 }
 
                 // Transform the screen to absolute coordinate system
-                g.TranslateTransform(-Document.Offset.X, -Document.Offset.Y);
-                g.ScaleTransform(Document.Zoom, Document.Zoom);
+                g.TranslateTransform( -Document.Offset.X, -Document.Offset.Y );
+                g.ScaleTransform( Document.Zoom, Document.Zoom );
 
                 // Draw contents
-                Document.Display(g);
+                Document.Display( g );
             }
         }
 
-        private void ScrollHorizontally(int offset)
+        private void ScrollHorizontally( int offset )
         {
-            if (HScroll)
+            if ( HScroll )
             {
                 var posX = -DisplayRectangle.X + offset;
                 var maxX = DisplayRectangle.Width - ClientRectangle.Width;
 
-                if (posX < 0)
+                if ( posX < 0 )
                     posX = 0;
-                if (posX > maxX)
+                if ( posX > maxX )
                     posX = maxX;
 
-                SetDisplayRectLocation(-posX, DisplayRectangle.Y);
-                AdjustFormScrollbars(true);
+                SetDisplayRectLocation( -posX, DisplayRectangle.Y );
+                AdjustFormScrollbars( true );
             }
         }
 
-        private void UpdateDocumentOffset()
+        private void UpdateDocumentOffset( )
         {
-            if (HasDocument)
+            if ( HasDocument )
             {
                 Document.Offset = Offset;
-                if (MonoHelper.IsRunningOnMono)
-                    Invalidate();
+                if ( MonoHelper.IsRunningOnMono )
+                    Invalidate( );
             }
         }
 
-        private void UpdateWindowPositions()
+        private void UpdateWindowPositions( )
         {
-            if (ParentForm != null)
+            if ( ParentForm != null )
             {
-                var point = PointToScreen(Point.Empty);
-                var absPos = ParentForm.PointToClient(point);
+                var point = PointToScreen( Point.Empty );
+                var absPos = ParentForm.PointToClient( point );
 
-                foreach (var window in windows)
+                foreach ( var window in windows )
                 {
                     window.ParentLocation = absPos;
                 }
             }
         }
 
-        protected override bool ProcessDialogKey(Keys keyData)
+        protected override bool ProcessDialogKey( Keys keyData )
         {
             var key = keyData & ~Keys.Modifiers;
 
-            if (key == Keys.Up || key == Keys.Down)
+            if ( key == Keys.Up || key == Keys.Down )
                 return false;
-            return base.ProcessDialogKey(keyData);
+            return base.ProcessDialogKey( keyData );
         }
 
-        protected override void OnClientSizeChanged(EventArgs e)
+        protected override void OnClientSizeChanged( EventArgs e )
         {
-            base.OnClientSizeChanged(e);
-            OnVisibleAreaChanged(EventArgs.Empty);
+            base.OnClientSizeChanged( e );
+            OnVisibleAreaChanged( EventArgs.Empty );
         }
 
-        protected override void OnScroll(ScrollEventArgs e)
+        protected override void OnScroll( ScrollEventArgs e )
         {
-            base.OnScroll(e);
-            UpdateDocumentOffset();
+            base.OnScroll( e );
+            UpdateDocumentOffset( );
         }
 
-        protected override void OnMouseWheel(MouseEventArgs e)
+        protected override void OnMouseWheel( MouseEventArgs e )
         {
-            if (ModifierKeys == Keys.Control)
+            if ( ModifierKeys == Keys.Control )
             {
                 var enlarge = e.Delta > 0;
 
-                if (ClientRectangle.Contains(e.Location))
-                    ChangeZoom(enlarge, ConvertRelativeToAbsolute(e.Location));
+                if ( ClientRectangle.Contains( e.Location ) )
+                    ChangeZoom( enlarge, ConvertRelativeToAbsolute( e.Location ) );
                 else
-                    ChangeZoom(enlarge);
+                    ChangeZoom( enlarge );
             }
-            else if (ModifierKeys == Keys.Shift)
+            else if ( ModifierKeys == Keys.Shift )
             {
-                ScrollHorizontally(-e.Delta);
+                ScrollHorizontally( -e.Delta );
             }
             else
             {
-                base.OnMouseWheel(e);
+                base.OnMouseWheel( e );
             }
-            UpdateDocumentOffset();
+            UpdateDocumentOffset( );
         }
 
-        protected virtual void OnMouseHWheel(EventArgs e) //TODO: MouseEventArgs kellene
+        protected virtual void OnMouseHWheel( EventArgs e ) //TODO: MouseEventArgs kellene
         {
-            UpdateDocumentOffset();
-            Invalidate(); //TODO: SetDisplayRectLocation() kellene
-            if (MouseHWheel != null)
-                MouseHWheel(this, e);
+            UpdateDocumentOffset( );
+            Invalidate( ); //TODO: SetDisplayRectLocation() kellene
+            if ( MouseHWheel != null )
+                MouseHWheel( this, e );
         }
 
-        protected override void OnMouseDown(MouseEventArgs e)
+        protected override void OnMouseDown( MouseEventArgs e )
         {
-            base.OnMouseDown(e);
+            base.OnMouseDown( e );
 
-            if (HasDocument)
+            if ( HasDocument )
             {
-                var abs_e = new AbsoluteMouseEventArgs(e, Document);
-                Document.MouseDown(abs_e);
-                if (e.Button == MouseButtons.Right)
-                    ContextMenuStrip = Document.GetContextMenu(abs_e);
-            }
-        }
-
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            base.OnMouseMove(e);
-
-            if (HasDocument)
-            {
-                Document.MouseMove(new AbsoluteMouseEventArgs(e, Document));
+                var abs_e = new AbsoluteMouseEventArgs( e, Document );
+                Document.MouseDown( abs_e );
+                if ( e.Button == MouseButtons.Right )
+                    ContextMenuStrip = Document.GetContextMenu( abs_e );
             }
         }
 
-        protected override void OnMouseUp(MouseEventArgs e)
+        protected override void OnMouseMove( MouseEventArgs e )
         {
-            base.OnMouseUp(e);
+            base.OnMouseMove( e );
 
-            if (HasDocument)
+            if ( HasDocument )
             {
-                Document.MouseUp(new AbsoluteMouseEventArgs(e, Document));
+                Document.MouseMove( new AbsoluteMouseEventArgs( e, Document ) );
             }
         }
 
-        protected override void OnMouseDoubleClick(MouseEventArgs e)
+        protected override void OnMouseUp( MouseEventArgs e )
         {
-            base.OnMouseDoubleClick(e);
+            base.OnMouseUp( e );
 
-            if (HasDocument)
+            if ( HasDocument )
             {
-                Document.DoubleClick(new AbsoluteMouseEventArgs(e, Document));
+                Document.MouseUp( new AbsoluteMouseEventArgs( e, Document ) );
             }
         }
 
-        protected override void OnKeyDown(KeyEventArgs e)
+        protected override void OnMouseDoubleClick( MouseEventArgs e )
         {
-            base.OnKeyDown(e);
+            base.OnMouseDoubleClick( e );
 
-            if (document != null)
+            if ( HasDocument )
             {
-                if (e.Modifiers == Keys.Control)
+                Document.DoubleClick( new AbsoluteMouseEventArgs( e, Document ) );
+            }
+        }
+
+        protected override void OnKeyDown( KeyEventArgs e )
+        {
+            base.OnKeyDown( e );
+
+            if ( document != null )
+            {
+                if ( e.Modifiers == Keys.Control )
                 {
-                    if (e.KeyCode == Keys.Add)
+                    if ( e.KeyCode == Keys.Add )
                     {
-                        ZoomIn();
+                        ZoomIn( );
                     }
-                    else if (e.KeyCode == Keys.Subtract)
+                    else if ( e.KeyCode == Keys.Subtract )
                     {
-                        ZoomOut();
+                        ZoomOut( );
                     }
-                    else if (e.KeyCode == Keys.Multiply || e.KeyCode == Keys.NumPad0)
+                    else if ( e.KeyCode == Keys.Multiply || e.KeyCode == Keys.NumPad0 )
                     {
                         Zoom = 1.0F;
                     }
                 }
 
-                document.KeyDown(e);
+                document.KeyDown( e );
             }
         }
 
-        protected override void OnPaint(PaintEventArgs e)
+        protected override void OnPaint( PaintEventArgs e )
         {
-            base.OnPaint(e);
+            base.OnPaint( e );
 
-            if (HasDocument)
+            if ( HasDocument )
             {
-                DrawContent(e.Graphics);
+                DrawContent( e.Graphics );
             }
         }
 
-        protected override void WndProc(ref Message m)
+        protected override void WndProc( ref Message m )
         {
-            base.WndProc(ref m);
+            base.WndProc( ref m );
 
-            if (m.Msg == 0x020E) // WM_MOUSEHWHEEL
+            if ( m.Msg == 0x020E ) // WM_MOUSEHWHEEL
             {
-                OnMouseHWheel(EventArgs.Empty);
+                OnMouseHWheel( EventArgs.Empty );
             }
         }
 
-        protected override void OnLocationChanged(EventArgs e)
+        protected override void OnLocationChanged( EventArgs e )
         {
-            base.OnLocationChanged(e);
-            UpdateWindowPositions();
+            base.OnLocationChanged( e );
+            UpdateWindowPositions( );
         }
 
-        protected override void OnResize(EventArgs e)
+        protected override void OnResize( EventArgs e )
         {
-            base.OnResize(e);
-            UpdateDocumentOffset();
-            UpdateWindowPositions();
+            base.OnResize( e );
+            UpdateDocumentOffset( );
+            UpdateWindowPositions( );
         }
 
-        private void OnZoomChanged(EventArgs e)
+        private void OnZoomChanged( EventArgs e )
         {
-            if (ZoomChanged != null)
-                ZoomChanged(this, e);
+            if ( ZoomChanged != null )
+                ZoomChanged( this, e );
         }
 
-        private void OnDocumentRedrawed(EventArgs e)
+        private void OnDocumentRedrawed( EventArgs e )
         {
-            if (DocumentRedrawed != null)
-                DocumentRedrawed(this, e);
+            if ( DocumentRedrawed != null )
+                DocumentRedrawed( this, e );
         }
 
-        private void OnVisibleAreaChanged(EventArgs e)
+        private void OnVisibleAreaChanged( EventArgs e )
         {
-            if (VisibleAreaChanged != null)
-                VisibleAreaChanged(this, e);
+            if ( VisibleAreaChanged != null )
+                VisibleAreaChanged( this, e );
         }
     }
 }

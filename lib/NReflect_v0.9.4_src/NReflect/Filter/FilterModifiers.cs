@@ -20,47 +20,55 @@ using System;
 
 namespace NReflect.Filter
 {
-  /// <summary>
-  /// A collection of possible modifiers.
-  /// </summary>
-  [Flags]
-  public enum FilterModifiers
-  {
     /// <summary>
-    /// Means "all modifiers"
+    /// A collection of possible modifiers.
     /// </summary>
-    AllModifiers = 0,
-    /// <summary>
-    /// Modifier private
-    /// </summary>
-    Private = 1,
-    /// <summary>
-    /// Modifier public
-    /// </summary>
-    Public = 2,
-    /// <summary>
-    /// Modifier protected
-    /// </summary>
-    Protected = 4,
-    /// <summary>
-    /// Modifier internal
-    /// </summary>
-    Internal = 8,
-    /// <summary>
-    /// Modifier protected internal
-    /// </summary>
-    ProtectedInternal = 16,
-    /// <summary>
-    /// static elements
-    /// </summary>
-    Static = 32,
-    /// <summary>
-    /// elements which are not static
-    /// </summary>
-    Instance = 64,
-    /// <summary>
-    /// The default access modifier.
-    /// </summary>
-    Default =  128
-  }
+    [Flags]
+    public enum FilterModifiers
+    {
+        /// <summary>
+        /// Means "all modifiers"
+        /// </summary>
+        AllModifiers = 0,
+
+        /// <summary>
+        /// Modifier private
+        /// </summary>
+        Private = 1,
+
+        /// <summary>
+        /// Modifier public
+        /// </summary>
+        Public = 2,
+
+        /// <summary>
+        /// Modifier protected
+        /// </summary>
+        Protected = 4,
+
+        /// <summary>
+        /// Modifier internal
+        /// </summary>
+        Internal = 8,
+
+        /// <summary>
+        /// Modifier protected internal
+        /// </summary>
+        ProtectedInternal = 16,
+
+        /// <summary>
+        /// static elements
+        /// </summary>
+        Static = 32,
+
+        /// <summary>
+        /// elements which are not static
+        /// </summary>
+        Instance = 64,
+
+        /// <summary>
+        /// The default access modifier.
+        /// </summary>
+        Default = 128
+    }
 }

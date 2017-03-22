@@ -21,34 +21,29 @@ namespace NClass.Java
 {
     internal sealed class JavaEnum : EnumType
     {
-        internal JavaEnum()
-            : this("NewEnum")
-        {
-        }
+        internal JavaEnum( ) : this( "NewEnum" ) {}
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        internal JavaEnum(string name)
-            : base(name)
-        {
-        }
+        internal JavaEnum( string name ) : base( name ) {}
 
         public override AccessModifier AccessModifier
         {
             get { return base.AccessModifier; }
             set
             {
-                if (IsNested ||
-                    value == AccessModifier.Default ||
-                    value == AccessModifier.Public)
+                if ( IsNested || value == AccessModifier.Default || value == AccessModifier.Public )
                 {
                     base.AccessModifier = value;
                 }
             }
         }
 
-        public override AccessModifier DefaultAccess { get { return AccessModifier.Internal; } }
+        public override AccessModifier DefaultAccess
+        {
+            get { return AccessModifier.Internal; }
+        }
 
         /// <exception cref="ArgumentException">
         ///     The <paramref name="value" /> is already a child member of the type.
@@ -63,7 +58,7 @@ namespace NClass.Java
                     RaiseChangedEvent = false;
 
                     base.NestingParent = value;
-                    if (NestingParent == null && Access != AccessModifier.Public)
+                    if ( NestingParent == null && Access != AccessModifier.Public )
                         AccessModifier = AccessModifier.Default;
                 }
                 finally
@@ -73,7 +68,10 @@ namespace NClass.Java
             }
         }
 
-        public override Language Language { get { return JavaLanguage.Instance; } }
+        public override Language Language
+        {
+            get { return JavaLanguage.Instance; }
+        }
 
         /// <exception cref="BadSyntaxException">
         ///     The name does not fit to the syntax.
@@ -81,11 +79,11 @@ namespace NClass.Java
         /// <exception cref="ReservedNameException">
         ///     The name is a reserved name.
         /// </exception>
-        public override EnumValue AddValue(string declaration)
+        public override EnumValue AddValue( string declaration )
         {
-            EnumValue value = new JavaEnumValue(declaration);
+            EnumValue value = new JavaEnumValue( declaration );
 
-            AddValue(value);
+            AddValue( value );
             return value;
         }
 
@@ -95,33 +93,33 @@ namespace NClass.Java
         /// <exception cref="ReservedNameException">
         ///     The name is a reserved name.
         /// </exception>
-        public override EnumValue ModifyValue(EnumValue value, string declaration)
+        public override EnumValue ModifyValue( EnumValue value, string declaration )
         {
-            EnumValue newValue = new JavaEnumValue(declaration);
+            EnumValue newValue = new JavaEnumValue( declaration );
 
-            if (ChangeValue(value, newValue))
+            if ( ChangeValue( value, newValue ) )
                 return newValue;
             return value;
         }
 
-        public override string GetDeclaration()
+        public override string GetDeclaration( )
         {
-            var builder = new StringBuilder();
+            var builder = new StringBuilder( );
 
-            if (AccessModifier != AccessModifier.Default)
+            if ( AccessModifier != AccessModifier.Default )
             {
-                builder.Append(Language.GetAccessString(AccessModifier, true));
-                builder.Append(" ");
+                builder.Append( Language.GetAccessString( AccessModifier, true ) );
+                builder.Append( " " );
             }
-            builder.AppendFormat("enum {0}", Name);
+            builder.AppendFormat( "enum {0}", Name );
 
-            return builder.ToString();
+            return builder.ToString( );
         }
 
-        public override EnumType Clone()
+        public override EnumType Clone( )
         {
-            var newEnum = new JavaEnum();
-            newEnum.CopyFrom(this);
+            var newEnum = new JavaEnum( );
+            newEnum.CopyFrom( this );
             return newEnum;
         }
     }

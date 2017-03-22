@@ -15,7 +15,7 @@ namespace NClass.AssemblyCSharpImport.Controls
         /// <summary>
         ///     Initializes a new instance of <see cref="DataGridViewImageComboBoxColumnCell" />.
         /// </summary>
-        public DataGridViewImageComboBoxColumnCell()
+        public DataGridViewImageComboBoxColumnCell( )
         {
             DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
             DisplayStyleForCurrentCellOnly = true;
@@ -31,17 +31,26 @@ namespace NClass.AssemblyCSharpImport.Controls
         /// <summary>
         ///     Gets the type of the values of the cells. Returns the type of <see cref="ImageComboBoxItem" />.
         /// </summary>
-        public override Type ValueType { get { return typeof (ImageComboBoxItem); } }
+        public override Type ValueType
+        {
+            get { return typeof( ImageComboBoxItem ); }
+        }
 
         /// <summary>
         ///     Gets the type of the editing control. Returns the type of <see cref="DataGridViewImageComboBoxEditingControl" />.
         /// </summary>
-        public override Type EditType { get { return typeof (DataGridViewImageComboBoxEditingControl); } }
+        public override Type EditType
+        {
+            get { return typeof( DataGridViewImageComboBoxEditingControl ); }
+        }
 
         /// <summary>
         ///     Gets a new value for the cell. Returns a newly created <see cref="ImageComboBoxItem" />.
         /// </summary>
-        public override object DefaultNewRowValue { get { return new ImageComboBoxItem(); } }
+        public override object DefaultNewRowValue
+        {
+            get { return new ImageComboBoxItem( ); }
+        }
 
         #endregion
 
@@ -82,12 +91,7 @@ namespace NClass.AssemblyCSharpImport.Controls
         ///     <see cref="P:System.Windows.Forms.DataGridViewComboBoxCell.DataSource" /> or the
         ///     <see cref="P:System.Windows.Forms.DataGridViewComboBoxCell.Items" /> collection.
         /// </exception>
-        protected override object GetFormattedValue(object value,
-                                                    int rowIndex,
-                                                    ref DataGridViewCellStyle cellStyle,
-                                                    TypeConverter valueTypeConverter,
-                                                    TypeConverter formattedValueTypeConverter,
-                                                    DataGridViewDataErrorContexts context)
+        protected override object GetFormattedValue( object value, int rowIndex, ref DataGridViewCellStyle cellStyle, TypeConverter valueTypeConverter, TypeConverter formattedValueTypeConverter, DataGridViewDataErrorContexts context )
         {
             return value;
         }
@@ -108,10 +112,7 @@ namespace NClass.AssemblyCSharpImport.Controls
         ///     A <see cref="T:System.ComponentModel.TypeConverter" /> for the cell value type, or
         ///     null to use the default converter.
         /// </param>
-        public override object ParseFormattedValue(object formattedValue,
-                                                   DataGridViewCellStyle cellStyle,
-                                                   TypeConverter formattedValueTypeConverter,
-                                                   TypeConverter valueTypeConverter)
+        public override object ParseFormattedValue( object formattedValue, DataGridViewCellStyle cellStyle, TypeConverter formattedValueTypeConverter, TypeConverter valueTypeConverter )
         {
             return formattedValue;
         }
@@ -148,43 +149,17 @@ namespace NClass.AssemblyCSharpImport.Controls
         ///     A bitwise combination of the <see cref="T:System.Windows.Forms.DataGridViewPaintParts" />
         ///     values that specifies which parts of the cell need to be painted.
         /// </param>
-        protected override void Paint(Graphics graphics,
-                                      Rectangle clipBounds,
-                                      Rectangle cellBounds,
-                                      int rowIndex,
-                                      DataGridViewElementStates elementState,
-                                      object value,
-                                      object formattedValue,
-                                      string errorText,
-                                      DataGridViewCellStyle cellStyle,
-                                      DataGridViewAdvancedBorderStyle advancedBorderStyle,
-                                      DataGridViewPaintParts paintParts)
+        protected override void Paint( Graphics graphics, Rectangle clipBounds, Rectangle cellBounds, int rowIndex, DataGridViewElementStates elementState, object value, object formattedValue, string errorText, DataGridViewCellStyle cellStyle, DataGridViewAdvancedBorderStyle advancedBorderStyle, DataGridViewPaintParts paintParts )
         {
             //Call the base to draw the combo box itself.
-            base.Paint(graphics,
-                       clipBounds,
-                       cellBounds,
-                       rowIndex,
-                       elementState,
-                       value,
-                       null,
-                       errorText,
-                       cellStyle,
-                       advancedBorderStyle,
-                       paintParts);
+            base.Paint( graphics, clipBounds, cellBounds, rowIndex, elementState, value, null, errorText, cellStyle, advancedBorderStyle, paintParts );
 
             //Now we will draw the current content of the box.
-            var column = (DataGridViewImageComboBoxColumn) OwningColumn;
-            if ((paintParts & DataGridViewPaintParts.Background) != 0 || (paintParts & DataGridViewPaintParts.All) != 0)
+            var column = ( DataGridViewImageComboBoxColumn ) OwningColumn;
+            if ( ( paintParts & DataGridViewPaintParts.Background ) != 0 || ( paintParts & DataGridViewPaintParts.All ) != 0 )
             {
-                var rect = new Rectangle(cellBounds.X + 4, cellBounds.Y, cellBounds.Width - 4, cellBounds.Height - 1);
-                ControlDrawHelper.DrawImageComboBoxItem(graphics,
-                                                        value,
-                                                        column.ImageList,
-                                                        column.ImageSize,
-                                                        rect,
-                                                        cellStyle.Font,
-                                                        cellStyle.ForeColor);
+                var rect = new Rectangle( cellBounds.X + 4, cellBounds.Y, cellBounds.Width - 4, cellBounds.Height - 1 );
+                ControlDrawHelper.DrawImageComboBoxItem( graphics, value, column.ImageList, column.ImageSize, rect, cellStyle.Font, cellStyle.ForeColor );
             }
         }
 
@@ -197,22 +172,19 @@ namespace NClass.AssemblyCSharpImport.Controls
         ///     A <see cref="T:System.Windows.Forms.DataGridViewCellStyle" /> that determines the
         ///     appearance of the hosted control.
         /// </param>
-        public override void InitializeEditingControl(int rowIndex,
-                                                      object initialFormattedValue,
-                                                      DataGridViewCellStyle dataGridViewCellStyle)
+        public override void InitializeEditingControl( int rowIndex, object initialFormattedValue, DataGridViewCellStyle dataGridViewCellStyle )
         {
-            base.InitializeEditingControl(rowIndex, initialFormattedValue, dataGridViewCellStyle);
+            base.InitializeEditingControl( rowIndex, initialFormattedValue, dataGridViewCellStyle );
 
-            var control =
-                DataGridView.EditingControl as DataGridViewImageComboBoxEditingControl;
+            var control = DataGridView.EditingControl as DataGridViewImageComboBoxEditingControl;
             var column = OwningColumn as DataGridViewImageComboBoxColumn;
-            if (control != null && column != null)
+            if ( control != null && column != null )
             {
                 control.ImageList = column.ImageList;
                 control.ImageSize = column.ImageSize;
                 control.ItemHeight = column.ImageSize.Height + 2;
-                control.Items.Clear();
-                control.Items.AddRange(column.Items.ToArray());
+                control.Items.Clear( );
+                control.Items.AddRange( column.Items.ToArray( ) );
 
                 control.SelectedItem = Value as ImageComboBoxItem;
             }

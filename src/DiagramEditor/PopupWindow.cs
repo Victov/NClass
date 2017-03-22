@@ -29,17 +29,17 @@ namespace NClass.DiagramEditor
             get { return base.Location; }
             set
             {
-                if (Parent != null)
+                if ( Parent != null )
                 {
                     var client = Parent.ClientRectangle;
 
-                    if (value.X < ClientMargin)
+                    if ( value.X < ClientMargin )
                         value.X = ClientMargin;
-                    if (value.Y < ClientMargin)
+                    if ( value.Y < ClientMargin )
                         value.Y = ClientMargin;
-                    if (value.X + Width > client.Width - ClientMargin)
+                    if ( value.X + Width > client.Width - ClientMargin )
                         value.X = client.Width - Width - ClientMargin;
-                    if (value.Y + Height > client.Height - ClientMargin)
+                    if ( value.Y + Height > client.Height - ClientMargin )
                         value.Y = client.Height - Height - ClientMargin;
                 }
                 base.Location = value;
@@ -51,14 +51,12 @@ namespace NClass.DiagramEditor
             get { return parentLocation; }
             set
             {
-                var offset = new Size(value.X - parentLocation.X, value.Y - parentLocation.Y);
+                var offset = new Size( value.X - parentLocation.X, value.Y - parentLocation.Y );
                 parentLocation = value;
                 Location += offset;
             }
         }
 
-        public virtual void Closing()
-        {
-        }
+        public virtual void Closing( ) {}
     }
 }

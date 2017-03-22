@@ -36,9 +36,9 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">Additional information.</param>
-        private void menuItem_Click(object sender, EventArgs e)
+        private void menuItem_Click( object sender, EventArgs e )
         {
-            Launch();
+            Launch( );
         }
 
         #endregion
@@ -51,13 +51,13 @@ namespace NClass.AssemblyCSharpImport
         /// <summary>
         ///     Set up the current culture for the strings.
         /// </summary>
-        static ImportPlugin()
+        static ImportPlugin( )
         {
             try
             {
-                Strings.Culture = CultureInfo.GetCultureInfo(Settings.Default.UILanguage);
+                Strings.Culture = CultureInfo.GetCultureInfo( Settings.Default.UILanguage );
             }
-            catch (ArgumentException)
+            catch ( ArgumentException )
             {
                 //Culture is not supported, maybe the setting is "default".
             }
@@ -67,14 +67,9 @@ namespace NClass.AssemblyCSharpImport
         ///     Constructs a new instance of NETImportPlugin.
         /// </summary>
         /// <param name="environment">An instance of NClassEnvironment.</param>
-        public ImportPlugin(NClassEnvironment environment)
-            : base(environment)
+        public ImportPlugin( NClassEnvironment environment ) : base( environment )
         {
-            menuItem = new ToolStripMenuItem
-            {
-                Text = Strings.Menu_Title,
-                ToolTipText = Strings.Menu_ToolTip
-            };
+            menuItem = new ToolStripMenuItem {Text = Strings.Menu_Title, ToolTipText = Strings.Menu_ToolTip};
             menuItem.Click += menuItem_Click;
         }
 
@@ -88,12 +83,18 @@ namespace NClass.AssemblyCSharpImport
         /// <summary>
         ///     Gets a value indicating whether the plugin can be executed at the moment.
         /// </summary>
-        public override bool IsAvailable { get { return Workspace.HasActiveProject; } }
+        public override bool IsAvailable
+        {
+            get { return Workspace.HasActiveProject; }
+        }
 
         /// <summary>
         ///     Gets the menu item used to start the plugin.
         /// </summary>
-        public override ToolStripItem MenuItem { get { return menuItem; } }
+        public override ToolStripItem MenuItem
+        {
+            get { return menuItem; }
+        }
 
         #endregion
 
@@ -105,63 +106,63 @@ namespace NClass.AssemblyCSharpImport
         /// <summary>
         ///     Starts the functionality of the plugin.
         /// </summary>
-        protected void Launch()
+        protected void Launch( )
         {
-            if (Workspace.HasActiveProject)
+            if ( Workspace.HasActiveProject )
             {
-                var settings = new ImportSettings();
-                using (var settingsForm = new ImportSettingsForm(settings))
+                var settings = new ImportSettings( );
+                using ( var settingsForm = new ImportSettingsForm( settings ) )
                 {
-                    if (settingsForm.ShowDialog() == DialogResult.OK)
+                    if ( settingsForm.ShowDialog( ) == DialogResult.OK )
                     {
-                        var diagram = new Diagram(CSharpLanguage.Instance);
+                        var diagram = new Diagram( CSharpLanguage.Instance );
 
                         // Is it a file or a folder?
-                        foreach (var item in settings.Items)
+                        foreach ( var item in settings.Items )
                         {
                             // Analyse items to know if it is :
                             // a C# source file
                             // a folder
                             // a .NET assembly
-                            if (Path.HasExtension(item))
+                            if ( Path.HasExtension( item ) )
                             {
-                                switch (Path.GetExtension(item))
+                                switch ( Path.GetExtension( item ) )
                                 {
                                     case ".cs":
-                                        if (File.Exists(item))
+                                        if ( File.Exists( item ) )
                                         {
-                                            if (settings.NewDiagram)
-                                                diagram = new Diagram(CSharpLanguage.Instance);
+                                            if ( settings.NewDiagram )
+                                                diagram = new Diagram( CSharpLanguage.Instance );
 
-                                            ImportCSharpFile(diagram, settings, item);
+                                            ImportCSharpFile( diagram, settings, item );
                                         }
                                         break;
                                     case ".dll":
                                     case ".exe":
-                                        if (File.Exists(item))
+                                        if ( File.Exists( item ) )
                                         {
-                                            if (settings.NewDiagram)
-                                                diagram = new Diagram(CSharpLanguage.Instance);
+                                            if ( settings.NewDiagram )
+                                                diagram = new Diagram( CSharpLanguage.Instance );
 
-                                            ImportAssembly(diagram, settings, item);
+                                            ImportAssembly( diagram, settings, item );
                                         }
                                         break;
                                     case ".sln":
-                                        if (File.Exists(item))
+                                        if ( File.Exists( item ) )
                                         {
-                                            if (settings.NewDiagram)
-                                                diagram = new Diagram(CSharpLanguage.Instance);
+                                            if ( settings.NewDiagram )
+                                                diagram = new Diagram( CSharpLanguage.Instance );
 
-                                            ImportVisualStudioSolution(diagram, settings, item);
+                                            ImportVisualStudioSolution( diagram, settings, item );
                                         }
                                         break;
                                     case ".csproj":
-                                        if (File.Exists(item))
+                                        if ( File.Exists( item ) )
                                         {
-                                            if (settings.NewDiagram)
-                                                diagram = new Diagram(CSharpLanguage.Instance);
+                                            if ( settings.NewDiagram )
+                                                diagram = new Diagram( CSharpLanguage.Instance );
 
-                                            ImportVisualStudioProject(diagram, settings, item);
+                                            ImportVisualStudioProject( diagram, settings, item );
                                         }
                                         break;
                                     default:
@@ -171,8 +172,8 @@ namespace NClass.AssemblyCSharpImport
                             }
                             else
                             {
-                                if (Directory.Exists(item))
-                                    ImportFolder(diagram, settings, item);
+                                if ( Directory.Exists( item ) )
+                                    ImportFolder( diagram, settings, item );
                             }
                         }
                     }
@@ -183,45 +184,45 @@ namespace NClass.AssemblyCSharpImport
         /// <summary>
         ///     Import a C# code source file.
         /// </summary>
-        private void ImportCSharpFile(Diagram diagram, ImportSettings settings, string fileName)
+        private void ImportCSharpFile( Diagram diagram, ImportSettings settings, string fileName )
         {
-            var importer = new CSharpImport(diagram, settings);
+            var importer = new CSharpImport( diagram, settings );
 
-            if (importer.ImportSourceCode(fileName))
-                Workspace.ActiveProject.Add(diagram);
+            if ( importer.ImportSourceCode( fileName ) )
+                Workspace.ActiveProject.Add( diagram );
         }
 
         /// <summary>
         ///     Import all C# code source files in a folder and its subfolders.
         /// </summary>
-        private void ImportFolder(Diagram diagram, ImportSettings settings, string folderName)
+        private void ImportFolder( Diagram diagram, ImportSettings settings, string folderName )
         {
             // All C# code source file in this directory 
-            foreach (var file in Directory.EnumerateFiles(folderName, "*.cs"))
-                ImportCSharpFile(diagram, settings, file);
+            foreach ( var file in Directory.EnumerateFiles( folderName, "*.cs" ) )
+                ImportCSharpFile( diagram, settings, file );
 
             // All subfolders in this directory 
-            foreach (var folder in Directory.EnumerateDirectories(folderName))
-                ImportCSharpFile(diagram, settings, folder);
+            foreach ( var folder in Directory.EnumerateDirectories( folderName ) )
+                ImportCSharpFile( diagram, settings, folder );
         }
 
         /// <summary>
         ///     Import a .NET assembly.
         /// </summary>
-        private void ImportAssembly(Diagram diagram, ImportSettings settings, string fileName)
+        private void ImportAssembly( Diagram diagram, ImportSettings settings, string fileName )
         {
-            var importer = new NETImport(diagram, settings);
+            var importer = new NETImport( diagram, settings );
 
-            if (importer.ImportAssembly(fileName))
+            if ( importer.ImportAssembly( fileName ) )
             {
-                Workspace.ActiveProject.Add(diagram);
+                Workspace.ActiveProject.Add( diagram );
             }
         }
 
         /// <summary>
         ///     Import a Visual Studio Solution.
         /// </summary>
-        private void ImportVisualStudioSolution(Diagram diagram, ImportSettings settings, string fileName)
+        private void ImportVisualStudioSolution( Diagram diagram, ImportSettings settings, string fileName )
         {
             // TO DO
             // http://stackoverflow.com/questions/707107/library-for-parsing-visual-studio-solution-files
@@ -232,7 +233,7 @@ namespace NClass.AssemblyCSharpImport
         /// <summary>
         ///     Import a Visual Studio Project.
         /// </summary>
-        private void ImportVisualStudioProject(Diagram diagram, ImportSettings settings, string fileName)
+        private void ImportVisualStudioProject( Diagram diagram, ImportSettings settings, string fileName )
         {
             // TO DO
         }

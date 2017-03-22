@@ -38,11 +38,11 @@ namespace NClass.DiagramEditor.ClassDiagram
             get { return isSelected; }
             set
             {
-                if (isSelected != value)
+                if ( isSelected != value )
                 {
                     isSelected = value;
                     NeedsRedraw = true;
-                    OnSelectionChanged(EventArgs.Empty);
+                    OnSelectionChanged( EventArgs.Empty );
                 }
             }
         }
@@ -52,20 +52,20 @@ namespace NClass.DiagramEditor.ClassDiagram
             get { return isActive; }
             set
             {
-                if (isActive != value)
+                if ( isActive != value )
                 {
-                    if (value)
-                        OnActivating(EventArgs.Empty);
+                    if ( value )
+                        OnActivating( EventArgs.Empty );
                     else
-                        OnDeactivating(EventArgs.Empty);
+                        OnDeactivating( EventArgs.Empty );
 
                     isActive = value;
                     NeedsRedraw = true;
 
-                    if (isActive)
-                        OnActivated(EventArgs.Empty);
+                    if ( isActive )
+                        OnActivated( EventArgs.Empty );
                     else
-                        OnDeactivated(EventArgs.Empty);
+                        OnDeactivated( EventArgs.Empty );
                 }
             }
         }
@@ -78,7 +78,7 @@ namespace NClass.DiagramEditor.ClassDiagram
 
         public bool IsDirty { get; private set; } = true;
 
-        public virtual void Clean()
+        public virtual void Clean( )
         {
             IsDirty = false;
         }
@@ -93,202 +93,184 @@ namespace NClass.DiagramEditor.ClassDiagram
         public event AbsoluteMouseEventHandler MouseUp;
         public event AbsoluteMouseEventHandler DoubleClick;
 
-        public virtual void SelectPrevious()
+        public virtual void SelectPrevious( ) {}
+
+        public virtual void SelectNext( ) {}
+
+        public virtual void MoveUp( ) {}
+
+        public virtual void MoveDown( ) {}
+
+        protected void ShowWindow( PopupWindow window )
         {
+            if ( Diagram != null )
+                Diagram.ShowWindow( window );
         }
 
-        public virtual void SelectNext()
+        protected void HideWindow( PopupWindow window )
         {
+            if ( Diagram != null )
+                Diagram.HideWindow( window );
         }
 
-        public virtual void MoveUp()
+        protected internal virtual void ShowEditor( ) {}
+
+        protected internal virtual void HideEditor( ) {}
+
+        internal RectangleF GetVisibleArea( float zoom )
         {
+            return GetVisibleArea( Style.CurrentStyle, zoom );
         }
 
-        public virtual void MoveDown()
+        internal RectangleF GetVisibleArea( Style style, float zoom )
         {
+            return CalculateDrawingArea( style, false, zoom );
         }
 
-        protected void ShowWindow(PopupWindow window)
+        internal RectangleF GetPrintingClip( float zoom )
         {
-            if (Diagram != null)
-                Diagram.ShowWindow(window);
+            return GetPrintingClip( Style.CurrentStyle, zoom );
         }
 
-        protected void HideWindow(PopupWindow window)
+        internal RectangleF GetPrintingClip( Style style, float zoom )
         {
-            if (Diagram != null)
-                Diagram.HideWindow(window);
+            return CalculateDrawingArea( style, true, zoom );
         }
 
-        protected internal virtual void ShowEditor()
+        protected abstract RectangleF CalculateDrawingArea( Style style, bool printing, float zoom );
+
+        protected internal virtual void MoveWindow( ) {}
+
+        internal bool DeleteSelectedMember( )
         {
+            return DeleteSelectedMember( true );
         }
 
-        protected internal virtual void HideEditor()
-        {
-        }
-
-        internal RectangleF GetVisibleArea(float zoom)
-        {
-            return GetVisibleArea(Style.CurrentStyle, zoom);
-        }
-
-        internal RectangleF GetVisibleArea(Style style, float zoom)
-        {
-            return CalculateDrawingArea(style, false, zoom);
-        }
-
-        internal RectangleF GetPrintingClip(float zoom)
-        {
-            return GetPrintingClip(Style.CurrentStyle, zoom);
-        }
-
-        internal RectangleF GetPrintingClip(Style style, float zoom)
-        {
-            return CalculateDrawingArea(style, true, zoom);
-        }
-
-        protected abstract RectangleF CalculateDrawingArea(Style style, bool printing, float zoom);
-
-        protected internal virtual void MoveWindow()
-        {
-        }
-
-        internal bool DeleteSelectedMember()
-        {
-            return DeleteSelectedMember(true);
-        }
-
-        protected internal virtual bool DeleteSelectedMember(bool showConfirmation)
+        protected internal virtual bool DeleteSelectedMember( bool showConfirmation )
         {
             return false;
         }
 
-        protected bool ConfirmMemberDelete()
+        protected bool ConfirmMemberDelete( )
         {
-            var result = MessageBox.Show(
-                Strings.DeleteMemberConfirmation,
-                Strings.Confirmation,
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning);
+            var result = MessageBox.Show( Strings.DeleteMemberConfirmation, Strings.Confirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Warning );
 
             return result == DialogResult.Yes;
         }
 
-        public void Draw(IGraphics g)
+        public void Draw( IGraphics g )
         {
-            Draw(g, false, Style.CurrentStyle);
+            Draw( g, false, Style.CurrentStyle );
         }
 
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="style" /> is null.
         /// </exception>
-        public void Draw(IGraphics g, Style style)
+        public void Draw( IGraphics g, Style style )
         {
-            if (style == null)
-                throw new ArgumentNullException("style");
+            if ( style == null )
+                throw new ArgumentNullException( "style" );
 
-            Draw(g, false, style);
+            Draw( g, false, style );
         }
 
-        public void Draw(IGraphics g, bool onScreen)
+        public void Draw( IGraphics g, bool onScreen )
         {
-            Draw(g, onScreen, Style.CurrentStyle);
+            Draw( g, onScreen, Style.CurrentStyle );
         }
 
-        public abstract void Draw(IGraphics g, bool onScreen, Style style);
+        public abstract void Draw( IGraphics g, bool onScreen, Style style );
 
-        protected internal abstract Rectangle GetLogicalArea();
+        protected internal abstract Rectangle GetLogicalArea( );
 
-        protected internal abstract void DrawSelectionLines(Graphics g, float zoom, Point offset);
+        protected internal abstract void DrawSelectionLines( Graphics g, float zoom, Point offset );
 
-        protected internal abstract bool TrySelect(RectangleF frame);
+        protected internal abstract bool TrySelect( RectangleF frame );
 
-        protected internal abstract void Offset(Size offset);
+        protected internal abstract void Offset( Size offset );
 
-        protected internal abstract Size GetMaximalOffset(Size offset, int padding);
+        protected internal abstract Size GetMaximalOffset( Size offset, int padding );
 
-        protected internal abstract IEnumerable<ToolStripItem> GetContextMenuItems(Diagram diagram);
-
-        [Obsolete]
-        protected internal abstract void Serialize(XmlElement node);
+        protected internal abstract IEnumerable< ToolStripItem > GetContextMenuItems( Diagram diagram );
 
         [Obsolete]
-        protected internal abstract void Deserialize(XmlElement node);
+        protected internal abstract void Serialize( XmlElement node );
 
-        protected virtual void OnModified(EventArgs e)
+        [Obsolete]
+        protected internal abstract void Deserialize( XmlElement node );
+
+        protected virtual void OnModified( EventArgs e )
         {
             IsDirty = true;
             NeedsRedraw = true;
-            if (Modified != null)
-                Modified(this, e);
+            if ( Modified != null )
+                Modified( this, e );
         }
 
-        protected virtual void OnSelectionChanged(EventArgs e)
+        protected virtual void OnSelectionChanged( EventArgs e )
         {
-            if (SelectionChanged != null)
-                SelectionChanged(this, e);
+            if ( SelectionChanged != null )
+                SelectionChanged( this, e );
         }
 
-        protected virtual void OnActivating(EventArgs e)
+        protected virtual void OnActivating( EventArgs e )
         {
-            if (Activating != null)
-                Activating(this, e);
+            if ( Activating != null )
+                Activating( this, e );
         }
 
-        protected virtual void OnActivated(EventArgs e)
+        protected virtual void OnActivated( EventArgs e )
         {
-            if (Activated != null)
-                Activated(this, e);
+            if ( Activated != null )
+                Activated( this, e );
         }
 
-        protected virtual void OnDeactivating(EventArgs e)
+        protected virtual void OnDeactivating( EventArgs e )
         {
-            if (Deactivating != null)
-                Deactivating(this, e);
+            if ( Deactivating != null )
+                Deactivating( this, e );
         }
 
-        protected virtual void OnDeactivated(EventArgs e)
+        protected virtual void OnDeactivated( EventArgs e )
         {
-            if (Deactivated != null)
-                Deactivated(this, e);
+            if ( Deactivated != null )
+                Deactivated( this, e );
         }
 
-        protected virtual void OnMouseDown(AbsoluteMouseEventArgs e)
+        protected virtual void OnMouseDown( AbsoluteMouseEventArgs e )
         {
             IsMousePressed = true;
             IsSelected = true;
 
-            if (MouseDown != null)
-                MouseDown(this, e);
+            if ( MouseDown != null )
+                MouseDown( this, e );
         }
 
-        protected virtual void OnMouseMove(AbsoluteMouseEventArgs e)
+        protected virtual void OnMouseMove( AbsoluteMouseEventArgs e )
         {
-            if (MouseMove != null)
-                MouseMove(this, e);
+            if ( MouseMove != null )
+                MouseMove( this, e );
         }
 
-        protected virtual void OnMouseUp(AbsoluteMouseEventArgs e)
+        protected virtual void OnMouseUp( AbsoluteMouseEventArgs e )
         {
             IsMousePressed = false;
-            if (MouseUp != null)
-                MouseUp(this, e);
+            if ( MouseUp != null )
+                MouseUp( this, e );
         }
 
-        protected virtual void OnDoubleClick(AbsoluteMouseEventArgs e)
+        protected virtual void OnDoubleClick( AbsoluteMouseEventArgs e )
         {
-            if (DoubleClick != null)
-                DoubleClick(this, e);
+            if ( DoubleClick != null )
+                DoubleClick( this, e );
         }
 
-        internal abstract void MousePressed(AbsoluteMouseEventArgs e);
+        internal abstract void MousePressed( AbsoluteMouseEventArgs e );
 
-        internal abstract void MouseMoved(AbsoluteMouseEventArgs e);
+        internal abstract void MouseMoved( AbsoluteMouseEventArgs e );
 
-        internal abstract void MouseUpped(AbsoluteMouseEventArgs e);
+        internal abstract void MouseUpped( AbsoluteMouseEventArgs e );
 
-        internal abstract void DoubleClicked(AbsoluteMouseEventArgs e);
+        internal abstract void DoubleClicked( AbsoluteMouseEventArgs e );
     }
 }

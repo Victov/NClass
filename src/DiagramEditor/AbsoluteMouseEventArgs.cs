@@ -18,11 +18,11 @@ using System.Windows.Forms;
 
 namespace NClass.DiagramEditor
 {
-    public delegate void AbsoluteMouseEventHandler(object sender, AbsoluteMouseEventArgs e);
+    public delegate void AbsoluteMouseEventHandler( object sender, AbsoluteMouseEventArgs e );
 
     public class AbsoluteMouseEventArgs
     {
-        public AbsoluteMouseEventArgs(MouseButtons button, float x, float y, float zoom)
+        public AbsoluteMouseEventArgs( MouseButtons button, float x, float y, float zoom )
         {
             Button = button;
             X = x;
@@ -30,7 +30,7 @@ namespace NClass.DiagramEditor
             Zoom = zoom;
         }
 
-        public AbsoluteMouseEventArgs(MouseButtons button, PointF location, float zoom)
+        public AbsoluteMouseEventArgs( MouseButtons button, PointF location, float zoom )
         {
             Button = button;
             X = location.X;
@@ -38,18 +38,15 @@ namespace NClass.DiagramEditor
             Zoom = zoom;
         }
 
-        public AbsoluteMouseEventArgs(MouseEventArgs e, Point offset, float zoom)
+        public AbsoluteMouseEventArgs( MouseEventArgs e, Point offset, float zoom )
         {
             Button = e.Button;
-            X = (e.X + offset.X)/zoom;
-            Y = (e.Y + offset.Y)/zoom;
+            X = ( e.X + offset.X ) / zoom;
+            Y = ( e.Y + offset.Y ) / zoom;
             Zoom = zoom;
         }
 
-        public AbsoluteMouseEventArgs(MouseEventArgs e, IDocument document)
-            : this(e, document.Offset, document.Zoom)
-        {
-        }
+        public AbsoluteMouseEventArgs( MouseEventArgs e, IDocument document ) : this( e, document.Offset, document.Zoom ) {}
 
         public MouseButtons Button { get; }
 
@@ -57,7 +54,10 @@ namespace NClass.DiagramEditor
 
         public float Y { get; }
 
-        public PointF Location { get { return new PointF(X, Y); } }
+        public PointF Location
+        {
+            get { return new PointF( X, Y ); }
+        }
 
         public bool Handled { get; set; } = false;
 

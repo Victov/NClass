@@ -20,18 +20,17 @@ namespace NClass.DiagramEditor
 {
     public static class MonoHelper
     {
-        static MonoHelper()
+        static MonoHelper( )
         {
-            var monoRuntime = Type.GetType("Mono.Runtime");
+            var monoRuntime = Type.GetType( "Mono.Runtime" );
 
-            if (monoRuntime != null)
+            if ( monoRuntime != null )
             {
                 IsRunningOnMono = true;
-                var method = monoRuntime.GetMethod("GetDisplayName",
-                                                   BindingFlags.NonPublic | BindingFlags.Static);
+                var method = monoRuntime.GetMethod( "GetDisplayName", BindingFlags.NonPublic | BindingFlags.Static );
 
-                if (method != null)
-                    Version = method.Invoke(null, null) as string;
+                if ( method != null )
+                    Version = method.Invoke( null, null ) as string;
                 else
                     Version = "Unknown version";
             }
@@ -46,10 +45,10 @@ namespace NClass.DiagramEditor
 
         public static string Version { get; }
 
-        public static bool IsOlderVersionThan(string version)
+        public static bool IsOlderVersionThan( string version )
         {
             version = "Mono " + version;
-            return Version.CompareTo(version) < 0;
+            return Version.CompareTo( version ) < 0;
         }
     }
 }

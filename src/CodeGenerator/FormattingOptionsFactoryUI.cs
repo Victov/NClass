@@ -10,163 +10,25 @@ namespace NClass.CodeGenerator
         /// <summary>
         ///     Creates empty CSharpFormatting options.
         /// </summary>
-        public static CSharpFormattingOptionsUI CreateEmpty()
+        public static CSharpFormattingOptionsUI CreateEmpty( )
         {
-            return new CSharpFormattingOptionsUI();
+            return new CSharpFormattingOptionsUI( );
         }
 
         /// <summary>
         ///     Creates mono indent style CSharpFormatting options.
         /// </summary>
-        public static CSharpFormattingOptionsUI CreateMono()
+        public static CSharpFormattingOptionsUI CreateMono( )
         {
-            return new CSharpFormattingOptionsUI
-            {
-                IndentNamespaceBody = true,
-                IndentClassBody = true,
-                IndentInterfaceBody = true,
-                IndentStructBody = true,
-                IndentEnumBody = true,
-                IndentMethodBody = true,
-                IndentPropertyBody = true,
-                IndentEventBody = true,
-                IndentBlocks = true,
-                IndentSwitchBody = false,
-                IndentCaseBody = true,
-                IndentBreakStatements = true,
-                IndentPreprocessorDirectives = true,
-                IndentBlocksInsideExpressions = false,
-                NamespaceBraceStyle = BraceStyle.NextLine,
-                ClassBraceStyle = BraceStyle.NextLine,
-                InterfaceBraceStyle = BraceStyle.NextLine,
-                StructBraceStyle = BraceStyle.NextLine,
-                EnumBraceStyle = BraceStyle.NextLine,
-                MethodBraceStyle = BraceStyle.NextLine,
-                ConstructorBraceStyle = BraceStyle.NextLine,
-                DestructorBraceStyle = BraceStyle.NextLine,
-                AnonymousMethodBraceStyle = BraceStyle.EndOfLine,
-                PropertyBraceStyle = BraceStyle.EndOfLine,
-                PropertyGetBraceStyle = BraceStyle.EndOfLine,
-                PropertySetBraceStyle = BraceStyle.EndOfLine,
-                SimpleGetBlockFormatting = PropertyFormatting.AllowOneLine,
-                SimpleSetBlockFormatting = PropertyFormatting.AllowOneLine,
-                EventBraceStyle = BraceStyle.EndOfLine,
-                EventAddBraceStyle = BraceStyle.EndOfLine,
-                EventRemoveBraceStyle = BraceStyle.EndOfLine,
-                AllowEventAddBlockInline = true,
-                AllowEventRemoveBlockInline = true,
-                StatementBraceStyle = BraceStyle.EndOfLine,
-                ElseNewLinePlacement = NewLinePlacement.SameLine,
-                ElseIfNewLinePlacement = NewLinePlacement.SameLine,
-                CatchNewLinePlacement = NewLinePlacement.SameLine,
-                FinallyNewLinePlacement = NewLinePlacement.SameLine,
-                WhileNewLinePlacement = NewLinePlacement.SameLine,
-                ArrayInitializerWrapping = Wrapping.WrapIfTooLong,
-                ArrayInitializerBraceStyle = BraceStyle.EndOfLine,
-                AllowOneLinedArrayInitialziers = true,
-                SpaceBeforeMethodCallParentheses = true,
-                SpaceBeforeMethodDeclarationParentheses = true,
-                SpaceBeforeConstructorDeclarationParentheses = true,
-                SpaceBeforeDelegateDeclarationParentheses = true,
-                SpaceAfterMethodCallParameterComma = true,
-                SpaceAfterConstructorDeclarationParameterComma = true,
-                SpaceBeforeNewParentheses = true,
-                SpacesWithinNewParentheses = false,
-                SpacesBetweenEmptyNewParentheses = false,
-                SpaceBeforeNewParameterComma = false,
-                SpaceAfterNewParameterComma = true,
-                SpaceBeforeIfParentheses = true,
-                SpaceBeforeWhileParentheses = true,
-                SpaceBeforeForParentheses = true,
-                SpaceBeforeForeachParentheses = true,
-                SpaceBeforeCatchParentheses = true,
-                SpaceBeforeSwitchParentheses = true,
-                SpaceBeforeLockParentheses = true,
-                SpaceBeforeUsingParentheses = true,
-                SpaceAroundAssignment = true,
-                SpaceAroundLogicalOperator = true,
-                SpaceAroundEqualityOperator = true,
-                SpaceAroundRelationalOperator = true,
-                SpaceAroundBitwiseOperator = true,
-                SpaceAroundAdditiveOperator = true,
-                SpaceAroundMultiplicativeOperator = true,
-                SpaceAroundShiftOperator = true,
-                SpaceAroundNullCoalescingOperator = true,
-                SpacesWithinParentheses = false,
-                SpaceWithinMethodCallParentheses = false,
-                SpaceWithinMethodDeclarationParentheses = false,
-                SpacesWithinIfParentheses = false,
-                SpacesWithinWhileParentheses = false,
-                SpacesWithinForParentheses = false,
-                SpacesWithinForeachParentheses = false,
-                SpacesWithinCatchParentheses = false,
-                SpacesWithinSwitchParentheses = false,
-                SpacesWithinLockParentheses = false,
-                SpacesWithinUsingParentheses = false,
-                SpacesWithinCastParentheses = false,
-                SpacesWithinSizeOfParentheses = false,
-                SpacesWithinTypeOfParentheses = false,
-                SpacesWithinCheckedExpressionParantheses = false,
-                SpaceBeforeConditionalOperatorCondition = true,
-                SpaceAfterConditionalOperatorCondition = true,
-                SpaceBeforeConditionalOperatorSeparator = true,
-                SpaceAfterConditionalOperatorSeparator = true,
-                SpacesWithinBrackets = false,
-                SpacesBeforeBrackets = true,
-                SpaceBeforeBracketComma = false,
-                SpaceAfterBracketComma = true,
-                SpaceBeforeForSemicolon = false,
-                SpaceAfterForSemicolon = true,
-                SpaceAfterTypecast = false,
-                AlignEmbeddedStatements = true,
-                SimplePropertyFormatting = PropertyFormatting.AllowOneLine,
-                AutoPropertyFormatting = PropertyFormatting.AllowOneLine,
-                EmptyLineFormatting = EmptyLineFormatting.DoNotIndent,
-                SpaceBeforeMethodDeclarationParameterComma = false,
-                SpaceAfterMethodDeclarationParameterComma = true,
-                SpaceAfterDelegateDeclarationParameterComma = true,
-                SpaceBeforeFieldDeclarationComma = false,
-                SpaceAfterFieldDeclarationComma = true,
-                SpaceBeforeLocalVariableDeclarationComma = false,
-                SpaceAfterLocalVariableDeclarationComma = true,
-                SpaceBeforeIndexerDeclarationBracket = true,
-                SpaceWithinIndexerDeclarationBracket = false,
-                SpaceBeforeIndexerDeclarationParameterComma = false,
-                SpaceInNamedArgumentAfterDoubleColon = true,
-                RemoveEndOfLineWhiteSpace = true,
-                SpaceAfterIndexerDeclarationParameterComma = true,
-                MinimumBlankLinesBeforeUsings = 0,
-                MinimumBlankLinesAfterUsings = 1,
-                UsingPlacement = UsingPlacement.TopOfFile,
-                MinimumBlankLinesBeforeFirstDeclaration = 0,
-                MinimumBlankLinesBetweenTypes = 1,
-                MinimumBlankLinesBetweenFields = 0,
-                MinimumBlankLinesBetweenEventFields = 0,
-                MinimumBlankLinesBetweenMembers = 1,
-                MinimumBlankLinesAroundRegion = 1,
-                MinimumBlankLinesInsideRegion = 1,
-                AlignToFirstIndexerArgument = false,
-                AlignToFirstIndexerDeclarationParameter = true,
-                AlignToFirstMethodCallArgument = false,
-                AlignToFirstMethodDeclarationParameter = true,
-                KeepCommentsAtFirstColumn = true,
-                ChainedMethodCallWrapping = Wrapping.DoNotChange,
-                MethodCallArgumentWrapping = Wrapping.DoNotChange,
-                NewLineAferMethodCallOpenParentheses = NewLinePlacement.DoNotCare,
-                MethodCallClosingParenthesesOnNewLine = NewLinePlacement.DoNotCare,
-                IndexerArgumentWrapping = Wrapping.DoNotChange,
-                NewLineAferIndexerOpenBracket = NewLinePlacement.DoNotCare,
-                IndexerClosingBracketOnNewLine = NewLinePlacement.DoNotCare,
-                NewLineBeforeNewQueryClause = NewLinePlacement.NewLine
-            };
+            return new CSharpFormattingOptionsUI {IndentNamespaceBody = true, IndentClassBody = true, IndentInterfaceBody = true, IndentStructBody = true, IndentEnumBody = true, IndentMethodBody = true, IndentPropertyBody = true, IndentEventBody = true, IndentBlocks = true, IndentSwitchBody = false, IndentCaseBody = true, IndentBreakStatements = true, IndentPreprocessorDirectives = true, IndentBlocksInsideExpressions = false, NamespaceBraceStyle = BraceStyle.NextLine, ClassBraceStyle = BraceStyle.NextLine, InterfaceBraceStyle = BraceStyle.NextLine, StructBraceStyle = BraceStyle.NextLine, EnumBraceStyle = BraceStyle.NextLine, MethodBraceStyle = BraceStyle.NextLine, ConstructorBraceStyle = BraceStyle.NextLine, DestructorBraceStyle = BraceStyle.NextLine, AnonymousMethodBraceStyle = BraceStyle.EndOfLine, PropertyBraceStyle = BraceStyle.EndOfLine, PropertyGetBraceStyle = BraceStyle.EndOfLine, PropertySetBraceStyle = BraceStyle.EndOfLine, SimpleGetBlockFormatting = PropertyFormatting.AllowOneLine, SimpleSetBlockFormatting = PropertyFormatting.AllowOneLine, EventBraceStyle = BraceStyle.EndOfLine, EventAddBraceStyle = BraceStyle.EndOfLine, EventRemoveBraceStyle = BraceStyle.EndOfLine, AllowEventAddBlockInline = true, AllowEventRemoveBlockInline = true, StatementBraceStyle = BraceStyle.EndOfLine, ElseNewLinePlacement = NewLinePlacement.SameLine, ElseIfNewLinePlacement = NewLinePlacement.SameLine, CatchNewLinePlacement = NewLinePlacement.SameLine, FinallyNewLinePlacement = NewLinePlacement.SameLine, WhileNewLinePlacement = NewLinePlacement.SameLine, ArrayInitializerWrapping = Wrapping.WrapIfTooLong, ArrayInitializerBraceStyle = BraceStyle.EndOfLine, AllowOneLinedArrayInitialziers = true, SpaceBeforeMethodCallParentheses = true, SpaceBeforeMethodDeclarationParentheses = true, SpaceBeforeConstructorDeclarationParentheses = true, SpaceBeforeDelegateDeclarationParentheses = true, SpaceAfterMethodCallParameterComma = true, SpaceAfterConstructorDeclarationParameterComma = true, SpaceBeforeNewParentheses = true, SpacesWithinNewParentheses = false, SpacesBetweenEmptyNewParentheses = false, SpaceBeforeNewParameterComma = false, SpaceAfterNewParameterComma = true, SpaceBeforeIfParentheses = true, SpaceBeforeWhileParentheses = true, SpaceBeforeForParentheses = true, SpaceBeforeForeachParentheses = true, SpaceBeforeCatchParentheses = true, SpaceBeforeSwitchParentheses = true, SpaceBeforeLockParentheses = true, SpaceBeforeUsingParentheses = true, SpaceAroundAssignment = true, SpaceAroundLogicalOperator = true, SpaceAroundEqualityOperator = true, SpaceAroundRelationalOperator = true, SpaceAroundBitwiseOperator = true, SpaceAroundAdditiveOperator = true, SpaceAroundMultiplicativeOperator = true, SpaceAroundShiftOperator = true, SpaceAroundNullCoalescingOperator = true, SpacesWithinParentheses = false, SpaceWithinMethodCallParentheses = false, SpaceWithinMethodDeclarationParentheses = false, SpacesWithinIfParentheses = false, SpacesWithinWhileParentheses = false, SpacesWithinForParentheses = false, SpacesWithinForeachParentheses = false, SpacesWithinCatchParentheses = false, SpacesWithinSwitchParentheses = false, SpacesWithinLockParentheses = false, SpacesWithinUsingParentheses = false, SpacesWithinCastParentheses = false, SpacesWithinSizeOfParentheses = false, SpacesWithinTypeOfParentheses = false, SpacesWithinCheckedExpressionParantheses = false, SpaceBeforeConditionalOperatorCondition = true, SpaceAfterConditionalOperatorCondition = true, SpaceBeforeConditionalOperatorSeparator = true, SpaceAfterConditionalOperatorSeparator = true, SpacesWithinBrackets = false, SpacesBeforeBrackets = true, SpaceBeforeBracketComma = false, SpaceAfterBracketComma = true, SpaceBeforeForSemicolon = false, SpaceAfterForSemicolon = true, SpaceAfterTypecast = false, AlignEmbeddedStatements = true, SimplePropertyFormatting = PropertyFormatting.AllowOneLine, AutoPropertyFormatting = PropertyFormatting.AllowOneLine, EmptyLineFormatting = EmptyLineFormatting.DoNotIndent, SpaceBeforeMethodDeclarationParameterComma = false, SpaceAfterMethodDeclarationParameterComma = true, SpaceAfterDelegateDeclarationParameterComma = true, SpaceBeforeFieldDeclarationComma = false, SpaceAfterFieldDeclarationComma = true, SpaceBeforeLocalVariableDeclarationComma = false, SpaceAfterLocalVariableDeclarationComma = true, SpaceBeforeIndexerDeclarationBracket = true, SpaceWithinIndexerDeclarationBracket = false, SpaceBeforeIndexerDeclarationParameterComma = false, SpaceInNamedArgumentAfterDoubleColon = true, RemoveEndOfLineWhiteSpace = true, SpaceAfterIndexerDeclarationParameterComma = true, MinimumBlankLinesBeforeUsings = 0, MinimumBlankLinesAfterUsings = 1, UsingPlacement = UsingPlacement.TopOfFile, MinimumBlankLinesBeforeFirstDeclaration = 0, MinimumBlankLinesBetweenTypes = 1, MinimumBlankLinesBetweenFields = 0, MinimumBlankLinesBetweenEventFields = 0, MinimumBlankLinesBetweenMembers = 1, MinimumBlankLinesAroundRegion = 1, MinimumBlankLinesInsideRegion = 1, AlignToFirstIndexerArgument = false, AlignToFirstIndexerDeclarationParameter = true, AlignToFirstMethodCallArgument = false, AlignToFirstMethodDeclarationParameter = true, KeepCommentsAtFirstColumn = true, ChainedMethodCallWrapping = Wrapping.DoNotChange, MethodCallArgumentWrapping = Wrapping.DoNotChange, NewLineAferMethodCallOpenParentheses = NewLinePlacement.DoNotCare, MethodCallClosingParenthesesOnNewLine = NewLinePlacement.DoNotCare, IndexerArgumentWrapping = Wrapping.DoNotChange, NewLineAferIndexerOpenBracket = NewLinePlacement.DoNotCare, IndexerClosingBracketOnNewLine = NewLinePlacement.DoNotCare, NewLineBeforeNewQueryClause = NewLinePlacement.NewLine};
         }
 
         /// <summary>
         ///     Creates sharp develop indent style CSharpFormatting options.
         /// </summary>
-        public static CSharpFormattingOptionsUI CreateSharpDevelop()
+        public static CSharpFormattingOptionsUI CreateSharpDevelop( )
         {
-            var baseOptions = CreateKRStyle();
+            var baseOptions = CreateKRStyle( );
             return baseOptions;
         }
 
@@ -174,151 +36,17 @@ namespace NClass.CodeGenerator
         ///     The K&R style, so named because it was used in Kernighan and Ritchie's book The C Programming Language,
         ///     is commonly used in C. It is less common for C++, C#, and others.
         /// </summary>
-        public static CSharpFormattingOptionsUI CreateKRStyle()
+        public static CSharpFormattingOptionsUI CreateKRStyle( )
         {
-            return new CSharpFormattingOptionsUI
-            {
-                IndentNamespaceBody = true,
-                IndentClassBody = true,
-                IndentInterfaceBody = true,
-                IndentStructBody = true,
-                IndentEnumBody = true,
-                IndentMethodBody = true,
-                IndentPropertyBody = true,
-                IndentEventBody = true,
-                IndentBlocks = true,
-                IndentSwitchBody = true,
-                IndentCaseBody = true,
-                IndentBreakStatements = true,
-                IndentPreprocessorDirectives = true,
-                NamespaceBraceStyle = BraceStyle.NextLine,
-                ClassBraceStyle = BraceStyle.NextLine,
-                InterfaceBraceStyle = BraceStyle.NextLine,
-                StructBraceStyle = BraceStyle.NextLine,
-                EnumBraceStyle = BraceStyle.NextLine,
-                MethodBraceStyle = BraceStyle.NextLine,
-                ConstructorBraceStyle = BraceStyle.NextLine,
-                DestructorBraceStyle = BraceStyle.NextLine,
-                AnonymousMethodBraceStyle = BraceStyle.EndOfLine,
-                PropertyBraceStyle = BraceStyle.EndOfLine,
-                PropertyGetBraceStyle = BraceStyle.EndOfLine,
-                PropertySetBraceStyle = BraceStyle.EndOfLine,
-                SimpleGetBlockFormatting = PropertyFormatting.AllowOneLine,
-                SimpleSetBlockFormatting = PropertyFormatting.AllowOneLine,
-                EventBraceStyle = BraceStyle.EndOfLine,
-                EventAddBraceStyle = BraceStyle.EndOfLine,
-                EventRemoveBraceStyle = BraceStyle.EndOfLine,
-                AllowEventAddBlockInline = true,
-                AllowEventRemoveBlockInline = true,
-                StatementBraceStyle = BraceStyle.EndOfLine,
-                ElseNewLinePlacement = NewLinePlacement.SameLine,
-                ElseIfNewLinePlacement = NewLinePlacement.SameLine,
-                CatchNewLinePlacement = NewLinePlacement.SameLine,
-                FinallyNewLinePlacement = NewLinePlacement.SameLine,
-                WhileNewLinePlacement = NewLinePlacement.SameLine,
-                ArrayInitializerWrapping = Wrapping.WrapIfTooLong,
-                ArrayInitializerBraceStyle = BraceStyle.EndOfLine,
-                SpaceBeforeMethodCallParentheses = false,
-                SpaceBeforeMethodDeclarationParentheses = false,
-                SpaceBeforeConstructorDeclarationParentheses = false,
-                SpaceBeforeDelegateDeclarationParentheses = false,
-                SpaceBeforeIndexerDeclarationBracket = false,
-                SpaceAfterMethodCallParameterComma = true,
-                SpaceAfterConstructorDeclarationParameterComma = true,
-                NewLineBeforeConstructorInitializerColon = NewLinePlacement.NewLine,
-                NewLineAfterConstructorInitializerColon = NewLinePlacement.SameLine,
-                SpaceBeforeNewParentheses = false,
-                SpacesWithinNewParentheses = false,
-                SpacesBetweenEmptyNewParentheses = false,
-                SpaceBeforeNewParameterComma = false,
-                SpaceAfterNewParameterComma = true,
-                SpaceBeforeIfParentheses = true,
-                SpaceBeforeWhileParentheses = true,
-                SpaceBeforeForParentheses = true,
-                SpaceBeforeForeachParentheses = true,
-                SpaceBeforeCatchParentheses = true,
-                SpaceBeforeSwitchParentheses = true,
-                SpaceBeforeLockParentheses = true,
-                SpaceBeforeUsingParentheses = true,
-                SpaceAroundAssignment = true,
-                SpaceAroundLogicalOperator = true,
-                SpaceAroundEqualityOperator = true,
-                SpaceAroundRelationalOperator = true,
-                SpaceAroundBitwiseOperator = true,
-                SpaceAroundAdditiveOperator = true,
-                SpaceAroundMultiplicativeOperator = true,
-                SpaceAroundShiftOperator = true,
-                SpaceAroundNullCoalescingOperator = true,
-                SpacesWithinParentheses = false,
-                SpaceWithinMethodCallParentheses = false,
-                SpaceWithinMethodDeclarationParentheses = false,
-                SpacesWithinIfParentheses = false,
-                SpacesWithinWhileParentheses = false,
-                SpacesWithinForParentheses = false,
-                SpacesWithinForeachParentheses = false,
-                SpacesWithinCatchParentheses = false,
-                SpacesWithinSwitchParentheses = false,
-                SpacesWithinLockParentheses = false,
-                SpacesWithinUsingParentheses = false,
-                SpacesWithinCastParentheses = false,
-                SpacesWithinSizeOfParentheses = false,
-                SpacesWithinTypeOfParentheses = false,
-                SpacesWithinCheckedExpressionParantheses = false,
-                SpaceBeforeConditionalOperatorCondition = true,
-                SpaceAfterConditionalOperatorCondition = true,
-                SpaceBeforeConditionalOperatorSeparator = true,
-                SpaceAfterConditionalOperatorSeparator = true,
-                SpaceBeforeArrayDeclarationBrackets = false,
-                SpacesWithinBrackets = false,
-                SpacesBeforeBrackets = false,
-                SpaceBeforeBracketComma = false,
-                SpaceAfterBracketComma = true,
-                SpaceBeforeForSemicolon = false,
-                SpaceAfterForSemicolon = true,
-                SpaceAfterTypecast = false,
-                AlignEmbeddedStatements = true,
-                SimplePropertyFormatting = PropertyFormatting.AllowOneLine,
-                AutoPropertyFormatting = PropertyFormatting.AllowOneLine,
-                EmptyLineFormatting = EmptyLineFormatting.DoNotIndent,
-                SpaceBeforeMethodDeclarationParameterComma = false,
-                SpaceAfterMethodDeclarationParameterComma = true,
-                SpaceAfterDelegateDeclarationParameterComma = true,
-                SpaceBeforeFieldDeclarationComma = false,
-                SpaceAfterFieldDeclarationComma = true,
-                SpaceBeforeLocalVariableDeclarationComma = false,
-                SpaceAfterLocalVariableDeclarationComma = true,
-                SpaceWithinIndexerDeclarationBracket = false,
-                SpaceBeforeIndexerDeclarationParameterComma = false,
-                SpaceInNamedArgumentAfterDoubleColon = true,
-                SpaceAfterIndexerDeclarationParameterComma = true,
-                RemoveEndOfLineWhiteSpace = true,
-                MinimumBlankLinesBeforeUsings = 0,
-                MinimumBlankLinesAfterUsings = 1,
-                MinimumBlankLinesBeforeFirstDeclaration = 0,
-                MinimumBlankLinesBetweenTypes = 1,
-                MinimumBlankLinesBetweenFields = 0,
-                MinimumBlankLinesBetweenEventFields = 0,
-                MinimumBlankLinesBetweenMembers = 1,
-                MinimumBlankLinesAroundRegion = 1,
-                MinimumBlankLinesInsideRegion = 1,
-                KeepCommentsAtFirstColumn = true,
-                ChainedMethodCallWrapping = Wrapping.DoNotChange,
-                MethodCallArgumentWrapping = Wrapping.DoNotChange,
-                NewLineAferMethodCallOpenParentheses = NewLinePlacement.DoNotCare,
-                MethodCallClosingParenthesesOnNewLine = NewLinePlacement.DoNotCare,
-                IndexerArgumentWrapping = Wrapping.DoNotChange,
-                NewLineAferIndexerOpenBracket = NewLinePlacement.DoNotCare,
-                IndexerClosingBracketOnNewLine = NewLinePlacement.DoNotCare,
-                NewLineBeforeNewQueryClause = NewLinePlacement.NewLine
-            };
+            return new CSharpFormattingOptionsUI {IndentNamespaceBody = true, IndentClassBody = true, IndentInterfaceBody = true, IndentStructBody = true, IndentEnumBody = true, IndentMethodBody = true, IndentPropertyBody = true, IndentEventBody = true, IndentBlocks = true, IndentSwitchBody = true, IndentCaseBody = true, IndentBreakStatements = true, IndentPreprocessorDirectives = true, NamespaceBraceStyle = BraceStyle.NextLine, ClassBraceStyle = BraceStyle.NextLine, InterfaceBraceStyle = BraceStyle.NextLine, StructBraceStyle = BraceStyle.NextLine, EnumBraceStyle = BraceStyle.NextLine, MethodBraceStyle = BraceStyle.NextLine, ConstructorBraceStyle = BraceStyle.NextLine, DestructorBraceStyle = BraceStyle.NextLine, AnonymousMethodBraceStyle = BraceStyle.EndOfLine, PropertyBraceStyle = BraceStyle.EndOfLine, PropertyGetBraceStyle = BraceStyle.EndOfLine, PropertySetBraceStyle = BraceStyle.EndOfLine, SimpleGetBlockFormatting = PropertyFormatting.AllowOneLine, SimpleSetBlockFormatting = PropertyFormatting.AllowOneLine, EventBraceStyle = BraceStyle.EndOfLine, EventAddBraceStyle = BraceStyle.EndOfLine, EventRemoveBraceStyle = BraceStyle.EndOfLine, AllowEventAddBlockInline = true, AllowEventRemoveBlockInline = true, StatementBraceStyle = BraceStyle.EndOfLine, ElseNewLinePlacement = NewLinePlacement.SameLine, ElseIfNewLinePlacement = NewLinePlacement.SameLine, CatchNewLinePlacement = NewLinePlacement.SameLine, FinallyNewLinePlacement = NewLinePlacement.SameLine, WhileNewLinePlacement = NewLinePlacement.SameLine, ArrayInitializerWrapping = Wrapping.WrapIfTooLong, ArrayInitializerBraceStyle = BraceStyle.EndOfLine, SpaceBeforeMethodCallParentheses = false, SpaceBeforeMethodDeclarationParentheses = false, SpaceBeforeConstructorDeclarationParentheses = false, SpaceBeforeDelegateDeclarationParentheses = false, SpaceBeforeIndexerDeclarationBracket = false, SpaceAfterMethodCallParameterComma = true, SpaceAfterConstructorDeclarationParameterComma = true, NewLineBeforeConstructorInitializerColon = NewLinePlacement.NewLine, NewLineAfterConstructorInitializerColon = NewLinePlacement.SameLine, SpaceBeforeNewParentheses = false, SpacesWithinNewParentheses = false, SpacesBetweenEmptyNewParentheses = false, SpaceBeforeNewParameterComma = false, SpaceAfterNewParameterComma = true, SpaceBeforeIfParentheses = true, SpaceBeforeWhileParentheses = true, SpaceBeforeForParentheses = true, SpaceBeforeForeachParentheses = true, SpaceBeforeCatchParentheses = true, SpaceBeforeSwitchParentheses = true, SpaceBeforeLockParentheses = true, SpaceBeforeUsingParentheses = true, SpaceAroundAssignment = true, SpaceAroundLogicalOperator = true, SpaceAroundEqualityOperator = true, SpaceAroundRelationalOperator = true, SpaceAroundBitwiseOperator = true, SpaceAroundAdditiveOperator = true, SpaceAroundMultiplicativeOperator = true, SpaceAroundShiftOperator = true, SpaceAroundNullCoalescingOperator = true, SpacesWithinParentheses = false, SpaceWithinMethodCallParentheses = false, SpaceWithinMethodDeclarationParentheses = false, SpacesWithinIfParentheses = false, SpacesWithinWhileParentheses = false, SpacesWithinForParentheses = false, SpacesWithinForeachParentheses = false, SpacesWithinCatchParentheses = false, SpacesWithinSwitchParentheses = false, SpacesWithinLockParentheses = false, SpacesWithinUsingParentheses = false, SpacesWithinCastParentheses = false, SpacesWithinSizeOfParentheses = false, SpacesWithinTypeOfParentheses = false, SpacesWithinCheckedExpressionParantheses = false, SpaceBeforeConditionalOperatorCondition = true, SpaceAfterConditionalOperatorCondition = true, SpaceBeforeConditionalOperatorSeparator = true, SpaceAfterConditionalOperatorSeparator = true, SpaceBeforeArrayDeclarationBrackets = false, SpacesWithinBrackets = false, SpacesBeforeBrackets = false, SpaceBeforeBracketComma = false, SpaceAfterBracketComma = true, SpaceBeforeForSemicolon = false, SpaceAfterForSemicolon = true, SpaceAfterTypecast = false, AlignEmbeddedStatements = true, SimplePropertyFormatting = PropertyFormatting.AllowOneLine, AutoPropertyFormatting = PropertyFormatting.AllowOneLine, EmptyLineFormatting = EmptyLineFormatting.DoNotIndent, SpaceBeforeMethodDeclarationParameterComma = false, SpaceAfterMethodDeclarationParameterComma = true, SpaceAfterDelegateDeclarationParameterComma = true, SpaceBeforeFieldDeclarationComma = false, SpaceAfterFieldDeclarationComma = true, SpaceBeforeLocalVariableDeclarationComma = false, SpaceAfterLocalVariableDeclarationComma = true, SpaceWithinIndexerDeclarationBracket = false, SpaceBeforeIndexerDeclarationParameterComma = false, SpaceInNamedArgumentAfterDoubleColon = true, SpaceAfterIndexerDeclarationParameterComma = true, RemoveEndOfLineWhiteSpace = true, MinimumBlankLinesBeforeUsings = 0, MinimumBlankLinesAfterUsings = 1, MinimumBlankLinesBeforeFirstDeclaration = 0, MinimumBlankLinesBetweenTypes = 1, MinimumBlankLinesBetweenFields = 0, MinimumBlankLinesBetweenEventFields = 0, MinimumBlankLinesBetweenMembers = 1, MinimumBlankLinesAroundRegion = 1, MinimumBlankLinesInsideRegion = 1, KeepCommentsAtFirstColumn = true, ChainedMethodCallWrapping = Wrapping.DoNotChange, MethodCallArgumentWrapping = Wrapping.DoNotChange, NewLineAferMethodCallOpenParentheses = NewLinePlacement.DoNotCare, MethodCallClosingParenthesesOnNewLine = NewLinePlacement.DoNotCare, IndexerArgumentWrapping = Wrapping.DoNotChange, NewLineAferIndexerOpenBracket = NewLinePlacement.DoNotCare, IndexerClosingBracketOnNewLine = NewLinePlacement.DoNotCare, NewLineBeforeNewQueryClause = NewLinePlacement.NewLine};
         }
 
         /// <summary>
         ///     Creates allman indent style CSharpFormatting options used in Visual Studio.
         /// </summary>
-        public static CSharpFormattingOptionsUI CreateAllman()
+        public static CSharpFormattingOptionsUI CreateAllman( )
         {
-            var baseOptions = CreateKRStyle();
+            var baseOptions = CreateKRStyle( );
             baseOptions.AnonymousMethodBraceStyle = BraceStyle.NextLine;
             baseOptions.PropertyBraceStyle = BraceStyle.NextLine;
             baseOptions.PropertyGetBraceStyle = BraceStyle.NextLine;
@@ -346,9 +74,9 @@ namespace NClass.CodeGenerator
         ///     The Whitesmiths style, also called Wishart style to a lesser extent, is less common today than the previous three.
         ///     It was originally used in the documentation for the first commercial C compiler, the Whitesmiths Compiler.
         /// </summary>
-        public static CSharpFormattingOptionsUI CreateWhitesmiths()
+        public static CSharpFormattingOptionsUI CreateWhitesmiths( )
         {
-            var baseOptions = CreateKRStyle();
+            var baseOptions = CreateKRStyle( );
 
             baseOptions.NamespaceBraceStyle = BraceStyle.NextLineShifted;
             baseOptions.ClassBraceStyle = BraceStyle.NextLineShifted;
@@ -382,9 +110,9 @@ namespace NClass.CodeGenerator
         ///     Although not directly related to indentation, GNU coding style also includes a space before the bracketed
         ///     list of arguments to a function.
         /// </summary>
-        public static CSharpFormattingOptionsUI CreateGNU()
+        public static CSharpFormattingOptionsUI CreateGNU( )
         {
-            var baseOptions = CreateAllman();
+            var baseOptions = CreateAllman( );
             baseOptions.StatementBraceStyle = BraceStyle.NextLineShifted2;
             return baseOptions;
         }

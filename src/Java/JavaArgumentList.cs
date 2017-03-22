@@ -22,40 +22,30 @@ namespace NClass.Java
     internal class JavaArgumentList : ArgumentList
     {
         // <type> <name> [,]
-        private const string JavaParameterPattern =
-            @"\s*(?<type>" + JavaLanguage.GenericTypePattern2 + @")\s+" +
-            @"(?<name>" + JavaLanguage.NamePattern + @")\s*(,|$)";
+        private const string JavaParameterPattern = @"\s*(?<type>" + JavaLanguage.GenericTypePattern2 + @")\s+" + @"(?<name>" + JavaLanguage.NamePattern + @")\s*(,|$)";
 
         private const string ParameterStringPattern = @"^\s*(" + JavaParameterPattern + ")*$";
 
-        private static readonly Regex parameterRegex =
-            new Regex(JavaParameterPattern, RegexOptions.ExplicitCapture);
+        private static readonly Regex parameterRegex = new Regex( JavaParameterPattern, RegexOptions.ExplicitCapture );
 
-        private static readonly Regex singleParamterRegex =
-            new Regex("^" + JavaParameterPattern + "$", RegexOptions.ExplicitCapture);
+        private static readonly Regex singleParamterRegex = new Regex( "^" + JavaParameterPattern + "$", RegexOptions.ExplicitCapture );
 
-        private static readonly Regex parameterStringRegex =
-            new Regex(ParameterStringPattern, RegexOptions.ExplicitCapture);
+        private static readonly Regex parameterStringRegex = new Regex( ParameterStringPattern, RegexOptions.ExplicitCapture );
 
-        internal JavaArgumentList()
-        {
-        }
+        internal JavaArgumentList( ) {}
 
-        internal JavaArgumentList(int capacity)
-            : base(capacity)
-        {
-        }
+        internal JavaArgumentList( int capacity ) : base( capacity ) {}
 
         /// <exception cref="ReservedNameException">
         ///     The parameter name is already exists.
         /// </exception>
-        public override Parameter Add(string name, string type, ParameterModifier modifier, string defaultValue)
+        public override Parameter Add( string name, string type, ParameterModifier modifier, string defaultValue )
         {
-            if (IsReservedName(name))
-                throw new ReservedNameException(name);
+            if ( IsReservedName( name ) )
+                throw new ReservedNameException( name );
 
-            Parameter parameter = new JavaParameter(name, type);
-            InnerList.Add(parameter);
+            Parameter parameter = new JavaParameter( name, type );
+            InnerList.Add( parameter );
 
             return parameter;
         }
@@ -66,25 +56,24 @@ namespace NClass.Java
         /// <exception cref="ReservedNameException">
         ///     The parameter name is already exists.
         /// </exception>
-        public override Parameter Add(string declaration)
+        public override Parameter Add( string declaration )
         {
-            var match = singleParamterRegex.Match(declaration);
+            var match = singleParamterRegex.Match( declaration );
 
-            if (match.Success)
+            if ( match.Success )
             {
-                var nameGroup = match.Groups["name"];
-                var typeGroup = match.Groups["type"];
+                var nameGroup = match.Groups[ "name" ];
+                var typeGroup = match.Groups[ "type" ];
 
-                if (IsReservedName(nameGroup.Value))
-                    throw new ReservedNameException(nameGroup.Value);
+                if ( IsReservedName( nameGroup.Value ) )
+                    throw new ReservedNameException( nameGroup.Value );
 
-                Parameter parameter = new JavaParameter(nameGroup.Value, typeGroup.Value);
-                InnerList.Add(parameter);
+                Parameter parameter = new JavaParameter( nameGroup.Value, typeGroup.Value );
+                InnerList.Add( parameter );
 
                 return parameter;
             }
-            throw new BadSyntaxException(
-                Strings.ErrorInvalidParameterDeclaration);
+            throw new BadSyntaxException( Strings.ErrorInvalidParameterDeclaration );
         }
 
         /// <exception cref="BadSyntaxException">
@@ -93,36 +82,35 @@ namespace NClass.Java
         /// <exception cref="ReservedNameException">
         ///     The parameter name is already exists.
         /// </exception>
-        public override Parameter ModifyParameter(Parameter parameter, string declaration)
+        public override Parameter ModifyParameter( Parameter parameter, string declaration )
         {
-            var match = singleParamterRegex.Match(declaration);
-            var index = InnerList.IndexOf(parameter);
+            var match = singleParamterRegex.Match( declaration );
+            var index = InnerList.IndexOf( parameter );
 
-            if (index < 0)
+            if ( index < 0 )
                 return parameter;
 
-            if (match.Success)
+            if ( match.Success )
             {
-                var nameGroup = match.Groups["name"];
-                var typeGroup = match.Groups["type"];
+                var nameGroup = match.Groups[ "name" ];
+                var typeGroup = match.Groups[ "type" ];
 
-                if (IsReservedName(nameGroup.Value, index))
-                    throw new ReservedNameException(nameGroup.Value);
+                if ( IsReservedName( nameGroup.Value, index ) )
+                    throw new ReservedNameException( nameGroup.Value );
 
-                Parameter newParameter = new JavaParameter(nameGroup.Value, typeGroup.Value);
-                InnerList[index] = newParameter;
+                Parameter newParameter = new JavaParameter( nameGroup.Value, typeGroup.Value );
+                InnerList[ index ] = newParameter;
                 return newParameter;
             }
-            throw new BadSyntaxException(
-                Strings.ErrorInvalidParameterDeclaration);
+            throw new BadSyntaxException( Strings.ErrorInvalidParameterDeclaration );
         }
 
-        public override ArgumentList Clone()
+        public override ArgumentList Clone( )
         {
-            var argumentList = new JavaArgumentList(Capacity);
-            foreach (Parameter parameter in InnerList)
+            var argumentList = new JavaArgumentList( Capacity );
+            foreach ( Parameter parameter in InnerList )
             {
-                argumentList.InnerList.Add(parameter.Clone());
+                argumentList.InnerList.Add( parameter.Clone( ) );
             }
             return argumentList;
         }
@@ -130,23 +118,22 @@ namespace NClass.Java
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="declaration" /> does not fit to the syntax.
         /// </exception>
-        public override void InitFromString(string declaration)
+        public override void InitFromString( string declaration )
         {
-            if (parameterStringRegex.IsMatch(declaration))
+            if ( parameterStringRegex.IsMatch( declaration ) )
             {
-                Clear();
-                foreach (Match match in parameterRegex.Matches(declaration))
+                Clear( );
+                foreach ( Match match in parameterRegex.Matches( declaration ) )
                 {
-                    var nameGroup = match.Groups["name"];
-                    var typeGroup = match.Groups["type"];
+                    var nameGroup = match.Groups[ "name" ];
+                    var typeGroup = match.Groups[ "type" ];
 
-                    InnerList.Add(new JavaParameter(nameGroup.Value, typeGroup.Value));
+                    InnerList.Add( new JavaParameter( nameGroup.Value, typeGroup.Value ) );
                 }
             }
             else
             {
-                throw new BadSyntaxException(
-                    Strings.ErrorInvalidParameterDeclaration);
+                throw new BadSyntaxException( Strings.ErrorInvalidParameterDeclaration );
             }
         }
     }

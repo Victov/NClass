@@ -24,13 +24,9 @@ namespace NClass.Java
     internal sealed class JavaConstructor : Constructor
     {
         // [<access>] <name>([<args>])
-        private const string ConstructorPattern =
-            @"^\s*" + JavaLanguage.AccessPattern +
-            @"(?<name>" + JavaLanguage.NamePattern + ")" +
-            @"\((?(static)|(?<args>.*))\)" + JavaLanguage.DeclarationEnding;
+        private const string ConstructorPattern = @"^\s*" + JavaLanguage.AccessPattern + @"(?<name>" + JavaLanguage.NamePattern + ")" + @"\((?(static)|(?<args>.*))\)" + JavaLanguage.DeclarationEnding;
 
-        private static readonly Regex constructorRegex =
-            new Regex(ConstructorPattern, RegexOptions.ExplicitCapture);
+        private static readonly Regex constructorRegex = new Regex( ConstructorPattern, RegexOptions.ExplicitCapture );
 
         /// <exception cref="ArgumentException">
         ///     The language of <paramref name="parent" /> does not equal.
@@ -38,21 +34,18 @@ namespace NClass.Java
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="parent" /> is null.
         /// </exception>
-        internal JavaConstructor(CompositeType parent)
-            : base(parent)
-        {
-        }
+        internal JavaConstructor( CompositeType parent ) : base( parent ) {}
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="value" /> does not fit to the syntax.
         /// </exception>
         public override string Name
         {
-            get { return GetNameWithoutGeneric(Parent.Name); }
+            get { return GetNameWithoutGeneric( Parent.Name ); }
             set
             {
-                if (value != null && value != GetNameWithoutGeneric(Parent.Name))
-                    throw new BadSyntaxException(Strings.ErrorConstructorName);
+                if ( value != null && value != GetNameWithoutGeneric( Parent.Name ) )
+                    throw new BadSyntaxException( Strings.ErrorConstructorName );
             }
         }
 
@@ -64,8 +57,8 @@ namespace NClass.Java
             get { return base.IsStatic; }
             set
             {
-                if (value)
-                    throw new BadSyntaxException(Strings.ErrorCannotSetStatic);
+                if ( value )
+                    throw new BadSyntaxException( Strings.ErrorCannotSetStatic );
             }
         }
 
@@ -77,45 +70,46 @@ namespace NClass.Java
             get { return false; }
             set
             {
-                if (value)
-                    throw new BadSyntaxException(Strings.ErrorCannotSetModifier);
+                if ( value )
+                    throw new BadSyntaxException( Strings.ErrorCannotSetModifier );
             }
         }
 
-        public override Language Language { get { return JavaLanguage.Instance; } }
+        public override Language Language
+        {
+            get { return JavaLanguage.Instance; }
+        }
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="declaration" /> does not fit to the syntax.
         /// </exception>
-        public override void InitFromString(string declaration)
+        public override void InitFromString( string declaration )
         {
-            var match = constructorRegex.Match(declaration);
+            var match = constructorRegex.Match( declaration );
             RaiseChangedEvent = false;
 
             try
             {
-                if (match.Success)
+                if ( match.Success )
                 {
                     try
                     {
-                        var nameGroup = match.Groups["name"];
-                        var accessGroup = match.Groups["access"];
-                        var argsGroup = match.Groups["args"];
+                        var nameGroup = match.Groups[ "name" ];
+                        var accessGroup = match.Groups[ "access" ];
+                        var argsGroup = match.Groups[ "args" ];
 
                         ValidName = nameGroup.Value;
-                        AccessModifier = Language.TryParseAccessModifier(accessGroup.Value);
-                        ArgumentList.InitFromString(argsGroup.Value);
+                        AccessModifier = Language.TryParseAccessModifier( accessGroup.Value );
+                        ArgumentList.InitFromString( argsGroup.Value );
                     }
-                    catch (BadSyntaxException ex)
+                    catch ( BadSyntaxException ex )
                     {
-                        throw new BadSyntaxException(
-                            Strings.ErrorInvalidDeclaration,
-                            ex);
+                        throw new BadSyntaxException( Strings.ErrorInvalidDeclaration, ex );
                     }
                 }
                 else
                 {
-                    throw new BadSyntaxException(Strings.ErrorInvalidDeclaration);
+                    throw new BadSyntaxException( Strings.ErrorInvalidDeclaration );
                 }
             }
             finally
@@ -124,33 +118,33 @@ namespace NClass.Java
             }
         }
 
-        public override string GetDeclaration()
+        public override string GetDeclaration( )
         {
-            var builder = new StringBuilder(50);
+            var builder = new StringBuilder( 50 );
 
-            if (AccessModifier != AccessModifier.Default)
+            if ( AccessModifier != AccessModifier.Default )
             {
-                builder.Append(Language.GetAccessString(AccessModifier, true));
-                builder.Append(" ");
+                builder.Append( Language.GetAccessString( AccessModifier, true ) );
+                builder.Append( " " );
             }
 
-            builder.AppendFormat("{0}(", Name);
+            builder.AppendFormat( "{0}(", Name );
 
-            for (var i = 0; i < ArgumentList.Count; i++)
+            for ( var i = 0; i < ArgumentList.Count; i++ )
             {
-                builder.Append(ArgumentList[i]);
-                if (i < ArgumentList.Count - 1)
-                    builder.Append(", ");
+                builder.Append( ArgumentList[ i ] );
+                if ( i < ArgumentList.Count - 1 )
+                    builder.Append( ", " );
             }
-            builder.Append(")");
+            builder.Append( ")" );
 
-            return builder.ToString();
+            return builder.ToString( );
         }
 
-        public override Operation Clone(CompositeType newParent)
+        public override Operation Clone( CompositeType newParent )
         {
-            var constructor = new JavaConstructor(newParent);
-            constructor.CopyFrom(this);
+            var constructor = new JavaConstructor( newParent );
+            constructor.CopyFrom( this );
             return constructor;
         }
     }

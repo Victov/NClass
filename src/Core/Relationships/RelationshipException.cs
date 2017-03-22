@@ -21,24 +21,12 @@ namespace NClass.Core
 {
     public class RelationshipException : Exception
     {
-        public RelationshipException()
-            : base(Strings.ErrorCannotCreateRelationship)
-        {
-        }
+        public RelationshipException( ) : base( Strings.ErrorCannotCreateRelationship ) {}
 
-        public RelationshipException(string message)
-            : base(message)
-        {
-        }
+        public RelationshipException( string message ) : base( message ) {}
 
-        public RelationshipException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
+        public RelationshipException( string message, Exception innerException ) : base( message, innerException ) {}
 
-        protected RelationshipException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
+        protected RelationshipException( SerializationInfo info, StreamingContext context ) : base( info, context ) {}
     }
 }

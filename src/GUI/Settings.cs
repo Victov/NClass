@@ -22,7 +22,7 @@ namespace NClass.GUI
     {
         private const int MaxRecentFileCount = 5;
 
-        public Language GetDefaultLanguage()
+        public Language GetDefaultLanguage( )
         {
             /*
             // TO DO: Manage an exception if are loaded
@@ -30,37 +30,37 @@ namespace NClass.GUI
 
 			return defaultLanguage ?? CSharpLanguage.Instance;
             */
-            var defaultLanguage = Language.GetLanguage(DefaultLanguageName);
+            var defaultLanguage = Language.GetLanguage( DefaultLanguageName );
 
-            if (defaultLanguage == null)
+            if ( defaultLanguage == null )
                 // TO DO: Select a default language available!
-                throw new InvalidDataException("Invalid project language.");
+                throw new InvalidDataException( "Invalid project language." );
 
             return defaultLanguage;
         }
 
-        public void AddRecentFile(string recentFile)
+        public void AddRecentFile( string recentFile )
         {
-            if (!File.Exists(recentFile))
+            if ( !File.Exists( recentFile ) )
                 return;
 
-            var index = RecentFiles.IndexOf(recentFile);
+            var index = RecentFiles.IndexOf( recentFile );
 
-            if (index < 0)
+            if ( index < 0 )
             {
-                if (RecentFiles.Count < MaxRecentFileCount)
-                    RecentFiles.Add(string.Empty);
+                if ( RecentFiles.Count < MaxRecentFileCount )
+                    RecentFiles.Add( string.Empty );
 
-                for (var i = RecentFiles.Count - 2; i >= 0; i--)
-                    RecentFiles[i + 1] = RecentFiles[i];
-                RecentFiles[0] = recentFile;
+                for ( var i = RecentFiles.Count - 2; i >= 0; i-- )
+                    RecentFiles[ i + 1 ] = RecentFiles[ i ];
+                RecentFiles[ 0 ] = recentFile;
             }
-            else if (index > 0)
+            else if ( index > 0 )
             {
-                var temp = RecentFiles[index];
-                for (var i = index; i > 0; i--)
-                    RecentFiles[i] = RecentFiles[i - 1];
-                RecentFiles[0] = temp;
+                var temp = RecentFiles[ index ];
+                for ( var i = index; i > 0; i-- )
+                    RecentFiles[ i ] = RecentFiles[ i - 1 ];
+                RecentFiles[ 0 ] = temp;
             }
         }
     }

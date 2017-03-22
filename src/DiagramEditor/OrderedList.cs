@@ -18,14 +18,14 @@ using System.Collections.Generic;
 
 namespace NClass.DiagramEditor
 {
-    public class OrderedList<T> : LinkedList<T>
+    public class OrderedList< T > : LinkedList< T >
     {
         public T FirstValue
         {
             get
             {
-                if (First == null)
-                    return default(T);
+                if ( First == null )
+                    return default( T );
                 return First.Value;
             }
         }
@@ -34,8 +34,8 @@ namespace NClass.DiagramEditor
         {
             get
             {
-                if (First == null || First.Next == null)
-                    return default(T);
+                if ( First == null || First.Next == null )
+                    return default( T );
                 return First.Next.Value;
             }
         }
@@ -44,8 +44,8 @@ namespace NClass.DiagramEditor
         {
             get
             {
-                if (Last == null || Last.Previous == null)
-                    return default(T);
+                if ( Last == null || Last.Previous == null )
+                    return default( T );
                 return Last.Previous.Value;
             }
         }
@@ -54,21 +54,21 @@ namespace NClass.DiagramEditor
         {
             get
             {
-                if (Last == null)
-                    return default(T);
+                if ( Last == null )
+                    return default( T );
                 return Last.Value;
             }
         }
 
-        public void Add(T value)
+        public void Add( T value )
         {
-            AddLast(value);
+            AddLast( value );
         }
 
-        public IEnumerable<T> GetModifiableList()
+        public IEnumerable< T > GetModifiableList( )
         {
             var current = First;
-            while (current != null)
+            while ( current != null )
             {
                 var next = current.Next;
                 yield return current.Value;
@@ -76,30 +76,30 @@ namespace NClass.DiagramEditor
             }
         }
 
-        public IEnumerable<T> GetReversedList()
+        public IEnumerable< T > GetReversedList( )
         {
             var current = Last;
-            while (current != null)
+            while ( current != null )
             {
                 yield return current.Value;
                 current = current.Previous;
             }
         }
 
-        public void ShiftToFirstPlace(T value)
+        public void ShiftToFirstPlace( T value )
         {
-            Remove(value);
-            AddFirst(value);
+            Remove( value );
+            AddFirst( value );
         }
 
-        public bool RemoveOn(Predicate<T> match)
+        public bool RemoveOn( Predicate< T > match )
         {
             var current = First;
-            while (current != null)
+            while ( current != null )
             {
-                if (match(current.Value))
+                if ( match( current.Value ) )
                 {
-                    Remove(current);
+                    Remove( current );
                     return true;
                 }
                 current = current.Next;
@@ -107,14 +107,14 @@ namespace NClass.DiagramEditor
             return false;
         }
 
-        public void Reverse()
+        public void Reverse( )
         {
             var node = First;
-            while (Last != node)
+            while ( Last != node )
             {
                 var last = Last;
-                Remove(last);
-                AddBefore(node, last);
+                Remove( last );
+                AddBefore( node, last );
             }
         }
     }

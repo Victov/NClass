@@ -30,31 +30,31 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 
         private DelegateShape shape;
 
-        public DelegateEditor()
+        public DelegateEditor( )
         {
-            InitializeComponent();
+            InitializeComponent( );
             toolStrip.Renderer = ToolStripSimplifiedRenderer.Default;
-            UpdateTexts();
+            UpdateTexts( );
         }
 
-        internal override void Init(DiagramElement element)
+        internal override void Init( DiagramElement element )
         {
-            shape = (DelegateShape) element;
+            shape = ( DelegateShape ) element;
             txtNewParameter.Text = newValueText;
             noNewValue = true;
-            RefreshValues();
+            RefreshValues( );
         }
 
-        private void UpdateTexts()
+        private void UpdateTexts( )
         {
             toolNewParameter.ToolTipText = Strings.NewParameter;
         }
 
-        private void RefreshValues()
+        private void RefreshValues( )
         {
             var type = shape.DelegateType;
             var language = type.Language;
-            SuspendLayout();
+            SuspendLayout( );
 
             // txtReturnType
             var cursorPosition = txtReturnType.SelectionStart;
@@ -65,76 +65,76 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
             txtName.Text = type.Name;
             txtName.SelectionStart = cursorPosition;
 
-            SetError(null);
+            SetError( null );
             needValidation = false;
 
-            RefreshVisibility();
-            ResumeLayout();
+            RefreshVisibility( );
+            ResumeLayout( );
         }
 
-        private void RefreshVisibility()
+        private void RefreshVisibility( )
         {
             var language = shape.DelegateType.Language;
             var type = shape.DelegateType;
 
-            toolVisibility.Image = Icons.GetImage(type);
-            toolVisibility.Text = language.ValidAccessModifiers[type.AccessModifier];
+            toolVisibility.Image = Icons.GetImage( type );
+            toolVisibility.Text = language.ValidAccessModifiers[ type.AccessModifier ];
 
             // Public
-            if (language.ValidAccessModifiers.ContainsKey(AccessModifier.Public))
+            if ( language.ValidAccessModifiers.ContainsKey( AccessModifier.Public ) )
             {
                 toolPublic.Visible = true;
-                toolPublic.Text = language.ValidAccessModifiers[AccessModifier.Public];
+                toolPublic.Text = language.ValidAccessModifiers[ AccessModifier.Public ];
             }
             else
             {
                 toolPublic.Visible = false;
             }
             // Protected Internal
-            if (type.IsNested && language.ValidAccessModifiers.ContainsKey(AccessModifier.ProtectedInternal))
+            if ( type.IsNested && language.ValidAccessModifiers.ContainsKey( AccessModifier.ProtectedInternal ) )
             {
                 toolProtint.Visible = true;
-                toolProtint.Text = language.ValidAccessModifiers[AccessModifier.ProtectedInternal];
+                toolProtint.Text = language.ValidAccessModifiers[ AccessModifier.ProtectedInternal ];
             }
             else
             {
                 toolProtint.Visible = false;
             }
             // Internal
-            if (language.ValidAccessModifiers.ContainsKey(AccessModifier.Internal))
+            if ( language.ValidAccessModifiers.ContainsKey( AccessModifier.Internal ) )
             {
                 toolInternal.Visible = true;
-                toolInternal.Text = language.ValidAccessModifiers[AccessModifier.Internal];
+                toolInternal.Text = language.ValidAccessModifiers[ AccessModifier.Internal ];
             }
             else
             {
                 toolInternal.Visible = false;
             }
             // Protected
-            if (type.IsNested && language.ValidAccessModifiers.ContainsKey(AccessModifier.Protected))
+            if ( type.IsNested && language.ValidAccessModifiers.ContainsKey( AccessModifier.Protected ) )
             {
                 toolProtected.Visible = true;
-                toolProtected.Text = language.ValidAccessModifiers[AccessModifier.Protected];
+                toolProtected.Text = language.ValidAccessModifiers[ AccessModifier.Protected ];
             }
             else
             {
                 toolProtected.Visible = false;
             }
             // Private
-            if (type.IsNested && language.ValidAccessModifiers.ContainsKey(AccessModifier.Private))
+            if ( type.IsNested && language.ValidAccessModifiers.ContainsKey( AccessModifier.Private ) )
             {
                 toolPrivate.Visible = true;
-                toolPrivate.Text = language.ValidAccessModifiers[AccessModifier.Private];
+                toolPrivate.Text = language.ValidAccessModifiers[ AccessModifier.Private ];
             }
             else
             {
                 toolPrivate.Visible = false;
             }
             // Default
-            if (language.ValidAccessModifiers.ContainsKey(AccessModifier.Default))
+            if ( language.ValidAccessModifiers.ContainsKey( AccessModifier.Default ) )
             {
                 toolDefault.Visible = true;
-                toolDefault.Text = language.ValidAccessModifiers[AccessModifier.Default];
+                toolDefault.Text = language.ValidAccessModifiers[ AccessModifier.Default ];
             }
             else
             {
@@ -142,169 +142,169 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
             }
         }
 
-        public override void ValidateData()
+        public override void ValidateData( )
         {
-            ValidateName();
-            SetError(null);
+            ValidateName( );
+            SetError( null );
         }
 
-        private bool ValidateName()
+        private bool ValidateName( )
         {
-            if (needValidation)
+            if ( needValidation )
             {
                 try
                 {
                     shape.DelegateType.Name = txtName.Text;
                     shape.DelegateType.ReturnType = txtReturnType.Text;
-                    RefreshValues();
+                    RefreshValues( );
                 }
-                catch (BadSyntaxException ex)
+                catch ( BadSyntaxException ex )
                 {
-                    SetError(ex.Message);
+                    SetError( ex.Message );
                     return false;
                 }
             }
             return true;
         }
 
-        private void SetError(string message)
+        private void SetError( string message )
         {
-            if (MonoHelper.IsRunningOnMono && MonoHelper.IsOlderVersionThan("2.4"))
+            if ( MonoHelper.IsRunningOnMono && MonoHelper.IsOlderVersionThan( "2.4" ) )
                 return;
 
-            errorProvider.SetError(this, message);
+            errorProvider.SetError( this, message );
         }
 
-        private void AddNewValue()
+        private void AddNewValue( )
         {
-            if (!noNewValue && ValidateName())
+            if ( !noNewValue && ValidateName( ) )
             {
                 try
                 {
-                    shape.DelegateType.AddParameter(txtNewParameter.Text);
-                    ClearNewValueField();
+                    shape.DelegateType.AddParameter( txtNewParameter.Text );
+                    ClearNewValueField( );
                 }
-                catch (BadSyntaxException ex)
+                catch ( BadSyntaxException ex )
                 {
-                    SetError(ex.Message);
+                    SetError( ex.Message );
                 }
             }
         }
 
-        private void ClearNewValueField()
+        private void ClearNewValueField( )
         {
-            SetError(null);
+            SetError( null );
             txtNewParameter.Text = string.Empty;
         }
 
-        private void ChangeAccess(AccessModifier access)
+        private void ChangeAccess( AccessModifier access )
         {
-            if (ValidateName())
+            if ( ValidateName( ) )
             {
                 try
                 {
                     shape.DelegateType.AccessModifier = access;
-                    RefreshValues();
+                    RefreshValues( );
                 }
-                catch (BadSyntaxException ex)
+                catch ( BadSyntaxException ex )
                 {
-                    RefreshValues();
-                    SetError(ex.Message);
+                    RefreshValues( );
+                    SetError( ex.Message );
                 }
             }
         }
 
-        private void toolPublic_Click(object sender, EventArgs e)
+        private void toolPublic_Click( object sender, EventArgs e )
         {
-            ChangeAccess(AccessModifier.Public);
+            ChangeAccess( AccessModifier.Public );
         }
 
-        private void toolProtint_Click(object sender, EventArgs e)
+        private void toolProtint_Click( object sender, EventArgs e )
         {
-            ChangeAccess(AccessModifier.ProtectedInternal);
+            ChangeAccess( AccessModifier.ProtectedInternal );
         }
 
-        private void toolInternal_Click(object sender, EventArgs e)
+        private void toolInternal_Click( object sender, EventArgs e )
         {
-            ChangeAccess(AccessModifier.Internal);
+            ChangeAccess( AccessModifier.Internal );
         }
 
-        private void toolProtected_Click(object sender, EventArgs e)
+        private void toolProtected_Click( object sender, EventArgs e )
         {
-            ChangeAccess(AccessModifier.Protected);
+            ChangeAccess( AccessModifier.Protected );
         }
 
-        private void toolPrivate_Click(object sender, EventArgs e)
+        private void toolPrivate_Click( object sender, EventArgs e )
         {
-            ChangeAccess(AccessModifier.Private);
+            ChangeAccess( AccessModifier.Private );
         }
 
-        private void toolDefault_Click(object sender, EventArgs e)
+        private void toolDefault_Click( object sender, EventArgs e )
         {
-            ChangeAccess(AccessModifier.Default);
+            ChangeAccess( AccessModifier.Default );
         }
 
-        private void txtNewValue_KeyDown(object sender, KeyEventArgs e)
+        private void txtNewValue_KeyDown( object sender, KeyEventArgs e )
         {
-            switch (e.KeyCode)
+            switch ( e.KeyCode )
             {
                 case Keys.Enter:
-                    AddNewValue();
+                    AddNewValue( );
                     e.Handled = true;
                     break;
 
                 case Keys.Escape:
                     needValidation = false;
-                    shape.HideEditor();
+                    shape.HideEditor( );
                     e.Handled = true;
                     break;
 
                 case Keys.Tab:
-                    txtReturnType.Focus();
+                    txtReturnType.Focus( );
                     e.Handled = true;
                     break;
             }
         }
 
-        private void txtNewValue_TextChanged(object sender, EventArgs e)
+        private void txtNewValue_TextChanged( object sender, EventArgs e )
         {
             noNewValue = txtNewParameter.Text.Length == 0;
         }
 
-        private void txtNewValue_GotFocus(object sender, EventArgs e)
+        private void txtNewValue_GotFocus( object sender, EventArgs e )
         {
-            if (noNewValue)
+            if ( noNewValue )
             {
                 txtNewParameter.Text = string.Empty;
             }
         }
 
-        private void txtNewValue_LostFocus(object sender, EventArgs e)
+        private void txtNewValue_LostFocus( object sender, EventArgs e )
         {
-            if (noNewValue)
+            if ( noNewValue )
             {
                 txtNewParameter.Text = newValueText;
                 noNewValue = true;
             }
         }
 
-        private void toolNewValue_Click(object sender, EventArgs e)
+        private void toolNewValue_Click( object sender, EventArgs e )
         {
-            AddNewValue();
+            AddNewValue( );
         }
 
-        private void txtReturnType_KeyDown(object sender, KeyEventArgs e)
+        private void txtReturnType_KeyDown( object sender, KeyEventArgs e )
         {
-            switch (e.KeyCode)
+            switch ( e.KeyCode )
             {
                 case Keys.Enter:
-                    ValidateName();
+                    ValidateName( );
                     e.Handled = true;
                     break;
 
                 case Keys.Escape:
                     needValidation = false;
-                    shape.HideEditor();
+                    shape.HideEditor( );
                     e.Handled = true;
                     break;
 
@@ -315,18 +315,18 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
             }
         }
 
-        private void txtName_KeyDown(object sender, KeyEventArgs e)
+        private void txtName_KeyDown( object sender, KeyEventArgs e )
         {
-            switch (e.KeyCode)
+            switch ( e.KeyCode )
             {
                 case Keys.Enter:
-                    ValidateName();
+                    ValidateName( );
                     e.Handled = true;
                     break;
 
                 case Keys.Escape:
                     needValidation = false;
-                    shape.HideEditor();
+                    shape.HideEditor( );
                     e.Handled = true;
                     break;
 
@@ -337,19 +337,19 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
             }
         }
 
-        private void declaration_TextChanged(object sender, EventArgs e)
+        private void declaration_TextChanged( object sender, EventArgs e )
         {
             needValidation = true;
         }
 
-        private void declaration_Validating(object sender, CancelEventArgs e)
+        private void declaration_Validating( object sender, CancelEventArgs e )
         {
-            ValidateName();
+            ValidateName( );
         }
 
-        protected override void OnVisibleChanged(EventArgs e)
+        protected override void OnVisibleChanged( EventArgs e )
         {
-            base.OnVisibleChanged(e);
+            base.OnVisibleChanged( e );
             txtName.SelectionStart = 0;
         }
     }

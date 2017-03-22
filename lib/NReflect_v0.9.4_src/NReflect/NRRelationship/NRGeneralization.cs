@@ -21,71 +21,69 @@ using NReflect.NREntities;
 
 namespace NReflect.NRRelationship
 {
-  /// <summary>
-  /// Represents an generalization relationship between two types.
-  /// </summary>
-  [Serializable]
-  public class NRGeneralization
-  {
-    // ========================================================================
-    // Con- / Destruction
-
-    #region === Con- / Destruction
-
     /// <summary>
-    /// Initializes a new instance of <see cref="NRGeneralization"/>.
+    /// Represents an generalization relationship between two types.
     /// </summary>
-    public NRGeneralization()
+    [Serializable]
+    public class NRGeneralization
     {
+        // ========================================================================
+        // Con- / Destruction
+
+        #region === Con- / Destruction
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="NRGeneralization"/>.
+        /// </summary>
+        public NRGeneralization( ) {}
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="NRGeneralization"/>.
+        /// </summary>
+        /// <param name="baseType">The base type of the generalization.</param>
+        /// <param name="derivedType">The derived type of the generalization.</param>
+        public NRGeneralization( NRCompositeType baseType, NRCompositeType derivedType )
+        {
+            BaseType = baseType;
+            DerivedType = derivedType;
+        }
+
+        #endregion
+
+        // ========================================================================
+        // Properties
+
+        #region === Properties
+
+        /// <summary>
+        /// Gets or sets the base type of the generalization.
+        /// </summary>
+        public NRCompositeType BaseType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the derived type of the generalization.
+        /// </summary>
+        public NRCompositeType DerivedType { get; set; }
+
+        #endregion
+
+        // ========================================================================
+        // Methods
+
+        #region === Methods
+
+        /// <summary>
+        /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+        /// </returns>
+        /// <filterpriority>2</filterpriority>
+        public override string ToString( )
+        {
+            return BaseType.Name + " <|-- " + DerivedType.Name;
+        }
+
+        #endregion
     }
-
-    /// <summary>
-    /// Initializes a new instance of <see cref="NRGeneralization"/>.
-    /// </summary>
-    /// <param name="baseType">The base type of the generalization.</param>
-    /// <param name="derivedType">The derived type of the generalization.</param>
-    public NRGeneralization(NRCompositeType baseType, NRCompositeType derivedType)
-    {
-      BaseType = baseType;
-      DerivedType = derivedType;
-    }
-
-    #endregion
-
-    // ========================================================================
-    // Properties
-
-    #region === Properties
-
-    /// <summary>
-    /// Gets or sets the base type of the generalization.
-    /// </summary>
-    public NRCompositeType BaseType { get; set; }
-
-    /// <summary>
-    /// Gets or sets the derived type of the generalization.
-    /// </summary>
-    public NRCompositeType DerivedType { get; set; }
-
-    #endregion
-
-    // ========================================================================
-    // Methods
-
-    #region === Methods
-
-    /// <summary>
-    /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
-    /// </summary>
-    /// <returns>
-    /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
-    /// </returns>
-    /// <filterpriority>2</filterpriority>
-    public override string ToString()
-    {
-      return BaseType.Name + " <|-- " + DerivedType.Name;
-    }
-
-    #endregion
-  }
 }

@@ -1,6 +1,4 @@
 ﻿namespace ICSharpCode.NRefactory
 {
-    internal class Declaration
-    {
-    }
+    internal class Declaration {}
 }

@@ -19,34 +19,34 @@ using System.Windows.Forms;
 
 namespace NClass.DiagramEditor
 {
-    public abstract class DynamicMenu : IEnumerable<ToolStripMenuItem>
+    public abstract class DynamicMenu : IEnumerable< ToolStripMenuItem >
     {
-        public DynamicMenu()
+        public DynamicMenu( )
         {
             PreferredIndex = -1;
         }
 
-        public DynamicMenu(int preferredIndex)
+        public DynamicMenu( int preferredIndex )
         {
             PreferredIndex = preferredIndex;
         }
 
         public int PreferredIndex { get; }
 
-        public IEnumerator<ToolStripMenuItem> GetEnumerator()
+        public IEnumerator< ToolStripMenuItem > GetEnumerator( )
         {
-            return GetMenuItems().GetEnumerator();
+            return GetMenuItems( ).GetEnumerator( );
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator( )
         {
-            return GetEnumerator();
+            return GetEnumerator( );
         }
 
-        public abstract IEnumerable<ToolStripMenuItem> GetMenuItems();
+        public abstract IEnumerable< ToolStripMenuItem > GetMenuItems( );
 
-        public abstract ToolStrip GetToolStrip();
+        public abstract ToolStrip GetToolStrip( );
 
-        public abstract void SetReference(IDocument document);
+        public abstract void SetReference( IDocument document );
     }
 }

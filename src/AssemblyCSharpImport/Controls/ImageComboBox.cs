@@ -17,7 +17,7 @@ namespace NClass.AssemblyCSharpImport.Controls
         /// <summary>
         ///     Initializes a new instance of <see cref="ImageComboBox" />.
         /// </summary>
-        public ImageComboBox()
+        public ImageComboBox( )
         {
             DropDownStyle = ComboBoxStyle.DropDownList;
             DrawMode = DrawMode.OwnerDrawFixed;
@@ -34,16 +34,16 @@ namespace NClass.AssemblyCSharpImport.Controls
         ///     Raises the <see cref="ComboBox.DrawItem" /> event.
         /// </summary>
         /// <param name="e">A <see cref="DrawItemEventArgs" /> that contains the event data. </param>
-        protected override void OnDrawItem(DrawItemEventArgs e)
+        protected override void OnDrawItem( DrawItemEventArgs e )
         {
-            e.DrawBackground();
-            e.DrawFocusRectangle();
+            e.DrawBackground( );
+            e.DrawFocusRectangle( );
 
-            var item = e.Index >= 0 ? Items[e.Index] : null;
+            var item = e.Index >= 0 ? Items[ e.Index ] : null;
 
-            ControlDrawHelper.DrawImageComboBoxItem(e.Graphics, item, ImageList, ImageSize, e.Bounds, Font, ForeColor);
+            ControlDrawHelper.DrawImageComboBoxItem( e.Graphics, item, ImageList, ImageSize, e.Bounds, Font, ForeColor );
 
-            base.OnDrawItem(e);
+            base.OnDrawItem( e );
         }
 
         #endregion

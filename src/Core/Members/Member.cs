@@ -34,12 +34,12 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="parent" /> is null.
         /// </exception>
-        protected Member(string name, CompositeType parent)
+        protected Member( string name, CompositeType parent )
         {
-            if (parent == null)
-                throw new ArgumentNullException("parent");
-            if (parent.Language != Language)
-                throw new ArgumentException(Strings.ErrorLanguagesDoNotEqual);
+            if ( parent == null )
+                throw new ArgumentNullException( "parent" );
+            if ( parent.Language != Language )
+                throw new ArgumentException( Strings.ErrorLanguagesDoNotEqual );
 
             Initializing = true;
             Parent = parent;
@@ -58,13 +58,13 @@ namespace NClass.Core
             get { return parent; }
             set
             {
-                if (value == null)
-                    throw new ArgumentNullException("value");
+                if ( value == null )
+                    throw new ArgumentNullException( "value" );
 
-                if (parent != value)
+                if ( parent != value )
                 {
                     parent = value;
-                    Changed();
+                    Changed( );
                 }
             }
         }
@@ -77,12 +77,12 @@ namespace NClass.Core
             get { return name; }
             set
             {
-                var newName = Language.GetValidName(value, true);
+                var newName = Language.GetValidName( value, true );
 
-                if (newName != name)
+                if ( newName != name )
                 {
                     name = newName;
-                    Changed();
+                    Changed( );
                 }
             }
         }
@@ -91,15 +91,18 @@ namespace NClass.Core
         {
             set
             {
-                if (name != value)
+                if ( name != value )
                 {
                     name = value;
-                    Changed();
+                    Changed( );
                 }
             }
         }
 
-        public virtual bool IsNameReadonly { get { return false; } }
+        public virtual bool IsNameReadonly
+        {
+            get { return false; }
+        }
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="value" /> does not fit to the syntax.
@@ -109,12 +112,12 @@ namespace NClass.Core
             get { return type; }
             set
             {
-                var newType = Language.GetValidTypeName(value);
+                var newType = Language.GetValidTypeName( value );
 
-                if (newType != type)
+                if ( newType != type )
                 {
                     type = newType;
-                    Changed();
+                    Changed( );
                 }
             }
         }
@@ -123,15 +126,18 @@ namespace NClass.Core
         {
             set
             {
-                if (type != value)
+                if ( type != value )
                 {
                     type = value;
-                    Changed();
+                    Changed( );
                 }
             }
         }
 
-        public virtual bool IsTypeReadonly { get { return false; } }
+        public virtual bool IsTypeReadonly
+        {
+            get { return false; }
+        }
 
         protected abstract string DefaultType { get; }
 
@@ -143,30 +149,36 @@ namespace NClass.Core
             get { return access; }
             set
             {
-                if (!Language.IsValidModifier(value))
-                    throw new BadSyntaxException(Strings.ErrorInvalidModifier);
+                if ( !Language.IsValidModifier( value ) )
+                    throw new BadSyntaxException( Strings.ErrorInvalidModifier );
 
-                if (access != value)
+                if ( access != value )
                 {
                     access = value;
-                    Changed();
+                    Changed( );
                 }
             }
         }
 
-        public virtual AccessModifier DefaultAccess { get { return Parent.DefaultMemberAccess; } }
+        public virtual AccessModifier DefaultAccess
+        {
+            get { return Parent.DefaultMemberAccess; }
+        }
 
         public AccessModifier Access
         {
             get
             {
-                if (AccessModifier == AccessModifier.Default)
+                if ( AccessModifier == AccessModifier.Default )
                     return DefaultAccess;
                 return AccessModifier;
             }
         }
 
-        public virtual bool IsAccessModifiable { get { return true; } }
+        public virtual bool IsAccessModifiable
+        {
+            get { return true; }
+        }
 
         public abstract bool IsModifierless { get; }
 
@@ -182,27 +194,24 @@ namespace NClass.Core
 
         public abstract Language Language { get; }
 
-        public string GetUmlDescription()
+        public string GetUmlDescription( )
         {
-            return GetUmlDescription(true, true, true, true);
+            return GetUmlDescription( true, true, true, true );
         }
 
-        public string GetUmlDescription(bool getType, bool getParameters, bool getParameterNames)
+        public string GetUmlDescription( bool getType, bool getParameters, bool getParameterNames )
         {
-            return GetUmlDescription(getType, getParameters, getParameterNames, getType);
+            return GetUmlDescription( getType, getParameters, getParameterNames, getType );
         }
 
-        public abstract string GetUmlDescription(bool getType,
-                                                 bool getParameters,
-                                                 bool getParameterNames,
-                                                 bool getInitValue);
+        public abstract string GetUmlDescription( bool getType, bool getParameters, bool getParameterNames, bool getInitValue );
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="declaration" /> does not fit to the syntax.
         /// </exception>
-        public abstract void InitFromString(string declaration);
+        public abstract void InitFromString( string declaration );
 
-        protected virtual void CopyFrom(Member member)
+        protected virtual void CopyFrom( Member member )
         {
             name = member.name;
             type = member.type;

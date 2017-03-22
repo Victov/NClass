@@ -62,13 +62,13 @@ namespace PDFExport
         ///     An instance of <see cref="XGraphics" /> which is used to
         ///     create the PDF.
         /// </param>
-        public PDFGraphics(XGraphics graphics)
+        public PDFGraphics( XGraphics graphics )
         {
             this.graphics = graphics;
 
-            transform = new Matrix();
+            transform = new Matrix( );
 
-            clippingRegion = new Region();
+            clippingRegion = new Region( );
         }
 
         #endregion
@@ -110,61 +110,61 @@ namespace PDFExport
         /// <summary>
         ///     Takes the inital state.
         /// </summary>
-        public void TakeInitialTransform()
+        public void TakeInitialTransform( )
         {
-            initialState = graphics.Save();
+            initialState = graphics.Save( );
             //Initial state token, so reset the transform matrix.
-            transform = new Matrix();
+            transform = new Matrix( );
         }
 
         /// <summary>
         ///     Restores the state to the initial state.
         /// </summary>
-        private void RestoreInitialTransform()
+        private void RestoreInitialTransform( )
         {
             //Go to the initial state
-            graphics.Restore(initialState);
-            initialState = graphics.Save();
+            graphics.Restore( initialState );
+            initialState = graphics.Save( );
 
             //We've just restored the initial state so the there are no transformations active.
-            transform = new Matrix();
+            transform = new Matrix( );
 
             //Restore the last clipping
-            ApplyClip(clippingRegion);
+            ApplyClip( clippingRegion );
         }
 
         public Matrix Transform
         {
-            get { return transform.Clone(); }
+            get { return transform.Clone( ); }
             set
             {
-                RestoreInitialTransform();
-                graphics.MultiplyTransform(value);
-                transform = value.Clone();
+                RestoreInitialTransform( );
+                graphics.MultiplyTransform( value );
+                transform = value.Clone( );
             }
         }
 
-        public void ResetTransform()
+        public void ResetTransform( )
         {
-            RestoreInitialTransform();
+            RestoreInitialTransform( );
         }
 
-        public void TranslateTransform(float dx, float dy)
+        public void TranslateTransform( float dx, float dy )
         {
-            transform.Translate(dx, dy);
-            graphics.TranslateTransform(dx, dy);
+            transform.Translate( dx, dy );
+            graphics.TranslateTransform( dx, dy );
         }
 
-        public void RotateTransform(float angle)
+        public void RotateTransform( float angle )
         {
-            transform.Rotate(angle);
-            graphics.RotateTransform(angle);
+            transform.Rotate( angle );
+            graphics.RotateTransform( angle );
         }
 
-        public void ScaleTransform(float sx, float sy)
+        public void ScaleTransform( float sx, float sy )
         {
-            transform.Scale(sx, sy);
-            graphics.ScaleTransform(sx, sy);
+            transform.Scale( sx, sy );
+            graphics.ScaleTransform( sx, sy );
         }
 
         /// <summary>
@@ -184,65 +184,70 @@ namespace PDFExport
         /// <summary>
         ///     Resets the clipping.
         /// </summary>
-        private void RestoreInitialClip()
+        private void RestoreInitialClip( )
         {
             //Get back to the initial state
-            graphics.Restore(initialState);
-            initialState = graphics.Save();
+            graphics.Restore( initialState );
+            initialState = graphics.Save( );
 
             //Restore transform
-            graphics.MultiplyTransform(transform);
+            graphics.MultiplyTransform( transform );
 
-            clippingRegion = new Region();
+            clippingRegion = new Region( );
         }
 
-        public Region Clip { get { return clippingRegion; } set { SetClip(value, CombineMode.Replace); } }
-
-        public RectangleF ClipBounds { get { return clippingRegion.GetBounds(graphics.Graphics); } }
-
-        public void SetClip(Rectangle rect, CombineMode combineMode)
+        public Region Clip
         {
-            RestoreInitialClip();
-            CombineClippingRegion(combineMode, new Region(rect));
-
-            graphics.IntersectClip(rect);
+            get { return clippingRegion; }
+            set { SetClip( value, CombineMode.Replace ); }
         }
 
-        public void SetClip(RectangleF rect, CombineMode combineMode)
+        public RectangleF ClipBounds
         {
-            RestoreInitialClip();
-            CombineClippingRegion(combineMode, new Region(rect));
-
-            graphics.IntersectClip(rect);
+            get { return clippingRegion.GetBounds( graphics.Graphics ); }
         }
 
-        public void SetClip(GraphicsPath path, CombineMode combineMode)
+        public void SetClip( Rectangle rect, CombineMode combineMode )
         {
-            RestoreInitialClip();
-            CombineClippingRegion(combineMode, new Region(path));
+            RestoreInitialClip( );
+            CombineClippingRegion( combineMode, new Region( rect ) );
 
-            graphics.IntersectClip(new XGraphicsPath(path.PathData.Points,
-                                                     path.PathData.Types,
-                                                     FillModeToXFillMode(path.FillMode)));
+            graphics.IntersectClip( rect );
         }
 
-        public void SetClip(Region region, CombineMode combineMode)
+        public void SetClip( RectangleF rect, CombineMode combineMode )
         {
-            RestoreInitialClip();
-            CombineClippingRegion(combineMode, region);
+            RestoreInitialClip( );
+            CombineClippingRegion( combineMode, new Region( rect ) );
 
-            ApplyClip(region);
+            graphics.IntersectClip( rect );
+        }
+
+        public void SetClip( GraphicsPath path, CombineMode combineMode )
+        {
+            RestoreInitialClip( );
+            CombineClippingRegion( combineMode, new Region( path ) );
+
+            graphics.IntersectClip( new XGraphicsPath( path.PathData.Points, path.PathData.Types, FillModeToXFillMode( path.FillMode ) ) );
+        }
+
+        public void SetClip( Region region, CombineMode combineMode )
+        {
+            RestoreInitialClip( );
+            CombineClippingRegion( combineMode, region );
+
+            ApplyClip( region );
         }
 
         /// <summary>
         ///     Applies the clipping stored in <paramref name="region" />.
         /// </summary>
         /// <param name="region">A region which is used for clipping.</param>
-        private void ApplyClip(Region region)
+        private void ApplyClip( Region region )
         {
-            foreach (var rect in region.GetRegionScans(new Matrix()))
+            foreach ( var rect in region.GetRegionScans( new Matrix( ) ) )
             {
-                graphics.IntersectClip(rect);
+                graphics.IntersectClip( rect );
             }
         }
 
@@ -251,30 +256,30 @@ namespace PDFExport
         /// </summary>
         /// <param name="combineMode">The combine mode to use.</param>
         /// <param name="region">The region to combine with the clippingRegion.</param>
-        private void CombineClippingRegion(CombineMode combineMode, Region region)
+        private void CombineClippingRegion( CombineMode combineMode, Region region )
         {
-            switch (combineMode)
+            switch ( combineMode )
             {
                 case CombineMode.Replace:
                     clippingRegion = region;
                     break;
                 case CombineMode.Intersect:
-                    clippingRegion.Intersect(region);
+                    clippingRegion.Intersect( region );
                     break;
                 case CombineMode.Union:
-                    clippingRegion.Union(region);
+                    clippingRegion.Union( region );
                     break;
                 case CombineMode.Xor:
-                    clippingRegion.Xor(region);
+                    clippingRegion.Xor( region );
                     break;
                 case CombineMode.Exclude:
-                    clippingRegion.Exclude(region);
+                    clippingRegion.Exclude( region );
                     break;
                 case CombineMode.Complement:
-                    clippingRegion.Complement(region);
+                    clippingRegion.Complement( region );
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("combineMode");
+                    throw new ArgumentOutOfRangeException( "combineMode" );
             }
         }
 
@@ -282,85 +287,82 @@ namespace PDFExport
 
         #region --- Draw...
 
-        public void DrawLine(Pen pen, int x1, int y1, int x2, int y2)
+        public void DrawLine( Pen pen, int x1, int y1, int x2, int y2 )
         {
-            graphics.DrawLine(PenToXPen(pen), x1, y1, x2, y2);
+            graphics.DrawLine( PenToXPen( pen ), x1, y1, x2, y2 );
         }
 
-        public void DrawLine(Pen pen, Point pt1, Point pt2)
+        public void DrawLine( Pen pen, Point pt1, Point pt2 )
         {
-            graphics.DrawLine(PenToXPen(pen), pt1, pt2);
+            graphics.DrawLine( PenToXPen( pen ), pt1, pt2 );
         }
 
-        public void DrawLines(Pen pen, Point[] points)
+        public void DrawLines( Pen pen, Point[] points )
         {
-            graphics.DrawLines(PenToXPen(pen), points);
+            graphics.DrawLines( PenToXPen( pen ), points );
         }
 
-        public void DrawRectangle(Pen pen, Rectangle rect)
+        public void DrawRectangle( Pen pen, Rectangle rect )
         {
-            graphics.DrawRectangle(PenToXPen(pen), rect);
+            graphics.DrawRectangle( PenToXPen( pen ), rect );
         }
 
-        public void DrawEllipse(Pen pen, int x, int y, int width, int height)
+        public void DrawEllipse( Pen pen, int x, int y, int width, int height )
         {
-            graphics.DrawEllipse(PenToXPen(pen), x, y, width, height);
+            graphics.DrawEllipse( PenToXPen( pen ), x, y, width, height );
         }
 
-        public void DrawPolygon(Pen pen, Point[] points)
+        public void DrawPolygon( Pen pen, Point[] points )
         {
-            graphics.DrawPolygon(PenToXPen(pen), points);
+            graphics.DrawPolygon( PenToXPen( pen ), points );
         }
 
-        public void DrawPath(Pen pen, GraphicsPath path)
+        public void DrawPath( Pen pen, GraphicsPath path )
         {
-            graphics.DrawPath(PenToXPen(pen), GraphicsPathToXGraphicsPath(path));
+            graphics.DrawPath( PenToXPen( pen ), GraphicsPathToXGraphicsPath( path ) );
         }
 
-        public void DrawString(string s, Font font, Brush brush, PointF point)
+        public void DrawString( string s, Font font, Brush brush, PointF point )
         {
-            graphics.DrawString(s, FontToXFont(font), BrushToXBrush(brush), point);
+            graphics.DrawString( s, FontToXFont( font ), BrushToXBrush( brush ), point );
         }
 
-        public void DrawString(string s, Font font, Brush brush, PointF point, StringFormat format)
+        public void DrawString( string s, Font font, Brush brush, PointF point, StringFormat format )
         {
-            graphics.DrawString(s, FontToXFont(font), BrushToXBrush(brush), point, StringFormatToXStringFormat(format));
+            graphics.DrawString( s, FontToXFont( font ), BrushToXBrush( brush ), point, StringFormatToXStringFormat( format ) );
         }
 
-        public void DrawString(string s, Font font, Brush brush, RectangleF layoutRectangle)
+        public void DrawString( string s, Font font, Brush brush, RectangleF layoutRectangle )
         {
-            graphics.DrawString(s, FontToXFont(font), BrushToXBrush(brush), layoutRectangle);
+            graphics.DrawString( s, FontToXFont( font ), BrushToXBrush( brush ), layoutRectangle );
         }
 
-        public void DrawString(string s, Font font, Brush brush, RectangleF layoutRectangle, StringFormat format)
+        public void DrawString( string s, Font font, Brush brush, RectangleF layoutRectangle, StringFormat format )
         {
-            var xFormat = StringFormatToXStringFormat(format);
-            var xFont = FontToXFont(font);
-            var xBrush = BrushToXBrush(brush);
-            if (format.FormatFlags == StringFormatFlags.NoWrap)
+            var xFormat = StringFormatToXStringFormat( format );
+            var xFont = FontToXFont( font );
+            var xBrush = BrushToXBrush( brush );
+            if ( format.FormatFlags == StringFormatFlags.NoWrap )
             {
                 //Single line
-                var line = TrimString(s, layoutRectangle.Width, xFont, format.Trimming);
-                graphics.DrawString(line, xFont, xBrush, layoutRectangle, xFormat);
+                var line = TrimString( s, layoutRectangle.Width, xFont, format.Trimming );
+                graphics.DrawString( line, xFont, xBrush, layoutRectangle, xFormat );
             }
             else
             {
                 //Multiline
                 var lineHeight = xFont.Height;
-                var lines = SetText(s, layoutRectangle.Width, (int) (layoutRectangle.Height/lineHeight), xFont);
+                var lines = SetText( s, layoutRectangle.Width, ( int ) ( layoutRectangle.Height / lineHeight ), xFont );
 
-                for (var i = 0; i < lines.Count; i++)
+                for ( var i = 0; i < lines.Count; i++ )
                 {
-                    var rect = new RectangleF(layoutRectangle.X,
-                                              layoutRectangle.Y + i*lineHeight,
-                                              layoutRectangle.Width,
-                                              lineHeight);
-                    graphics.DrawString(lines[i], xFont, xBrush, rect, xFormat);
+                    var rect = new RectangleF( layoutRectangle.X, layoutRectangle.Y + i * lineHeight, layoutRectangle.Width, lineHeight );
+                    graphics.DrawString( lines[ i ], xFont, xBrush, rect, xFormat );
                 }
             }
         }
 
-        public void DrawImage(Image image, Point point)
+        public void DrawImage( Image image, Point point )
         {
             //Images get scaled from pixels to dots by PDF-Sharp. So we have to take care
             //that the image scaling isn't applied twice. One way would be to scale the image
@@ -368,50 +370,50 @@ namespace PDFExport
             //everything, draw the image (don't forget to scale the coordinates), and restore
             //the old state. This is a hack.
             //What, if the ScaleImage isn't the pixel to dot scaling? That will fail.
-            graphics.Save();
-            graphics.ScaleTransform(ScaleImage, ScaleImage);
-            var point2 = new PointF(point.X/ScaleImage, point.Y/ScaleImage);
-            graphics.DrawImage(ImageToXImage(image), point2);
-            graphics.Restore();
+            graphics.Save( );
+            graphics.ScaleTransform( ScaleImage, ScaleImage );
+            var point2 = new PointF( point.X / ScaleImage, point.Y / ScaleImage );
+            graphics.DrawImage( ImageToXImage( image ), point2 );
+            graphics.Restore( );
         }
 
-        public void DrawImage(Image image, int x, int y)
+        public void DrawImage( Image image, int x, int y )
         {
             //See DrawImage(Image image, Point point).
-            graphics.Save();
-            graphics.ScaleTransform(ScaleImage, ScaleImage);
-            graphics.DrawImage(ImageToXImage(image), x/ScaleImage, y/ScaleImage);
-            graphics.Restore();
+            graphics.Save( );
+            graphics.ScaleTransform( ScaleImage, ScaleImage );
+            graphics.DrawImage( ImageToXImage( image ), x / ScaleImage, y / ScaleImage );
+            graphics.Restore( );
         }
 
         #endregion
 
         #region --- Fill...
 
-        public void FillRectangle(Brush brush, Rectangle rect)
+        public void FillRectangle( Brush brush, Rectangle rect )
         {
-            graphics.DrawRectangle(BrushToXBrush(brush), rect);
+            graphics.DrawRectangle( BrushToXBrush( brush ), rect );
         }
 
-        public void FillPolygon(Brush brush, Point[] points)
+        public void FillPolygon( Brush brush, Point[] points )
         {
             //If no FillMode is given for the GDI version of FillPolygon, it uses FillMode.Alternate.
-            graphics.DrawPolygon(BrushToXBrush(brush), points, XFillMode.Alternate);
+            graphics.DrawPolygon( BrushToXBrush( brush ), points, XFillMode.Alternate );
         }
 
-        public void FillEllipse(Brush brush, Rectangle rect)
+        public void FillEllipse( Brush brush, Rectangle rect )
         {
-            graphics.DrawEllipse(BrushToXBrush(brush), rect);
+            graphics.DrawEllipse( BrushToXBrush( brush ), rect );
         }
 
-        public void FillEllipse(Brush brush, int x, int y, int width, int height)
+        public void FillEllipse( Brush brush, int x, int y, int width, int height )
         {
-            graphics.DrawEllipse(BrushToXBrush(brush), x, y, width, height);
+            graphics.DrawEllipse( BrushToXBrush( brush ), x, y, width, height );
         }
 
-        public void FillPath(Brush brush, GraphicsPath path)
+        public void FillPath( Brush brush, GraphicsPath path )
         {
-            graphics.DrawPath(BrushToXBrush(brush), GraphicsPathToXGraphicsPath(path));
+            graphics.DrawPath( BrushToXBrush( brush ), GraphicsPathToXGraphicsPath( path ) );
         }
 
         #endregion
@@ -430,9 +432,9 @@ namespace PDFExport
         /// </summary>
         /// <param name="path">The GDI-GraphicsPath to convert.</param>
         /// <returns>The converted PDF-XGraphicsPath.</returns>
-        private static XGraphicsPath GraphicsPathToXGraphicsPath(GraphicsPath path)
+        private static XGraphicsPath GraphicsPathToXGraphicsPath( GraphicsPath path )
         {
-            return new XGraphicsPath(path.PathPoints, path.PathTypes, FillModeToXFillMode(path.FillMode));
+            return new XGraphicsPath( path.PathPoints, path.PathTypes, FillModeToXFillMode( path.FillMode ) );
         }
 
         /// <summary>
@@ -440,14 +442,9 @@ namespace PDFExport
         /// </summary>
         /// <param name="format">The GDI-StringFormat to convert.</param>
         /// <returns>The converted PDF-XStringFormat.</returns>
-        private static XStringFormat StringFormatToXStringFormat(StringFormat format)
+        private static XStringFormat StringFormatToXStringFormat( StringFormat format )
         {
-            return new XStringFormat
-            {
-                Alignment = StringAlignmentToXStringAlignment(format.Alignment),
-                FormatFlags = StringFormatFlagsToXStringFormatFlags(format.FormatFlags),
-                LineAlignment = StringAlignmentToXLineAlignment(format.LineAlignment)
-            };
+            return new XStringFormat {Alignment = StringAlignmentToXStringAlignment( format.Alignment ), FormatFlags = StringFormatFlagsToXStringFormatFlags( format.FormatFlags ), LineAlignment = StringAlignmentToXLineAlignment( format.LineAlignment )};
         }
 
         /// <summary>
@@ -455,9 +452,9 @@ namespace PDFExport
         /// </summary>
         /// <param name="stringAlignment">The GDI-StringAlignment to convert.</param>
         /// <returns>The converted PDF-XStringAlignment.</returns>
-        private static XStringAlignment StringAlignmentToXStringAlignment(StringAlignment stringAlignment)
+        private static XStringAlignment StringAlignmentToXStringAlignment( StringAlignment stringAlignment )
         {
-            switch (stringAlignment)
+            switch ( stringAlignment )
             {
                 case StringAlignment.Near:
                     return XStringAlignment.Near;
@@ -466,7 +463,7 @@ namespace PDFExport
                 case StringAlignment.Far:
                     return XStringAlignment.Far;
                 default:
-                    throw new ArgumentOutOfRangeException("stringAlignment");
+                    throw new ArgumentOutOfRangeException( "stringAlignment" );
             }
         }
 
@@ -475,7 +472,7 @@ namespace PDFExport
         /// </summary>
         /// <param name="stringFormatFlags">The GDI-StringFormatFlags to convert.</param>
         /// <returns>The converted PDF-XStringFormatFlags.</returns>
-        private static XStringFormatFlags StringFormatFlagsToXStringFormatFlags(StringFormatFlags stringFormatFlags)
+        private static XStringFormatFlags StringFormatFlagsToXStringFormatFlags( StringFormatFlags stringFormatFlags )
         {
             //Nothing else is implemented...
             return XStringFormatFlags.MeasureTrailingSpaces;
@@ -486,9 +483,9 @@ namespace PDFExport
         /// </summary>
         /// <param name="stringAlignment">The GDI-StringAlignment to convert.</param>
         /// <returns>The converted PDF-XLineAlignment.</returns>
-        private static XLineAlignment StringAlignmentToXLineAlignment(StringAlignment stringAlignment)
+        private static XLineAlignment StringAlignmentToXLineAlignment( StringAlignment stringAlignment )
         {
-            switch (stringAlignment)
+            switch ( stringAlignment )
             {
                 case StringAlignment.Near:
                     return XLineAlignment.Near;
@@ -497,7 +494,7 @@ namespace PDFExport
                 case StringAlignment.Far:
                     return XLineAlignment.Far;
                 default:
-                    throw new ArgumentOutOfRangeException("stringAlignment");
+                    throw new ArgumentOutOfRangeException( "stringAlignment" );
             }
         }
 
@@ -509,16 +506,16 @@ namespace PDFExport
         /// </remarks>
         /// <param name="brush">The GDI-Brush to convert.</param>
         /// <returns>The converted PDF-XBrush.</returns>
-        private static XBrush BrushToXBrush(Brush brush)
+        private static XBrush BrushToXBrush( Brush brush )
         {
             XBrush xbrush;
             SolidBrush solidBrush;
             LinearGradientBrush lgBrush;
-            if ((solidBrush = brush as SolidBrush) != null)
+            if ( ( solidBrush = brush as SolidBrush ) != null )
             {
-                xbrush = new XSolidBrush(solidBrush.Color);
+                xbrush = new XSolidBrush( solidBrush.Color );
             }
-            else if ((lgBrush = brush as LinearGradientBrush) != null)
+            else if ( ( lgBrush = brush as LinearGradientBrush ) != null )
             {
                 //There is no way to extract the angle of the gradient out of the GDI-brush.
                 //It only has a transformation matrix. To create a new gradient for pdfsharp,
@@ -526,12 +523,12 @@ namespace PDFExport
                 //Create a "line" (start and end point) through the rectangle at the half of
                 //the heigth. The two points are p1 and p2. Transform these points with the
                 //matrix. The transformed points are located on the border of the rectangle.
-                var p1 = new PointF(lgBrush.Rectangle.Left, lgBrush.Rectangle.Top + lgBrush.Rectangle.Height/2.0f);
-                var p2 = new PointF(lgBrush.Rectangle.Right, lgBrush.Rectangle.Top + lgBrush.Rectangle.Height/2.0f);
+                var p1 = new PointF( lgBrush.Rectangle.Left, lgBrush.Rectangle.Top + lgBrush.Rectangle.Height / 2.0f );
+                var p2 = new PointF( lgBrush.Rectangle.Right, lgBrush.Rectangle.Top + lgBrush.Rectangle.Height / 2.0f );
                 PointF[] points = {p1, p2};
-                lgBrush.Transform.TransformPoints(points);
-                p1 = points[0];
-                p2 = points[1];
+                lgBrush.Transform.TransformPoints( points );
+                p1 = points[ 0 ];
+                p2 = points[ 1 ];
 
                 //The direction is ok now. But the line might be to short. That is the case if
                 //the line is neither horizontal, nor vertical, nor diagonal. To fill the whole
@@ -539,11 +536,11 @@ namespace PDFExport
                 //outside the rectangle. To determine this gap we have to use some trigonometry.
                 //This will happily never the case in NClass. So we don't have to do this here.
 
-                xbrush = new XLinearGradientBrush(p1, p2, lgBrush.LinearColors[0], lgBrush.LinearColors[1]);
+                xbrush = new XLinearGradientBrush( p1, p2, lgBrush.LinearColors[ 0 ], lgBrush.LinearColors[ 1 ] );
             }
             else
             {
-                throw new NotImplementedException("Brush type not supported by PDFsharp.");
+                throw new NotImplementedException( "Brush type not supported by PDFsharp." );
             }
             return xbrush;
         }
@@ -553,9 +550,9 @@ namespace PDFExport
         /// </summary>
         /// <param name="font">The GDI-Font to convert.</param>
         /// <returns>The converted PDF-XFont.</returns>
-        private XFont FontToXFont(Font font)
+        private XFont FontToXFont( Font font )
         {
-            return new XFont(font.Name, font.SizeInPoints*ScaleFont, FontStyleToXFontStyle(font.Style));
+            return new XFont( font.Name, font.SizeInPoints * ScaleFont, FontStyleToXFontStyle( font.Style ) );
         }
 
         /// <summary>
@@ -563,13 +560,13 @@ namespace PDFExport
         /// </summary>
         /// <param name="fontStyle">The GDI-FontStyle to convert.</param>
         /// <returns>The converted PDF-XFontStyle.</returns>
-        private static XFontStyle FontStyleToXFontStyle(FontStyle fontStyle)
+        private static XFontStyle FontStyleToXFontStyle( FontStyle fontStyle )
         {
-            if (fontStyle == (FontStyle.Bold | FontStyle.Italic))
+            if ( fontStyle == ( FontStyle.Bold | FontStyle.Italic ) )
             {
                 return XFontStyle.BoldItalic;
             }
-            switch (fontStyle)
+            switch ( fontStyle )
             {
                 case FontStyle.Regular:
                     return XFontStyle.Regular;
@@ -582,7 +579,7 @@ namespace PDFExport
                 case FontStyle.Strikeout:
                     return XFontStyle.Strikeout;
                 default:
-                    throw new ArgumentOutOfRangeException("fontStyle");
+                    throw new ArgumentOutOfRangeException( "fontStyle" );
             }
         }
 
@@ -594,14 +591,14 @@ namespace PDFExport
         /// </remarks>
         /// <param name="image">The GDI-Image to convert.</param>
         /// <returns>The converted PDF-XImage.</returns>
-        private static XImage ImageToXImage(Image image)
+        private static XImage ImageToXImage( Image image )
         {
-            Image image2 = new Bitmap(image.Width, image.Height);
-            var gfx = Graphics.FromImage(image2);
-            gfx.FillRectangle(new SolidBrush(Color.White), 0, 0, image2.Width, image2.Height);
-            gfx.DrawImageUnscaled(image, 0, 0);
+            Image image2 = new Bitmap( image.Width, image.Height );
+            var gfx = Graphics.FromImage( image2 );
+            gfx.FillRectangle( new SolidBrush( Color.White ), 0, 0, image2.Width, image2.Height );
+            gfx.DrawImageUnscaled( image, 0, 0 );
 
-            return XImage.FromGdiPlusImage(image2);
+            return XImage.FromGdiPlusImage( image2 );
         }
 
         /// <summary>
@@ -609,16 +606,16 @@ namespace PDFExport
         /// </summary>
         /// <param name="fillMode">The GDI-FillMode to convert.</param>
         /// <returns>The converted PDF-XFillMode.</returns>
-        private static XFillMode FillModeToXFillMode(FillMode fillMode)
+        private static XFillMode FillModeToXFillMode( FillMode fillMode )
         {
-            switch (fillMode)
+            switch ( fillMode )
             {
                 case FillMode.Alternate:
                     return XFillMode.Alternate;
                 case FillMode.Winding:
                     return XFillMode.Winding;
                 default:
-                    throw new ArgumentOutOfRangeException("fillMode");
+                    throw new ArgumentOutOfRangeException( "fillMode" );
             }
         }
 
@@ -627,20 +624,13 @@ namespace PDFExport
         /// </summary>
         /// <param name="pen">The GDI-Pen to convert.</param>
         /// <returns>The converted PDF-XPen.</returns>
-        private static XPen PenToXPen(Pen pen)
+        private static XPen PenToXPen( Pen pen )
         {
-            var xPen = new XPen(pen.Color, pen.Width)
-            {
-                DashOffset = pen.DashOffset,
-                DashStyle = DashStyleToXDashStyle(pen.DashStyle),
-                LineCap = LineCapToXLineCap(pen.StartCap),
-                LineJoin = LineJoinToXLineJoin(pen.LineJoin),
-                MiterLimit = pen.MiterLimit
-            };
+            var xPen = new XPen( pen.Color, pen.Width ) {DashOffset = pen.DashOffset, DashStyle = DashStyleToXDashStyle( pen.DashStyle ), LineCap = LineCapToXLineCap( pen.StartCap ), LineJoin = LineJoinToXLineJoin( pen.LineJoin ), MiterLimit = pen.MiterLimit};
 
-            if (pen.DashStyle == DashStyle.Custom)
+            if ( pen.DashStyle == DashStyle.Custom )
             {
-                xPen.DashPattern = FloatArrayToDoubleArray(pen.DashPattern);
+                xPen.DashPattern = FloatArrayToDoubleArray( pen.DashPattern );
             }
 
             return xPen;
@@ -651,12 +641,12 @@ namespace PDFExport
         /// </summary>
         /// <param name="floats">The array of floats to convert.</param>
         /// <returns>The converted array of doubles.</returns>
-        private static double[] FloatArrayToDoubleArray(float[] floats)
+        private static double[] FloatArrayToDoubleArray( float[] floats )
         {
             var doubles = new double[floats.Length];
-            for (var i = 0; i < floats.Length; i++)
+            for ( var i = 0; i < floats.Length; i++ )
             {
-                doubles[i] = floats[i];
+                doubles[ i ] = floats[ i ];
             }
 
             return doubles;
@@ -671,9 +661,9 @@ namespace PDFExport
         /// </remarks>
         /// <param name="lineJoin">The GDI-LineJoin to convert.</param>
         /// <returns>The converted PDF-XLineJoin.</returns>
-        private static XLineJoin LineJoinToXLineJoin(LineJoin lineJoin)
+        private static XLineJoin LineJoinToXLineJoin( LineJoin lineJoin )
         {
-            switch (lineJoin)
+            switch ( lineJoin )
             {
                 case LineJoin.Miter:
                 case LineJoin.MiterClipped:
@@ -760,9 +750,9 @@ namespace PDFExport
         /// </remarks>
         /// <param name="lineCap">The GDI-LineCap to convert.</param>
         /// <returns>The converted PDF-XLineCap.</returns>
-        private static XLineCap LineCapToXLineCap(LineCap lineCap)
+        private static XLineCap LineCapToXLineCap( LineCap lineCap )
         {
-            switch (lineCap)
+            switch ( lineCap )
             {
                 case LineCap.Square:
                 case LineCap.Triangle:
@@ -790,9 +780,9 @@ namespace PDFExport
         /// </summary>
         /// <param name="dashStyle">The GDI-DashStyle to convert.</param>
         /// <returns>The converted PDF-XDashStyle.</returns>
-        private static XDashStyle DashStyleToXDashStyle(DashStyle dashStyle)
+        private static XDashStyle DashStyleToXDashStyle( DashStyle dashStyle )
         {
-            switch (dashStyle)
+            switch ( dashStyle )
             {
                 case DashStyle.Solid:
                     return XDashStyle.Solid;
@@ -807,7 +797,7 @@ namespace PDFExport
                 case DashStyle.Custom:
                     return XDashStyle.Custom;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException( );
             }
         }
 
@@ -827,106 +817,96 @@ namespace PDFExport
         /// <param name="maxLines">The maximum count of lines.</param>
         /// <param name="xFont">The font to use.</param>
         /// <returns>A list of strings. One item per line.</returns>
-        private List<string> SetText(string text, float width, int maxLines, XFont xFont)
+        private List< string > SetText( string text, float width, int maxLines, XFont xFont )
         {
-            var tokens = TokenizeString(text, "\r\n|\n\r|\n|\r|\t| ");
-            var lines = new List<string>();
-            var line = new StringBuilder();
+            var tokens = TokenizeString( text, "\r\n|\n\r|\n|\r|\t| " );
+            var lines = new List< string >( );
+            var line = new StringBuilder( );
             var wordCount = 0;
-            for (var i = 0; i < tokens.Count; i += 2)
+            for ( var i = 0; i < tokens.Count; i += 2 )
             {
-                line.Append(tokens[i]);
+                line.Append( tokens[ i ] );
                 wordCount++;
-                var lineWidth = graphics.MeasureString(line.ToString(), xFont).Width;
-                if (lineWidth > width)
+                var lineWidth = graphics.MeasureString( line.ToString( ), xFont ).Width;
+                if ( lineWidth > width )
                 {
                     //too long => wrap
-                    if (lines.Count == maxLines - 1)
+                    if ( lines.Count == maxLines - 1 )
                     {
                         //This is the last line. Trim the line.
-                        lines.Add(TrimString(line.ToString(),
-                                             width,
-                                             xFont,
-                                             wordCount == 1
-                                                 ? StringTrimming.EllipsisCharacter
-                                                 : StringTrimming.EllipsisWord));
+                        lines.Add( TrimString( line.ToString( ), width, xFont, wordCount == 1 ? StringTrimming.EllipsisCharacter : StringTrimming.EllipsisWord ) );
                         return lines;
                     }
 
-                    if (wordCount == 1)
+                    if ( wordCount == 1 )
                     {
                         //single word too long => while too long: new line
                         var charsSet = 0;
-                        while (lineWidth > width)
+                        while ( lineWidth > width )
                         {
-                            if (lines.Count == maxLines - 1)
+                            if ( lines.Count == maxLines - 1 )
                             {
                                 //This is the last line. Trim the line.
-                                lines.Add(TrimString(line.ToString(), width, xFont, StringTrimming.EllipsisCharacter));
+                                lines.Add( TrimString( line.ToString( ), width, xFont, StringTrimming.EllipsisCharacter ) );
                                 return lines;
                             }
                             //Remove characters until the "word" fits
                             do
                             {
                                 line.Length--;
-                                lineWidth = graphics.MeasureString(line.ToString(), xFont).Width;
-                            } while (lineWidth > width && line.Length > 0);
-                            if (line.Length == 0)
+                                lineWidth = graphics.MeasureString( line.ToString( ), xFont ).Width;
+                            } while ( lineWidth > width && line.Length > 0 );
+                            if ( line.Length == 0 )
                             {
                                 //This can happen if the width is to small for one singel char. We set the char
                                 //in this case even if it doesn't realy fit.
-                                line.Append(tokens[i][charsSet]);
+                                line.Append( tokens[ i ][ charsSet ] );
                             }
-                            lines.Add(line.ToString());
+                            lines.Add( line.ToString( ) );
                             charsSet += line.Length;
                             //The next line starts with the rest of the word
-                            line = new StringBuilder(tokens[i].Substring(charsSet));
-                            lineWidth = graphics.MeasureString(line.ToString(), xFont).Width;
+                            line = new StringBuilder( tokens[ i ].Substring( charsSet ) );
+                            lineWidth = graphics.MeasureString( line.ToString( ), xFont ).Width;
                         }
                     }
                     else
                     {
                         //multiple words in line => remove last one
-                        line.Length -= tokens[i].Length;
-                        lines.Add(line.ToString().TrimEnd());
-                        line = new StringBuilder();
+                        line.Length -= tokens[ i ].Length;
+                        lines.Add( line.ToString( ).TrimEnd( ) );
+                        line = new StringBuilder( );
                         wordCount = 0;
                         i -= 2;
                     }
                 }
-                if (lineWidth <= width)
+                if ( lineWidth <= width )
                 {
-                    if (i + 1 < tokens.Count)
+                    if ( i + 1 < tokens.Count )
                     {
-                        var token = tokens[i + 1];
-                        var regex = new Regex("\r\n|\n\r|\n|\r");
-                        if (regex.IsMatch(token))
+                        var token = tokens[ i + 1 ];
+                        var regex = new Regex( "\r\n|\n\r|\n|\r" );
+                        if ( regex.IsMatch( token ) )
                         {
                             // A new line
-                            if (lines.Count == maxLines - 1)
+                            if ( lines.Count == maxLines - 1 )
                             {
                                 //This is the last line. Trim the line.
-                                line.Append("...");
-                                lines.Add(TrimString(line.ToString(),
-                                                     width,
-                                                     xFont,
-                                                     wordCount == 1
-                                                         ? StringTrimming.EllipsisCharacter
-                                                         : StringTrimming.EllipsisWord));
+                                line.Append( "..." );
+                                lines.Add( TrimString( line.ToString( ), width, xFont, wordCount == 1 ? StringTrimming.EllipsisCharacter : StringTrimming.EllipsisWord ) );
                                 return lines;
                             }
-                            lines.Add(line.ToString().TrimEnd());
-                            line = new StringBuilder();
+                            lines.Add( line.ToString( ).TrimEnd( ) );
+                            line = new StringBuilder( );
                             wordCount = 0;
                         }
                         else
                         {
-                            line.Append(token);
+                            line.Append( token );
                         }
                     }
                 }
             }
-            lines.Add(line.ToString());
+            lines.Add( line.ToString( ) );
             return lines;
         }
 
@@ -949,19 +929,19 @@ namespace PDFExport
         /// <param name="text">The text to devide.</param>
         /// <param name="separator">Teh separator to devide the text.</param>
         /// <returns>A list of tokens.</returns>
-        private static List<string> TokenizeString(string text, string separator)
+        private static List< string > TokenizeString( string text, string separator )
         {
-            var regex = new Regex(separator);
-            var matches = regex.Matches(text);
-            var result = new List<string>();
+            var regex = new Regex( separator );
+            var matches = regex.Matches( text );
+            var result = new List< string >( );
             var pos = 0;
-            foreach (Match match in matches)
+            foreach ( Match match in matches )
             {
-                result.Add(text.Substring(pos, match.Index - pos));
-                result.Add(match.Value);
+                result.Add( text.Substring( pos, match.Index - pos ) );
+                result.Add( match.Value );
                 pos = match.Index + match.Length;
             }
-            result.Add(text.Substring(pos, text.Length - pos));
+            result.Add( text.Substring( pos, text.Length - pos ) );
 
             return result;
         }
@@ -977,35 +957,30 @@ namespace PDFExport
         /// <param name="font">The font which is used to print the text.</param>
         /// <param name="stringTrimming">A StringTrimming which should be used. See remarks.</param>
         /// <returns>The (possible) trimmed string.</returns>
-        private string TrimString(string s, float width, XFont font, StringTrimming stringTrimming)
+        private string TrimString( string s, float width, XFont font, StringTrimming stringTrimming )
         {
-            if (graphics.MeasureString(s, font).Width <= width
-                || stringTrimming == StringTrimming.None)
+            if ( graphics.MeasureString( s, font ).Width <= width || stringTrimming == StringTrimming.None )
             {
                 return s;
             }
 
-            var ellipsis = stringTrimming == StringTrimming.EllipsisCharacter
-                           || stringTrimming == StringTrimming.EllipsisWord
-                           || stringTrimming == StringTrimming.EllipsisPath;
-            var word = stringTrimming == StringTrimming.Word
-                       || stringTrimming == StringTrimming.EllipsisWord;
+            var ellipsis = stringTrimming == StringTrimming.EllipsisCharacter || stringTrimming == StringTrimming.EllipsisWord || stringTrimming == StringTrimming.EllipsisPath;
+            var word = stringTrimming == StringTrimming.Word || stringTrimming == StringTrimming.EllipsisWord;
 
             var result = ellipsis ? s + "..." : s;
             do
             {
-                if (word)
+                if ( word )
                 {
-                    var pos = result.LastIndexOf(' ');
-                    result = pos <= 0 ? "" : result.Substring(0, pos);
+                    var pos = result.LastIndexOf( ' ' );
+                    result = pos <= 0 ? "" : result.Substring( 0, pos );
                 }
                 else
                 {
-                    result = result.Substring(0, ellipsis ? result.Length - 4 : result.Length - 1);
+                    result = result.Substring( 0, ellipsis ? result.Length - 4 : result.Length - 1 );
                 }
                 result = ellipsis ? result + "..." : result;
-            } while (graphics.MeasureString(result, font).Width > width
-                     || s.Length <= 0);
+            } while ( graphics.MeasureString( result, font ).Width > width || s.Length <= 0 );
 
             return result;
         }

@@ -23,12 +23,12 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
     {
         private DelegateType parent;
 
-        protected override void FillList()
+        protected override void FillList( )
         {
-            lstItems.Items.Clear();
-            foreach (var value in parent.Arguments)
+            lstItems.Items.Clear( );
+            foreach ( var value in parent.Arguments )
             {
-                var item = lstItems.Items.Add(value.ToString());
+                var item = lstItems.Items.Add( value.ToString( ) );
 
                 item.Tag = value;
                 item.ImageIndex = Icons.ParameterImageIndex;
@@ -41,10 +41,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         /// <exception cref="ReservedNameException">
         ///     The <paramref name="text" /> contains a reserved name.
         /// </exception>
-        protected override void AddToList(string text)
+        protected override void AddToList( string text )
         {
-            var value = parent.AddParameter(text);
-            var item = lstItems.Items.Add(value.ToString());
+            var value = parent.AddParameter( text );
+            var item = lstItems.Items.Add( value.ToString( ) );
 
             item.Tag = value;
             item.ImageIndex = Icons.ParameterImageIndex;
@@ -56,46 +56,46 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         /// <exception cref="ReservedNameException">
         ///     The <paramref name="text" /> contains a reserved name.
         /// </exception>
-        protected override void Modify(ListViewItem item, string text)
+        protected override void Modify( ListViewItem item, string text )
         {
-            if (item.Tag is Parameter)
+            if ( item.Tag is Parameter )
             {
-                var parameter = parent.ModifyParameter((Parameter) item.Tag, text);
+                var parameter = parent.ModifyParameter( ( Parameter ) item.Tag, text );
                 item.Tag = parameter;
-                item.Text = parameter.ToString();
+                item.Text = parameter.ToString( );
             }
         }
 
-        protected override void MoveUpItem(ListViewItem item)
+        protected override void MoveUpItem( ListViewItem item )
         {
-            if (item != null)
-                parent.MoveUpItem(item.Tag);
-            base.MoveUpItem(item);
+            if ( item != null )
+                parent.MoveUpItem( item.Tag );
+            base.MoveUpItem( item );
         }
 
-        protected override void MoveDownItem(ListViewItem item)
+        protected override void MoveDownItem( ListViewItem item )
         {
-            if (item != null)
-                parent.MoveDownItem(item.Tag);
-            base.MoveDownItem(item);
+            if ( item != null )
+                parent.MoveDownItem( item.Tag );
+            base.MoveDownItem( item );
         }
 
-        protected override void Remove(ListViewItem item)
+        protected override void Remove( ListViewItem item )
         {
-            if (item != null && item.Tag is Parameter)
-                parent.RemoveParameter((Parameter) item.Tag);
-            base.Remove(item);
+            if ( item != null && item.Tag is Parameter )
+                parent.RemoveParameter( ( Parameter ) item.Tag );
+            base.Remove( item );
         }
 
-        public void ShowDialog(DelegateType parent)
+        public void ShowDialog( DelegateType parent )
         {
-            if (parent != null)
+            if ( parent != null )
             {
                 this.parent = parent;
-                Text = string.Format(Strings.ItemsOfType, parent.Name);
-                FillList();
+                Text = string.Format( Strings.ItemsOfType, parent.Name );
+                FillList( );
 
-                base.ShowDialog();
+                base.ShowDialog( );
             }
         }
     }

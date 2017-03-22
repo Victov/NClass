@@ -21,14 +21,14 @@ namespace NClass.Core
         // List<> Loaded = new List <>;
 
 
-        public string[] GetAll()
+        public string[] GetAll( )
         {
             // return Loaded.ToArray();
             return null;
         }
 
 
-        public Language GetLanguageInstance(string name)
+        public Language GetLanguageInstance( string name )
         {
             // Loaded.FindAll(Name == name);
             return null;

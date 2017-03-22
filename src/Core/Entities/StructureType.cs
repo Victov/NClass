@@ -23,46 +23,76 @@ namespace NClass.Core
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        protected StructureType(string name)
-            : base(name)
+        protected StructureType( string name ) : base( name ) {}
+
+        public sealed override EntityType EntityType
         {
+            get { return EntityType.Structure; }
         }
 
-        public sealed override EntityType EntityType { get { return EntityType.Structure; } }
+        public override bool SupportsFields
+        {
+            get { return true; }
+        }
 
-        public override bool SupportsFields { get { return true; } }
+        public override bool SupportsMethods
+        {
+            get { return true; }
+        }
 
-        public override bool SupportsMethods { get { return true; } }
+        public override bool SupportsConstuctors
+        {
+            get { return true; }
+        }
 
-        public override bool SupportsConstuctors { get { return true; } }
+        public override bool SupportsDestructors
+        {
+            get { return false; }
+        }
 
-        public override bool SupportsDestructors { get { return false; } }
+        public override bool SupportsNesting
+        {
+            get { return true; }
+        }
 
-        public override bool SupportsNesting { get { return true; } }
+        public override bool HasExplicitBase
+        {
+            get { return false; }
+        }
 
-        public override bool HasExplicitBase { get { return false; } }
+        public override bool IsAllowedParent
+        {
+            get { return false; }
+        }
 
-        public override bool IsAllowedParent { get { return false; } }
+        public override bool IsAllowedChild
+        {
+            get { return false; }
+        }
 
-        public override bool IsAllowedChild { get { return false; } }
-
-        public override IEnumerable<Operation> OverridableOperations { get { return new Operation[] {}; } }
+        public override IEnumerable< Operation > OverridableOperations
+        {
+            get { return new Operation[] {}; }
+        }
 
         public sealed override string Signature
         {
-            get { return Language.GetAccessString(Access, false) + " Structure"; }
+            get { return Language.GetAccessString( Access, false ) + " Structure"; }
         }
 
-        public override string Stereotype { get { return "«structure»"; } }
+        public override string Stereotype
+        {
+            get { return "«structure»"; }
+        }
 
         /// <exception cref="InvalidOperationException">
         ///     The type does not support destructors.
         /// </exception>
-        public override Destructor AddDestructor()
+        public override Destructor AddDestructor( )
         {
-            throw new InvalidOperationException("Structures do not support destructors.");
+            throw new InvalidOperationException( "Structures do not support destructors." );
         }
 
-        public abstract StructureType Clone();
+        public abstract StructureType Clone( );
     }
 }

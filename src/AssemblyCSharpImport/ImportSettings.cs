@@ -9,10 +9,8 @@ namespace NClass.AssemblyCSharpImport
     /// <summary>
     ///     This is needed to serialize an ArrayList of ImportSettings.
     /// </summary>
-    [XmlInclude(typeof (ImportSettings))]
-    public class TemplateList : ArrayList
-    {
-    }
+    [XmlInclude( typeof( ImportSettings ) )]
+    public class TemplateList : ArrayList {}
 
     /// <summary>
     ///     The settings in this class describe what and how to import.
@@ -26,7 +24,7 @@ namespace NClass.AssemblyCSharpImport
         ///     Returns the name of the ImportSettings.
         /// </summary>
         /// <returns>The name of the ImportSettings.</returns>
-        public override string ToString()
+        public override string ToString( )
         {
             return Name;
         }
@@ -43,7 +41,7 @@ namespace NClass.AssemblyCSharpImport
         /// <summary>
         ///     Gets or sets the items to analyse (.NET Assemblies, C# source code files or folders).
         /// </summary>
-        public List<string> Items { get; set; }
+        public List< string > Items { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating if it is needed to create a new diagram for each item.
@@ -58,7 +56,7 @@ namespace NClass.AssemblyCSharpImport
         /// <summary>
         ///     Gets or sets the list of <see cref="FilterRule" /> of the settings.
         /// </summary>
-        public List<FilterRule> FilterRules { get; set; }
+        public List< FilterRule > FilterRules { get; set; }
 
         /// <summary>
         ///     Gets or sets a value indicating whether the to create relationships.

@@ -27,47 +27,52 @@ namespace NClass.Core
         ///     <paramref name="parentClass" /> is null.-or-
         ///     <paramref name="innerClass" /> is null.
         /// </exception>
-        internal NestingRelationship(CompositeType parentType, TypeBase innerType)
-            : base(parentType, innerType)
+        internal NestingRelationship( CompositeType parentType, TypeBase innerType ) : base( parentType, innerType )
         {
-            Attach();
+            Attach( );
         }
 
-        public override RelationshipType RelationshipType { get { return RelationshipType.Nesting; } }
-
-        private CompositeType ParentType { get { return (CompositeType) First; } }
-
-        private TypeBase InnerType { get { return (TypeBase) Second; } }
-
-        public NestingRelationship Clone(CompositeType parentType, TypeBase innerType)
+        public override RelationshipType RelationshipType
         {
-            var nesting = new NestingRelationship(parentType, innerType);
-            nesting.CopyFrom(this);
+            get { return RelationshipType.Nesting; }
+        }
+
+        private CompositeType ParentType
+        {
+            get { return ( CompositeType ) First; }
+        }
+
+        private TypeBase InnerType
+        {
+            get { return ( TypeBase ) Second; }
+        }
+
+        public NestingRelationship Clone( CompositeType parentType, TypeBase innerType )
+        {
+            var nesting = new NestingRelationship( parentType, innerType );
+            nesting.CopyFrom( this );
             return nesting;
         }
 
         /// <exception cref="RelationshipException">
         ///     Cannot finalize relationship.
         /// </exception>
-        protected override void OnAttaching(EventArgs e)
+        protected override void OnAttaching( EventArgs e )
         {
-            if (InnerType.IsNested)
-                throw new RelationshipException(Strings.ErrorInnerTypeAlreadyNested);
+            if ( InnerType.IsNested )
+                throw new RelationshipException( Strings.ErrorInnerTypeAlreadyNested );
 
             InnerType.NestingParent = ParentType;
         }
 
-        protected override void OnDetaching(EventArgs e)
+        protected override void OnDetaching( EventArgs e )
         {
             InnerType.NestingParent = null;
         }
 
-        public override string ToString()
+        public override string ToString( )
         {
-            return string.Format("{0}: {1} (+)--> {2}",
-                                 Strings.Nesting,
-                                 First.Name,
-                                 Second.Name);
+            return string.Format( "{0}: {1} (+)--> {2}", Strings.Nesting, First.Name, Second.Name );
         }
     }
 }

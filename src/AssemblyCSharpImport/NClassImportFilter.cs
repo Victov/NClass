@@ -38,7 +38,7 @@ namespace NClass.AssemblyCSharpImport
         ///     Initializes a new instance of <see cref="NClassImportFilter" />.
         /// </summary>
         /// <param name="filter">The filter to delegate filter calls to.</param>
-        public NClassImportFilter(IFilter filter)
+        public NClassImportFilter( IFilter filter )
         {
             this.filter = filter;
             UnsafeTypesPresent = false;
@@ -83,9 +83,9 @@ namespace NClass.AssemblyCSharpImport
         /// <returns>
         ///     <c>True</c> if the class should be reflected.
         /// </returns>
-        public bool Reflect(NRClass nrClass)
+        public bool Reflect( NRClass nrClass )
         {
-            return filter.Reflect(nrClass);
+            return filter.Reflect( nrClass );
         }
 
         /// <summary>
@@ -95,9 +95,9 @@ namespace NClass.AssemblyCSharpImport
         /// <returns>
         ///     <c>True</c> if the interface should be reflected.
         /// </returns>
-        public bool Reflect(NRInterface nrInterface)
+        public bool Reflect( NRInterface nrInterface )
         {
-            return filter.Reflect(nrInterface);
+            return filter.Reflect( nrInterface );
         }
 
         /// <summary>
@@ -107,9 +107,9 @@ namespace NClass.AssemblyCSharpImport
         /// <returns>
         ///     <c>True</c> if the struct should be reflected.
         /// </returns>
-        public bool Reflect(NRStruct nrStruct)
+        public bool Reflect( NRStruct nrStruct )
         {
-            return filter.Reflect(nrStruct);
+            return filter.Reflect( nrStruct );
         }
 
         /// <summary>
@@ -119,11 +119,9 @@ namespace NClass.AssemblyCSharpImport
         /// <returns>
         ///     <c>True</c> if the delegate should be reflected.
         /// </returns>
-        public bool Reflect(NRDelegate nrDelegate)
+        public bool Reflect( NRDelegate nrDelegate )
         {
-            return IsUnsafePointer(nrDelegate.ReturnType.ToString()) || HasUnsafeParameters(nrDelegate.Parameters)
-                ? false
-                : filter.Reflect(nrDelegate);
+            return IsUnsafePointer( nrDelegate.ReturnType.ToString( ) ) || HasUnsafeParameters( nrDelegate.Parameters ) ? false : filter.Reflect( nrDelegate );
         }
 
         /// <summary>
@@ -133,9 +131,9 @@ namespace NClass.AssemblyCSharpImport
         /// <returns>
         ///     <c>True</c> if the enum should be reflected.
         /// </returns>
-        public bool Reflect(NREnum nrEnum)
+        public bool Reflect( NREnum nrEnum )
         {
-            return filter.Reflect(nrEnum);
+            return filter.Reflect( nrEnum );
         }
 
         /// <summary>
@@ -145,9 +143,9 @@ namespace NClass.AssemblyCSharpImport
         /// <returns>
         ///     <c>True</c> if the enum value should be reflected.
         /// </returns>
-        public bool Reflect(NREnumValue nrEnumValue)
+        public bool Reflect( NREnumValue nrEnumValue )
         {
-            return filter.Reflect(nrEnumValue);
+            return filter.Reflect( nrEnumValue );
         }
 
         /// <summary>
@@ -157,9 +155,9 @@ namespace NClass.AssemblyCSharpImport
         /// <returns>
         ///     <c>True</c> if the method should be reflected.
         /// </returns>
-        public bool Reflect(NRConstructor nrConstructor)
+        public bool Reflect( NRConstructor nrConstructor )
         {
-            return HasUnsafeParameters(nrConstructor.Parameters) ? false : filter.Reflect(nrConstructor);
+            return HasUnsafeParameters( nrConstructor.Parameters ) ? false : filter.Reflect( nrConstructor );
         }
 
         /// <summary>
@@ -169,11 +167,9 @@ namespace NClass.AssemblyCSharpImport
         /// <returns>
         ///     <c>True</c> if the method should be reflected.
         /// </returns>
-        public bool Reflect(NRMethod nrMethod)
+        public bool Reflect( NRMethod nrMethod )
         {
-            return IsUnsafePointer(nrMethod.Type.Name) || HasUnsafeParameters(nrMethod.Parameters)
-                ? false
-                : filter.Reflect(nrMethod);
+            return IsUnsafePointer( nrMethod.Type.Name ) || HasUnsafeParameters( nrMethod.Parameters ) ? false : filter.Reflect( nrMethod );
         }
 
         /// <summary>
@@ -183,11 +179,9 @@ namespace NClass.AssemblyCSharpImport
         /// <returns>
         ///     <c>True</c> if the operator should be reflected.
         /// </returns>
-        public bool Reflect(NROperator nrOperator)
+        public bool Reflect( NROperator nrOperator )
         {
-            return IsUnsafePointer(nrOperator.Type.Name) || HasUnsafeParameters(nrOperator.Parameters)
-                ? false
-                : filter.Reflect(nrOperator);
+            return IsUnsafePointer( nrOperator.Type.Name ) || HasUnsafeParameters( nrOperator.Parameters ) ? false : filter.Reflect( nrOperator );
         }
 
         /// <summary>
@@ -197,9 +191,9 @@ namespace NClass.AssemblyCSharpImport
         /// <returns>
         ///     <c>True</c> if the event should be reflected.
         /// </returns>
-        public bool Reflect(NREvent nrEvent)
+        public bool Reflect( NREvent nrEvent )
         {
-            return filter.Reflect(nrEvent);
+            return filter.Reflect( nrEvent );
         }
 
         /// <summary>
@@ -209,9 +203,9 @@ namespace NClass.AssemblyCSharpImport
         /// <returns>
         ///     <c>True</c> if the field should be reflected.
         /// </returns>
-        public bool Reflect(NRField nrField)
+        public bool Reflect( NRField nrField )
         {
-            return IsUnsafePointer(nrField.Type.Name) ? false : filter.Reflect(nrField);
+            return IsUnsafePointer( nrField.Type.Name ) ? false : filter.Reflect( nrField );
         }
 
         /// <summary>
@@ -221,9 +215,9 @@ namespace NClass.AssemblyCSharpImport
         /// <returns>
         ///     <c>True</c> if the property should be reflected.
         /// </returns>
-        public bool Reflect(NRProperty nrProperty)
+        public bool Reflect( NRProperty nrProperty )
         {
-            return IsUnsafePointer(nrProperty.Type.Name) ? false : filter.Reflect(nrProperty);
+            return IsUnsafePointer( nrProperty.Type.Name ) ? false : filter.Reflect( nrProperty );
         }
 
         /// <summary>
@@ -231,9 +225,9 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         /// <param name="nrAttribute">The attribute to test.</param>
         /// <returns><c>True</c> if the attribute should be reflected.</returns>
-        public bool Reflect(NRAttribute nrAttribute)
+        public bool Reflect( NRAttribute nrAttribute )
         {
-            return IsUnsafePointer(nrAttribute.Name) ? false : filter.Reflect(nrAttribute);
+            return IsUnsafePointer( nrAttribute.Name ) ? false : filter.Reflect( nrAttribute );
         }
 
         /// <summary>
@@ -248,9 +242,9 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         /// <param name="nrModule">The module to test.</param>
         /// <returns><c>True</c> if the module should be reflected.</returns>
-        public bool Reflect(NRModule nrModule)
+        public bool Reflect( NRModule nrModule )
         {
-            return IsUnsafePointer(nrModule.Name) ? false : filter.Reflect(nrModule);
+            return IsUnsafePointer( nrModule.Name ) ? false : filter.Reflect( nrModule );
         }
 
 
@@ -259,9 +253,9 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         /// <param name="type">The type to check.</param>
         /// <returns><c>true</c> if the given type represents an unsafe pointer.</returns>
-        private bool IsUnsafePointer(string type)
+        private bool IsUnsafePointer( string type )
         {
-            if (type.Contains("*"))
+            if ( type.Contains( "*" ) )
             {
                 UnsafeTypesPresent = true;
                 return true;
@@ -274,9 +268,9 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         /// <param name="parameters">The list of parameters to check.</param>
         /// <returns><c>true</c> if the given list of parameters contains an unsafe pointer.</returns>
-        private bool HasUnsafeParameters(IEnumerable<NRParameter> parameters)
+        private bool HasUnsafeParameters( IEnumerable< NRParameter > parameters )
         {
-            return parameters.Any(parameter => IsUnsafePointer(parameter.Type.Name));
+            return parameters.Any( parameter => IsUnsafePointer( parameter.Type.Name ) );
         }
 
         #endregion

@@ -25,26 +25,25 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
     {
         private bool checkingLocked;
 
-        public TreeDialog()
+        public TreeDialog( )
         {
-            InitializeComponent();
+            InitializeComponent( );
             OperationTree.ImageList = Icons.IconList;
         }
 
         protected TreeView OperationTree { get; private set; }
 
-        public IEnumerable<Operation> GetSelectedOperations()
+        public IEnumerable< Operation > GetSelectedOperations( )
         {
-            for (var parent = 0; parent < OperationTree.Nodes.Count; parent++)
+            for ( var parent = 0; parent < OperationTree.Nodes.Count; parent++ )
             {
-                var parentNode = OperationTree.Nodes[parent];
+                var parentNode = OperationTree.Nodes[ parent ];
 
-                for (var child = 0; child < parentNode.Nodes.Count; child++)
+                for ( var child = 0; child < parentNode.Nodes.Count; child++ )
                 {
-                    if (parentNode.Nodes[child].Tag is Operation &&
-                        parentNode.Nodes[child].Checked)
+                    if ( parentNode.Nodes[ child ].Tag is Operation && parentNode.Nodes[ child ].Checked )
                     {
-                        yield return (Operation) parentNode.Nodes[child].Tag;
+                        yield return ( Operation ) parentNode.Nodes[ child ].Tag;
                     }
                 }
             }
@@ -54,57 +53,57 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         ///     <paramref name="parentNode" /> is null.-or-
         ///     <paramref name="operation" /> is null.
         /// </exception>
-        protected TreeNode CreateOperationNode(TreeNode parentNode, Operation operation)
+        protected TreeNode CreateOperationNode( TreeNode parentNode, Operation operation )
         {
-            if (parentNode == null)
-                throw new ArgumentNullException("parentNode");
-            if (operation == null)
-                throw new ArgumentNullException("operation");
+            if ( parentNode == null )
+                throw new ArgumentNullException( "parentNode" );
+            if ( operation == null )
+                throw new ArgumentNullException( "operation" );
 
-            var child = parentNode.Nodes.Add(operation.GetUmlDescription());
-            var imageIndex = Icons.GetImageIndex(operation);
+            var child = parentNode.Nodes.Add( operation.GetUmlDescription( ) );
+            var imageIndex = Icons.GetImageIndex( operation );
 
             child.Tag = operation;
             child.ImageIndex = imageIndex;
             child.SelectedImageIndex = imageIndex;
-            child.ToolTipText = operation.ToString();
+            child.ToolTipText = operation.ToString( );
 
             return child;
         }
 
-        protected void RemoveEmptyNodes()
+        protected void RemoveEmptyNodes( )
         {
-            for (var i = 0; i < OperationTree.Nodes.Count; i++)
+            for ( var i = 0; i < OperationTree.Nodes.Count; i++ )
             {
-                if (OperationTree.Nodes[i].Nodes.Count == 0)
-                    OperationTree.Nodes.RemoveAt(i--);
+                if ( OperationTree.Nodes[ i ].Nodes.Count == 0 )
+                    OperationTree.Nodes.RemoveAt( i-- );
             }
         }
 
-        protected virtual void UpdateTexts()
+        protected virtual void UpdateTexts( )
         {
             btnOK.Text = Strings.ButtonOK;
             btnCancel.Text = Strings.ButtonCancel;
         }
 
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoad( EventArgs e )
         {
-            base.OnLoad(e);
-            UpdateTexts();
+            base.OnLoad( e );
+            UpdateTexts( );
         }
 
-        private void treMembers_AfterCheck(object sender, TreeViewEventArgs e)
+        private void treMembers_AfterCheck( object sender, TreeViewEventArgs e )
         {
-            if (!checkingLocked)
+            if ( !checkingLocked )
             {
                 checkingLocked = true;
 
                 var node = e.Node;
                 var parentNode = e.Node.Parent;
 
-                if (parentNode != null)
+                if ( parentNode != null )
                 {
-                    if (!node.Checked)
+                    if ( !node.Checked )
                     {
                         parentNode.Checked = false;
                     }
@@ -112,9 +111,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                     {
                         var allChecked = true;
 
-                        foreach (TreeNode neighbour in parentNode.Nodes)
+                        foreach ( TreeNode neighbour in parentNode.Nodes )
                         {
-                            if (!neighbour.Checked)
+                            if ( !neighbour.Checked )
                             {
                                 allChecked = false;
                                 break;
@@ -124,7 +123,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
                     }
                 }
 
-                foreach (TreeNode child in node.Nodes)
+                foreach ( TreeNode child in node.Nodes )
                     child.Checked = node.Checked;
 
                 checkingLocked = false;

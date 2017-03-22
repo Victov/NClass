@@ -24,10 +24,10 @@ namespace NClass.DiagramEditor
         ///     <paramref name="g" /> is null.-or-
         ///     <paramref name="style" /> is null.
         /// </exception>
-        void Print(IGraphics g, bool selectedOnly, Style style);
+        void Print( IGraphics g, bool selectedOnly, Style style );
 
-        RectangleF GetPrintingArea(bool selectedOnly);
+        RectangleF GetPrintingArea( bool selectedOnly );
 
-        void ShowPrintDialog();
+        void ShowPrintDialog( );
     }
 }

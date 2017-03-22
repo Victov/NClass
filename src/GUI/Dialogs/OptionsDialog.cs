@@ -26,14 +26,14 @@ namespace NClass.GUI.Dialogs
     {
         private Style savedStyle;
 
-        public OptionsDialog()
+        public OptionsDialog( )
         {
-            InitializeComponent();
+            InitializeComponent( );
         }
 
         public event EventHandler StyleModified;
 
-        private void UpdateTexts()
+        private void UpdateTexts( )
         {
             Text = Strings.Options;
             tabGeneral.Text = Strings.General;
@@ -63,200 +63,191 @@ namespace NClass.GUI.Dialogs
             cboLanguage.Left = lblLanguage.Left + lblLanguage.Width + 3;
         }
 
-        private void LoadStyles()
+        private void LoadStyles( )
         {
-            cboStyles.Items.Clear();
-            foreach (var style in Style.AvaiableStyles)
+            cboStyles.Items.Clear( );
+            foreach ( var style in Style.AvaiableStyles )
             {
-                cboStyles.Items.Add(style);
-                if (style.Equals(Style.CurrentStyle))
+                cboStyles.Items.Add( style );
+                if ( style.Equals( Style.CurrentStyle ) )
                     cboStyles.SelectedItem = style;
             }
         }
 
-        private void FillLanguages()
+        private void FillLanguages( )
         {
-            cboLanguage.Items.Clear();
-            foreach (var language in UILanguage.AvalilableCultures)
+            cboLanguage.Items.Clear( );
+            foreach ( var language in UILanguage.AvalilableCultures )
             {
-                cboLanguage.Items.Add(language);
+                cboLanguage.Items.Add( language );
             }
         }
 
-        private void LoadSettings()
+        private void LoadSettings( )
         {
             // General settings
-            cboLanguage.SelectedItem = UILanguage.CreateUILanguage(Settings.Default.UILanguage);
+            cboLanguage.SelectedItem = UILanguage.CreateUILanguage( Settings.Default.UILanguage );
             chkRememberOpenProjects.Checked = Settings.Default.RememberOpenProjects;
 
             // Diagram settings
             chkUsePrecisionSnapping.Checked = DiagramEditor.Settings.Default.UsePrecisionSnapping;
-            if (DiagramEditor.Settings.Default.ShowChevron == ChevronMode.Always)
+            if ( DiagramEditor.Settings.Default.ShowChevron == ChevronMode.Always )
                 radChevronAlways.Checked = true;
-            else if (DiagramEditor.Settings.Default.ShowChevron == ChevronMode.AsNeeded)
+            else if ( DiagramEditor.Settings.Default.ShowChevron == ChevronMode.AsNeeded )
                 radChevronAsNeeded.Checked = true;
             else
                 radChevronNever.Checked = true;
 
-            if (DiagramEditor.Settings.Default.UseClearType == ClearTypeMode.Always)
+            if ( DiagramEditor.Settings.Default.UseClearType == ClearTypeMode.Always )
                 radClearTypeAlways.Checked = true;
-            else if (DiagramEditor.Settings.Default.UseClearType == ClearTypeMode.WhenZoomed)
+            else if ( DiagramEditor.Settings.Default.UseClearType == ClearTypeMode.WhenZoomed )
                 radClearTypeWhenZoomed.Checked = true;
             else
                 radClearTypeNever.Checked = true;
             chkClearTypeForImages.Checked = DiagramEditor.Settings.Default.UseClearTypeForImages;
 
             // Style settings
-            savedStyle = Style.CurrentStyle.Clone();
+            savedStyle = Style.CurrentStyle.Clone( );
             stylePropertyGrid.SelectedObject = Style.CurrentStyle;
         }
 
-        private void SaveSettings()
+        private void SaveSettings( )
         {
             // General settings
-            Settings.Default.UILanguage = ((UILanguage) cboLanguage.SelectedItem).ShortName;
+            Settings.Default.UILanguage = ( ( UILanguage ) cboLanguage.SelectedItem ).ShortName;
             Settings.Default.RememberOpenProjects = chkRememberOpenProjects.Checked;
 
             // Diagram settings
             DiagramEditor.Settings.Default.UsePrecisionSnapping = chkUsePrecisionSnapping.Checked;
-            if (radChevronAlways.Checked)
+            if ( radChevronAlways.Checked )
                 DiagramEditor.Settings.Default.ShowChevron = ChevronMode.Always;
-            else if (radChevronAsNeeded.Checked)
+            else if ( radChevronAsNeeded.Checked )
                 DiagramEditor.Settings.Default.ShowChevron = ChevronMode.AsNeeded;
             else
                 DiagramEditor.Settings.Default.ShowChevron = ChevronMode.Never;
 
-            if (radClearTypeAlways.Checked)
+            if ( radClearTypeAlways.Checked )
                 DiagramEditor.Settings.Default.UseClearType = ClearTypeMode.Always;
-            else if (radClearTypeWhenZoomed.Checked)
+            else if ( radClearTypeWhenZoomed.Checked )
                 DiagramEditor.Settings.Default.UseClearType = ClearTypeMode.WhenZoomed;
             else
                 DiagramEditor.Settings.Default.UseClearType = ClearTypeMode.Never;
             DiagramEditor.Settings.Default.UseClearTypeForImages = chkClearTypeForImages.Checked;
 
             // Style settings
-            Style.SaveCurrentStyle();
-            if (savedStyle != null)
-                savedStyle.Dispose();
+            Style.SaveCurrentStyle( );
+            if ( savedStyle != null )
+                savedStyle.Dispose( );
 
-            DiagramEditor.Settings.Default.Save();
-            Settings.Default.Save();
+            DiagramEditor.Settings.Default.Save( );
+            Settings.Default.Save( );
         }
 
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoad( EventArgs e )
         {
-            base.OnLoad(e);
+            base.OnLoad( e );
 
-            UpdateTexts();
-            FillLanguages();
-            LoadSettings();
-            LoadStyles();
+            UpdateTexts( );
+            FillLanguages( );
+            LoadSettings( );
+            LoadStyles( );
         }
 
-        protected override void OnClosed(EventArgs e)
+        protected override void OnClosed( EventArgs e )
         {
-            base.OnClosed(e);
-            if (DialogResult == DialogResult.Cancel)
+            base.OnClosed( e );
+            if ( DialogResult == DialogResult.Cancel )
                 Style.CurrentStyle = savedStyle;
-            savedStyle.Dispose();
+            savedStyle.Dispose( );
         }
 
-        private void stylePropertyGrid_PropertyValueChanged(object s,
-                                                            PropertyValueChangedEventArgs e)
+        private void stylePropertyGrid_PropertyValueChanged( object s, PropertyValueChangedEventArgs e )
         {
             cboStyles.SelectedIndex = -1;
-            if (StyleModified != null)
-                StyleModified(this, EventArgs.Empty);
+            if ( StyleModified != null )
+                StyleModified( this, EventArgs.Empty );
         }
 
-        private void btnClearRecents_Click(object sender, EventArgs e)
+        private void btnClearRecents_Click( object sender, EventArgs e )
         {
-            Settings.Default.RecentFiles.Clear();
+            Settings.Default.RecentFiles.Clear( );
         }
 
-        private void cboStyles_SelectedIndexChanged(object sender, EventArgs e)
+        private void cboStyles_SelectedIndexChanged( object sender, EventArgs e )
         {
             var style = cboStyles.SelectedItem as Style;
-            if (style != null)
-                ChangeCurrentStyle(style);
+            if ( style != null )
+                ChangeCurrentStyle( style );
         }
 
-        private void ChangeCurrentStyle(Style style)
+        private void ChangeCurrentStyle( Style style )
         {
             Style.CurrentStyle = style;
             stylePropertyGrid.SelectedObject = Style.CurrentStyle;
-            if (StyleModified != null)
-                StyleModified(this, EventArgs.Empty);
+            if ( StyleModified != null )
+                StyleModified( this, EventArgs.Empty );
         }
 
-        private void btnClear_Click(object sender, EventArgs e)
+        private void btnClear_Click( object sender, EventArgs e )
         {
-            ChangeCurrentStyle(new Style());
+            ChangeCurrentStyle( new Style( ) );
             cboStyles.SelectedIndex = -1;
         }
 
-        private void btnLoad_Click(object sender, EventArgs e)
+        private void btnLoad_Click( object sender, EventArgs e )
         {
-            using (var dialog = new OpenFileDialog())
+            using ( var dialog = new OpenFileDialog( ) )
             {
                 dialog.Filter = Strings.DiagramStyle + " (*.dst)|*.dst";
                 dialog.InitialDirectory = Style.StylesDirectory;
 
-                if (dialog.ShowDialog() == DialogResult.OK)
+                if ( dialog.ShowDialog( ) == DialogResult.OK )
                 {
-                    var style = Style.Load(dialog.FileName);
+                    var style = Style.Load( dialog.FileName );
 
-                    if (style == null)
+                    if ( style == null )
                     {
-                        MessageBox.Show(
-                            Strings.ErrorCouldNotLoadFile,
-                            Strings.Load,
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
+                        MessageBox.Show( Strings.ErrorCouldNotLoadFile, Strings.Load, MessageBoxButtons.OK, MessageBoxIcon.Error );
                     }
                     else
                     {
-                        cboStyles.Items.Add(style);
+                        cboStyles.Items.Add( style );
                         cboStyles.SelectedItem = style;
                     }
                 }
             }
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private void btnSave_Click( object sender, EventArgs e )
         {
-            using (var dialog = new SaveFileDialog())
+            using ( var dialog = new SaveFileDialog( ) )
             {
                 dialog.FileName = Style.CurrentStyle.Name;
                 dialog.InitialDirectory = Style.StylesDirectory;
                 dialog.Filter = Strings.DiagramStyle + " (*.dst)|*.dst";
 
-                if (dialog.ShowDialog() == DialogResult.OK)
+                if ( dialog.ShowDialog( ) == DialogResult.OK )
                 {
-                    if (Style.CurrentStyle.IsUntitled)
+                    if ( Style.CurrentStyle.IsUntitled )
                     {
-                        Style.CurrentStyle.Name = Path.GetFileNameWithoutExtension(dialog.FileName);
+                        Style.CurrentStyle.Name = Path.GetFileNameWithoutExtension( dialog.FileName );
                     }
 
-                    if (!Style.CurrentStyle.Save(dialog.FileName))
+                    if ( !Style.CurrentStyle.Save( dialog.FileName ) )
                     {
-                        MessageBox.Show(
-                            Strings.ErrorCouldNotSaveFile,
-                            Strings.Save,
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
+                        MessageBox.Show( Strings.ErrorCouldNotSaveFile, Strings.Save, MessageBoxButtons.OK, MessageBoxIcon.Error );
                     }
                     else
                     {
-                        LoadStyles();
+                        LoadStyles( );
                     }
                 }
             }
         }
 
-        private void btnOK_Click(object sender, EventArgs e)
+        private void btnOK_Click( object sender, EventArgs e )
         {
-            SaveSettings();
+            SaveSettings( );
         }
     }
 }

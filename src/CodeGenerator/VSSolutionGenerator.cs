@@ -29,8 +29,7 @@ namespace NClass.CodeGenerator
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="project" /> is null.
         /// </exception>
-        public VSSolutionGenerator(Project project, SolutionType version)
-            : base(project)
+        public VSSolutionGenerator( Project project, SolutionType version ) : base( project )
         {
             Version = version;
         }
@@ -40,9 +39,7 @@ namespace NClass.CodeGenerator
             get { return version; }
             set
             {
-                if (value == SolutionType.VisualStudio2005 ||
-                    value == SolutionType.VisualStudio2008 ||
-                    value == SolutionType.VisualStudio2015)
+                if ( value == SolutionType.VisualStudio2005 || value == SolutionType.VisualStudio2008 || value == SolutionType.VisualStudio2015 )
                 {
                     version = value;
                 }
@@ -53,9 +50,9 @@ namespace NClass.CodeGenerator
         {
             get
             {
-                if (Version == SolutionType.VisualStudio2005)
+                if ( Version == SolutionType.VisualStudio2005 )
                     return "9.00";
-                if(Version == SolutionType.VisualStudio2008)
+                if ( Version == SolutionType.VisualStudio2008 )
                     return "10.00";
                 return "12.00";
             }
@@ -65,9 +62,9 @@ namespace NClass.CodeGenerator
         {
             get
             {
-                if (Version == SolutionType.VisualStudio2005)
+                if ( Version == SolutionType.VisualStudio2005 )
                     return "Visual Studio 2005";
-                if (Version == SolutionType.VisualStudio2008)
+                if ( Version == SolutionType.VisualStudio2008 )
                     return "Visual Studio 2008";
                 return "Visual Studio 14";
             }
@@ -76,38 +73,35 @@ namespace NClass.CodeGenerator
         /// <exception cref="ArgumentException">
         ///     The <paramref name="model" /> has invalid language.
         /// </exception>
-        protected override ProjectGenerator CreateProjectGenerator(Model model)
+        protected override ProjectGenerator CreateProjectGenerator( Model model )
         {
             var language = model.Language;
 
-            if (language == CSharpLanguage.Instance)
-                return new CSharpProjectGenerator(model, Version);
-            if (language == JavaLanguage.Instance)
-                return new JavaProjectGenerator(model);
+            if ( language == CSharpLanguage.Instance )
+                return new CSharpProjectGenerator( model, Version );
+            if ( language == JavaLanguage.Instance )
+                return new JavaProjectGenerator( model );
 
-            throw new ArgumentException("The model has an unknown language.");
+            throw new ArgumentException( "The model has an unknown language." );
         }
 
-        protected override bool GenerateSolutionFile(string location)
+        protected override bool GenerateSolutionFile( string location )
         {
             try
             {
-                var templateDir = Path.Combine(Application.StartupPath, "Templates");
-                var templatePath = Path.Combine(templateDir, "sln.template");
-                var solutionDir = Path.Combine(location, SolutionName);
-                var solutionPath = Path.Combine(solutionDir, SolutionName + ".sln");
+                var templateDir = Path.Combine( Application.StartupPath, "Templates" );
+                var templatePath = Path.Combine( templateDir, "sln.template" );
+                var solutionDir = Path.Combine( location, SolutionName );
+                var solutionPath = Path.Combine( solutionDir, SolutionName + ".sln" );
 
-                using (var reader = new StreamReader(templatePath))
-                using (var writer = new StreamWriter(
-                    solutionPath,
-                    false,
-                    reader.CurrentEncoding))
-                {
-                    while (!reader.EndOfStream)
+                using ( var reader = new StreamReader( templatePath ) )
+                    using ( var writer = new StreamWriter( solutionPath, false, reader.CurrentEncoding ) )
                     {
-                        CopyLine(reader, writer);
+                        while ( !reader.EndOfStream )
+                        {
+                            CopyLine( reader, writer );
+                        }
                     }
-                }
                 return true;
             }
             catch
@@ -116,29 +110,28 @@ namespace NClass.CodeGenerator
             }
         }
 
-        private void CopyLine(StreamReader reader, StreamWriter writer)
+        private void CopyLine( StreamReader reader, StreamWriter writer )
         {
-            var line = reader.ReadLine();
+            var line = reader.ReadLine( );
 
-            line = line.Replace("${VersionNumber}", VersionNumber);
-            line = line.Replace("${VersionString}", VersionString);
+            line = line.Replace( "${VersionNumber}", VersionNumber );
+            line = line.Replace( "${VersionString}", VersionString );
 
-            if (line.Contains("${ProjectFile}"))
+            if ( line.Contains( "${ProjectFile}" ) )
             {
-                var nextLine = reader.ReadLine();
-                foreach (var generator in ProjectGenerators)
+                var nextLine = reader.ReadLine( );
+                foreach ( var generator in ProjectGenerators )
                 {
-                    var newLine = line.Replace("${ProjectFile}",
-                                               generator.RelativeProjectFileName);
-                    newLine = newLine.Replace("${ProjectName}", generator.ProjectName);
+                    var newLine = line.Replace( "${ProjectFile}", generator.RelativeProjectFileName );
+                    newLine = newLine.Replace( "${ProjectName}", generator.ProjectName );
 
-                    writer.WriteLine(newLine);
-                    writer.WriteLine(nextLine);
+                    writer.WriteLine( newLine );
+                    writer.WriteLine( nextLine );
                 }
             }
             else
             {
-                writer.WriteLine(line);
+                writer.WriteLine( line );
             }
         }
     }

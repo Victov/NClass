@@ -19,12 +19,12 @@ namespace PDFExport
         /// <summary>
         ///     Initializes a new instance of PDFExportOptions.
         /// </summary>
-        public PDFExportOptions()
+        public PDFExportOptions( )
         {
-            InitializeComponent();
+            InitializeComponent( );
 
-            LocalizeComponents();
-            LoadSettings();
+            LocalizeComponents( );
+            LoadSettings( );
         }
 
         #endregion
@@ -59,7 +59,7 @@ namespace PDFExport
         /// <summary>
         ///     Displays the text for the current culture.
         /// </summary>
-        private void LocalizeComponents()
+        private void LocalizeComponents( )
         {
             Text = Strings.Options_Title;
             chkSelectedOnly.Text = Strings.Options_OnlySelected;
@@ -76,7 +76,7 @@ namespace PDFExport
         /// <summary>
         ///     Loads the last used settings into the properties.
         /// </summary>
-        private void LoadSettings()
+        private void LoadSettings( )
         {
             SelectedOnly = Settings.Default.OnlySelectedElements;
             Unit = Settings.Default.Unit;
@@ -86,13 +86,13 @@ namespace PDFExport
         /// <summary>
         ///     Stores the current values of the properties into the settings.
         /// </summary>
-        private void SaveSettings()
+        private void SaveSettings( )
         {
             Settings.Default.OnlySelectedElements = SelectedOnly;
             Settings.Default.Unit = Unit;
             Settings.Default.Padding = PDFPadding;
 
-            Settings.Default.Save();
+            Settings.Default.Save( );
         }
 
         /// <summary>
@@ -100,9 +100,9 @@ namespace PDFExport
         /// </summary>
         /// <param name="unit">The XGraphicsUnit to convert.</param>
         /// <returns>A string representing the XGraphicsUnit.</returns>
-        private static string GetUnitString(XGraphicsUnit unit)
+        private static string GetUnitString( XGraphicsUnit unit )
         {
-            switch (unit)
+            switch ( unit )
             {
                 case XGraphicsUnit.Point:
                     return Strings.Unit_Dots;
@@ -124,11 +124,11 @@ namespace PDFExport
         /// </summary>
         /// <param name="unit">The string to convert.</param>
         /// <returns>The resulting XGraphicsUnit.</returns>
-        private static XGraphicsUnit GetUnit(string unit)
+        private static XGraphicsUnit GetUnit( string unit )
         {
-            foreach (XGraphicsUnit xGraphicsUnit in Enum.GetValues(typeof (XGraphicsUnit)))
+            foreach ( XGraphicsUnit xGraphicsUnit in Enum.GetValues( typeof( XGraphicsUnit ) ) )
             {
-                if (GetUnitString(xGraphicsUnit) == unit)
+                if ( GetUnitString( xGraphicsUnit ) == unit )
                 {
                     return xGraphicsUnit;
                 }
@@ -149,16 +149,13 @@ namespace PDFExport
         /// </summary>
         /// <param name="sender">The caller.</param>
         /// <param name="e">Additional information.</param>
-        private void cmdOK_Click(object sender, EventArgs e)
+        private void cmdOK_Click( object sender, EventArgs e )
         {
             SelectedOnly = chkSelectedOnly.Checked;
-            PDFPadding = new Padding((int) numLeft.Value,
-                                     (int) numTop.Value,
-                                     (int) numRight.Value,
-                                     (int) numBottom.Value);
-            Unit = GetUnit(cboUnit.Text);
+            PDFPadding = new Padding( ( int ) numLeft.Value, ( int ) numTop.Value, ( int ) numRight.Value, ( int ) numBottom.Value );
+            Unit = GetUnit( cboUnit.Text );
 
-            SaveSettings();
+            SaveSettings( );
         }
 
         /// <summary>
@@ -166,7 +163,7 @@ namespace PDFExport
         /// </summary>
         /// <param name="sender">The caller.</param>
         /// <param name="e">Additional information.</param>
-        private void PDFExportOptions_Shown(object sender, EventArgs e)
+        private void PDFExportOptions_Shown( object sender, EventArgs e )
         {
             chkSelectedOnly.Checked = SelectedOnly;
 
@@ -175,12 +172,12 @@ namespace PDFExport
             numBottom.Value = PDFPadding.Bottom;
             numLeft.Value = PDFPadding.Left;
 
-            cboUnit.Items.Clear();
-            foreach (XGraphicsUnit xGraphicsUnit in Enum.GetValues(typeof (XGraphicsUnit)))
+            cboUnit.Items.Clear( );
+            foreach ( XGraphicsUnit xGraphicsUnit in Enum.GetValues( typeof( XGraphicsUnit ) ) )
             {
-                cboUnit.Items.Add(GetUnitString(xGraphicsUnit));
+                cboUnit.Items.Add( GetUnitString( xGraphicsUnit ) );
             }
-            cboUnit.Text = GetUnitString(Unit);
+            cboUnit.Text = GetUnitString( Unit );
         }
 
         #endregion

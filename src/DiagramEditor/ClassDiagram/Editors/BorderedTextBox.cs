@@ -22,19 +22,19 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
 {
     public class BorderedTextBox : UserControl
     {
-        private readonly Panel panel = new Panel();
+        private readonly Panel panel = new Panel( );
 
-        private readonly TabTextBox textBox = new TabTextBox();
+        private readonly TabTextBox textBox = new TabTextBox( );
 
-        public BorderedTextBox()
+        public BorderedTextBox( )
         {
             textBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             textBox.BorderStyle = BorderStyle.FixedSingle;
-            textBox.Location = new Point(-1, -1);
+            textBox.Location = new Point( -1, -1 );
             textBox.AcceptsReturn = true;
             panel.Dock = DockStyle.Fill;
-            panel.Size = textBox.Size - new Size(2, 0);
-            panel.Controls.Add(textBox);
+            panel.Size = textBox.Size - new Size( 2, 0 );
+            panel.Controls.Add( textBox );
 
             textBox.KeyDown += textBox_KeyDown;
             textBox.TextChanged += textBox_TextChanged;
@@ -42,91 +42,115 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
             textBox.GotFocus += textBox_GotFocus;
             textBox.LostFocus += textBox_LostFocus;
 
-            Padding = new Padding(1);
+            Padding = new Padding( 1 );
             BorderColor = SystemColors.ControlDark;
-            Controls.Add(panel);
+            Controls.Add( panel );
         }
 
-        [DefaultValue(typeof (Color), "ControlDark")]
-        public Color BorderColor { get { return base.BackColor; } set { base.BackColor = value; } }
+        [DefaultValue( typeof( Color ), "ControlDark" )]
+        public Color BorderColor
+        {
+            get { return base.BackColor; }
+            set { base.BackColor = value; }
+        }
 
-        [DefaultValue(typeof (Color), "Window")]
-        public new Color BackColor { get { return textBox.BackColor; } set { textBox.BackColor = value; } }
+        [DefaultValue( typeof( Color ), "Window" )]
+        public new Color BackColor
+        {
+            get { return textBox.BackColor; }
+            set { textBox.BackColor = value; }
+        }
 
-        public bool ReadOnly { get { return textBox.ReadOnly; } set { textBox.ReadOnly = value; } }
+        public bool ReadOnly
+        {
+            get { return textBox.ReadOnly; }
+            set { textBox.ReadOnly = value; }
+        }
 
-        public override string Text { get { return textBox.Text; } set { textBox.Text = value; } }
+        public override string Text
+        {
+            get { return textBox.Text; }
+            set { textBox.Text = value; }
+        }
 
-        [DefaultValue(true)]
-        public bool AcceptsReturn { get { return textBox.AcceptsReturn; } set { textBox.AcceptsReturn = value; } }
+        [DefaultValue( true )]
+        public bool AcceptsReturn
+        {
+            get { return textBox.AcceptsReturn; }
+            set { textBox.AcceptsReturn = value; }
+        }
 
-        [DefaultValue(false)]
-        public bool AcceptsTab { get { return textBox.AcceptsTab; } set { textBox.AcceptsTab = value; } }
+        [DefaultValue( false )]
+        public bool AcceptsTab
+        {
+            get { return textBox.AcceptsTab; }
+            set { textBox.AcceptsTab = value; }
+        }
 
         /// <exception cref="ArgumentOutOfRangeException">
         ///     The assigned value is less than zero.
         /// </exception>
-        public int SelectionStart { get { return textBox.SelectionStart; } set { textBox.SelectionStart = value; } }
-
-        private void textBox_KeyDown(object sender, KeyEventArgs e)
+        public int SelectionStart
         {
-            OnKeyDown(e);
+            get { return textBox.SelectionStart; }
+            set { textBox.SelectionStart = value; }
         }
 
-        private void textBox_TextChanged(object sender, EventArgs e)
+        private void textBox_KeyDown( object sender, KeyEventArgs e )
         {
-            OnTextChanged(e);
+            OnKeyDown( e );
         }
 
-        private void textBox_GotFocus(object sender, EventArgs e)
+        private void textBox_TextChanged( object sender, EventArgs e )
         {
-            OnGotFocus(e);
+            OnTextChanged( e );
         }
 
-        private void textBox_LostFocus(object sender, EventArgs e)
+        private void textBox_GotFocus( object sender, EventArgs e )
         {
-            OnLostFocus(e);
+            OnGotFocus( e );
         }
 
-        private void textBox_Validating(object sender, CancelEventArgs e)
+        private void textBox_LostFocus( object sender, EventArgs e )
         {
-            OnValidating(e);
+            OnLostFocus( e );
         }
 
-        protected override void SetBoundsCore(int x,
-                                              int y,
-                                              int width,
-                                              int height,
-                                              BoundsSpecified specified)
+        private void textBox_Validating( object sender, CancelEventArgs e )
         {
-            base.SetBoundsCore(x, y, width, textBox.PreferredHeight, specified);
+            OnValidating( e );
         }
 
-        protected override void Dispose(bool disposing)
+        protected override void SetBoundsCore( int x, int y, int width, int height, BoundsSpecified specified )
         {
-            if (disposing)
+            base.SetBoundsCore( x, y, width, textBox.PreferredHeight, specified );
+        }
+
+        protected override void Dispose( bool disposing )
+        {
+            if ( disposing )
             {
-                textBox.Dispose();
-                panel.Dispose();
+                textBox.Dispose( );
+                panel.Dispose( );
             }
-            base.Dispose(disposing);
+            base.Dispose( disposing );
         }
 
         private class TabTextBox : TextBox
         {
-            protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+            protected override bool ProcessCmdKey( ref Message msg, Keys keyData )
             {
-                if (keyData == Keys.Enter && AcceptsReturn)
+                if ( keyData == Keys.Enter && AcceptsReturn )
                 {
-                    OnKeyDown(new KeyEventArgs(keyData));
+                    OnKeyDown( new KeyEventArgs( keyData ) );
                     return true;
                 }
-                if (keyData == Keys.Tab && AcceptsTab)
+                if ( keyData == Keys.Tab && AcceptsTab )
                 {
-                    OnKeyDown(new KeyEventArgs(keyData));
+                    OnKeyDown( new KeyEventArgs( keyData ) );
                     return true;
                 }
-                return base.ProcessCmdKey(ref msg, keyData);
+                return base.ProcessCmdKey( ref msg, keyData );
             }
         }
     }

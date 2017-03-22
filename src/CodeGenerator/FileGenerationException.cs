@@ -20,34 +20,27 @@ namespace NClass.CodeGenerator
 {
     public class FileGenerationException : Exception
     {
-        public FileGenerationException(string filePath)
-            : base(@"Could not generate the file\n" + filePath)
+        public FileGenerationException( string filePath ) : base( @"Could not generate the file\n" + filePath )
         {
             FilePath = filePath;
         }
 
-        public FileGenerationException(string filePath, string message)
-            : base(message)
+        public FileGenerationException( string filePath, string message ) : base( message )
         {
             FilePath = filePath;
         }
 
-        public FileGenerationException(string filePath, Exception innerException)
-            : base(@"Could not generate the file\n" + filePath, innerException)
+        public FileGenerationException( string filePath, Exception innerException ) : base( @"Could not generate the file\n" + filePath, innerException )
         {
             FilePath = filePath;
         }
 
-        public FileGenerationException(string filePath, string message, Exception innerException)
-            : base(message, innerException)
+        public FileGenerationException( string filePath, string message, Exception innerException ) : base( message, innerException )
         {
             FilePath = filePath;
         }
 
-        protected FileGenerationException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
+        protected FileGenerationException( SerializationInfo info, StreamingContext context ) : base( info, context ) {}
 
         public string FilePath { get; }
     }

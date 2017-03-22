@@ -11,31 +11,31 @@ namespace CommandLine
         private static string workingDirectory = string.Empty;
         private static bool runBatch;
 
-        private static void Main(string[] args)
+        private static void Main( string[] args )
         {
             // Arguments
-            if (args == null || args.Length == 0)
+            if ( args == null || args.Length == 0 )
             {
-                DisplayVersion();
+                DisplayVersion( );
                 return;
             }
 
             // Run program with logger
-            var app = new App();
+            var app = new App( );
             string result;
 
-            for (var i = 0; i < args.Length; i++)
+            for ( var i = 0; i < args.Length; i++ )
             {
-                switch (args[i])
+                switch ( args[ i ] )
                 {
                     // NClass project to load if exist or to create
                     case "-project":
                     case "-p":
-                        result = App.FileExist(i, args.Length, args[i + 1], "-project");
-                        if (string.IsNullOrWhiteSpace(result) == false)
+                        result = App.FileExist( i, args.Length, args[ i + 1 ], "-project" );
+                        if ( string.IsNullOrWhiteSpace( result ) == false )
                         {
-                            Console.WriteLine(result);
-                            DisplayHelp();
+                            Console.WriteLine( result );
+                            DisplayHelp( );
                             return;
                         }
                         // TO DO:
@@ -44,36 +44,36 @@ namespace CommandLine
                     // NClass settings to load (file must exist)
                     case "-settings":
                     case "-s":
-                        result = App.FileExist(i, args.Length, args[i + 1], "-settings");
-                        if (string.IsNullOrWhiteSpace(result) == false)
+                        result = App.FileExist( i, args.Length, args[ i + 1 ], "-settings" );
+                        if ( string.IsNullOrWhiteSpace( result ) == false )
                         {
-                            Console.WriteLine(result);
-                            DisplayHelp();
+                            Console.WriteLine( result );
+                            DisplayHelp( );
                             return;
                         }
                         break;
                     case "-directory":
                     case "-d":
-                        if (i + 1 >= args.Length)
+                        if ( i + 1 >= args.Length )
                         {
-                            Console.WriteLine(Strings.MissingArgument, "-directory");
+                            Console.WriteLine( Strings.MissingArgument, "-directory" );
                             return;
                         }
 
                         // Check if the folder exists
-                        if (Directory.Exists(args[i + 1]) == false)
+                        if ( Directory.Exists( args[ i + 1 ] ) == false )
                         {
-                            Console.WriteLine(Strings.MissingArgument, "-directory");
+                            Console.WriteLine( Strings.MissingArgument, "-directory" );
                             return;
                         }
 
                         // Memorize the working directory
-                        workingDirectory = args[i + 1];
+                        workingDirectory = args[ i + 1 ];
                         i++;
                         break;
                     case "-log_cfg":
                     case "-l":
-                        app.ArgumentLog(i, args.Length, args[i + 1]);
+                        app.ArgumentLog( i, args.Length, args[ i + 1 ] );
                         break;
                     case "-batch":
                     case "-b":
@@ -81,14 +81,14 @@ namespace CommandLine
                         break;
                     case "-version":
                     case "-v":
-                        DisplayVersion();
+                        DisplayVersion( );
                         return;
                     case "-help":
                     case "-h":
-                        DisplayHelp();
+                        DisplayHelp( );
                         return;
                     default:
-                        DisplayHelp();
+                        DisplayHelp( );
                         return;
                 }
             }
@@ -96,34 +96,33 @@ namespace CommandLine
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
 
             // Run program with logger
-            app.Start();
+            app.Start( );
         }
 
-        private static void DisplayHelp()
+        private static void DisplayHelp( )
         {
-            DisplayVersion();
-            Console.WriteLine("");
+            DisplayVersion( );
+            Console.WriteLine( "" );
 
-            Console.WriteLine("-h / -help             Show the help to use this software.");
-            Console.WriteLine("-v / -version          Show the version of this software.");
-            Console.WriteLine("-p / -project          NClass project file to modify or create.");
-            Console.WriteLine("-s / -setting          Settings file to load.");
-            Console.WriteLine("-d / -directory        Working directory where to put log file.");
-            Console.WriteLine("-l / -log_cfg          Config log file.");
-            Console.WriteLine("-b / -batch            To run in batch mode without any input from user.");
+            Console.WriteLine( "-h / -help             Show the help to use this software." );
+            Console.WriteLine( "-v / -version          Show the version of this software." );
+            Console.WriteLine( "-p / -project          NClass project file to modify or create." );
+            Console.WriteLine( "-s / -setting          Settings file to load." );
+            Console.WriteLine( "-d / -directory        Working directory where to put log file." );
+            Console.WriteLine( "-l / -log_cfg          Config log file." );
+            Console.WriteLine( "-b / -batch            To run in batch mode without any input from user." );
         }
 
-        private static void DisplayVersion()
+        private static void DisplayVersion( )
         {
-            Console.WriteLine("NClass modified by Samuel Didier - Copyright - 2014 - Version 1.0 beta");
-            Console.WriteLine(
-                "Software to add comments, regions and summary tags based on my custom style to C# source code");
+            Console.WriteLine( "NClass modified by Samuel Didier - Copyright - 2014 - Version 1.0 beta" );
+            Console.WriteLine( "Software to add comments, regions and summary tags based on my custom style to C# source code" );
         }
 
-        private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private static void CurrentDomainOnUnhandledException( object sender, UnhandledExceptionEventArgs e )
         {
-            Console.WriteLine(e.ExceptionObject.ToString());
-            Environment.Exit(0);
+            Console.WriteLine( e.ExceptionObject.ToString( ) );
+            Environment.Exit( 0 );
         }
     }
 }

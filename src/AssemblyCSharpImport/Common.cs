@@ -11,27 +11,25 @@ namespace NClass.AssemblyCSharpImport
         /// <summary>
         ///     Creates a nice arrangement for each entity.
         /// </summary>
-        public static void ArrangeTypes(Diagram diagram)
+        public static void ArrangeTypes( Diagram diagram )
         {
-            const int Margin = Connection.Spacing*2;
+            const int Margin = Connection.Spacing * 2;
             const int DiagramPadding = Shape.SelectionMargin;
 
             var shapeCount = diagram.ShapeCount;
-            var columns = (int) Math.Ceiling(Math.Sqrt(shapeCount*2));
+            var columns = ( int ) Math.Ceiling( Math.Sqrt( shapeCount * 2 ) );
             var shapeIndex = 0;
             var top = Shape.SelectionMargin;
             var maxHeight = 0;
 
-            foreach (var shape in diagram.Shapes)
+            foreach ( var shape in diagram.Shapes )
             {
-                var column = shapeIndex%columns;
+                var column = shapeIndex % columns;
 
-                shape.Location = new Point(
-                    (TypeShape.DefaultWidth + Margin)*column + DiagramPadding,
-                    top);
+                shape.Location = new Point( ( TypeShape.DefaultWidth + Margin ) * column + DiagramPadding, top );
 
-                maxHeight = Math.Max(maxHeight, shape.Height);
-                if (column == columns - 1)
+                maxHeight = Math.Max( maxHeight, shape.Height );
+                if ( column == columns - 1 )
                 {
                     top += maxHeight + Margin;
                     maxHeight = 0;

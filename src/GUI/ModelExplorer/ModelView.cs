@@ -29,38 +29,38 @@ namespace NClass.GUI.ModelExplorer
         private Font normalFont;
         private Workspace workspace;
 
-        public ModelView()
+        public ModelView( )
         {
-            InitializeComponent();
-            Controls.Add(lblAddProject);
-            UpdateTexts();
+            InitializeComponent( );
+            Controls.Add( lblAddProject );
+            UpdateTexts( );
 
-            normalFont = new Font(Font, FontStyle.Regular);
-            boldFont = new Font(Font, FontStyle.Bold);
+            normalFont = new Font( Font, FontStyle.Regular );
+            boldFont = new Font( Font, FontStyle.Bold );
         }
 
-        [Browsable(false)]
+        [Browsable( false )]
         public Workspace Workspace
         {
             get { return workspace; }
             set
             {
-                if (workspace != value)
+                if ( workspace != value )
                 {
-                    if (workspace != null)
+                    if ( workspace != null )
                     {
                         workspace.ActiveProjectChanged -= workspace_ActiveProjectChanged;
                         workspace.ProjectAdded -= workspace_ProjectAdded;
                         workspace.ProjectRemoved -= workspace_ProjectRemoved;
-                        RemoveProjects();
+                        RemoveProjects( );
                     }
                     workspace = value;
-                    if (workspace != null)
+                    if ( workspace != null )
                     {
                         workspace.ActiveProjectChanged += workspace_ActiveProjectChanged;
                         workspace.ProjectAdded += workspace_ProjectAdded;
                         workspace.ProjectRemoved += workspace_ProjectRemoved;
-                        LoadProjects();
+                        LoadProjects( );
                     }
                     lblAddProject.Visible = workspace != null && !workspace.HasProject;
                 }
@@ -69,7 +69,7 @@ namespace NClass.GUI.ModelExplorer
 
         public event DocumentEventHandler DocumentOpening;
 
-        private void UpdateTexts()
+        private void UpdateTexts( )
         {
             mnuNewProject.Text = Strings.MenuNewProject;
             mnuOpen.Text = Strings.MenuOpen;
@@ -80,173 +80,173 @@ namespace NClass.GUI.ModelExplorer
             lblAddProject.Text = Strings.DoubleClickToAddProject;
         }
 
-        private void AddProject(Project project)
+        private void AddProject( Project project )
         {
-            ModelNode projectNode = new ProjectNode(project);
-            Nodes.Add(projectNode);
-            projectNode.AfterInitialized();
+            ModelNode projectNode = new ProjectNode( project );
+            Nodes.Add( projectNode );
+            projectNode.AfterInitialized( );
 
             SelectedNode = projectNode;
-            projectNode.Expand();
+            projectNode.Expand( );
             lblAddProject.Visible = false;
 
-            if (project.ItemCount == 1)
+            if ( project.ItemCount == 1 )
             {
-                foreach (var item in project.Items)
+                foreach ( var item in project.Items )
                 {
                     var document = item as IDocument;
-                    if (document != null)
-                        OnDocumentOpening(new DocumentEventArgs(document));
+                    if ( document != null )
+                        OnDocumentOpening( new DocumentEventArgs( document ) );
                 }
             }
-            if (project.IsUntitled)
+            if ( project.IsUntitled )
             {
-                projectNode.EditLabel();
+                projectNode.EditLabel( );
             }
         }
 
-        private void RemoveProject(Project project)
+        private void RemoveProject( Project project )
         {
-            foreach (ProjectNode projectNode in Nodes)
+            foreach ( ProjectNode projectNode in Nodes )
             {
-                if (projectNode.Project == project)
+                if ( projectNode.Project == project )
                 {
-                    projectNode.Delete();
+                    projectNode.Delete( );
                     break;
                 }
             }
-            if (!workspace.HasProject)
+            if ( !workspace.HasProject )
                 lblAddProject.Visible = true;
         }
 
-        private void RemoveProjects()
+        private void RemoveProjects( )
         {
-            foreach (ModelNode node in Nodes)
+            foreach ( ModelNode node in Nodes )
             {
-                node.BeforeDelete();
+                node.BeforeDelete( );
             }
-            Nodes.Clear();
+            Nodes.Clear( );
             lblAddProject.Visible = true;
         }
 
-        private void LoadProjects()
+        private void LoadProjects( )
         {
-            foreach (var project in workspace.Projects)
+            foreach ( var project in workspace.Projects )
             {
-                AddProject(project);
+                AddProject( project );
             }
         }
 
-        private void workspace_ActiveProjectChanged(object sender, EventArgs e)
+        private void workspace_ActiveProjectChanged( object sender, EventArgs e )
         {
-            foreach (ProjectNode node in Nodes)
+            foreach ( ProjectNode node in Nodes )
             {
-                if (node.Project == Workspace.ActiveProject)
+                if ( node.Project == Workspace.ActiveProject )
                     node.NodeFont = boldFont;
                 else
                     node.NodeFont = normalFont;
                 node.Text = node.Text; // Little hack to update the text's clipping size
             }
 
-            if (MonoHelper.IsRunningOnMono)
-                Refresh();
+            if ( MonoHelper.IsRunningOnMono )
+                Refresh( );
         }
 
-        private void workspace_ProjectAdded(object sender, ProjectEventArgs e)
+        private void workspace_ProjectAdded( object sender, ProjectEventArgs e )
         {
-            AddProject(e.Project);
+            AddProject( e.Project );
         }
 
-        private void workspace_ProjectRemoved(object sender, ProjectEventArgs e)
+        private void workspace_ProjectRemoved( object sender, ProjectEventArgs e )
         {
-            RemoveProject(e.Project);
+            RemoveProject( e.Project );
         }
 
-        private void lblAddProject_DoubleClick(object sender, EventArgs e)
+        private void lblAddProject_DoubleClick( object sender, EventArgs e )
         {
-            if (workspace != null && !workspace.HasProject)
+            if ( workspace != null && !workspace.HasProject )
             {
-                workspace.AddEmptyProject();
+                workspace.AddEmptyProject( );
             }
         }
 
-        protected override void OnNodeMouseDoubleClick(TreeNodeMouseClickEventArgs e)
+        protected override void OnNodeMouseDoubleClick( TreeNodeMouseClickEventArgs e )
         {
-            base.OnNodeMouseDoubleClick(e);
-            var node = (ModelNode) e.Node;
-            node.DoubleClick();
+            base.OnNodeMouseDoubleClick( e );
+            var node = ( ModelNode ) e.Node;
+            node.DoubleClick( );
         }
 
-        protected override void OnKeyDown(KeyEventArgs e)
+        protected override void OnKeyDown( KeyEventArgs e )
         {
-            base.OnKeyDown(e);
+            base.OnKeyDown( e );
 
-            if (e.KeyCode == Keys.Enter)
-            {
-                var selectedNode = SelectedNode as ModelNode;
-                if (selectedNode != null)
-                    selectedNode.EnterPressed();
-            }
-            else if (e.KeyCode == Keys.F2)
+            if ( e.KeyCode == Keys.Enter )
             {
                 var selectedNode = SelectedNode as ModelNode;
-                if (selectedNode != null)
-                    selectedNode.EditLabel();
+                if ( selectedNode != null )
+                    selectedNode.EnterPressed( );
+            }
+            else if ( e.KeyCode == Keys.F2 )
+            {
+                var selectedNode = SelectedNode as ModelNode;
+                if ( selectedNode != null )
+                    selectedNode.EditLabel( );
             }
         }
 
-        protected override void OnBeforeCollapse(TreeViewCancelEventArgs e)
+        protected override void OnBeforeCollapse( TreeViewCancelEventArgs e )
         {
-            base.OnBeforeCollapse(e);
+            base.OnBeforeCollapse( e );
 
             // Prevent top level nodes to be collapsed
-            if (e.Node.Level == 0)
+            if ( e.Node.Level == 0 )
                 e.Cancel = true;
         }
 
-        protected override void OnBeforeLabelEdit(NodeLabelEditEventArgs e)
+        protected override void OnBeforeLabelEdit( NodeLabelEditEventArgs e )
         {
-            base.OnBeforeLabelEdit(e);
+            base.OnBeforeLabelEdit( e );
 
-            var node = (ModelNode) e.Node;
-            if (!node.EditingLabel)
+            var node = ( ModelNode ) e.Node;
+            if ( !node.EditingLabel )
                 e.CancelEdit = true;
         }
 
-        protected override void OnAfterLabelEdit(NodeLabelEditEventArgs e)
+        protected override void OnAfterLabelEdit( NodeLabelEditEventArgs e )
         {
-            base.OnAfterLabelEdit(e);
+            base.OnAfterLabelEdit( e );
 
-            var node = (ModelNode) e.Node;
-            node.LabelEdited();
-            if (!e.CancelEdit && e.Label != null)
+            var node = ( ModelNode ) e.Node;
+            node.LabelEdited( );
+            if ( !e.CancelEdit && e.Label != null )
             {
-                node.LabelModified(e);
+                node.LabelModified( e );
             }
         }
 
         //TODO: ez így nem szép! nem kéne internal!
-        protected internal virtual void OnDocumentOpening(DocumentEventArgs e)
+        protected internal virtual void OnDocumentOpening( DocumentEventArgs e )
         {
-            if (DocumentOpening != null)
-                DocumentOpening(this, e);
+            if ( DocumentOpening != null )
+                DocumentOpening( this, e );
         }
 
-        protected override void OnFontChanged(EventArgs e)
+        protected override void OnFontChanged( EventArgs e )
         {
-            base.OnFontChanged(e);
+            base.OnFontChanged( e );
 
-            normalFont.Dispose();
-            boldFont.Dispose();
-            normalFont = new Font(Font, FontStyle.Regular);
-            boldFont = new Font(Font, FontStyle.Bold);
+            normalFont.Dispose( );
+            boldFont.Dispose( );
+            normalFont = new Font( Font, FontStyle.Regular );
+            boldFont = new Font( Font, FontStyle.Bold );
         }
 
         #region Context menu event handlers
 
-        private void contextMenu_Opening(object sender, CancelEventArgs e)
+        private void contextMenu_Opening( object sender, CancelEventArgs e )
         {
-            if (Workspace.Default.HasProject)
+            if ( Workspace.Default.HasProject )
             {
                 mnuSaveAll.Enabled = true;
                 mnuCloseAll.Enabled = true;
@@ -258,23 +258,23 @@ namespace NClass.GUI.ModelExplorer
             }
         }
 
-        private void mnuNewProject_Click(object sender, EventArgs e)
+        private void mnuNewProject_Click( object sender, EventArgs e )
         {
-            var project = Workspace.Default.AddEmptyProject();
+            var project = Workspace.Default.AddEmptyProject( );
             Workspace.Default.ActiveProject = project;
         }
 
-        private void mnuOpen_DropDownOpening(object sender, EventArgs e)
+        private void mnuOpen_DropDownOpening( object sender, EventArgs e )
         {
-            foreach (ToolStripItem item in mnuOpen.DropDownItems)
+            foreach ( ToolStripItem item in mnuOpen.DropDownItems )
             {
-                if (item.Tag is int)
+                if ( item.Tag is int )
                 {
-                    var index = (int) item.Tag;
+                    var index = ( int ) item.Tag;
 
-                    if (index < Settings.Default.RecentFiles.Count)
+                    if ( index < Settings.Default.RecentFiles.Count )
                     {
-                        item.Text = Settings.Default.RecentFiles[index];
+                        item.Text = Settings.Default.RecentFiles[ index ];
                         item.Visible = true;
                     }
                     else
@@ -287,29 +287,29 @@ namespace NClass.GUI.ModelExplorer
             mnuSepOpenFile.Visible = Settings.Default.RecentFiles.Count > 0;
         }
 
-        private void mnuOpenFile_Click(object sender, EventArgs e)
+        private void mnuOpenFile_Click( object sender, EventArgs e )
         {
-            Workspace.Default.OpenProject();
+            Workspace.Default.OpenProject( );
         }
 
-        private void OpenRecentFile_Click(object sender, EventArgs e)
+        private void OpenRecentFile_Click( object sender, EventArgs e )
         {
-            var index = (int) ((ToolStripItem) sender).Tag;
-            if (index >= 0 && index < Settings.Default.RecentFiles.Count)
+            var index = ( int ) ( ( ToolStripItem ) sender ).Tag;
+            if ( index >= 0 && index < Settings.Default.RecentFiles.Count )
             {
-                var fileName = Settings.Default.RecentFiles[index];
-                Workspace.Default.OpenProject(fileName);
+                var fileName = Settings.Default.RecentFiles[ index ];
+                Workspace.Default.OpenProject( fileName );
             }
         }
 
-        private void mnuSaveAll_Click(object sender, EventArgs e)
+        private void mnuSaveAll_Click( object sender, EventArgs e )
         {
-            Workspace.Default.SaveAllProjects();
+            Workspace.Default.SaveAllProjects( );
         }
 
-        private void mnuCloseAll_Click(object sender, EventArgs e)
+        private void mnuCloseAll_Click( object sender, EventArgs e )
         {
-            Workspace.Default.RemoveAll();
+            Workspace.Default.RemoveAll( );
         }
 
         #endregion

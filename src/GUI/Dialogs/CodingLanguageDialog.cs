@@ -7,15 +7,15 @@ namespace NClass.GUI.Dialogs
 {
     public partial class CodingLanguageDialog : Form
     {
-        public CodingLanguageDialog()
+        public CodingLanguageDialog( )
         {
-            InitializeComponent();
+            InitializeComponent( );
 
             // Display all coding languages available
             // listBoxCodingLanguages.Items.AddRange();
 
             // Select by default the first one if we have items
-            if (listBoxCodingLanguages.Items.Count != 0)
+            if ( listBoxCodingLanguages.Items.Count != 0 )
             {
                 btnOK.Enabled = false;
                 listBoxCodingLanguages.Enabled = false;
@@ -30,26 +30,26 @@ namespace NClass.GUI.Dialogs
 
         public Language LanguageSelected { get; }
 
-        private void UpdateTexts()
+        private void UpdateTexts( )
         {
             Text = Strings.ProgramingLanguage;
             btnOK.Text = Strings.ButtonOK;
             btnCancel.Text = Strings.ButtonCancel;
         }
 
-        private void btnOK_Click(object sender, EventArgs e)
+        private void btnOK_Click( object sender, EventArgs e )
         {
-            if (listBoxCodingLanguages.SelectedIndex == -1)
+            if ( listBoxCodingLanguages.SelectedIndex == -1 )
                 return;
 
             //LanguageSelected = GetLanguageInstance();
         }
 
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoad( EventArgs e )
         {
-            base.OnLoad(e);
+            base.OnLoad( e );
 
-            UpdateTexts();
+            UpdateTexts( );
         }
     }
 }

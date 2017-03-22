@@ -6,13 +6,13 @@ namespace NClass.CodeGenerator
 {
     public partial class CopyrightHeader : Form
     {
-        public CopyrightHeader()
+        public CopyrightHeader( )
         {
-            InitializeComponent();
-            UpdateTexts();
+            InitializeComponent( );
+            UpdateTexts( );
         }
 
-        private void UpdateTexts()
+        private void UpdateTexts( )
         {
             lblCompagnyName.Text = Strings.CompagnyName;
             lblAuthor.Text = Strings.AuthorName;
@@ -21,9 +21,9 @@ namespace NClass.CodeGenerator
             btnOK.Text = Strings.ButtonOK;
         }
 
-        private void btnOK_Click(object sender, EventArgs e)
+        private void btnOK_Click( object sender, EventArgs e )
         {
-            if (string.IsNullOrWhiteSpace(rtbCopyrightHeader.Text) == false)
+            if ( string.IsNullOrWhiteSpace( rtbCopyrightHeader.Text ) == false )
                 Settings.Default.CopyrightHeader = rtbCopyrightHeader.Text;
             else
                 Settings.Default.CopyrightHeader = string.Empty;
@@ -32,13 +32,13 @@ namespace NClass.CodeGenerator
             Settings.Default.Author = tbAuthor.Text;
 
             DialogResult = DialogResult.OK;
-            Close();
+            Close( );
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void btnCancel_Click( object sender, EventArgs e )
         {
             DialogResult = DialogResult.Cancel;
-            Close();
+            Close( );
         }
     }
 }

@@ -15,11 +15,11 @@
 
 namespace NClass.DiagramEditor
 {
-    public delegate void DocumentEventHandler(object sender, DocumentEventArgs e);
+    public delegate void DocumentEventHandler( object sender, DocumentEventArgs e );
 
     public class DocumentEventArgs
     {
-        public DocumentEventArgs(IDocument document)
+        public DocumentEventArgs( IDocument document )
         {
             Document = document;
         }

@@ -18,11 +18,11 @@ using System.Xml;
 
 namespace NClass.Core
 {
-    public delegate void SerializeEventHandler(object sender, SerializeEventArgs e);
+    public delegate void SerializeEventHandler( object sender, SerializeEventArgs e );
 
     public class SerializeEventArgs : EventArgs
     {
-        public SerializeEventArgs(XmlElement node)
+        public SerializeEventArgs( XmlElement node )
         {
             Node = node;
         }

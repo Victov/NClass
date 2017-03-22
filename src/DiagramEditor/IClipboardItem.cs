@@ -17,6 +17,6 @@ namespace NClass.DiagramEditor
 {
     public interface IClipboardItem
     {
-        void Paste(IDocument document);
+        void Paste( IDocument document );
     }
 }

@@ -38,19 +38,19 @@ namespace NClass.DiagramEditor.ClassDiagram
         private Shape second;
         private readonly RelationshipType type;
 
-        static ConnectionCreator()
+        static ConnectionCreator( )
         {
-            firstPen = new Pen(Color.Blue);
+            firstPen = new Pen( Color.Blue );
             firstPen.DashPattern = dashPattern;
             firstPen.Width = 1.5F;
-            secondPen = new Pen(Color.Red);
+            secondPen = new Pen( Color.Red );
             secondPen.DashPattern = dashPattern;
             secondPen.Width = 1.5F;
-            arrowPen = new Pen(Color.Black);
-            arrowPen.CustomEndCap = new AdjustableArrowCap(6, 7, true);
+            arrowPen = new Pen( Color.Black );
+            arrowPen.CustomEndCap = new AdjustableArrowCap( 6, 7, true );
         }
 
-        public ConnectionCreator(Diagram diagram, RelationshipType type)
+        public ConnectionCreator( Diagram diagram, RelationshipType type )
         {
             this.diagram = diagram;
             this.type = type;
@@ -58,273 +58,273 @@ namespace NClass.DiagramEditor.ClassDiagram
 
         public bool Created { get; private set; }
 
-        public void MouseMove(AbsoluteMouseEventArgs e)
+        public void MouseMove( AbsoluteMouseEventArgs e )
         {
-            var mouseLocation = new Point((int) e.X, (int) e.Y);
+            var mouseLocation = new Point( ( int ) e.X, ( int ) e.Y );
 
-            foreach (var shape in diagram.Shapes)
+            foreach ( var shape in diagram.Shapes )
             {
-                if (shape.BorderRectangle.Contains(mouseLocation))
+                if ( shape.BorderRectangle.Contains( mouseLocation ) )
                 {
-                    if (!firstSelected)
+                    if ( !firstSelected )
                     {
-                        if (first != shape)
+                        if ( first != shape )
                         {
                             first = shape;
-                            diagram.Redraw();
+                            diagram.Redraw( );
                         }
                     }
                     else
                     {
-                        if (second != shape)
+                        if ( second != shape )
                         {
                             second = shape;
-                            diagram.Redraw();
+                            diagram.Redraw( );
                         }
                     }
                     return;
                 }
             }
 
-            if (!firstSelected)
+            if ( !firstSelected )
             {
-                if (first != null)
+                if ( first != null )
                 {
                     first = null;
-                    diagram.Redraw();
+                    diagram.Redraw( );
                 }
             }
             else
             {
-                if (second != null)
+                if ( second != null )
                 {
                     second = null;
-                    diagram.Redraw();
+                    diagram.Redraw( );
                 }
             }
         }
 
-        public void MouseDown(AbsoluteMouseEventArgs e)
+        public void MouseDown( AbsoluteMouseEventArgs e )
         {
-            if (!firstSelected)
+            if ( !firstSelected )
             {
-                if (first != null)
+                if ( first != null )
                     firstSelected = true;
             }
             else
             {
-                if (second != null)
-                    CreateConnection();
+                if ( second != null )
+                    CreateConnection( );
             }
         }
 
-        private void CreateConnection()
+        private void CreateConnection( )
         {
-            switch (type)
+            switch ( type )
             {
                 case RelationshipType.Association:
-                    CreateAssociation();
+                    CreateAssociation( );
                     break;
 
                 case RelationshipType.Composition:
-                    CreateComposition();
+                    CreateComposition( );
                     break;
 
                 case RelationshipType.Aggregation:
-                    CreateAggregation();
+                    CreateAggregation( );
                     break;
 
                 case RelationshipType.Generalization:
-                    CreateGeneralization();
+                    CreateGeneralization( );
                     break;
 
                 case RelationshipType.Realization:
-                    CreateRealization();
+                    CreateRealization( );
                     break;
 
                 case RelationshipType.Dependency:
-                    CreateDependency();
+                    CreateDependency( );
                     break;
 
                 case RelationshipType.Nesting:
-                    CreateNesting();
+                    CreateNesting( );
                     break;
 
                 case RelationshipType.Comment:
-                    CreateCommentRelationship();
+                    CreateCommentRelationship( );
                     break;
             }
             Created = true;
-            diagram.Redraw();
+            diagram.Redraw( );
         }
 
-        private void CreateAssociation()
+        private void CreateAssociation( )
         {
             var shape1 = first as TypeShape;
             var shape2 = second as TypeShape;
 
-            if (shape1 != null && shape2 != null)
+            if ( shape1 != null && shape2 != null )
             {
-                diagram.AddAssociation(shape1.TypeBase, shape2.TypeBase);
+                diagram.AddAssociation( shape1.TypeBase, shape2.TypeBase );
             }
             else
             {
-                MessageBox.Show(Strings.ErrorCannotCreateRelationship);
+                MessageBox.Show( Strings.ErrorCannotCreateRelationship );
             }
         }
 
-        private void CreateComposition()
+        private void CreateComposition( )
         {
             var shape1 = first as TypeShape;
             var shape2 = second as TypeShape;
 
-            if (shape1 != null && shape2 != null)
+            if ( shape1 != null && shape2 != null )
             {
-                diagram.AddComposition(shape1.TypeBase, shape2.TypeBase);
+                diagram.AddComposition( shape1.TypeBase, shape2.TypeBase );
             }
             else
             {
-                MessageBox.Show(Strings.ErrorCannotCreateRelationship);
+                MessageBox.Show( Strings.ErrorCannotCreateRelationship );
             }
         }
 
-        private void CreateAggregation()
+        private void CreateAggregation( )
         {
             var shape1 = first as TypeShape;
             var shape2 = second as TypeShape;
 
-            if (shape1 != null && shape2 != null)
+            if ( shape1 != null && shape2 != null )
             {
-                diagram.AddAggregation(shape1.TypeBase, shape2.TypeBase);
+                diagram.AddAggregation( shape1.TypeBase, shape2.TypeBase );
             }
             else
             {
-                MessageBox.Show(Strings.ErrorCannotCreateRelationship);
+                MessageBox.Show( Strings.ErrorCannotCreateRelationship );
             }
         }
 
-        private void CreateGeneralization()
+        private void CreateGeneralization( )
         {
             var shape1 = first as CompositeTypeShape;
             var shape2 = second as CompositeTypeShape;
 
-            if (shape1 != null && shape2 != null)
+            if ( shape1 != null && shape2 != null )
             {
                 try
                 {
-                    diagram.AddGeneralization(shape1.CompositeType, shape2.CompositeType);
+                    diagram.AddGeneralization( shape1.CompositeType, shape2.CompositeType );
                 }
-                catch (RelationshipException)
+                catch ( RelationshipException )
                 {
-                    MessageBox.Show(Strings.ErrorCannotCreateRelationship);
+                    MessageBox.Show( Strings.ErrorCannotCreateRelationship );
                 }
             }
             else
             {
-                MessageBox.Show(Strings.ErrorCannotCreateRelationship);
+                MessageBox.Show( Strings.ErrorCannotCreateRelationship );
             }
         }
 
-        private void CreateRealization()
+        private void CreateRealization( )
         {
             var shape1 = first as TypeShape;
             var shape2 = second as InterfaceShape;
 
-            if (shape1 != null && shape2 != null)
+            if ( shape1 != null && shape2 != null )
             {
                 try
                 {
-                    diagram.AddRealization(shape1.TypeBase, shape2.InterfaceType);
+                    diagram.AddRealization( shape1.TypeBase, shape2.InterfaceType );
                 }
-                catch (RelationshipException)
+                catch ( RelationshipException )
                 {
-                    MessageBox.Show(Strings.ErrorCannotCreateRelationship);
+                    MessageBox.Show( Strings.ErrorCannotCreateRelationship );
                 }
             }
             else
             {
-                MessageBox.Show(Strings.ErrorCannotCreateRelationship);
+                MessageBox.Show( Strings.ErrorCannotCreateRelationship );
             }
         }
 
-        private void CreateDependency()
+        private void CreateDependency( )
         {
             var shape1 = first as TypeShape;
             var shape2 = second as TypeShape;
 
-            if (shape1 != null && shape2 != null)
+            if ( shape1 != null && shape2 != null )
             {
-                diagram.AddDependency(shape1.TypeBase, shape2.TypeBase);
+                diagram.AddDependency( shape1.TypeBase, shape2.TypeBase );
             }
             else
             {
-                MessageBox.Show(Strings.ErrorCannotCreateRelationship);
+                MessageBox.Show( Strings.ErrorCannotCreateRelationship );
             }
         }
 
-        private void CreateNesting()
+        private void CreateNesting( )
         {
             var shape1 = first as CompositeTypeShape;
             var shape2 = second as TypeShape;
 
-            if (shape1 != null && shape2 != null)
+            if ( shape1 != null && shape2 != null )
             {
                 try
                 {
-                    diagram.AddNesting(shape1.CompositeType, shape2.TypeBase);
+                    diagram.AddNesting( shape1.CompositeType, shape2.TypeBase );
                 }
-                catch (RelationshipException)
+                catch ( RelationshipException )
                 {
-                    MessageBox.Show(Strings.ErrorCannotCreateRelationship);
+                    MessageBox.Show( Strings.ErrorCannotCreateRelationship );
                 }
             }
             else
             {
-                MessageBox.Show(Strings.ErrorCannotCreateRelationship);
+                MessageBox.Show( Strings.ErrorCannotCreateRelationship );
             }
         }
 
-        private void CreateCommentRelationship()
+        private void CreateCommentRelationship( )
         {
             var shape1 = first as CommentShape;
             var shape2 = second as CommentShape;
 
-            if (shape1 != null)
+            if ( shape1 != null )
             {
-                diagram.AddCommentRelationship(shape1.Comment, second.Entity);
+                diagram.AddCommentRelationship( shape1.Comment, second.Entity );
             }
-            else if (shape2 != null)
+            else if ( shape2 != null )
             {
-                diagram.AddCommentRelationship(shape2.Comment, first.Entity);
+                diagram.AddCommentRelationship( shape2.Comment, first.Entity );
             }
             else
             {
-                MessageBox.Show(Strings.ErrorCannotCreateRelationship);
+                MessageBox.Show( Strings.ErrorCannotCreateRelationship );
             }
         }
 
-        public void Draw(Graphics g)
+        public void Draw( Graphics g )
         {
-            if (first != null)
+            if ( first != null )
             {
                 var border = first.BorderRectangle;
-                border.Inflate(BorderOffset, BorderOffset);
-                g.DrawRectangle(firstPen, border);
+                border.Inflate( BorderOffset, BorderOffset );
+                g.DrawRectangle( firstPen, border );
             }
 
-            if (second != null)
+            if ( second != null )
             {
                 var border = second.BorderRectangle;
-                if (second == first)
-                    border.Inflate(BorderOffset2, BorderOffset2);
+                if ( second == first )
+                    border.Inflate( BorderOffset2, BorderOffset2 );
                 else
-                    border.Inflate(BorderOffset, BorderOffset);
-                g.DrawRectangle(secondPen, border);
+                    border.Inflate( BorderOffset, BorderOffset );
+                g.DrawRectangle( secondPen, border );
             }
 
-            if (first != null && second != null)
+            if ( first != null && second != null )
             {
-                g.DrawLine(arrowPen, first.CenterPoint, second.CenterPoint);
+                g.DrawLine( arrowPen, first.CenterPoint, second.CenterPoint );
             }
         }
     }

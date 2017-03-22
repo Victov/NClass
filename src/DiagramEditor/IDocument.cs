@@ -40,30 +40,30 @@ namespace NClass.DiagramEditor
         event PopupWindowEventHandler HidingWindow;
 
 
-        void Display(Graphics g);
+        void Display( Graphics g );
 
-        void Redraw();
+        void Redraw( );
 
-        void CloseWindows();
+        void CloseWindows( );
 
-        DynamicMenu GetDynamicMenu();
+        DynamicMenu GetDynamicMenu( );
 
-        string GetStatus();
+        string GetStatus( );
 
-        string GetShortDescription();
+        string GetShortDescription( );
 
-        string GetSelectedElementName();
+        string GetSelectedElementName( );
 
-        void MouseDown(AbsoluteMouseEventArgs e);
+        void MouseDown( AbsoluteMouseEventArgs e );
 
-        void MouseMove(AbsoluteMouseEventArgs e);
+        void MouseMove( AbsoluteMouseEventArgs e );
 
-        void MouseUp(AbsoluteMouseEventArgs e);
+        void MouseUp( AbsoluteMouseEventArgs e );
 
-        void DoubleClick(AbsoluteMouseEventArgs e);
+        void DoubleClick( AbsoluteMouseEventArgs e );
 
-        void KeyDown(KeyEventArgs e);
+        void KeyDown( KeyEventArgs e );
 
-        ContextMenuStrip GetContextMenu(AbsoluteMouseEventArgs e);
+        ContextMenuStrip GetContextMenu( AbsoluteMouseEventArgs e );
     }
 }

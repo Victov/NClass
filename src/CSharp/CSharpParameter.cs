@@ -24,10 +24,7 @@ namespace NClass.CSharp
         ///     The <paramref name="name" /> or <paramref name="type" />
         ///     does not fit to the syntax.
         /// </exception>
-        internal CSharpParameter(string name, string type, ParameterModifier modifier, string defaultValue)
-            : base(name, type, modifier, defaultValue)
-        {
-        }
+        internal CSharpParameter( string name, string type, ParameterModifier modifier, string defaultValue ) : base( name, type, modifier, defaultValue ) {}
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="value" /> does not fit to the syntax.
@@ -37,9 +34,9 @@ namespace NClass.CSharp
             get { return base.Type; }
             protected set
             {
-                if (value == "void")
+                if ( value == "void" )
                 {
-                    throw new BadSyntaxException(Strings.ErrorInvalidParameterDeclaration);
+                    throw new BadSyntaxException( Strings.ErrorInvalidParameterDeclaration );
                 }
                 base.Type = value;
             }
@@ -50,9 +47,9 @@ namespace NClass.CSharp
             get { return base.Modifier; }
             protected set
             {
-                if (value != ParameterModifier.In && DefaultValue != null)
+                if ( value != ParameterModifier.In && DefaultValue != null )
                 {
-                    throw new BadSyntaxException(Strings.ErrorInvalidParameterDeclaration);
+                    throw new BadSyntaxException( Strings.ErrorInvalidParameterDeclaration );
                 }
                 base.Modifier = value;
             }
@@ -63,39 +60,39 @@ namespace NClass.CSharp
             get { return base.DefaultValue; }
             protected set
             {
-                if (!string.IsNullOrWhiteSpace(value) && Modifier != ParameterModifier.In)
+                if ( !string.IsNullOrWhiteSpace( value ) && Modifier != ParameterModifier.In )
                 {
-                    throw new BadSyntaxException(Strings.ErrorInvalidParameterDeclaration);
+                    throw new BadSyntaxException( Strings.ErrorInvalidParameterDeclaration );
                 }
                 base.DefaultValue = value;
             }
         }
 
-        public override Language Language { get { return CSharpLanguage.Instance; } }
-
-        public override string GetDeclaration()
+        public override Language Language
         {
-            if (DefaultValue != null)
+            get { return CSharpLanguage.Instance; }
+        }
+
+        public override string GetDeclaration( )
+        {
+            if ( DefaultValue != null )
             {
                 return Type + " " + Name + " = " + DefaultValue;
             }
-            if (Modifier == ParameterModifier.In)
+            if ( Modifier == ParameterModifier.In )
             {
                 return Type + " " + Name;
             }
-            if (Modifier == ParameterModifier.Inout)
+            if ( Modifier == ParameterModifier.Inout )
             {
-                return string.Format("ref {0} {1}", Type, Name);
+                return string.Format( "ref {0} {1}", Type, Name );
             }
-            return string.Format("{0} {1} {2}",
-                                 Modifier.ToString().ToLower(),
-                                 Type,
-                                 Name);
+            return string.Format( "{0} {1} {2}", Modifier.ToString( ).ToLower( ), Type, Name );
         }
 
-        public override Parameter Clone()
+        public override Parameter Clone( )
         {
-            return new CSharpParameter(Name, Type, Modifier, DefaultValue);
+            return new CSharpParameter( Name, Type, Modifier, DefaultValue );
         }
     }
 }

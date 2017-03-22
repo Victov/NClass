@@ -19,11 +19,10 @@ namespace NClass.AssemblyCSharpImport.Controls
         /// <summary>
         ///     Initializes a new instance of <see cref="DataGridViewImageComboBoxColumn" />.
         /// </summary>
-        public DataGridViewImageComboBoxColumn()
-            : base(new DataGridViewImageComboBoxColumnCell())
+        public DataGridViewImageComboBoxColumn( ) : base( new DataGridViewImageComboBoxColumnCell( ) )
         {
-            ImageList = new ImageList();
-            Items = new List<ImageComboBoxItem>();
+            ImageList = new ImageList( );
+            Items = new List< ImageComboBoxItem >( );
         }
 
         #endregion
@@ -37,14 +36,14 @@ namespace NClass.AssemblyCSharpImport.Controls
         ///     An <see cref="T:System.Object" /> that represents the cloned <see cref="T:System.Windows.Forms.DataGridViewBand" />
         ///     .
         /// </returns>
-        public override object Clone()
+        public override object Clone( )
         {
-            var clone = base.Clone() as DataGridViewImageComboBoxColumn;
-            if (clone != null)
+            var clone = base.Clone( ) as DataGridViewImageComboBoxColumn;
+            if ( clone != null )
             {
                 clone.ImageList = ImageList;
                 clone.ImageSize = ImageSize;
-                clone.Items = new List<ImageComboBoxItem>(Items);
+                clone.Items = new List< ImageComboBoxItem >( Items );
             }
             return clone;
         }
@@ -59,18 +58,18 @@ namespace NClass.AssemblyCSharpImport.Controls
         /// <summary>
         ///     Gets or sets an <see cref="ImageList" /> containing the images to display.
         /// </summary>
-        [Category("Data")]
-        [Description("The image list containing the images to display.")]
+        [Category( "Data" )]
+        [Description( "The image list containing the images to display." )]
         public ImageList ImageList { get; set; }
 
         /// <summary>
         ///     Gets or sets the list of <see cref="ImageComboBoxItem" />s contained within the
         ///     combo box.
         /// </summary>
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        [Category("Data")]
-        [Description("The elements available at the combobox.")]
-        public List<ImageComboBoxItem> Items { get; set; }
+        [DesignerSerializationVisibility( DesignerSerializationVisibility.Content )]
+        [Category( "Data" )]
+        [Description( "The elements available at the combobox." )]
+        public List< ImageComboBoxItem > Items { get; set; }
 
         /// <summary>
         ///     Gets or sets the size of the images.
@@ -94,11 +93,9 @@ namespace NClass.AssemblyCSharpImport.Controls
             set
             {
                 // Ensure that the cell used for the template is a DataGridViewImageComboBoxColumnCell.
-                if (value != null &&
-                    !value.GetType().IsAssignableFrom(typeof (DataGridViewImageComboBoxColumnCell)))
+                if ( value != null && !value.GetType( ).IsAssignableFrom( typeof( DataGridViewImageComboBoxColumnCell ) ) )
                 {
-                    throw new ArgumentException(
-                        "CellTemplate of DataGridViewImageComboBoxColumn has to be a DataGridViewImageComboBoxColumnCell");
+                    throw new ArgumentException( "CellTemplate of DataGridViewImageComboBoxColumn has to be a DataGridViewImageComboBoxColumnCell" );
                 }
                 base.CellTemplate = value;
             }

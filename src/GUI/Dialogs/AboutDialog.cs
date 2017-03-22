@@ -23,87 +23,71 @@ namespace NClass.GUI.Dialogs
 {
     public partial class AboutDialog : Form
     {
-        public AboutDialog()
+        public AboutDialog( )
         {
-            InitializeComponent();
+            InitializeComponent( );
         }
 
-        private void UpdateTexts()
+        private void UpdateTexts( )
         {
             Text = Strings.AboutNClass;
-            lblTitle.Text = Program.GetVersionString();
+            lblTitle.Text = Program.GetVersionString( );
             lblCopyright.Text = "Copyright (C) 2006-2009 " + Strings.Author;
-            lblStatus.Text = string.Format(Strings.BetaVersion);
+            lblStatus.Text = string.Format( Strings.BetaVersion );
             lnkEmail.Text = Strings.SendEmail;
             lnkHomepage.Text = Strings.VisitHomepage;
             btnClose.Text = Strings.ButtonClose;
 
-            lnkHomepage.Links.Clear();
-            lnkEmail.Links.Clear();
-            lnkHomepage.Links.Add(0, lnkHomepage.Text.Length, Resources.WebAddress);
-            lnkEmail.Links.Add(0,
-                               lnkEmail.Text.Length,
-                               "mailto:" + Resources.MailAddress + "?subject=NClass");
+            lnkHomepage.Links.Clear( );
+            lnkEmail.Links.Clear( );
+            lnkHomepage.Links.Add( 0, lnkHomepage.Text.Length, Resources.WebAddress );
+            lnkEmail.Links.Add( 0, lnkEmail.Text.Length, "mailto:" + Resources.MailAddress + "?subject=NClass" );
             lblTranslator.Text = Strings.Translator;
         }
 
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoad( EventArgs e )
         {
-            base.OnLoad(e);
-            UpdateTexts();
+            base.OnLoad( e );
+            UpdateTexts( );
         }
 
-        private void lnkEmail_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void lnkEmail_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
         {
             var target = e.Link.LinkData as string;
 
-            if (target != null)
+            if ( target != null )
             {
                 try
                 {
-                    Process.Start(target);
+                    Process.Start( target );
                 }
-                catch (Exception ex)
+                catch ( Exception ex )
                 {
-                    MessageBox.Show(
-                        string.Format("{0}\n{1}: {2}",
-                                      Strings.CommandFailed,
-                                      Strings.ErrorsReason,
-                                      ex.Message),
-                        Strings.Error,
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
+                    MessageBox.Show( string.Format( "{0}\n{1}: {2}", Strings.CommandFailed, Strings.ErrorsReason, ex.Message ), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error );
                 }
             }
         }
 
-        private void lnkHomepage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void lnkHomepage_LinkClicked( object sender, LinkLabelLinkClickedEventArgs e )
         {
             var target = e.Link.LinkData as string;
 
-            if (target != null)
+            if ( target != null )
             {
                 try
                 {
-                    Process.Start(target);
+                    Process.Start( target );
                 }
-                catch (Exception ex)
+                catch ( Exception ex )
                 {
-                    MessageBox.Show(
-                        string.Format("{0}\n{1}: {2}",
-                                      Strings.CommandFailed,
-                                      Strings.ErrorsReason,
-                                      ex.Message),
-                        Strings.Error,
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
+                    MessageBox.Show( string.Format( "{0}\n{1}: {2}", Strings.CommandFailed, Strings.ErrorsReason, ex.Message ), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error );
                 }
             }
         }
 
-        private void btnClose_Click(object sender, EventArgs e)
+        private void btnClose_Click( object sender, EventArgs e )
         {
-            Close();
+            Close( );
         }
     }
 }

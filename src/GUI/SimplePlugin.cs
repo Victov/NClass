@@ -26,29 +26,28 @@ namespace NClass.GUI
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="environment" /> is null.
         /// </exception>
-        protected SimplePlugin(NClassEnvironment environment)
-            : base(environment)
+        protected SimplePlugin( NClassEnvironment environment ) : base( environment )
         {
-            menuItem = new ToolStripMenuItem();
+            menuItem = new ToolStripMenuItem( );
             menuItem.Text = MenuText;
-            menuItem.ToolTipText = string.Format(Strings.PluginTooltip, Name, Author);
+            menuItem.ToolTipText = string.Format( Strings.PluginTooltip, Name, Author );
             menuItem.Click += menuItem_Click;
         }
 
-        public override ToolStripItem MenuItem { get { return menuItem; } }
+        public override ToolStripItem MenuItem
+        {
+            get { return menuItem; }
+        }
 
-        private void menuItem_Click(object sender, EventArgs e)
+        private void menuItem_Click( object sender, EventArgs e )
         {
             try
             {
-                Launch();
+                Launch( );
             }
-            catch (Exception ex)
+            catch ( Exception ex )
             {
-                MessageBox.Show(ex.Message,
-                                Strings.UnknownError,
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
+                MessageBox.Show( ex.Message, Strings.UnknownError, MessageBoxButtons.OK, MessageBoxIcon.Error );
             }
         }
 
@@ -60,7 +59,7 @@ namespace NClass.GUI
 
         public abstract string MenuText { get; }
 
-        protected abstract void Launch();
+        protected abstract void Launch( );
 
         #endregion
     }

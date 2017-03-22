@@ -17,16 +17,19 @@ namespace NClass.DiagramEditor.ClassDiagram.ContextMenus
 {
     public abstract class DiagramContextMenu : ContextMenu
     {
-        protected sealed override IDocument Document { get { return Diagram; } }
+        protected sealed override IDocument Document
+        {
+            get { return Diagram; }
+        }
 
         protected Diagram Diagram { get; private set; }
 
-        public sealed override void ValidateMenuItems(IDocument document)
+        public sealed override void ValidateMenuItems( IDocument document )
         {
-            ValidateMenuItems(document as Diagram);
+            ValidateMenuItems( document as Diagram );
         }
 
-        public virtual void ValidateMenuItems(Diagram diagram)
+        public virtual void ValidateMenuItems( Diagram diagram )
         {
             Diagram = diagram;
         }

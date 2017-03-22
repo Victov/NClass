@@ -20,50 +20,44 @@ namespace NClass.AssemblyCSharpImport.Controls
         /// <param name="bounds">A <see cref="Rectangle" /> representing the area of the item.</param>
         /// <param name="font">The font of the text.</param>
         /// <param name="foreColor">The color of the text.</param>
-        public static void DrawImageComboBoxItem(Graphics graphics,
-                                                 object value,
-                                                 ImageList imageList,
-                                                 Size imageSize,
-                                                 Rectangle bounds,
-                                                 Font font,
-                                                 Color foreColor)
+        public static void DrawImageComboBoxItem( Graphics graphics, object value, ImageList imageList, Size imageSize, Rectangle bounds, Font font, Color foreColor )
         {
             var left = bounds.Left;
             int top;
             var text = "";
             Image image = null;
 
-            if (value != null)
+            if ( value != null )
             {
                 var item = value as ImageComboBoxItem;
-                if (item != null)
+                if ( item != null )
                 {
                     text = item.Text;
 
-                    if (item.Image != null)
+                    if ( item.Image != null )
                     {
                         image = item.Image;
                     }
-                    else if (imageList != null && item.ImageIndex >= 0)
+                    else if ( imageList != null && item.ImageIndex >= 0 )
                     {
-                        image = imageList.Images[item.ImageIndex];
+                        image = imageList.Images[ item.ImageIndex ];
                     }
                 }
                 else
                 {
                     //Not an ImageComboBoxItem
-                    text = value.ToString();
+                    text = value.ToString( );
                 }
             }
-            if (image != null)
+            if ( image != null )
             {
-                top = (bounds.Height - image.Height)/2 + bounds.Top;
-                graphics.DrawImage(image, left, top, imageSize.Width, imageSize.Height);
+                top = ( bounds.Height - image.Height ) / 2 + bounds.Top;
+                graphics.DrawImage( image, left, top, imageSize.Width, imageSize.Height );
             }
             left += imageSize.Width;
 
-            top = (int) ((bounds.Height - graphics.MeasureString(text, font).Height)/2 + bounds.Top);
-            graphics.DrawString(text, font, new SolidBrush(foreColor), left, top);
+            top = ( int ) ( ( bounds.Height - graphics.MeasureString( text, font ).Height ) / 2 + bounds.Top );
+            graphics.DrawString( text, font, new SolidBrush( foreColor ), left, top );
         }
 
         #endregion

@@ -35,22 +35,22 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         protected const int MemberHeight = 17;
         protected static readonly StringFormat memberFormat;
 
-        private static readonly Pen borderPen = new Pen(Color.Black);
-        private static readonly SolidBrush backgroundBrush = new SolidBrush(Color.White);
-        private static readonly SolidBrush solidHeaderBrush = new SolidBrush(Color.White);
-        private static readonly SolidBrush nameBrush = new SolidBrush(Color.Black);
-        private static readonly SolidBrush identifierBrush = new SolidBrush(Color.Black);
-        private static readonly StringFormat headerFormat = new StringFormat(StringFormat.GenericTypographic);
-        private static readonly Size chevronSize = new Size(13, 13);
+        private static readonly Pen borderPen = new Pen( Color.Black );
+        private static readonly SolidBrush backgroundBrush = new SolidBrush( Color.White );
+        private static readonly SolidBrush solidHeaderBrush = new SolidBrush( Color.White );
+        private static readonly SolidBrush nameBrush = new SolidBrush( Color.Black );
+        private static readonly SolidBrush identifierBrush = new SolidBrush( Color.Black );
+        private static readonly StringFormat headerFormat = new StringFormat( StringFormat.GenericTypographic );
+        private static readonly Size chevronSize = new Size( 13, 13 );
 
         private int activeMemberIndex = -1;
         private bool collapsed;
         private bool showChevron;
         private EditorWindow showedEditor;
 
-        static TypeShape()
+        static TypeShape( )
         {
-            memberFormat = new StringFormat(StringFormat.GenericTypographic);
+            memberFormat = new StringFormat( StringFormat.GenericTypographic );
             memberFormat.FormatFlags = StringFormatFlags.NoWrap;
             memberFormat.LineAlignment = StringAlignment.Center;
             memberFormat.Trimming = StringTrimming.EllipsisCharacter;
@@ -62,11 +62,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="typeBase" /> is null.
         /// </exception>
-        protected TypeShape(TypeBase typeBase)
-            : base(typeBase)
+        protected TypeShape( TypeBase typeBase ) : base( typeBase )
         {
-            MinimumSize = new Size(DefaultWidth, MinimumSize.Height);
-            typeBase.Modified += delegate { UpdateMinSize(); };
+            MinimumSize = new Size( DefaultWidth, MinimumSize.Height );
+            typeBase.Modified += delegate { UpdateMinSize( ); };
         }
 
         protected internal virtual int ActiveMemberIndex
@@ -74,7 +73,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             get { return activeMemberIndex; }
             set
             {
-                if (value >= -1)
+                if ( value >= -1 )
                     activeMemberIndex = value;
             }
         }
@@ -84,12 +83,12 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             get { return collapsed; }
             set
             {
-                if (collapsed != value)
+                if ( collapsed != value )
                 {
                     var oldSize = Size;
                     collapsed = value;
-                    OnResize(new ResizeEventArgs(Size - oldSize));
-                    OnModified(EventArgs.Empty);
+                    OnResize( new ResizeEventArgs( Size - oldSize ) );
+                    OnModified( EventArgs.Empty );
                 }
             }
         }
@@ -98,8 +97,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         {
             get
             {
-                if (Collapsed)
-                    return new Size(Width, HeaderHeight);
+                if ( Collapsed )
+                    return new Size( Width, HeaderHeight );
                 return base.Size;
             }
             set { base.Size = value; }
@@ -109,7 +108,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         {
             get
             {
-                if (Collapsed)
+                if ( Collapsed )
                     return HeaderHeight;
                 return base.Height;
             }
@@ -118,27 +117,18 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         private bool CanDrawChevron
         {
-            get
-            {
-                return Settings.Default.ShowChevron == ChevronMode.Always ||
-                       Settings.Default.ShowChevron == ChevronMode.AsNeeded && showChevron;
-            }
+            get { return Settings.Default.ShowChevron == ChevronMode.Always || Settings.Default.ShowChevron == ChevronMode.AsNeeded && showChevron; }
         }
 
         private RectangleF CaptionRegion
         {
-            get
-            {
-                return new RectangleF(
-                    Left + MarginSize,
-                    Top + MarginSize,
-                    Width - MarginSize*2,
-                    HeaderHeight - MarginSize*2
-                    );
-            }
+            get { return new RectangleF( Left + MarginSize, Top + MarginSize, Width - MarginSize * 2, HeaderHeight - MarginSize * 2 ); }
         }
 
-        public sealed override IEntity Entity { get { return TypeBase; } }
+        public sealed override IEntity Entity
+        {
+            get { return TypeBase; }
+        }
 
         public abstract TypeBase TypeBase { get; }
 
@@ -146,228 +136,225 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         protected abstract EditorWindow ContentEditor { get; }
 
-        protected override Size DefaultSize { get { return new Size(DefaultWidth, DefaultHeight); } }
+        protected override Size DefaultSize
+        {
+            get { return new Size( DefaultWidth, DefaultHeight ); }
+        }
 
         public event EventHandler ActiveMemberChanged;
 
-        public static Rectangle GetOutline(Style style)
+        public static Rectangle GetOutline( Style style )
         {
-            return new Rectangle(0, 0, DefaultWidth, DefaultHeight);
+            return new Rectangle( 0, 0, DefaultWidth, DefaultHeight );
         }
 
-        protected abstract Color GetBackgroundColor(Style style);
+        protected abstract Color GetBackgroundColor( Style style );
 
-        protected abstract Color GetHeaderColor(Style style);
+        protected abstract Color GetHeaderColor( Style style );
 
-        protected abstract GradientStyle GetGradientHeaderStyle(Style style);
+        protected abstract GradientStyle GetGradientHeaderStyle( Style style );
 
-        protected abstract Color GetBorderColor(Style style);
+        protected abstract Color GetBorderColor( Style style );
 
-        protected abstract bool IsBorderDashed(Style style);
+        protected abstract bool IsBorderDashed( Style style );
 
-        protected abstract int GetRoundingSize(Style style);
+        protected abstract int GetRoundingSize( Style style );
 
-        protected virtual Font GetFont(Style style)
+        protected virtual Font GetFont( Style style )
         {
             return style.MemberFont;
         }
 
-        protected virtual Font GetNameFont(Style style)
+        protected virtual Font GetNameFont( Style style )
         {
             return style.NameFont;
         }
 
-        private bool HasIdentifier(Style style)
+        private bool HasIdentifier( Style style )
         {
-            return style.ShowSignature ||
-                   style.ShowStereotype && TypeBase.Stereotype != null;
+            return style.ShowSignature || style.ShowStereotype && TypeBase.Stereotype != null;
         }
 
-        public override void Collapse()
+        public override void Collapse( )
         {
             Collapsed = true;
         }
 
-        public override void Expand()
+        public override void Expand( )
         {
             Collapsed = false;
         }
 
-        protected internal override void ShowEditor()
+        protected internal override void ShowEditor( )
         {
-            var editor = GetEditorWindow();
-            if (editor != null)
+            var editor = GetEditorWindow( );
+            if ( editor != null )
             {
-                ShowEditor(editor);
+                ShowEditor( editor );
             }
         }
 
-        protected internal override void HideEditor()
+        protected internal override void HideEditor( )
         {
-            if (showedEditor != null)
+            if ( showedEditor != null )
             {
-                HideWindow(showedEditor);
+                HideWindow( showedEditor );
                 showedEditor = null;
             }
         }
 
-        private void ShowEditor(EditorWindow editor)
+        private void ShowEditor( EditorWindow editor )
         {
-            editor.Relocate(this);
-            ShowWindow(editor);
-            editor.Init(this);
-            editor.Focus();
+            editor.Relocate( this );
+            ShowWindow( editor );
+            editor.Init( this );
+            editor.Focus( );
             showedEditor = editor;
         }
 
-        protected internal abstract void EditMembers();
+        protected internal abstract void EditMembers( );
 
-        protected internal abstract override bool DeleteSelectedMember(bool showConfirmation);
+        protected internal abstract override bool DeleteSelectedMember( bool showConfirmation );
 
-        protected internal override IEnumerable<ToolStripItem> GetContextMenuItems(Diagram diagram)
+        protected internal override IEnumerable< ToolStripItem > GetContextMenuItems( Diagram diagram )
         {
-            return TypeShapeContextMenu.Default.GetMenuItems(diagram);
+            return TypeShapeContextMenu.Default.GetMenuItems( diagram );
         }
 
-        private bool IsChevronPressed(PointF mouseLocation)
+        private bool IsChevronPressed( PointF mouseLocation )
         {
-            return Settings.Default.ShowChevron != ChevronMode.Never &&
-                   mouseLocation.X >= Right - MarginSize - chevronSize.Width &&
-                   mouseLocation.X < Right - MarginSize &&
-                   mouseLocation.Y >= Top + MarginSize &&
-                   mouseLocation.Y < Top + MarginSize + chevronSize.Height;
+            return Settings.Default.ShowChevron != ChevronMode.Never && mouseLocation.X >= Right - MarginSize - chevronSize.Width && mouseLocation.X < Right - MarginSize && mouseLocation.Y >= Top + MarginSize && mouseLocation.Y < Top + MarginSize + chevronSize.Height;
         }
 
-        protected abstract EditorWindow GetEditorWindow();
+        protected abstract EditorWindow GetEditorWindow( );
 
-        protected override void OnMove(MoveEventArgs e)
+        protected override void OnMove( MoveEventArgs e )
         {
-            base.OnMove(e);
-            var window = GetEditorWindow();
-            if (window != null)
-                window.Relocate(this);
+            base.OnMove( e );
+            var window = GetEditorWindow( );
+            if ( window != null )
+                window.Relocate( this );
         }
 
-        protected override void OnResize(ResizeEventArgs e)
+        protected override void OnResize( ResizeEventArgs e )
         {
-            base.OnResize(e);
+            base.OnResize( e );
 
-            var window = GetEditorWindow();
-            if (window != null)
-                window.Relocate(this);
+            var window = GetEditorWindow( );
+            if ( window != null )
+                window.Relocate( this );
         }
 
-        protected override void OnMouseDown(AbsoluteMouseEventArgs e)
+        protected override void OnMouseDown( AbsoluteMouseEventArgs e )
         {
-            base.OnMouseDown(e);
+            base.OnMouseDown( e );
 
-            if (IsChevronPressed(e.Location))
+            if ( IsChevronPressed( e.Location ) )
             {
                 Collapsed = !Collapsed;
             }
             else
             {
-                if (e.Button == MouseButtons.Left)
+                if ( e.Button == MouseButtons.Left )
                 {
                     IsActive = true;
                 }
             }
         }
 
-        protected override void OnMouseUp(AbsoluteMouseEventArgs e)
+        protected override void OnMouseUp( AbsoluteMouseEventArgs e )
         {
-            base.OnMouseUp(e);
+            base.OnMouseUp( e );
 
-            if (showedEditor != null)
+            if ( showedEditor != null )
             {
-                showedEditor.Focus();
+                showedEditor.Focus( );
             }
         }
 
-        protected override void OnDoubleClick(AbsoluteMouseEventArgs e)
+        protected override void OnDoubleClick( AbsoluteMouseEventArgs e )
         {
-            base.OnDoubleClick(e);
+            base.OnDoubleClick( e );
 
-            if (!IsChevronPressed(e.Location) && Contains(e.Location) &&
-                e.Button == MouseButtons.Left)
+            if ( !IsChevronPressed( e.Location ) && Contains( e.Location ) && e.Button == MouseButtons.Left )
             {
-                ShowEditor();
+                ShowEditor( );
             }
         }
 
-        protected override void OnMouseEnter(EventArgs e)
+        protected override void OnMouseEnter( EventArgs e )
         {
-            base.OnMouseEnter(e);
+            base.OnMouseEnter( e );
 
             showChevron = true;
-            if (Settings.Default.ShowChevron == ChevronMode.AsNeeded)
+            if ( Settings.Default.ShowChevron == ChevronMode.AsNeeded )
                 NeedsRedraw = true;
         }
 
-        protected override void OnMouseLeave(EventArgs e)
+        protected override void OnMouseLeave( EventArgs e )
         {
-            base.OnMouseLeave(e);
+            base.OnMouseLeave( e );
 
             showChevron = false;
-            if (Settings.Default.ShowChevron == ChevronMode.AsNeeded)
+            if ( Settings.Default.ShowChevron == ChevronMode.AsNeeded )
                 NeedsRedraw = true;
         }
 
-        protected void UpdateMinSize()
+        protected void UpdateMinSize( )
         {
-            MinimumSize = new Size(MinimumSize.Width, GetRequiredHeight());
+            MinimumSize = new Size( MinimumSize.Width, GetRequiredHeight( ) );
         }
 
-        protected override ResizeMode GetResizeMode(AbsoluteMouseEventArgs e)
+        protected override ResizeMode GetResizeMode( AbsoluteMouseEventArgs e )
         {
-            var resizeMode = base.GetResizeMode(e);
+            var resizeMode = base.GetResizeMode( e );
 
-            if (Collapsed)
+            if ( Collapsed )
             {
                 return resizeMode & ~ResizeMode.Bottom;
             }
             return resizeMode;
         }
 
-        protected void DrawSeparatorLine(IGraphics g, int height)
+        protected void DrawSeparatorLine( IGraphics g, int height )
         {
-            g.DrawLine(borderPen, Left, height, Right, height);
+            g.DrawLine( borderPen, Left, height, Right, height );
         }
 
-        private void DrawRectangleSurface(IGraphics g, bool onScreen, Style style)
+        private void DrawRectangleSurface( IGraphics g, bool onScreen, Style style )
         {
             // Draw shadow
-            if ((!onScreen || !IsSelected) && !style.ShadowOffset.IsEmpty)
+            if ( ( !onScreen || !IsSelected ) && !style.ShadowOffset.IsEmpty )
             {
                 shadowBrush.Color = style.ShadowColor;
-                g.TranslateTransform(style.ShadowOffset.Width, style.ShadowOffset.Height);
-                g.FillRectangle(shadowBrush, BorderRectangle);
-                g.TranslateTransform(-style.ShadowOffset.Width, -style.ShadowOffset.Height);
+                g.TranslateTransform( style.ShadowOffset.Width, style.ShadowOffset.Height );
+                g.FillRectangle( shadowBrush, BorderRectangle );
+                g.TranslateTransform( -style.ShadowOffset.Width, -style.ShadowOffset.Height );
             }
 
             // Draw background
-            backgroundBrush.Color = GetBackgroundColor(style);
-            g.FillRectangle(backgroundBrush, BorderRectangle);
+            backgroundBrush.Color = GetBackgroundColor( style );
+            g.FillRectangle( backgroundBrush, BorderRectangle );
 
             // Draw header background
-            DrawHeaderBackground(g, style);
+            DrawHeaderBackground( g, style );
 
             // Draw border
-            g.DrawRectangle(borderPen, BorderRectangle);
+            g.DrawRectangle( borderPen, BorderRectangle );
         }
 
-        private void DrawHeaderBackground(IGraphics g, Style style)
+        private void DrawHeaderBackground( IGraphics g, Style style )
         {
-            var backColor = GetBackgroundColor(style);
-            var headerColor = GetHeaderColor(style);
+            var backColor = GetBackgroundColor( style );
+            var headerColor = GetHeaderColor( style );
 
-            var headerRectangle = new Rectangle(Left, Top, Width, HeaderHeight);
+            var headerRectangle = new Rectangle( Left, Top, Width, HeaderHeight );
 
-            if (GetGradientHeaderStyle(style) != GradientStyle.None)
+            if ( GetGradientHeaderStyle( style ) != GradientStyle.None )
             {
                 LinearGradientMode gradientMode;
 
-                switch (GetGradientHeaderStyle(style))
+                switch ( GetGradientHeaderStyle( style ) )
                 {
                     case GradientStyle.Vertical:
                         gradientMode = LinearGradientMode.Vertical;
@@ -383,79 +370,76 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
                         break;
                 }
 
-                Brush headerBrush = new LinearGradientBrush(headerRectangle,
-                                                            headerColor,
-                                                            backColor,
-                                                            gradientMode);
-                g.FillRectangle(headerBrush, headerRectangle);
-                headerBrush.Dispose();
+                Brush headerBrush = new LinearGradientBrush( headerRectangle, headerColor, backColor, gradientMode );
+                g.FillRectangle( headerBrush, headerRectangle );
+                headerBrush.Dispose( );
             }
             else
             {
-                if (headerColor != backColor || headerColor.A < 255)
+                if ( headerColor != backColor || headerColor.A < 255 )
                 {
-                    solidHeaderBrush.Color = GetHeaderColor(style);
-                    g.FillRectangle(solidHeaderBrush, headerRectangle);
+                    solidHeaderBrush.Color = GetHeaderColor( style );
+                    g.FillRectangle( solidHeaderBrush, headerRectangle );
                 }
             }
         }
 
-        private void DrawRoundedSurface(IGraphics g, bool onScreen, Style style)
+        private void DrawRoundedSurface( IGraphics g, bool onScreen, Style style )
         {
-            var diameter = GetRoundingSize(style)*2;
+            var diameter = GetRoundingSize( style ) * 2;
 
-            var borderPath = new GraphicsPath();
-            borderPath.AddArc(Left, Top, diameter, diameter, 180, 90);
-            borderPath.AddArc(Right - diameter, Top, diameter, diameter, 270, 90);
-            borderPath.AddArc(Right - diameter, Bottom - diameter, diameter, diameter, 0, 90);
-            borderPath.AddArc(Left, Bottom - diameter, diameter, diameter, 90, 90);
-            borderPath.CloseFigure();
+            var borderPath = new GraphicsPath( );
+            borderPath.AddArc( Left, Top, diameter, diameter, 180, 90 );
+            borderPath.AddArc( Right - diameter, Top, diameter, diameter, 270, 90 );
+            borderPath.AddArc( Right - diameter, Bottom - diameter, diameter, diameter, 0, 90 );
+            borderPath.AddArc( Left, Bottom - diameter, diameter, diameter, 90, 90 );
+            borderPath.CloseFigure( );
 
             // Draw shadow
-            if ((!onScreen || !IsSelected) && !style.ShadowOffset.IsEmpty)
+            if ( ( !onScreen || !IsSelected ) && !style.ShadowOffset.IsEmpty )
             {
                 shadowBrush.Color = style.ShadowColor;
-                g.TranslateTransform(style.ShadowOffset.Width, style.ShadowOffset.Height);
-                g.FillPath(shadowBrush, borderPath);
-                g.TranslateTransform(-style.ShadowOffset.Width, -style.ShadowOffset.Height);
+                g.TranslateTransform( style.ShadowOffset.Width, style.ShadowOffset.Height );
+                g.FillPath( shadowBrush, borderPath );
+                g.TranslateTransform( -style.ShadowOffset.Width, -style.ShadowOffset.Height );
             }
 
             // Draw background
-            g.FillPath(backgroundBrush, borderPath);
+            g.FillPath( backgroundBrush, borderPath );
 
             // Draw header background
             var oldClip = g.Clip;
-            g.SetClip(borderPath, CombineMode.Intersect);
-            DrawHeaderBackground(g, style);
-            g.Clip.Dispose();
+            g.SetClip( borderPath, CombineMode.Intersect );
+            DrawHeaderBackground( g, style );
+            g.Clip.Dispose( );
             g.Clip = oldClip;
 
             // Draw border
-            g.DrawPath(borderPen, borderPath);
+            g.DrawPath( borderPen, borderPath );
 
-            borderPath.Dispose();
+            borderPath.Dispose( );
         }
 
-        private void DrawSurface(IGraphics g, bool onScreen, Style style)
+        private void DrawSurface( IGraphics g, bool onScreen, Style style )
         {
             // Update styles
-            backgroundBrush.Color = GetBackgroundColor(style);
-            borderPen.Color = GetBorderColor(style);
-            borderPen.Width = GetBorderWidth(style);
-            if (IsBorderDashed(style))
+            backgroundBrush.Color = GetBackgroundColor( style );
+            borderPen.Color = GetBorderColor( style );
+            borderPen.Width = GetBorderWidth( style );
+            if ( IsBorderDashed( style ) )
                 borderPen.DashPattern = borderDashPattern;
             else
                 borderPen.DashStyle = DashStyle.Solid;
 
-            if (GetRoundingSize(style) == 0)
-                DrawRectangleSurface(g, onScreen, style);
+            if ( GetRoundingSize( style ) == 0 )
+                DrawRectangleSurface( g, onScreen, style );
             else
-                DrawRoundedSurface(g, onScreen, style);
+                DrawRoundedSurface( g, onScreen, style );
         }
 
-        private static StringAlignment GetHorizontalAlignment(ContentAlignment alignment)
+        private static StringAlignment GetHorizontalAlignment( ContentAlignment alignment )
         {
-            switch (alignment)
+            switch ( alignment )
             {
                 case ContentAlignment.BottomLeft:
                 case ContentAlignment.MiddleLeft:
@@ -475,9 +459,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             }
         }
 
-        private static StringAlignment GetVerticalAlignment(ContentAlignment alignment)
+        private static StringAlignment GetVerticalAlignment( ContentAlignment alignment )
         {
-            switch (alignment)
+            switch ( alignment )
             {
                 case ContentAlignment.TopLeft:
                 case ContentAlignment.TopCenter:
@@ -497,13 +481,11 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             }
         }
 
-        private static float GetHeaderTextTop(RectangleF textRegion,
-                                              float textHeight,
-                                              ContentAlignment alignment)
+        private static float GetHeaderTextTop( RectangleF textRegion, float textHeight, ContentAlignment alignment )
         {
             var top = textRegion.Top;
 
-            switch (alignment)
+            switch ( alignment )
             {
                 case ContentAlignment.BottomLeft:
                 case ContentAlignment.BottomCenter:
@@ -514,14 +496,14 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
                 case ContentAlignment.MiddleLeft:
                 case ContentAlignment.MiddleCenter:
                 case ContentAlignment.MiddleRight:
-                    top += (textRegion.Height - textHeight)/2;
+                    top += ( textRegion.Height - textHeight ) / 2;
                     break;
             }
 
             return top;
         }
 
-        private void DrawHeaderText(IGraphics g, Style style)
+        private void DrawHeaderText( IGraphics g, Style style )
         {
             var name = TypeBase.Name;
             var textRegion = CaptionRegion;
@@ -529,175 +511,160 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             // Update styles
             nameBrush.Color = style.NameColor;
             identifierBrush.Color = style.IdentifierColor;
-            headerFormat.Alignment = GetHorizontalAlignment(style.HeaderAlignment);
+            headerFormat.Alignment = GetHorizontalAlignment( style.HeaderAlignment );
 
-            if (HasIdentifier(style))
+            if ( HasIdentifier( style ) )
             {
-                var nameHeight = GetNameFont(style).GetHeight();
-                var identifierHeight = style.IdentifierFont.GetHeight();
+                var nameHeight = GetNameFont( style ).GetHeight( );
+                var identifierHeight = style.IdentifierFont.GetHeight( );
                 var textHeight = nameHeight + identifierHeight;
 
-                textRegion.Y = GetHeaderTextTop(textRegion, textHeight, style.HeaderAlignment);
+                textRegion.Y = GetHeaderTextTop( textRegion, textHeight, style.HeaderAlignment );
                 textRegion.Height = textHeight;
 
                 // Draw name and signature
-                if (style.ShowSignature)
+                if ( style.ShowSignature )
                 {
                     // Draw name to the top
                     headerFormat.LineAlignment = StringAlignment.Near;
-                    g.DrawString(name, GetNameFont(style), nameBrush, textRegion, headerFormat);
+                    g.DrawString( name, GetNameFont( style ), nameBrush, textRegion, headerFormat );
 
                     // Draw signature to the bottom
                     headerFormat.LineAlignment = StringAlignment.Far;
-                    g.DrawString(TypeBase.Signature,
-                                 style.IdentifierFont,
-                                 identifierBrush,
-                                 textRegion,
-                                 headerFormat);
+                    g.DrawString( TypeBase.Signature, style.IdentifierFont, identifierBrush, textRegion, headerFormat );
                 }
                 // Draw name and stereotype
                 else
                 {
                     // Draw stereotype to the top
                     headerFormat.LineAlignment = StringAlignment.Near;
-                    g.DrawString(TypeBase.Stereotype,
-                                 style.IdentifierFont,
-                                 identifierBrush,
-                                 textRegion,
-                                 headerFormat);
+                    g.DrawString( TypeBase.Stereotype, style.IdentifierFont, identifierBrush, textRegion, headerFormat );
 
                     // Draw name to the bottom
                     headerFormat.LineAlignment = StringAlignment.Far;
-                    g.DrawString(name, GetNameFont(style), nameBrush, textRegion, headerFormat);
+                    g.DrawString( name, GetNameFont( style ), nameBrush, textRegion, headerFormat );
                 }
             }
             else
             {
                 // Draw name only
-                headerFormat.LineAlignment = GetVerticalAlignment(style.HeaderAlignment);
-                g.DrawString(name, GetNameFont(style), nameBrush, textRegion, headerFormat);
+                headerFormat.LineAlignment = GetVerticalAlignment( style.HeaderAlignment );
+                g.DrawString( name, GetNameFont( style ), nameBrush, textRegion, headerFormat );
             }
 
-            if (!Collapsed)
-                DrawSeparatorLine(g, Top + HeaderHeight);
+            if ( !Collapsed )
+                DrawSeparatorLine( g, Top + HeaderHeight );
         }
 
-        private void DrawChevron(IGraphics g)
+        private void DrawChevron( IGraphics g )
         {
             var chevron = Collapsed ? Resources.Expand : Resources.Collapse;
-            var location = new Point(Right - MarginSize - chevronSize.Width, Top + MarginSize);
+            var location = new Point( Right - MarginSize - chevronSize.Width, Top + MarginSize );
 
-            g.DrawImage(chevron, location);
+            g.DrawImage( chevron, location );
         }
 
-        protected abstract void DrawContent(IGraphics g, Style style);
+        protected abstract void DrawContent( IGraphics g, Style style );
 
-        public override void Draw(IGraphics g, bool onScreen, Style style)
+        public override void Draw( IGraphics g, bool onScreen, Style style )
         {
-            DrawSurface(g, onScreen, style);
-            DrawHeaderText(g, style);
-            if (onScreen && CanDrawChevron)
-                DrawChevron(g);
-            if (!Collapsed)
-                DrawContent(g, style);
+            DrawSurface( g, onScreen, style );
+            DrawHeaderText( g, style );
+            if ( onScreen && CanDrawChevron )
+                DrawChevron( g );
+            if ( !Collapsed )
+                DrawContent( g, style );
         }
 
-        protected override float GetRequiredWidth(Graphics g, Style style)
+        protected override float GetRequiredWidth( Graphics g, Style style )
         {
             float nameWidth;
             float identifierWidth = 0;
 
-            nameWidth = g.MeasureString(TypeBase.Name,
-                                        GetNameFont(style),
-                                        PointF.Empty,
-                                        headerFormat).Width;
+            nameWidth = g.MeasureString( TypeBase.Name, GetNameFont( style ), PointF.Empty, headerFormat ).Width;
 
-            if (HasIdentifier(style))
+            if ( HasIdentifier( style ) )
             {
-                var identifier =
-                    style.ShowSignature ? TypeBase.Signature : TypeBase.Stereotype;
-                identifierWidth = g.MeasureString(identifier,
-                                                  style.IdentifierFont,
-                                                  PointF.Empty,
-                                                  headerFormat).Width;
+                var identifier = style.ShowSignature ? TypeBase.Signature : TypeBase.Stereotype;
+                identifierWidth = g.MeasureString( identifier, style.IdentifierFont, PointF.Empty, headerFormat ).Width;
             }
 
-            var requiredWidth = Math.Max(nameWidth, identifierWidth) + MarginSize*2;
-            return Math.Max(requiredWidth, base.GetRequiredWidth(g, style));
+            var requiredWidth = Math.Max( nameWidth, identifierWidth ) + MarginSize * 2;
+            return Math.Max( requiredWidth, base.GetRequiredWidth( g, style ) );
         }
 
-        protected abstract override int GetRequiredHeight();
+        protected abstract override int GetRequiredHeight( );
 
-        protected internal override void MoveWindow()
+        protected internal override void MoveWindow( )
         {
-            var editor = GetEditorWindow();
-            if (editor != null)
-                editor.Relocate(this);
+            var editor = GetEditorWindow( );
+            if ( editor != null )
+                editor.Relocate( this );
         }
 
-        public sealed override void SelectPrevious()
+        public sealed override void SelectPrevious( )
         {
             ActiveMemberIndex--;
         }
 
-        public sealed override void SelectNext()
+        public sealed override void SelectNext( )
         {
             ActiveMemberIndex++;
         }
 
-        protected virtual void OnActiveMemberChanged(EventArgs e)
+        protected virtual void OnActiveMemberChanged( EventArgs e )
         {
-            if (ActiveMemberChanged != null)
-                ActiveMemberChanged(this, e);
+            if ( ActiveMemberChanged != null )
+                ActiveMemberChanged( this, e );
 
-            if (showedEditor != null)
+            if ( showedEditor != null )
             {
-                var editor = GetEditorWindow();
+                var editor = GetEditorWindow( );
 
-                if (editor != showedEditor)
+                if ( editor != showedEditor )
                 {
-                    HideWindow(showedEditor);
+                    HideWindow( showedEditor );
                 }
-                ShowEditor(editor);
+                ShowEditor( editor );
             }
             NeedsRedraw = true;
         }
 
-        protected override void OnSerializing(SerializeEventArgs e)
+        protected override void OnSerializing( SerializeEventArgs e )
         {
-            if (collapsed)
+            if ( collapsed )
             {
                 collapsed = false;
-                base.OnSerializing(e);
+                base.OnSerializing( e );
                 collapsed = true;
             }
             else
             {
-                base.OnSerializing(e);
+                base.OnSerializing( e );
             }
 
-            var collapsedNode = e.Node.OwnerDocument.CreateElement("Collapsed");
-            collapsedNode.InnerText = Collapsed.ToString();
-            e.Node.AppendChild(collapsedNode);
+            var collapsedNode = e.Node.OwnerDocument.CreateElement( "Collapsed" );
+            collapsedNode.InnerText = Collapsed.ToString( );
+            e.Node.AppendChild( collapsedNode );
         }
 
-        protected override void OnDeserializing(SerializeEventArgs e)
+        protected override void OnDeserializing( SerializeEventArgs e )
         {
-            base.OnDeserializing(e);
+            base.OnDeserializing( e );
 
-            var collapsedNode = e.Node["Collapsed"];
-            if (collapsedNode != null)
+            var collapsedNode = e.Node[ "Collapsed" ];
+            if ( collapsedNode != null )
             {
                 bool collapsed;
-                if (bool.TryParse(collapsedNode.InnerText, out collapsed))
+                if ( bool.TryParse( collapsedNode.InnerText, out collapsed ) )
                     Collapsed = collapsed;
             }
-            UpdateMinSize();
+            UpdateMinSize( );
         }
 
-        public override string ToString()
+        public override string ToString( )
         {
-            return TypeBase.ToString();
+            return TypeBase.ToString( );
         }
     }
 }

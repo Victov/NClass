@@ -25,202 +25,131 @@ namespace NClass.CSharp
 {
     public sealed class CSharpLanguage : DotNetLanguage
     {
-        private static readonly Regex nameRegex = new Regex(ClosedNamePattern, RegexOptions.ExplicitCapture);
+        private static readonly Regex nameRegex = new Regex( ClosedNamePattern, RegexOptions.ExplicitCapture );
 
-        private static readonly Regex genericNameRegex = new Regex(ClosedGenericNamePattern,
-                                                                   RegexOptions.ExplicitCapture);
+        private static readonly Regex genericNameRegex = new Regex( ClosedGenericNamePattern, RegexOptions.ExplicitCapture );
 
-        private static readonly Regex typeRegex = new Regex(ClosedTypePattern, RegexOptions.ExplicitCapture);
+        private static readonly Regex typeRegex = new Regex( ClosedTypePattern, RegexOptions.ExplicitCapture );
 
-        private static readonly string[] reservedNames =
-        {
-            "abstract",
-            "as",
-            "base",
-            "break",
-            "case",
-            "catch",
-            "checked",
-            "class",
-            "const",
-            "continue",
-            "default",
-            "delegate",
-            "do",
-            "else",
-            "enum",
-            "event",
-            "explicit",
-            "extern",
-            "false",
-            "finally",
-            "fixed",
-            "for",
-            "foreach",
-            "goto",
-            "if",
-            "implicit",
-            "in",
-            "interface",
-            "internal",
-            "is",
-            "lock",
-            "namespace",
-            "new",
-            "null",
-            "operator",
-            "out",
-            "override",
-            "params",
-            "private",
-            "protected",
-            "public",
-            "readonly",
-            "ref",
-            "return",
-            "sealed",
-            "sizeof",
-            "stackalloc",
-            "static",
-            "struct",
-            "switch",
-            "this",
-            "throw",
-            "true",
-            "try",
-            "typeof",
-            "unchecked",
-            "unsafe",
-            "using",
-            "virtual",
-            "volatile",
-            "while"
-        };
+        private static readonly string[] reservedNames = {"abstract", "as", "base", "break", "case", "catch", "checked", "class", "const", "continue", "default", "delegate", "do", "else", "enum", "event", "explicit", "extern", "false", "finally", "fixed", "for", "foreach", "goto", "if", "implicit", "in", "interface", "internal", "is", "lock", "namespace", "new", "null", "operator", "out", "override", "params", "private", "protected", "public", "readonly", "ref", "return", "sealed", "sizeof", "stackalloc", "static", "struct", "switch", "this", "throw", "true", "try", "typeof", "unchecked", "unsafe", "using", "virtual", "volatile", "while"};
 
-        private static readonly string[] typeKeywords =
-        {
-            "bool",
-            "byte",
-            "char",
-            "decimal",
-            "double",
-            "float",
-            "int",
-            "long",
-            "object",
-            "sbyte",
-            "short",
-            "string",
-            "uint",
-            "ulong",
-            "ushort",
-            "void"
-        };
+        private static readonly string[] typeKeywords = {"bool", "byte", "char", "decimal", "double", "float", "int", "long", "object", "sbyte", "short", "string", "uint", "ulong", "ushort", "void"};
 
-        private static readonly Dictionary<AccessModifier, string> validAccessModifiers;
-        private static readonly Dictionary<ClassModifier, string> validClassModifiers;
-        private static readonly Dictionary<FieldModifier, string> validFieldModifiers;
-        private static readonly Dictionary<OperationModifier, string> validOperationModifiers;
+        private static readonly Dictionary< AccessModifier, string > validAccessModifiers;
+        private static readonly Dictionary< ClassModifier, string > validClassModifiers;
+        private static readonly Dictionary< FieldModifier, string > validFieldModifiers;
+        private static readonly Dictionary< OperationModifier, string > validOperationModifiers;
 
-        static CSharpLanguage()
+        static CSharpLanguage( )
         {
             // objectClass initialization
-            string[] objectMethods =
-            {
-                "public static bool Equals(object objA, object objB)",
-                "public virtual bool Equals(object obj)",
-                "public virtual int GetHashCode()",
-                "public System.Type GetType()",
-                "protected object MemberwiseClone()",
-                "public static bool ReferenceEquals(object objA, object objB)",
-                "public virtual string ToString()"
-            };
-            ObjectClass = new CSharpClass("Object");
-            ObjectClass.AddConstructor();
-            foreach (var methodDeclaration in objectMethods)
-                ObjectClass.AddMethod().InitFromString(methodDeclaration);
+            string[] objectMethods = {"public static bool Equals(object objA, object objB)", "public virtual bool Equals(object obj)", "public virtual int GetHashCode()", "public System.Type GetType()", "protected object MemberwiseClone()", "public static bool ReferenceEquals(object objA, object objB)", "public virtual string ToString()"};
+            ObjectClass = new CSharpClass( "Object" );
+            ObjectClass.AddConstructor( );
+            foreach ( var methodDeclaration in objectMethods )
+                ObjectClass.AddMethod( ).InitFromString( methodDeclaration );
 
             // validAccessModifiers initialization
-            validAccessModifiers = new Dictionary<AccessModifier, string>(6);
-            validAccessModifiers.Add(AccessModifier.Default, "Default");
-            validAccessModifiers.Add(AccessModifier.Public, "Public");
-            validAccessModifiers.Add(AccessModifier.ProtectedInternal, "Protected Internal");
-            validAccessModifiers.Add(AccessModifier.Internal, "Internal");
-            validAccessModifiers.Add(AccessModifier.Protected, "Protected");
-            validAccessModifiers.Add(AccessModifier.Private, "Private");
+            validAccessModifiers = new Dictionary< AccessModifier, string >( 6 );
+            validAccessModifiers.Add( AccessModifier.Default, "Default" );
+            validAccessModifiers.Add( AccessModifier.Public, "Public" );
+            validAccessModifiers.Add( AccessModifier.ProtectedInternal, "Protected Internal" );
+            validAccessModifiers.Add( AccessModifier.Internal, "Internal" );
+            validAccessModifiers.Add( AccessModifier.Protected, "Protected" );
+            validAccessModifiers.Add( AccessModifier.Private, "Private" );
 
             // validClassModifiers initialization
-            validClassModifiers = new Dictionary<ClassModifier, string>(3);
-            validClassModifiers.Add(ClassModifier.Abstract, "Abstract");
-            validClassModifiers.Add(ClassModifier.Sealed, "Sealed");
-            validClassModifiers.Add(ClassModifier.Static, "Static");
+            validClassModifiers = new Dictionary< ClassModifier, string >( 3 );
+            validClassModifiers.Add( ClassModifier.Abstract, "Abstract" );
+            validClassModifiers.Add( ClassModifier.Sealed, "Sealed" );
+            validClassModifiers.Add( ClassModifier.Static, "Static" );
 
             // validFieldModifiers initialization
-            validFieldModifiers = new Dictionary<FieldModifier, string>(5);
-            validFieldModifiers.Add(FieldModifier.Static, "Static");
-            validFieldModifiers.Add(FieldModifier.Readonly, "Readonly");
-            validFieldModifiers.Add(FieldModifier.Constant, "Const");
-            validFieldModifiers.Add(FieldModifier.Hider, "New");
-            validFieldModifiers.Add(FieldModifier.Volatile, "Volatile");
+            validFieldModifiers = new Dictionary< FieldModifier, string >( 5 );
+            validFieldModifiers.Add( FieldModifier.Static, "Static" );
+            validFieldModifiers.Add( FieldModifier.Readonly, "Readonly" );
+            validFieldModifiers.Add( FieldModifier.Constant, "Const" );
+            validFieldModifiers.Add( FieldModifier.Hider, "New" );
+            validFieldModifiers.Add( FieldModifier.Volatile, "Volatile" );
 
             // validOperationModifiers initialization
-            validOperationModifiers = new Dictionary<OperationModifier, string>(8);
-            validOperationModifiers.Add(OperationModifier.Static, "Static");
-            validOperationModifiers.Add(OperationModifier.Hider, "New");
-            validOperationModifiers.Add(OperationModifier.Virtual, "Virtual");
-            validOperationModifiers.Add(OperationModifier.Abstract, "Abstract");
-            validOperationModifiers.Add(OperationModifier.Override, "Override");
-            validOperationModifiers.Add(OperationModifier.Sealed, "Sealed");
-            validOperationModifiers.Add(OperationModifier.Sealed | OperationModifier.Override,
-                                        "Sealed Override");
-            validOperationModifiers.Add(OperationModifier.Abstract | OperationModifier.Override,
-                                        "Abstract Override");
+            validOperationModifiers = new Dictionary< OperationModifier, string >( 8 );
+            validOperationModifiers.Add( OperationModifier.Static, "Static" );
+            validOperationModifiers.Add( OperationModifier.Hider, "New" );
+            validOperationModifiers.Add( OperationModifier.Virtual, "Virtual" );
+            validOperationModifiers.Add( OperationModifier.Abstract, "Abstract" );
+            validOperationModifiers.Add( OperationModifier.Override, "Override" );
+            validOperationModifiers.Add( OperationModifier.Sealed, "Sealed" );
+            validOperationModifiers.Add( OperationModifier.Sealed | OperationModifier.Override, "Sealed Override" );
+            validOperationModifiers.Add( OperationModifier.Abstract | OperationModifier.Override, "Abstract Override" );
         }
 
-        private CSharpLanguage()
-        {
-        }
+        private CSharpLanguage( ) {}
 
-        public static CSharpLanguage Instance { get; } = new CSharpLanguage();
+        public static CSharpLanguage Instance { get; } = new CSharpLanguage( );
 
         internal static CSharpClass ObjectClass { get; }
 
-        public override string Name { get { return "C#"; } }
+        public override string Name
+        {
+            get { return "C#"; }
+        }
 
-        public override string AssemblyName { get { return "CSharp"; } }
-
-        [XmlIgnore]
-        public override Dictionary<AccessModifier, string> ValidAccessModifiers { get { return validAccessModifiers; } }
-
-        [XmlIgnore]
-        public override Dictionary<ClassModifier, string> ValidClassModifiers { get { return validClassModifiers; } }
-
-        [XmlIgnore]
-        public override Dictionary<FieldModifier, string> ValidFieldModifiers { get { return validFieldModifiers; } }
+        public override string AssemblyName
+        {
+            get { return "CSharp"; }
+        }
 
         [XmlIgnore]
-        public override Dictionary<OperationModifier, string> ValidOperationModifiers
+        public override Dictionary< AccessModifier, string > ValidAccessModifiers
+        {
+            get { return validAccessModifiers; }
+        }
+
+        [XmlIgnore]
+        public override Dictionary< ClassModifier, string > ValidClassModifiers
+        {
+            get { return validClassModifiers; }
+        }
+
+        [XmlIgnore]
+        public override Dictionary< FieldModifier, string > ValidFieldModifiers
+        {
+            get { return validFieldModifiers; }
+        }
+
+        [XmlIgnore]
+        public override Dictionary< OperationModifier, string > ValidOperationModifiers
         {
             get { return validOperationModifiers; }
         }
 
-        protected override string[] ReservedNames { get { return reservedNames; } }
+        protected override string[] ReservedNames
+        {
+            get { return reservedNames; }
+        }
 
-        protected override string[] TypeKeywords { get { return typeKeywords; } }
+        protected override string[] TypeKeywords
+        {
+            get { return typeKeywords; }
+        }
 
-        public override string DefaultFileExtension { get { return ".csd"; } }
+        public override string DefaultFileExtension
+        {
+            get { return ".csd"; }
+        }
 
-        public override bool IsValidModifier(AccessModifier modifier)
+        public override bool IsValidModifier( AccessModifier modifier )
         {
             return true;
         }
 
-        public override bool IsValidModifier(FieldModifier modifier)
+        public override bool IsValidModifier( FieldModifier modifier )
         {
             return true;
         }
 
-        public override bool IsValidModifier(OperationModifier modifier)
+        public override bool IsValidModifier( OperationModifier modifier )
         {
             return true;
         }
@@ -228,149 +157,105 @@ namespace NClass.CSharp
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="operation" /> contains invalid modifier combinations.
         /// </exception>
-        protected override void ValidateOperation(Operation operation)
+        protected override void ValidateOperation( Operation operation )
         {
-            ValidateAccessModifiers(operation);
-            ValidateOperationModifiers(operation);
+            ValidateAccessModifiers( operation );
+            ValidateOperationModifiers( operation );
         }
 
-        private static void ValidateOperationModifiers(Operation operation)
+        private static void ValidateOperationModifiers( Operation operation )
         {
-            if (operation.IsStatic)
+            if ( operation.IsStatic )
             {
-                if (operation.IsVirtual)
+                if ( operation.IsVirtual )
                 {
-                    throw new BadSyntaxException(string.Format(
-                        Strings.ErrorInvalidModifierCombination,
-                        "virtual",
-                        "static"));
+                    throw new BadSyntaxException( string.Format( Strings.ErrorInvalidModifierCombination, "virtual", "static" ) );
                 }
-                if (operation.IsAbstract)
+                if ( operation.IsAbstract )
                 {
-                    throw new BadSyntaxException(string.Format(
-                        Strings.ErrorInvalidModifierCombination,
-                        "abstract",
-                        "static"));
+                    throw new BadSyntaxException( string.Format( Strings.ErrorInvalidModifierCombination, "abstract", "static" ) );
                 }
-                if (operation.IsOverride)
+                if ( operation.IsOverride )
                 {
-                    throw new BadSyntaxException(string.Format(
-                        Strings.ErrorInvalidModifierCombination,
-                        "override",
-                        "static"));
+                    throw new BadSyntaxException( string.Format( Strings.ErrorInvalidModifierCombination, "override", "static" ) );
                 }
-                if (operation.IsSealed)
+                if ( operation.IsSealed )
                 {
-                    throw new BadSyntaxException(string.Format(
-                        Strings.ErrorInvalidModifierCombination,
-                        "sealed",
-                        "static"));
+                    throw new BadSyntaxException( string.Format( Strings.ErrorInvalidModifierCombination, "sealed", "static" ) );
                 }
             }
 
-            if (operation.IsVirtual)
+            if ( operation.IsVirtual )
             {
-                if (operation.IsAbstract)
+                if ( operation.IsAbstract )
                 {
-                    throw new BadSyntaxException(string.Format(
-                        Strings.ErrorInvalidModifierCombination,
-                        "abstract",
-                        "virtual"));
+                    throw new BadSyntaxException( string.Format( Strings.ErrorInvalidModifierCombination, "abstract", "virtual" ) );
                 }
-                if (operation.IsOverride)
+                if ( operation.IsOverride )
                 {
-                    throw new BadSyntaxException(string.Format(
-                        Strings.ErrorInvalidModifierCombination,
-                        "override",
-                        "virtual"));
+                    throw new BadSyntaxException( string.Format( Strings.ErrorInvalidModifierCombination, "override", "virtual" ) );
                 }
-                if (operation.IsSealed)
+                if ( operation.IsSealed )
                 {
-                    throw new BadSyntaxException(string.Format(
-                        Strings.ErrorInvalidModifierCombination,
-                        "sealed",
-                        "virtual"));
+                    throw new BadSyntaxException( string.Format( Strings.ErrorInvalidModifierCombination, "sealed", "virtual" ) );
                 }
             }
 
-            if (operation.IsHider)
+            if ( operation.IsHider )
             {
-                if (operation.IsOverride)
+                if ( operation.IsOverride )
                 {
-                    throw new BadSyntaxException(string.Format(
-                        Strings.ErrorInvalidModifierCombination,
-                        "new",
-                        "override"));
+                    throw new BadSyntaxException( string.Format( Strings.ErrorInvalidModifierCombination, "new", "override" ) );
                 }
-                if (operation.IsSealed)
+                if ( operation.IsSealed )
                 {
-                    throw new BadSyntaxException(string.Format(
-                        Strings.ErrorInvalidModifierCombination,
-                        "new",
-                        "sealed"));
+                    throw new BadSyntaxException( string.Format( Strings.ErrorInvalidModifierCombination, "new", "sealed" ) );
                 }
             }
 
-            if (operation.IsSealed)
+            if ( operation.IsSealed )
             {
-                if (operation.IsAbstract)
+                if ( operation.IsAbstract )
                 {
-                    throw new BadSyntaxException(string.Format(
-                        Strings.ErrorInvalidModifierCombination,
-                        "sealed",
-                        "abstract"));
+                    throw new BadSyntaxException( string.Format( Strings.ErrorInvalidModifierCombination, "sealed", "abstract" ) );
                 }
-                if (!operation.IsOverride)
+                if ( !operation.IsOverride )
                     operation.IsOverride = true;
             }
 
-            if (operation.IsAbstract)
+            if ( operation.IsAbstract )
             {
                 var parent = operation.Parent as ClassType;
-                if (parent == null)
-                    throw new BadSyntaxException(Strings.ErrorInvalidModifier);
+                if ( parent == null )
+                    throw new BadSyntaxException( Strings.ErrorInvalidModifier );
                 parent.Modifier = ClassModifier.Abstract;
             }
         }
 
-        private static void ValidateAccessModifiers(Operation operation)
+        private static void ValidateAccessModifiers( Operation operation )
         {
-            if (operation.AccessModifier != AccessModifier.Default &&
-                operation.Parent is InterfaceType)
+            if ( operation.AccessModifier != AccessModifier.Default && operation.Parent is InterfaceType )
             {
-                throw new BadSyntaxException(
-                    Strings.ErrorInterfaceMemberAccess);
+                throw new BadSyntaxException( Strings.ErrorInterfaceMemberAccess );
             }
 
-            if (operation.Access == AccessModifier.Private)
+            if ( operation.Access == AccessModifier.Private )
             {
-                if (operation.IsVirtual)
+                if ( operation.IsVirtual )
                 {
-                    throw new BadSyntaxException(string.Format(
-                        Strings.ErrorInvalidModifierCombination,
-                        "private",
-                        "virtual"));
+                    throw new BadSyntaxException( string.Format( Strings.ErrorInvalidModifierCombination, "private", "virtual" ) );
                 }
-                if (operation.IsAbstract)
+                if ( operation.IsAbstract )
                 {
-                    throw new BadSyntaxException(string.Format(
-                        Strings.ErrorInvalidModifierCombination,
-                        "private",
-                        "abstract"));
+                    throw new BadSyntaxException( string.Format( Strings.ErrorInvalidModifierCombination, "private", "abstract" ) );
                 }
-                if (operation.IsOverride)
+                if ( operation.IsOverride )
                 {
-                    throw new BadSyntaxException(string.Format(
-                        Strings.ErrorInvalidModifierCombination,
-                        "private",
-                        "override"));
+                    throw new BadSyntaxException( string.Format( Strings.ErrorInvalidModifierCombination, "private", "override" ) );
                 }
-                if (operation.IsSealed)
+                if ( operation.IsSealed )
                 {
-                    throw new BadSyntaxException(string.Format(
-                        Strings.ErrorInvalidModifierCombination,
-                        "private",
-                        "sealed"));
+                    throw new BadSyntaxException( string.Format( Strings.ErrorInvalidModifierCombination, "private", "sealed" ) );
                 }
             }
         }
@@ -378,38 +263,26 @@ namespace NClass.CSharp
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="field" /> contains invalid modifier combinations.
         /// </exception>
-        protected override void ValidateField(Field field)
+        protected override void ValidateField( Field field )
         {
-            if (field.IsConstant)
+            if ( field.IsConstant )
             {
-                if (field.IsStatic)
+                if ( field.IsStatic )
                 {
-                    throw new BadSyntaxException(string.Format(
-                        Strings.ErrorInvalidModifierCombination,
-                        "static",
-                        "const"));
+                    throw new BadSyntaxException( string.Format( Strings.ErrorInvalidModifierCombination, "static", "const" ) );
                 }
-                if (field.IsReadonly)
+                if ( field.IsReadonly )
                 {
-                    throw new BadSyntaxException(string.Format(
-                        Strings.ErrorInvalidModifierCombination,
-                        "readonly",
-                        "const"));
+                    throw new BadSyntaxException( string.Format( Strings.ErrorInvalidModifierCombination, "readonly", "const" ) );
                 }
-                if (field.IsVolatile)
+                if ( field.IsVolatile )
                 {
-                    throw new BadSyntaxException(string.Format(
-                        Strings.ErrorInvalidModifierCombination,
-                        "volatile",
-                        "const"));
+                    throw new BadSyntaxException( string.Format( Strings.ErrorInvalidModifierCombination, "volatile", "const" ) );
                 }
             }
-            if (field.IsReadonly && field.IsVolatile)
+            if ( field.IsReadonly && field.IsVolatile )
             {
-                throw new BadSyntaxException(string.Format(
-                    Strings.ErrorInvalidModifierCombination,
-                    "volatile",
-                    "readonly"));
+                throw new BadSyntaxException( string.Format( Strings.ErrorInvalidModifierCombination, "volatile", "readonly" ) );
             }
         }
 
@@ -420,26 +293,22 @@ namespace NClass.CSharp
         ///     <paramref name="operation" /> is null.-or-
         ///     <paramref name="newParent" /> is null.
         /// </exception>
-        protected override Operation Implement(Operation operation,
-                                               CompositeType newParent,
-                                               bool explicitly)
+        protected override Operation Implement( Operation operation, CompositeType newParent, bool explicitly )
         {
-            if (newParent == null)
-                throw new ArgumentNullException("newParent");
-            if (operation == null)
-                throw new ArgumentNullException("operation");
+            if ( newParent == null )
+                throw new ArgumentNullException( "newParent" );
+            if ( operation == null )
+                throw new ArgumentNullException( "operation" );
 
-            var newOperation = operation.Clone(newParent);
+            var newOperation = operation.Clone( newParent );
 
             newOperation.AccessModifier = AccessModifier.Public;
-            newOperation.ClearModifiers();
+            newOperation.ClearModifiers( );
             newOperation.IsStatic = false;
 
-            if (explicitly)
+            if ( explicitly )
             {
-                newOperation.Name = string.Format("{0}.{1}",
-                                                  ((InterfaceType) operation.Parent).Name,
-                                                  newOperation.Name);
+                newOperation.Name = string.Format( "{0}.{1}", ( ( InterfaceType ) operation.Parent ).Name, newOperation.Name );
             }
 
             return newOperation;
@@ -451,20 +320,17 @@ namespace NClass.CSharp
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="operation" /> is null.
         /// </exception>
-        protected override Operation Override(Operation operation, CompositeType newParent)
+        protected override Operation Override( Operation operation, CompositeType newParent )
         {
-            if (operation == null)
-                throw new ArgumentNullException("operation");
+            if ( operation == null )
+                throw new ArgumentNullException( "operation" );
 
-            if (!operation.IsVirtual && !operation.IsAbstract && !operation.IsOverride ||
-                operation.IsSealed)
+            if ( !operation.IsVirtual && !operation.IsAbstract && !operation.IsOverride || operation.IsSealed )
             {
-                throw new ArgumentException(
-                    Strings.ErrorCannotOverride,
-                    "operation");
+                throw new ArgumentException( Strings.ErrorCannotOverride, "operation" );
             }
 
-            var newOperation = operation.Clone(newParent);
+            var newOperation = operation.Clone( newParent );
             newOperation.IsVirtual = false;
             newOperation.IsAbstract = false;
             newOperation.IsOverride = true;
@@ -475,165 +341,165 @@ namespace NClass.CSharp
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        public override string GetValidName(string name, bool isGenericName)
+        public override string GetValidName( string name, bool isGenericName )
         {
-            var match = isGenericName ? genericNameRegex.Match(name) : nameRegex.Match(name);
+            var match = isGenericName ? genericNameRegex.Match( name ) : nameRegex.Match( name );
 
-            if (match.Success)
+            if ( match.Success )
             {
-                var validName = match.Groups["name"].Value;
-                return base.GetValidName(validName, isGenericName);
+                var validName = match.Groups[ "name" ].Value;
+                return base.GetValidName( validName, isGenericName );
             }
-            throw new BadSyntaxException(Strings.ErrorInvalidName);
+            throw new BadSyntaxException( Strings.ErrorInvalidName );
         }
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        public override string GetValidTypeName(string name)
+        public override string GetValidTypeName( string name )
         {
-            var match = typeRegex.Match(name);
+            var match = typeRegex.Match( name );
 
-            if (match.Success)
+            if ( match.Success )
             {
-                var validName = match.Groups["type"].Value;
-                return base.GetValidTypeName(validName);
+                var validName = match.Groups[ "type" ].Value;
+                return base.GetValidTypeName( validName );
             }
-            throw new BadSyntaxException(Strings.ErrorInvalidTypeName);
+            throw new BadSyntaxException( Strings.ErrorInvalidTypeName );
         }
 
-        public override AccessModifier TryParseAccessModifier(string value)
+        public override AccessModifier TryParseAccessModifier( string value )
         {
-            if (value.Contains("protected") && value.Contains("internal"))
+            if ( value.Contains( "protected" ) && value.Contains( "internal" ) )
                 return AccessModifier.ProtectedInternal;
-            return base.TryParseAccessModifier(value);
+            return base.TryParseAccessModifier( value );
         }
 
-        public override OperationModifier TryParseOperationModifier(string value)
+        public override OperationModifier TryParseOperationModifier( string value )
         {
-            if (value.Contains("sealed"))
+            if ( value.Contains( "sealed" ) )
                 return OperationModifier.Sealed;
-            return base.TryParseOperationModifier(value);
+            return base.TryParseOperationModifier( value );
         }
 
-        public override string GetAccessString(AccessModifier access, bool forCode)
+        public override string GetAccessString( AccessModifier access, bool forCode )
         {
-            switch (access)
+            switch ( access )
             {
                 case AccessModifier.ProtectedInternal:
-                    if (forCode)
+                    if ( forCode )
                         return "protected internal";
                     return "Protected Internal";
 
                 case AccessModifier.Default:
-                    if (forCode)
+                    if ( forCode )
                         return "";
                     return "Default";
 
                 default:
-                    if (forCode)
-                        return access.ToString().ToLower();
-                    return access.ToString();
+                    if ( forCode )
+                        return access.ToString( ).ToLower( );
+                    return access.ToString( );
             }
         }
 
-        public override string GetFieldModifierString(FieldModifier modifier, bool forCode)
+        public override string GetFieldModifierString( FieldModifier modifier, bool forCode )
         {
-            if (modifier == FieldModifier.None)
+            if ( modifier == FieldModifier.None )
             {
-                if (forCode)
+                if ( forCode )
                     return "";
                 return "None";
             }
 
-            var builder = new StringBuilder(30);
-            if ((modifier & FieldModifier.Hider) != 0)
-                builder.Append(forCode ? "new " : "New, ");
-            if ((modifier & FieldModifier.Constant) != 0)
-                builder.Append(forCode ? "const " : "Const, ");
-            if ((modifier & FieldModifier.Static) != 0)
-                builder.Append(forCode ? "static " : "Static, ");
-            if ((modifier & FieldModifier.Readonly) != 0)
-                builder.Append(forCode ? "readonly " : "Readonly, ");
-            if ((modifier & FieldModifier.Volatile) != 0)
-                builder.Append(forCode ? "volatile " : "Volatile, ");
+            var builder = new StringBuilder( 30 );
+            if ( ( modifier & FieldModifier.Hider ) != 0 )
+                builder.Append( forCode ? "new " : "New, " );
+            if ( ( modifier & FieldModifier.Constant ) != 0 )
+                builder.Append( forCode ? "const " : "Const, " );
+            if ( ( modifier & FieldModifier.Static ) != 0 )
+                builder.Append( forCode ? "static " : "Static, " );
+            if ( ( modifier & FieldModifier.Readonly ) != 0 )
+                builder.Append( forCode ? "readonly " : "Readonly, " );
+            if ( ( modifier & FieldModifier.Volatile ) != 0 )
+                builder.Append( forCode ? "volatile " : "Volatile, " );
 
-            if (forCode)
-                builder.Remove(builder.Length - 1, 1);
+            if ( forCode )
+                builder.Remove( builder.Length - 1, 1 );
             else
-                builder.Remove(builder.Length - 2, 2);
+                builder.Remove( builder.Length - 2, 2 );
 
-            return builder.ToString();
+            return builder.ToString( );
         }
 
-        public override string GetOperationModifierString(OperationModifier modifier, bool forCode)
+        public override string GetOperationModifierString( OperationModifier modifier, bool forCode )
         {
-            if (modifier == OperationModifier.None)
+            if ( modifier == OperationModifier.None )
             {
-                if (forCode)
+                if ( forCode )
                     return "";
                 return "None";
             }
 
-            var builder = new StringBuilder(30);
-            if ((modifier & OperationModifier.Hider) != 0)
-                builder.Append(forCode ? "new " : "New, ");
-            if ((modifier & OperationModifier.Static) != 0)
-                builder.Append(forCode ? "static " : "Static, ");
-            if ((modifier & OperationModifier.Virtual) != 0)
-                builder.Append(forCode ? "virtual " : "Virtual, ");
-            if ((modifier & OperationModifier.Abstract) != 0)
-                builder.Append(forCode ? "abstract " : "Abstract, ");
-            if ((modifier & OperationModifier.Sealed) != 0)
-                builder.Append(forCode ? "sealed " : "Sealed, ");
-            if ((modifier & OperationModifier.Override) != 0)
-                builder.Append(forCode ? "override " : "Override, ");
+            var builder = new StringBuilder( 30 );
+            if ( ( modifier & OperationModifier.Hider ) != 0 )
+                builder.Append( forCode ? "new " : "New, " );
+            if ( ( modifier & OperationModifier.Static ) != 0 )
+                builder.Append( forCode ? "static " : "Static, " );
+            if ( ( modifier & OperationModifier.Virtual ) != 0 )
+                builder.Append( forCode ? "virtual " : "Virtual, " );
+            if ( ( modifier & OperationModifier.Abstract ) != 0 )
+                builder.Append( forCode ? "abstract " : "Abstract, " );
+            if ( ( modifier & OperationModifier.Sealed ) != 0 )
+                builder.Append( forCode ? "sealed " : "Sealed, " );
+            if ( ( modifier & OperationModifier.Override ) != 0 )
+                builder.Append( forCode ? "override " : "Override, " );
 
-            if (forCode)
-                builder.Remove(builder.Length - 1, 1);
+            if ( forCode )
+                builder.Remove( builder.Length - 1, 1 );
             else
-                builder.Remove(builder.Length - 2, 2);
+                builder.Remove( builder.Length - 2, 2 );
 
-            return builder.ToString();
+            return builder.ToString( );
         }
 
-        public override string GetClassModifierString(ClassModifier modifier, bool forCode)
+        public override string GetClassModifierString( ClassModifier modifier, bool forCode )
         {
-            if (!forCode)
-                return modifier.ToString();
-            if (modifier == ClassModifier.None)
+            if ( !forCode )
+                return modifier.ToString( );
+            if ( modifier == ClassModifier.None )
                 return "";
-            return modifier.ToString().ToLower();
+            return modifier.ToString( ).ToLower( );
         }
 
-        protected override ClassType CreateClass()
+        protected override ClassType CreateClass( )
         {
-            return new CSharpClass();
+            return new CSharpClass( );
         }
 
-        protected override StructureType CreateStructure()
+        protected override StructureType CreateStructure( )
         {
-            return new CSharpStructure();
+            return new CSharpStructure( );
         }
 
-        protected override InterfaceType CreateInterface()
+        protected override InterfaceType CreateInterface( )
         {
-            return new CSharpInterface();
+            return new CSharpInterface( );
         }
 
-        protected override EnumType CreateEnum()
+        protected override EnumType CreateEnum( )
         {
-            return new CSharpEnum();
+            return new CSharpEnum( );
         }
 
-        protected override DelegateType CreateDelegate()
+        protected override DelegateType CreateDelegate( )
         {
-            return new CSharpDelegate();
+            return new CSharpDelegate( );
         }
 
-        protected override ArgumentList CreateParameterCollection()
+        protected override ArgumentList CreateParameterCollection( )
         {
-            return new CSharpArgumentList();
+            return new CSharpArgumentList( );
         }
 
         #region Regex patterns
@@ -651,49 +517,39 @@ namespace NClass.CSharp
         internal const string BaseTypePattern = TypeNamePattern + ArrayPattern;
 
         // <System.String[], System.String[]>
-        private const string GenericPattern =
-            @"<\s*" + BaseTypePattern + @"(\s*,\s*" + BaseTypePattern + @")*\s*>";
+        private const string GenericPattern = @"<\s*" + BaseTypePattern + @"(\s*,\s*" + BaseTypePattern + @")*\s*>";
 
         // System.Collections.Generic.List<System.String[], System.String[]>[]
-        internal const string GenericTypePattern =
-            TypeNamePattern + @"(\s*" + GenericPattern + ")?" + ArrayPattern;
+        internal const string GenericTypePattern = TypeNamePattern + @"(\s*" + GenericPattern + ")?" + ArrayPattern;
 
         // <List<int>[], List<string>>
-        private const string GenericPattern2 =
-            @"<\s*" + GenericTypePattern + @"(\s*,\s*" + GenericTypePattern + @")*\s*>";
+        private const string GenericPattern2 = @"<\s*" + GenericTypePattern + @"(\s*,\s*" + GenericTypePattern + @")*\s*>";
 
         // System.Collections.Generic.List<List<int>[]>[]
-        internal const string GenericTypePattern2 =
-            TypeNamePattern + @"(\s*" + GenericPattern2 + @")?\??" + ArrayPattern;
+        internal const string GenericTypePattern2 = TypeNamePattern + @"(\s*" + GenericPattern2 + @")?\??" + ArrayPattern;
 
 
         // Name
         internal const string NamePattern = InitialChar + @"\w*";
 
         // <T, K>
-        private const string BaseGenericPattern =
-            @"<\s*" + NamePattern + @"(\s*,\s*" + NamePattern + @")*\s*>";
+        private const string BaseGenericPattern = @"<\s*" + NamePattern + @"(\s*,\s*" + NamePattern + @")*\s*>";
 
         // Name<T>
-        internal const string GenericNamePattern =
-            NamePattern + @"(\s*" + BaseGenericPattern + ")?";
+        internal const string GenericNamePattern = NamePattern + @"(\s*" + BaseGenericPattern + ")?";
 
         // Interface.Method
-        private const string OperationNamePattern =
-            "(" + GenericTypePattern + @"(?<namedot>\.))?" + NamePattern;
+        private const string OperationNamePattern = "(" + GenericTypePattern + @"(?<namedot>\.))?" + NamePattern;
 
         // Interface.Method<T>
-        internal const string GenericOperationNamePattern =
-            OperationNamePattern + @"(\s*" + BaseGenericPattern + ")?";
+        internal const string GenericOperationNamePattern = OperationNamePattern + @"(\s*" + BaseGenericPattern + ")?";
 
 
         // [static | virtual | abstract | override | sealed | new]
-        internal const string OperationModifiersPattern =
-            @"((?<modifier>static|virtual|abstract|override|sealed|new)\s+)*";
+        internal const string OperationModifiersPattern = @"((?<modifier>static|virtual|abstract|override|sealed|new)\s+)*";
 
         // [public | protected internal | internal protected | internal | protected | private]
-        internal const string AccessPattern = @"((?<access>public|protected\s+internal|" +
-                                              @"internal\s+protected|internal|protected|private)\s+)*";
+        internal const string AccessPattern = @"((?<access>public|protected\s+internal|" + @"internal\s+protected|internal|protected|private)\s+)*";
 
         // For validating identifier names.
         private const string ClosedNamePattern = @"^\s*(?<name>" + NamePattern + @")\s*$";

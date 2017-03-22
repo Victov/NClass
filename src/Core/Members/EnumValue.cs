@@ -22,10 +22,10 @@ namespace NClass.Core
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="declaration" /> does not fit to the syntax.
         /// </exception>
-        protected EnumValue(string declaration)
+        protected EnumValue( string declaration )
         {
             Initializing = true;
-            InitFromString(declaration);
+            InitFromString( declaration );
             Initializing = false;
         }
 
@@ -34,10 +34,10 @@ namespace NClass.Core
             get { return name; }
             protected set
             {
-                if (name != value)
+                if ( name != value )
                 {
                     name = value;
-                    Changed();
+                    Changed( );
                 }
             }
         }
@@ -45,13 +45,13 @@ namespace NClass.Core
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="declaration" /> does not fit to the syntax.
         /// </exception>
-        public abstract void InitFromString(string declaration);
+        public abstract void InitFromString( string declaration );
 
-        protected internal abstract EnumValue Clone();
+        protected internal abstract EnumValue Clone( );
 
-        public override string ToString()
+        public override string ToString( )
         {
-            return GetDeclaration();
+            return GetDeclaration( );
         }
     }
 }

@@ -29,10 +29,10 @@ namespace NClass.GUI.ModelExplorer
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="project" /> is null.
         /// </exception>
-        public EmptyProjectNode(Project project)
+        public EmptyProjectNode( Project project )
         {
-            if (project == null)
-                throw new ArgumentNullException("project");
+            if ( project == null )
+                throw new ArgumentNullException( "project" );
 
             this.project = project;
             project.ItemAdded += project_ItemAdded;
@@ -42,46 +42,46 @@ namespace NClass.GUI.ModelExplorer
             SelectedImageKey = "diagram";
         }
 
-        protected internal override void AfterInitialized()
+        protected internal override void AfterInitialized( )
         {
-            base.AfterInitialized();
-            NodeFont = new Font(TreeView.Font, FontStyle.Italic);
+            base.AfterInitialized( );
+            NodeFont = new Font( TreeView.Font, FontStyle.Italic );
         }
 
-        private void project_ItemAdded(object sender, ProjectItemEventArgs e)
+        private void project_ItemAdded( object sender, ProjectItemEventArgs e )
         {
-            Delete();
+            Delete( );
         }
 
-        public override void LabelModified(NodeLabelEditEventArgs e)
+        public override void LabelModified( NodeLabelEditEventArgs e )
         {
             e.CancelEdit = true;
         }
 
-        private void AddEmptyDiagram()
+        private void AddEmptyDiagram( )
         {
             var parent = Parent;
 
-            Delete();
-            var diagram = new Diagram(Settings.Default.GetDefaultLanguage());
-            project.Add(diagram);
+            Delete( );
+            var diagram = new Diagram( Settings.Default.GetDefaultLanguage( ) );
+            project.Add( diagram );
         }
 
-        public override void DoubleClick()
+        public override void DoubleClick( )
         {
-            AddEmptyDiagram();
+            AddEmptyDiagram( );
         }
 
-        public override void EnterPressed()
+        public override void EnterPressed( )
         {
-            AddEmptyDiagram();
+            AddEmptyDiagram( );
         }
 
-        public override void BeforeDelete()
+        public override void BeforeDelete( )
         {
             project.ItemAdded -= project_ItemAdded;
-            NodeFont.Dispose();
-            base.BeforeDelete();
+            NodeFont.Dispose( );
+            base.BeforeDelete( );
         }
     }
 }

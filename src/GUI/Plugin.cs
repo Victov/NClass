@@ -24,19 +24,25 @@ namespace NClass.GUI
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="environment" /> is null.
         /// </exception>
-        protected Plugin(NClassEnvironment environment)
+        protected Plugin( NClassEnvironment environment )
         {
-            if (environment == null)
-                throw new ArgumentNullException("environment");
+            if ( environment == null )
+                throw new ArgumentNullException( "environment" );
 
             NClassEnvironment = environment;
         }
 
         protected NClassEnvironment NClassEnvironment { get; }
 
-        protected Workspace Workspace { get { return NClassEnvironment.Workspace; } }
+        protected Workspace Workspace
+        {
+            get { return NClassEnvironment.Workspace; }
+        }
 
-        protected DocumentManager DocumentManager { get { return NClassEnvironment.DocumentManager; } }
+        protected DocumentManager DocumentManager
+        {
+            get { return NClassEnvironment.DocumentManager; }
+        }
 
         public abstract bool IsAvailable { get; }
 

@@ -26,7 +26,7 @@ namespace NClass.Core
         ///     The <paramref name="name" /> or <paramref name="type" />
         ///     does not fit to the syntax.
         /// </exception>
-        protected Parameter(string name, string type, ParameterModifier modifier, string defaultValue)
+        protected Parameter( string name, string type, ParameterModifier modifier, string defaultValue )
         {
             Initializing = true;
             Name = name;
@@ -44,12 +44,12 @@ namespace NClass.Core
             get { return name; }
             protected set
             {
-                var newName = Language.GetValidName(value, false);
+                var newName = Language.GetValidName( value, false );
 
-                if (newName != name)
+                if ( newName != name )
                 {
                     name = newName;
-                    Changed();
+                    Changed( );
                 }
             }
         }
@@ -62,12 +62,12 @@ namespace NClass.Core
             get { return type; }
             protected set
             {
-                var newType = Language.GetValidTypeName(value);
+                var newType = Language.GetValidTypeName( value );
 
-                if (newType != type)
+                if ( newType != type )
                 {
                     type = newType;
-                    Changed();
+                    Changed( );
                 }
             }
         }
@@ -77,10 +77,10 @@ namespace NClass.Core
             get { return modifier; }
             protected set
             {
-                if (modifier != value)
+                if ( modifier != value )
                 {
                     modifier = value;
-                    Changed();
+                    Changed( );
                 }
             }
         }
@@ -90,24 +90,27 @@ namespace NClass.Core
             get { return defaultValue; }
             protected set
             {
-                if (string.IsNullOrWhiteSpace(value))
+                if ( string.IsNullOrWhiteSpace( value ) )
                     value = null;
 
-                if (defaultValue != value)
+                if ( defaultValue != value )
                 {
                     defaultValue = value;
-                    Changed();
+                    Changed( );
                 }
             }
         }
 
-        public bool IsOptional { get { return DefaultValue != null; } }
+        public bool IsOptional
+        {
+            get { return DefaultValue != null; }
+        }
 
         public abstract Language Language { get; }
 
-        private static string GetModifierString(ParameterModifier modifier)
+        private static string GetModifierString( ParameterModifier modifier )
         {
-            switch (modifier)
+            switch ( modifier )
             {
                 case ParameterModifier.Inout:
                     return "inout";
@@ -123,13 +126,13 @@ namespace NClass.Core
             }
         }
 
-        public string GetUmlDescription(bool getName, bool initValue)
+        public string GetUmlDescription( bool getName, bool initValue )
         {
             var format = "{0} {1}: {2} = {3}";
 
-            if (getName)
+            if ( getName )
             {
-                if (Modifier != ParameterModifier.In)
+                if ( Modifier != ParameterModifier.In )
                     format = "{0} {1}: {2}";
                 else
                     format = "{1}: {2}";
@@ -137,17 +140,17 @@ namespace NClass.Core
             else
                 format = "{2}";
 
-            if (initValue)
+            if ( initValue )
                 format += " = {3}";
 
-            return string.Format(format, GetModifierString(Modifier), Name, Type, defaultValue);
+            return string.Format( format, GetModifierString( Modifier ), Name, Type, defaultValue );
         }
 
-        public abstract Parameter Clone();
+        public abstract Parameter Clone( );
 
-        public override string ToString()
+        public override string ToString( )
         {
-            return GetDeclaration();
+            return GetDeclaration( );
         }
     }
 }

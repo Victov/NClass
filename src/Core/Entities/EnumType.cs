@@ -21,25 +21,37 @@ namespace NClass.Core
 {
     public abstract class EnumType : TypeBase
     {
-        private readonly List<EnumValue> values = new List<EnumValue>();
+        private readonly List< EnumValue > values = new List< EnumValue >( );
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        protected EnumType(string name)
-            : base(name)
+        protected EnumType( string name ) : base( name ) {}
+
+        public sealed override EntityType EntityType
         {
+            get { return EntityType.Enum; }
         }
 
-        public sealed override EntityType EntityType { get { return EntityType.Enum; } }
+        public IEnumerable< EnumValue > Values
+        {
+            get { return values; }
+        }
 
-        public IEnumerable<EnumValue> Values { get { return values; } }
+        public int ValueCount
+        {
+            get { return values.Count; }
+        }
 
-        public int ValueCount { get { return values.Count; } }
+        public sealed override string Signature
+        {
+            get { return Language.GetAccessString( Access, false ) + " Enum"; }
+        }
 
-        public sealed override string Signature { get { return Language.GetAccessString(Access, false) + " Enum"; } }
-
-        public override string Stereotype { get { return "«enumeration»"; } }
+        public override string Stereotype
+        {
+            get { return "«enumeration»"; }
+        }
 
         /// <exception cref="BadSyntaxException">
         ///     The name does not fit to the syntax.
@@ -47,31 +59,31 @@ namespace NClass.Core
         /// <exception cref="ReservedNameException">
         ///     The name is a reserved name.
         /// </exception>
-        public abstract EnumValue AddValue(string declaration);
+        public abstract EnumValue AddValue( string declaration );
 
         /// <exception cref="ReservedNameException">
         ///     The name is a reserved name.
         /// </exception>
-        protected void AddValue(EnumValue newValue)
+        protected void AddValue( EnumValue newValue )
         {
-            if (newValue != null)
+            if ( newValue != null )
             {
-                foreach (var value in Values)
+                foreach ( var value in Values )
                 {
-                    if (value.Name == newValue.Name)
-                        throw new ReservedNameException(newValue.Name);
+                    if ( value.Name == newValue.Name )
+                        throw new ReservedNameException( newValue.Name );
                 }
 
-                values.Add(newValue);
-                newValue.Modified += delegate { Changed(); };
-                Changed();
+                values.Add( newValue );
+                newValue.Modified += delegate { Changed( ); };
+                Changed( );
             }
         }
 
-        public EnumValue GetValue(int index)
+        public EnumValue GetValue( int index )
         {
-            if (index >= 0 && index < values.Count)
-                return values[index];
+            if ( index >= 0 && index < values.Count )
+                return values[ index ];
             return null;
         }
 
@@ -81,87 +93,87 @@ namespace NClass.Core
         /// <exception cref="ReservedNameException">
         ///     The name is a reserved name.
         /// </exception>
-        public abstract EnumValue ModifyValue(EnumValue value, string declaration);
+        public abstract EnumValue ModifyValue( EnumValue value, string declaration );
 
         /// <exception cref="ReservedNameException">
         ///     The new name is a reserved name.
         /// </exception>
-        protected bool ChangeValue(EnumValue oldValue, EnumValue newValue)
+        protected bool ChangeValue( EnumValue oldValue, EnumValue newValue )
         {
-            if (oldValue == null || newValue == null)
+            if ( oldValue == null || newValue == null )
                 return false;
 
             var index = -1;
-            for (var i = 0; i < values.Count; i++)
+            for ( var i = 0; i < values.Count; i++ )
             {
-                if (values[i] == oldValue)
+                if ( values[ i ] == oldValue )
                     index = i;
-                else if (values[i].Name == newValue.Name)
-                    throw new ReservedNameException(newValue.Name);
+                else if ( values[ i ].Name == newValue.Name )
+                    throw new ReservedNameException( newValue.Name );
             }
 
-            if (index == -1)
+            if ( index == -1 )
             {
                 return false;
             }
-            values[index] = newValue;
-            Changed();
+            values[ index ] = newValue;
+            Changed( );
             return true;
         }
 
-        public void RemoveValue(EnumValue value)
+        public void RemoveValue( EnumValue value )
         {
-            if (values.Remove(value))
-                Changed();
+            if ( values.Remove( value ) )
+                Changed( );
         }
 
-        public override bool MoveUpItem(object item)
+        public override bool MoveUpItem( object item )
         {
-            if (item is EnumValue && MoveUp(values, item))
+            if ( item is EnumValue && MoveUp( values, item ) )
             {
-                Changed();
+                Changed( );
                 return true;
             }
             return false;
         }
 
-        public override bool MoveDownItem(object item)
+        public override bool MoveDownItem( object item )
         {
-            if (item is EnumValue && MoveDown(values, item))
+            if ( item is EnumValue && MoveDown( values, item ) )
             {
-                Changed();
+                Changed( );
                 return true;
             }
             return false;
         }
 
-        protected override void CopyFrom(TypeBase type)
+        protected override void CopyFrom( TypeBase type )
         {
-            base.CopyFrom(type);
+            base.CopyFrom( type );
 
-            var enumType = (EnumType) type;
-            values.Clear();
+            var enumType = ( EnumType ) type;
+            values.Clear( );
             values.Capacity = enumType.values.Capacity;
-            foreach (var value in enumType.values)
+            foreach ( var value in enumType.values )
             {
-                values.Add(value.Clone());
+                values.Add( value.Clone( ) );
             }
         }
 
-        public abstract EnumType Clone();
+        public abstract EnumType Clone( );
 
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="node" /> is null.
         /// </exception>
-        protected internal override void Serialize(XmlElement node)
+        protected internal override void Serialize( XmlElement node )
         {
-            base.Serialize(node);
+            base.Serialize( node );
 
-            foreach (var value in values)
+            foreach ( var value in values )
             {
-                var child = node.OwnerDocument.CreateElement("Value");
-                child.InnerText = value.ToString();
-                node.AppendChild(child);
+                var child = node.OwnerDocument.CreateElement( "Value" );
+                child.InnerText = value.ToString( );
+                node.AppendChild( child );
             }
         }
 
@@ -174,15 +186,15 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="node" /> is null.
         /// </exception>
-        protected internal override void Deserialize(XmlElement node)
+        protected internal override void Deserialize( XmlElement node )
         {
             RaiseChangedEvent = false;
 
-            var nodeList = node.SelectNodes("Value");
-            foreach (XmlNode valueNode in nodeList)
-                AddValue(valueNode.InnerText);
+            var nodeList = node.SelectNodes( "Value" );
+            foreach ( XmlNode valueNode in nodeList )
+                AddValue( valueNode.InnerText );
 
-            base.Deserialize(node);
+            base.Deserialize( node );
             RaiseChangedEvent = true;
         }
     }

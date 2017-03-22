@@ -27,8 +27,7 @@ namespace NClass.CSharp
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="parent" /> is null.
         /// </exception>
-        internal CSharpDestructor(CompositeType parent)
-            : base(parent)
+        internal CSharpDestructor( CompositeType parent ) : base( parent )
         {
             AccessModifier = AccessModifier.Default;
         }
@@ -38,11 +37,11 @@ namespace NClass.CSharp
         /// </exception>
         public override string Name
         {
-            get { return "~" + GetNameWithoutGeneric(Parent.Name); }
+            get { return "~" + GetNameWithoutGeneric( Parent.Name ); }
             set
             {
-                if (value != null && value != "~" + GetNameWithoutGeneric(Parent.Name))
-                    throw new BadSyntaxException(Strings.ErrorDestructorName);
+                if ( value != null && value != "~" + GetNameWithoutGeneric( Parent.Name ) )
+                    throw new BadSyntaxException( Strings.ErrorDestructorName );
             }
         }
 
@@ -54,14 +53,20 @@ namespace NClass.CSharp
             get { return base.AccessModifier; }
             set
             {
-                if (value != AccessModifier.Default)
-                    throw new BadSyntaxException(Strings.ErrorCannotSetAccess);
+                if ( value != AccessModifier.Default )
+                    throw new BadSyntaxException( Strings.ErrorCannotSetAccess );
             }
         }
 
-        public override AccessModifier DefaultAccess { get { return AccessModifier.Private; } }
+        public override AccessModifier DefaultAccess
+        {
+            get { return AccessModifier.Private; }
+        }
 
-        public override bool IsAccessModifiable { get { return false; } }
+        public override bool IsAccessModifiable
+        {
+            get { return false; }
+        }
 
         /// <exception cref="BadSyntaxException">
         ///     Cannot set virtual modifier.
@@ -71,8 +76,8 @@ namespace NClass.CSharp
             get { return base.IsVirtual; }
             set
             {
-                if (value)
-                    throw new BadSyntaxException(Strings.ErrorCannotSetModifier);
+                if ( value )
+                    throw new BadSyntaxException( Strings.ErrorCannotSetModifier );
             }
         }
 
@@ -84,8 +89,8 @@ namespace NClass.CSharp
             get { return base.IsOverride; }
             set
             {
-                if (value)
-                    throw new BadSyntaxException(Strings.ErrorCannotSetModifier);
+                if ( value )
+                    throw new BadSyntaxException( Strings.ErrorCannotSetModifier );
             }
         }
 
@@ -97,26 +102,29 @@ namespace NClass.CSharp
             get { return base.IsSealed; }
             set
             {
-                if (value)
-                    throw new BadSyntaxException(Strings.ErrorCannotSetModifier);
+                if ( value )
+                    throw new BadSyntaxException( Strings.ErrorCannotSetModifier );
             }
         }
 
-        public override Language Language { get { return CSharpLanguage.Instance; } }
+        public override Language Language
+        {
+            get { return CSharpLanguage.Instance; }
+        }
 
-        public override void InitFromString(string declaration)
+        public override void InitFromString( string declaration )
         {
             ValidName = "~" + Parent.Name;
         }
 
-        public override string GetDeclaration()
+        public override string GetDeclaration( )
         {
             return Name + "()";
         }
 
-        public override Operation Clone(CompositeType newParent)
+        public override Operation Clone( CompositeType newParent )
         {
-            return new CSharpDestructor(newParent);
+            return new CSharpDestructor( newParent );
         }
     }
 }

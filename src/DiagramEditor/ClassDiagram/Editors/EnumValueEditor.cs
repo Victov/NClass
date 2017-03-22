@@ -23,49 +23,47 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
     {
         private EnumShape shape;
 
-        internal override void Init(DiagramElement element)
+        internal override void Init( DiagramElement element )
         {
-            shape = (EnumShape) element;
-            base.Init(element);
+            shape = ( EnumShape ) element;
+            base.Init( element );
         }
 
-        internal override void Relocate(DiagramElement element)
+        internal override void Relocate( DiagramElement element )
         {
-            Relocate((EnumShape) element);
+            Relocate( ( EnumShape ) element );
         }
 
-        internal void Relocate(EnumShape shape)
+        internal void Relocate( EnumShape shape )
         {
             var diagram = shape.Diagram;
-            if (diagram != null)
+            if ( diagram != null )
             {
-                var record = shape.GetMemberRectangle(shape.ActiveMemberIndex);
+                var record = shape.GetMemberRectangle( shape.ActiveMemberIndex );
 
-                var absolute = new Point(shape.Right, record.Top);
-                var relative = new Size(
-                    (int) (absolute.X*diagram.Zoom) - diagram.Offset.X + MarginSize,
-                    (int) (absolute.Y*diagram.Zoom) - diagram.Offset.Y);
-                relative.Height -= (Height - (int) (record.Height*diagram.Zoom))/2;
+                var absolute = new Point( shape.Right, record.Top );
+                var relative = new Size( ( int ) ( absolute.X * diagram.Zoom ) - diagram.Offset.X + MarginSize, ( int ) ( absolute.Y * diagram.Zoom ) - diagram.Offset.Y );
+                relative.Height -= ( Height - ( int ) ( record.Height * diagram.Zoom ) ) / 2;
 
                 Location = ParentLocation + relative;
             }
         }
 
-        protected override void RefreshValues()
+        protected override void RefreshValues( )
         {
-            if (shape.ActiveValue != null)
+            if ( shape.ActiveValue != null )
             {
                 var cursorPosition = SelectionStart;
-                DeclarationText = shape.ActiveValue.ToString();
+                DeclarationText = shape.ActiveValue.ToString( );
                 SelectionStart = cursorPosition;
 
-                SetError(null);
+                SetError( null );
                 NeedValidation = false;
-                RefreshMoveUpDownTools();
+                RefreshMoveUpDownTools( );
             }
         }
 
-        private void RefreshMoveUpDownTools()
+        private void RefreshMoveUpDownTools( )
         {
             var index = shape.ActiveMemberIndex;
             var parameterCount = shape.EnumType.ValueCount;
@@ -74,65 +72,65 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
             toolMoveDown.Enabled = index < parameterCount - 1;
         }
 
-        protected override bool ValidateDeclarationLine()
+        protected override bool ValidateDeclarationLine( )
         {
-            if (NeedValidation && shape.ActiveValue != null)
+            if ( NeedValidation && shape.ActiveValue != null )
             {
                 try
                 {
-                    shape.EnumType.ModifyValue(shape.ActiveValue, DeclarationText);
-                    RefreshValues();
+                    shape.EnumType.ModifyValue( shape.ActiveValue, DeclarationText );
+                    RefreshValues( );
                 }
-                catch (BadSyntaxException ex)
+                catch ( BadSyntaxException ex )
                 {
-                    SetError(ex.Message);
+                    SetError( ex.Message );
                     return false;
                 }
             }
             return true;
         }
 
-        protected override void HideEditor()
+        protected override void HideEditor( )
         {
             NeedValidation = false;
-            shape.HideEditor();
+            shape.HideEditor( );
         }
 
-        protected override void SelectPrevious()
+        protected override void SelectPrevious( )
         {
-            if (ValidateDeclarationLine())
+            if ( ValidateDeclarationLine( ) )
             {
-                shape.SelectPrevious();
+                shape.SelectPrevious( );
             }
         }
 
-        protected override void SelectNext()
+        protected override void SelectNext( )
         {
-            if (ValidateDeclarationLine())
+            if ( ValidateDeclarationLine( ) )
             {
-                shape.SelectNext();
+                shape.SelectNext( );
             }
         }
 
-        protected override void MoveUp()
+        protected override void MoveUp( )
         {
-            if (ValidateDeclarationLine())
+            if ( ValidateDeclarationLine( ) )
             {
-                shape.MoveUp();
+                shape.MoveUp( );
             }
         }
 
-        protected override void MoveDown()
+        protected override void MoveDown( )
         {
-            if (ValidateDeclarationLine())
+            if ( ValidateDeclarationLine( ) )
             {
-                shape.MoveDown();
+                shape.MoveDown( );
             }
         }
 
-        protected override void Delete()
+        protected override void Delete( )
         {
-            shape.DeleteActiveValue();
+            shape.DeleteActiveValue( );
         }
     }
 }

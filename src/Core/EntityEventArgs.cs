@@ -17,11 +17,11 @@ using System;
 
 namespace NClass.Core
 {
-    public delegate void EntityEventHandler(object sender, EntityEventArgs e);
+    public delegate void EntityEventHandler( object sender, EntityEventArgs e );
 
     public class EntityEventArgs : EventArgs
     {
-        public EntityEventArgs(IEntity entity)
+        public EntityEventArgs( IEntity entity )
         {
             Entity = entity;
         }

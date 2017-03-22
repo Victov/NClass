@@ -24,22 +24,24 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 {
     public sealed class DelegateShape : TypeShape
     {
-        private static readonly DelegateEditor typeEditor = new DelegateEditor();
-        private static readonly ParameterEditor parameterEditor = new ParameterEditor();
-        private static readonly DelegateDialog delegateDialog = new DelegateDialog();
-        private static readonly SolidBrush parameterBrush = new SolidBrush(Color.Black);
+        private static readonly DelegateEditor typeEditor = new DelegateEditor( );
+        private static readonly ParameterEditor parameterEditor = new ParameterEditor( );
+        private static readonly DelegateDialog delegateDialog = new DelegateDialog( );
+        private static readonly SolidBrush parameterBrush = new SolidBrush( Color.Black );
 
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="_delegate" /> is null.
         /// </exception>
-        internal DelegateShape(DelegateType _delegate)
-            : base(_delegate)
+        internal DelegateShape( DelegateType _delegate ) : base( _delegate )
         {
             DelegateType = _delegate;
-            UpdateMinSize();
+            UpdateMinSize( );
         }
 
-        public override TypeBase TypeBase { get { return DelegateType; } }
+        public override TypeBase TypeBase
+        {
+            get { return DelegateType; }
+        }
 
         public DelegateType DelegateType { get; }
 
@@ -47,8 +49,8 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         {
             get
             {
-                if (ActiveMemberIndex >= 0)
-                    return DelegateType.GetArgument(ActiveMemberIndex);
+                if ( ActiveMemberIndex >= 0 )
+                    return DelegateType.GetArgument( ActiveMemberIndex );
                 return null;
             }
         }
@@ -60,117 +62,123 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             {
                 var oldParameter = ActiveParameter;
 
-                if (value < DelegateType.ArgumentCount)
+                if ( value < DelegateType.ArgumentCount )
                     base.ActiveMemberIndex = value;
                 else
                     base.ActiveMemberIndex = DelegateType.ArgumentCount - 1;
 
-                if (oldParameter != ActiveParameter)
-                    OnActiveMemberChanged(EventArgs.Empty);
+                if ( oldParameter != ActiveParameter )
+                    OnActiveMemberChanged( EventArgs.Empty );
             }
         }
 
-        protected override TypeEditor HeaderEditor { get { return typeEditor; } }
-
-        protected override EditorWindow ContentEditor { get { return parameterEditor; } }
-
-        protected override EditorWindow GetEditorWindow()
+        protected override TypeEditor HeaderEditor
         {
-            if (ActiveParameter == null)
+            get { return typeEditor; }
+        }
+
+        protected override EditorWindow ContentEditor
+        {
+            get { return parameterEditor; }
+        }
+
+        protected override EditorWindow GetEditorWindow( )
+        {
+            if ( ActiveParameter == null )
                 return typeEditor;
             return parameterEditor;
         }
 
-        protected internal override bool DeleteSelectedMember(bool showConfirmation)
+        protected internal override bool DeleteSelectedMember( bool showConfirmation )
         {
-            if (IsActive && ActiveParameter != null)
+            if ( IsActive && ActiveParameter != null )
             {
-                if (!showConfirmation || ConfirmMemberDelete())
-                    DeleteActiveParameter();
+                if ( !showConfirmation || ConfirmMemberDelete( ) )
+                    DeleteActiveParameter( );
                 return true;
             }
             return false;
         }
 
-        protected override bool CloneEntity(Diagram diagram)
+        protected override bool CloneEntity( Diagram diagram )
         {
-            return diagram.InsertDelegate(DelegateType.Clone());
+            return diagram.InsertDelegate( DelegateType.Clone( ) );
         }
 
-        protected override Color GetBackgroundColor(Style style)
+        protected override Color GetBackgroundColor( Style style )
         {
             return style.DelegateBackgroundColor;
         }
 
-        protected override Color GetBorderColor(Style style)
+        protected override Color GetBorderColor( Style style )
         {
             return style.DelegateBorderColor;
         }
 
-        protected override int GetBorderWidth(Style style)
+        protected override int GetBorderWidth( Style style )
         {
             return style.DelegateBorderWidth;
         }
 
-        protected override bool IsBorderDashed(Style style)
+        protected override bool IsBorderDashed( Style style )
         {
             return style.IsDelegateBorderDashed;
         }
 
-        protected override Color GetHeaderColor(Style style)
+        protected override Color GetHeaderColor( Style style )
         {
             return style.DelegateHeaderColor;
         }
 
-        protected override int GetRoundingSize(Style style)
+        protected override int GetRoundingSize( Style style )
         {
             return style.DelegateRoundingSize;
         }
 
-        protected override GradientStyle GetGradientHeaderStyle(Style style)
+        protected override GradientStyle GetGradientHeaderStyle( Style style )
         {
             return style.DelegateGradientHeaderStyle;
         }
 
-        public override void MoveUp()
+        public override void MoveUp( )
         {
-            if (ActiveParameter != null && DelegateType.MoveUpItem(ActiveParameter))
+            if ( ActiveParameter != null && DelegateType.MoveUpItem( ActiveParameter ) )
             {
                 ActiveMemberIndex--;
             }
         }
 
-        public override void MoveDown()
+        public override void MoveDown( )
         {
-            if (ActiveParameter != null && DelegateType.MoveDownItem(ActiveParameter))
+            if ( ActiveParameter != null && DelegateType.MoveDownItem( ActiveParameter ) )
             {
                 ActiveMemberIndex++;
             }
         }
 
-        protected internal override void EditMembers()
+        protected internal override void EditMembers( )
         {
-            delegateDialog.ShowDialog(DelegateType);
+            delegateDialog.ShowDialog( DelegateType );
         }
 
-        protected override void OnMouseDown(AbsoluteMouseEventArgs e)
+        protected override void OnMouseDown( AbsoluteMouseEventArgs e )
         {
-            base.OnMouseDown(e);
-            SelectMember(e.Location);
+            base.OnMouseDown( e );
+            SelectMember( e.Location );
         }
 
-        private void SelectMember(PointF location)
+        private void SelectMember( PointF location )
         {
-            if (Contains(location))
+            if ( Contains( location ) )
             {
                 int index;
-                var y = (int) location.Y;
+                var y = ( int ) location.Y;
                 var top = Top + HeaderHeight + MarginSize;
 
-                if (top <= y)
+                if ( top <= y )
                 {
-                    index = (y - top)/MemberHeight;
-                    if (index < DelegateType.ArgumentCount)
+                    index = ( y - top ) / MemberHeight;
+                    if ( index < DelegateType.ArgumentCount )
                     {
                         ActiveMemberIndex = index;
                         return;
@@ -180,12 +188,12 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             }
         }
 
-        internal void DeleteActiveParameter()
+        internal void DeleteActiveParameter( )
         {
-            if (ActiveMemberIndex >= 0)
+            if ( ActiveMemberIndex >= 0 )
             {
                 int newIndex;
-                if (ActiveMemberIndex == DelegateType.ArgumentCount - 1) // Last parameter
+                if ( ActiveMemberIndex == DelegateType.ArgumentCount - 1 ) // Last parameter
                 {
                     newIndex = ActiveMemberIndex - 1;
                 }
@@ -194,99 +202,84 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
                     newIndex = ActiveMemberIndex;
                 }
 
-                DelegateType.RemoveParameter(ActiveParameter);
+                DelegateType.RemoveParameter( ActiveParameter );
                 ActiveMemberIndex = newIndex;
-                OnActiveMemberChanged(EventArgs.Empty);
+                OnActiveMemberChanged( EventArgs.Empty );
             }
         }
 
-        internal Rectangle GetMemberRectangle(int memberIndex)
+        internal Rectangle GetMemberRectangle( int memberIndex )
         {
-            return new Rectangle(
-                Left + MarginSize,
-                Top + HeaderHeight + MarginSize + memberIndex*MemberHeight,
-                Width - MarginSize*2,
-                MemberHeight);
+            return new Rectangle( Left + MarginSize, Top + HeaderHeight + MarginSize + memberIndex * MemberHeight, Width - MarginSize * 2, MemberHeight );
         }
 
-        private void DrawItem(IGraphics g, Parameter parameter, Rectangle record, Style style)
+        private void DrawItem( IGraphics g, Parameter parameter, Rectangle record, Style style )
         {
-            var font = GetFont(style);
-            var memberString = parameter.ToString();
+            var font = GetFont( style );
+            var memberString = parameter.ToString( );
             parameterBrush.Color = style.EnumItemColor;
 
-            if (style.UseIcons)
+            if ( style.UseIcons )
             {
                 Image icon = Resources.Parameter;
-                g.DrawImage(icon, record.X, record.Y);
+                g.DrawImage( icon, record.X, record.Y );
 
-                var textBounds = new Rectangle(
-                    record.X + IconSpacing,
-                    record.Y,
-                    record.Width - IconSpacing,
-                    record.Height);
+                var textBounds = new Rectangle( record.X + IconSpacing, record.Y, record.Width - IconSpacing, record.Height );
 
-                g.DrawString(memberString, font, parameterBrush, textBounds, memberFormat);
+                g.DrawString( memberString, font, parameterBrush, textBounds, memberFormat );
             }
             else
             {
-                g.DrawString(memberString, font, parameterBrush, record, memberFormat);
+                g.DrawString( memberString, font, parameterBrush, record, memberFormat );
             }
         }
 
-        protected internal override void DrawSelectionLines(Graphics g, float zoom, Point offset)
+        protected internal override void DrawSelectionLines( Graphics g, float zoom, Point offset )
         {
-            base.DrawSelectionLines(g, zoom, offset);
+            base.DrawSelectionLines( g, zoom, offset );
 
             // Draw selected parameter rectangle
-            if (IsActive && ActiveParameter != null)
+            if ( IsActive && ActiveParameter != null )
             {
-                var record = GetMemberRectangle(ActiveMemberIndex);
-                record = TransformRelativeToAbsolute(record, zoom, offset);
-                record.Inflate(2, 0);
-                g.DrawRectangle(Diagram.SelectionPen, record);
+                var record = GetMemberRectangle( ActiveMemberIndex );
+                record = TransformRelativeToAbsolute( record, zoom, offset );
+                record.Inflate( 2, 0 );
+                g.DrawRectangle( Diagram.SelectionPen, record );
             }
         }
 
-        protected override void DrawContent(IGraphics g, Style style)
+        protected override void DrawContent( IGraphics g, Style style )
         {
-            var record = new Rectangle(
-                Left + MarginSize,
-                Top + HeaderHeight + MarginSize,
-                Width - MarginSize*2,
-                MemberHeight);
+            var record = new Rectangle( Left + MarginSize, Top + HeaderHeight + MarginSize, Width - MarginSize * 2, MemberHeight );
 
-            foreach (var parameter in DelegateType.Arguments)
+            foreach ( var parameter in DelegateType.Arguments )
             {
-                DrawItem(g, parameter, record, style);
+                DrawItem( g, parameter, record, style );
                 record.Y += MemberHeight;
             }
         }
 
-        protected override float GetRequiredWidth(Graphics g, Style style)
+        protected override float GetRequiredWidth( Graphics g, Style style )
         {
             float requiredWidth = 0;
 
-            var font = GetFont(style);
-            foreach (var parameter in DelegateType.Arguments)
+            var font = GetFont( style );
+            foreach ( var parameter in DelegateType.Arguments )
             {
-                var itemWidth = g.MeasureString(parameter.ToString(),
-                                                font,
-                                                PointF.Empty,
-                                                memberFormat).Width;
-                requiredWidth = Math.Max(requiredWidth, itemWidth);
+                var itemWidth = g.MeasureString( parameter.ToString( ), font, PointF.Empty, memberFormat ).Width;
+                requiredWidth = Math.Max( requiredWidth, itemWidth );
             }
 
-            if (style.UseIcons)
+            if ( style.UseIcons )
                 requiredWidth += IconSpacing;
-            requiredWidth += MarginSize*2;
+            requiredWidth += MarginSize * 2;
 
-            return Math.Max(requiredWidth, base.GetRequiredWidth(g, style));
+            return Math.Max( requiredWidth, base.GetRequiredWidth( g, style ) );
         }
 
-        protected override int GetRequiredHeight()
+        protected override int GetRequiredHeight( )
         {
-            return HeaderHeight + MarginSize*2 + DelegateType.ArgumentCount*MemberHeight;
+            return HeaderHeight + MarginSize * 2 + DelegateType.ArgumentCount * MemberHeight;
         }
     }
 }

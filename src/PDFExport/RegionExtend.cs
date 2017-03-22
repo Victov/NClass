@@ -34,11 +34,11 @@ namespace PDFExport
 
         #region === Methods
 
-        public static GraphicsPath GetPath(this Region region)
+        public static GraphicsPath GetPath( this Region region )
         {
-            var path = new GraphicsPath();
+            var path = new GraphicsPath( );
 
-            path.AddRectangle(new Rectangle(0, 0, 100, 100));
+            path.AddRectangle( new Rectangle( 0, 0, 100, 100 ) );
 
             return path;
         }
@@ -48,9 +48,7 @@ namespace PDFExport
         ///     element on the given IRegionElementConsumer object.
         /// </summary>
         /// <param name="region">The region to enumerate.</param>
-        public static void EnumerateRegion(this Region region)
-        {
-        }
+        public static void EnumerateRegion( this Region region ) {}
 
         #endregion
 

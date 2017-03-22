@@ -22,54 +22,54 @@ using NReflect.NRMembers;
 
 namespace NReflect.NREntities
 {
-  /// <summary>
-  /// Represents a type which can only have one parent type which is reflected by NReflect.
-  /// </summary>
-  [Serializable]
-  public abstract class NRSingleInheritanceType : NRCompositeType, IFieldContainer
-  {
-    // ========================================================================
-    // Con- / Destruction
-
-    #region === Con- / Destruction
-
     /// <summary>
-    /// Initializes a new instance of <see cref="NRSingleInheritanceType"/>.
+    /// Represents a type which can only have one parent type which is reflected by NReflect.
     /// </summary>
-    protected NRSingleInheritanceType()
+    [Serializable]
+    public abstract class NRSingleInheritanceType : NRCompositeType, IFieldContainer
     {
-      Fields = new List<NRField>();
-      Constructors = new List<NRConstructor>();
-      Operators = new List<NROperator>();
+        // ========================================================================
+        // Con- / Destruction
+
+        #region === Con- / Destruction
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="NRSingleInheritanceType"/>.
+        /// </summary>
+        protected NRSingleInheritanceType( )
+        {
+            Fields = new List< NRField >( );
+            Constructors = new List< NRConstructor >( );
+            Operators = new List< NROperator >( );
+        }
+
+        #endregion
+
+        // ========================================================================
+        // Properties
+
+        #region === Properties
+
+        /// <summary>
+        /// Gets or sets the full name of the base type of this type.
+        /// </summary>
+        public NRTypeUsage BaseType { get; set; }
+
+        /// <summary>
+        /// Gets a list of constructors.
+        /// </summary>
+        public List< NRConstructor > Constructors { get; private set; }
+
+        /// <summary>
+        /// Gets a list of operators of this type.
+        /// </summary>
+        public List< NROperator > Operators { get; private set; }
+
+        /// <summary>
+        /// Gets a list of fields of this type.
+        /// </summary>
+        public List< NRField > Fields { get; private set; }
+
+        #endregion
     }
-
-    #endregion
-
-    // ========================================================================
-    // Properties
-
-    #region === Properties
-
-    /// <summary>
-    /// Gets or sets the full name of the base type of this type.
-    /// </summary>
-    public NRTypeUsage BaseType { get; set; }
-
-    /// <summary>
-    /// Gets a list of constructors.
-    /// </summary>
-    public List<NRConstructor> Constructors { get; private set; }
-
-    /// <summary>
-    /// Gets a list of operators of this type.
-    /// </summary>
-    public List<NROperator> Operators { get; private set; }
-
-    /// <summary>
-    /// Gets a list of fields of this type.
-    /// </summary>
-    public List<NRField> Fields { get; private set; }
-
-    #endregion
-  }
 }

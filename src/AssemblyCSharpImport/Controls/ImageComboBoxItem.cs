@@ -20,7 +20,7 @@ namespace NClass.AssemblyCSharpImport.Controls
         /// <returns>
         ///     A <see cref="string" /> that represents the current <see cref="ImageComboBoxItem" />.
         /// </returns>
-        public override string ToString()
+        public override string ToString( )
         {
             return Text;
         }
@@ -35,29 +35,20 @@ namespace NClass.AssemblyCSharpImport.Controls
         /// <summary>
         ///     Initializes a new instance of <see cref="ImageComboBoxItem" />.
         /// </summary>
-        public ImageComboBoxItem()
-            : this("", -1, null)
-        {
-        }
+        public ImageComboBoxItem( ) : this( "", -1, null ) {}
 
         /// <summary>
         ///     Initializes a new instance of <see cref="ImageComboBoxItem" />.
         /// </summary>
         /// <param name="text">The text ot the item.</param>
-        public ImageComboBoxItem(string text)
-            : this(text, -1, null)
-        {
-        }
+        public ImageComboBoxItem( string text ) : this( text, -1, null ) {}
 
         /// <summary>
         ///     Initializes a new instance of <see cref="ImageComboBoxItem" />.
         /// </summary>
         /// <param name="text">The text ot the item.</param>
         /// <param name="imageIndex">The image index of the item.</param>
-        public ImageComboBoxItem(string text, int imageIndex)
-            : this(text, imageIndex, null)
-        {
-        }
+        public ImageComboBoxItem( string text, int imageIndex ) : this( text, imageIndex, null ) {}
 
         /// <summary>
         ///     Initializes a new instance of <see cref="ImageComboBoxItem" />.
@@ -65,7 +56,7 @@ namespace NClass.AssemblyCSharpImport.Controls
         /// <param name="text">The text ot the item.</param>
         /// <param name="imageIndex">The image index of the item.</param>
         /// <param name="tag">A user defined value of the item.</param>
-        public ImageComboBoxItem(string text, int imageIndex, object tag)
+        public ImageComboBoxItem( string text, int imageIndex, object tag )
         {
             Text = text;
             ImageIndex = imageIndex;
@@ -77,10 +68,7 @@ namespace NClass.AssemblyCSharpImport.Controls
         /// </summary>
         /// <param name="text">The text ot the item.</param>
         /// <param name="image">The image of the item.</param>
-        public ImageComboBoxItem(string text, Image image)
-            : this(text, image, null)
-        {
-        }
+        public ImageComboBoxItem( string text, Image image ) : this( text, image, null ) {}
 
         /// <summary>
         ///     Initializes a new instance of <see cref="ImageComboBoxItem" />.
@@ -88,7 +76,7 @@ namespace NClass.AssemblyCSharpImport.Controls
         /// <param name="text">The text ot the item.</param>
         /// <param name="image">The image of the item.</param>
         /// <param name="tag">A user defined value of the item.</param>
-        public ImageComboBoxItem(string text, Image image, object tag)
+        public ImageComboBoxItem( string text, Image image, object tag )
         {
             Text = text;
             Image = image;

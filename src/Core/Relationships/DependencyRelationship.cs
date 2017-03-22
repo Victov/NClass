@@ -24,29 +24,31 @@ namespace NClass.Core
         ///     <paramref name="first" /> is null.-or-
         ///     <paramref name="second" /> is null.
         /// </exception>
-        internal DependencyRelationship(TypeBase first, TypeBase second)
-            : base(first, second)
+        internal DependencyRelationship( TypeBase first, TypeBase second ) : base( first, second )
         {
-            Attach();
+            Attach( );
         }
 
-        public override RelationshipType RelationshipType { get { return RelationshipType.Dependency; } }
-
-        public override bool SupportsLabel { get { return true; } }
-
-        public DependencyRelationship Clone(TypeBase first, TypeBase second)
+        public override RelationshipType RelationshipType
         {
-            var dependency = new DependencyRelationship(first, second);
-            dependency.CopyFrom(this);
+            get { return RelationshipType.Dependency; }
+        }
+
+        public override bool SupportsLabel
+        {
+            get { return true; }
+        }
+
+        public DependencyRelationship Clone( TypeBase first, TypeBase second )
+        {
+            var dependency = new DependencyRelationship( first, second );
+            dependency.CopyFrom( this );
             return dependency;
         }
 
-        public override string ToString()
+        public override string ToString( )
         {
-            return string.Format("{0}: {1} --> {2}",
-                                 Strings.Dependency,
-                                 First.Name,
-                                 Second.Name);
+            return string.Format( "{0}: {1} --> {2}", Strings.Dependency, First.Name, Second.Name );
         }
     }
 }

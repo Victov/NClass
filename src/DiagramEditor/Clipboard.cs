@@ -21,9 +21,12 @@ namespace NClass.DiagramEditor
     {
         public static IClipboardItem Item { get; set; }
 
-        public static bool IsEmpty { get { return Item == null; } }
+        public static bool IsEmpty
+        {
+            get { return Item == null; }
+        }
 
-        public static void Clear()
+        public static void Clear( )
         {
             Item = null;
         }
@@ -31,12 +34,12 @@ namespace NClass.DiagramEditor
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="document" /> is null.
         /// </exception>
-        public static void Paste(IDocument document)
+        public static void Paste( IDocument document )
         {
-            if (document == null)
-                throw new ArgumentNullException("document");
+            if ( document == null )
+                throw new ArgumentNullException( "document" );
 
-            Item.Paste(document);
+            Item.Paste( document );
         }
     }
 }

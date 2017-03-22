@@ -38,9 +38,9 @@ namespace PDFExport
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">Additional information.</param>
-        private void menuItem_Click(object sender, EventArgs e)
+        private void menuItem_Click( object sender, EventArgs e )
         {
-            Launch();
+            Launch( );
         }
 
         #endregion
@@ -53,42 +53,39 @@ namespace PDFExport
         /// <summary>
         ///     Starts the functionality of the plugin.
         /// </summary>
-        protected void Launch()
+        protected void Launch( )
         {
-            if (!DocumentManager.HasDocument)
+            if ( !DocumentManager.HasDocument )
             {
                 return;
             }
 
             string fileName;
-            using (var dialog = new SaveFileDialog())
+            using ( var dialog = new SaveFileDialog( ) )
             {
                 dialog.Filter = Strings.SaveDialogFilter;
                 dialog.RestoreDirectory = true;
-                if (dialog.ShowDialog() == DialogResult.Cancel)
+                if ( dialog.ShowDialog( ) == DialogResult.Cancel )
                 {
                     return;
                 }
                 fileName = dialog.FileName;
             }
 
-            var optionsForm = new PDFExportOptions();
-            if (optionsForm.ShowDialog() == DialogResult.Cancel)
+            var optionsForm = new PDFExportOptions( );
+            if ( optionsForm.ShowDialog( ) == DialogResult.Cancel )
             {
                 return;
             }
-            var padding = new Padding((int) new XUnit(optionsForm.PDFPadding.Left, optionsForm.Unit).Point,
-                                      (int) new XUnit(optionsForm.PDFPadding.Top, optionsForm.Unit).Point,
-                                      (int) new XUnit(optionsForm.PDFPadding.Right, optionsForm.Unit).Point,
-                                      (int) new XUnit(optionsForm.PDFPadding.Bottom, optionsForm.Unit).Point);
+            var padding = new Padding( ( int ) new XUnit( optionsForm.PDFPadding.Left, optionsForm.Unit ).Point, ( int ) new XUnit( optionsForm.PDFPadding.Top, optionsForm.Unit ).Point, ( int ) new XUnit( optionsForm.PDFPadding.Right, optionsForm.Unit ).Point, ( int ) new XUnit( optionsForm.PDFPadding.Bottom, optionsForm.Unit ).Point );
 
-            var mainForm = Application.OpenForms.OfType<MainForm>().FirstOrDefault();
+            var mainForm = Application.OpenForms.OfType< MainForm >( ).FirstOrDefault( );
 
-            PDFExportProgress.ShowAsync(mainForm);
+            PDFExportProgress.ShowAsync( mainForm );
 
-            var exporter = new PDFExporter(fileName, DocumentManager.ActiveDocument, optionsForm.SelectedOnly, padding);
-            Application.DoEvents();
-            exporter.Export();
+            var exporter = new PDFExporter( fileName, DocumentManager.ActiveDocument, optionsForm.SelectedOnly, padding );
+            Application.DoEvents( );
+            exporter.Export( );
 
             // Running the exporter within an extra thread isn't a good idea since
             // the exporter uses GDI+. NClass uses GDI+ also if it has to redraw the
@@ -106,13 +103,13 @@ namespace PDFExport
             //}
             //exportThread.Join();
 
-            PDFExportProgress.CloseAsync();
+            PDFExportProgress.CloseAsync( );
 
-            if (exporter.Successful)
+            if ( exporter.Successful )
             {
-                if (new PDFExportFinished().ShowDialog(mainForm) == DialogResult.OK)
+                if ( new PDFExportFinished( ).ShowDialog( mainForm ) == DialogResult.OK )
                 {
-                    Process.Start(fileName);
+                    Process.Start( fileName );
                 }
             }
         }
@@ -127,13 +124,13 @@ namespace PDFExport
         /// <summary>
         ///     Set up the current culture for the strings.
         /// </summary>
-        static PDFExportPlugin()
+        static PDFExportPlugin( )
         {
             try
             {
-                Strings.Culture = CultureInfo.GetCultureInfo(Settings.Default.UILanguage);
+                Strings.Culture = CultureInfo.GetCultureInfo( Settings.Default.UILanguage );
             }
-            catch (ArgumentException)
+            catch ( ArgumentException )
             {
                 //Culture is not supported, maybe the setting is "default".
             }
@@ -143,15 +140,9 @@ namespace PDFExport
         ///     Constructs a new instance of PDFExportPlugin.
         /// </summary>
         /// <param name="environment">An instance of NClassEnvironment.</param>
-        public PDFExportPlugin(NClassEnvironment environment)
-            : base(environment)
+        public PDFExportPlugin( NClassEnvironment environment ) : base( environment )
         {
-            menuItem = new ToolStripMenuItem
-            {
-                Text = Strings.Menu_Title,
-                Image = Resources.Document_pdf_16,
-                ToolTipText = Strings.Menu_ToolTip
-            };
+            menuItem = new ToolStripMenuItem {Text = Strings.Menu_Title, Image = Resources.Document_pdf_16, ToolTipText = Strings.Menu_ToolTip};
             menuItem.Click += menuItem_Click;
         }
 
@@ -165,12 +156,18 @@ namespace PDFExport
         /// <summary>
         ///     Gets a value indicating whether the plugin can be executed at the moment.
         /// </summary>
-        public override bool IsAvailable { get { return DocumentManager.HasDocument; } }
+        public override bool IsAvailable
+        {
+            get { return DocumentManager.HasDocument; }
+        }
 
         /// <summary>
         ///     Gets the menu item used to start the plugin.
         /// </summary>
-        public override ToolStripItem MenuItem { get { return menuItem; } }
+        public override ToolStripItem MenuItem
+        {
+            get { return menuItem; }
+        }
 
         #endregion
     }

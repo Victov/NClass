@@ -28,16 +28,16 @@ namespace NClass.Core
         public abstract string AssemblyName { get; }
 
         [XmlIgnore]
-        public abstract Dictionary<AccessModifier, string> ValidAccessModifiers { get; }
+        public abstract Dictionary< AccessModifier, string > ValidAccessModifiers { get; }
 
         [XmlIgnore]
-        public abstract Dictionary<ClassModifier, string> ValidClassModifiers { get; }
+        public abstract Dictionary< ClassModifier, string > ValidClassModifiers { get; }
 
         [XmlIgnore]
-        public abstract Dictionary<FieldModifier, string> ValidFieldModifiers { get; }
+        public abstract Dictionary< FieldModifier, string > ValidFieldModifiers { get; }
 
         [XmlIgnore]
-        public abstract Dictionary<OperationModifier, string> ValidOperationModifiers { get; }
+        public abstract Dictionary< OperationModifier, string > ValidOperationModifiers { get; }
 
         public abstract bool SupportsAssemblyImport { get; }
 
@@ -59,35 +59,29 @@ namespace NClass.Core
 
         protected abstract string[] TypeKeywords { get; }
 
-        public bool IsForbiddenName(string name)
+        public bool IsForbiddenName( string name )
         {
-            return Contains(ReservedNames, name) ||
-                   Contains(TypeKeywords, name);
+            return Contains( ReservedNames, name ) || Contains( TypeKeywords, name );
         }
 
-        public bool IsForbiddenTypeName(string name)
+        public bool IsForbiddenTypeName( string name )
         {
-            return Contains(ReservedNames, name);
+            return Contains( ReservedNames, name );
         }
 
         //TODO: a languageName ne az assembly neve legyen, hanem a Name property!
-        public static Language GetLanguage(string languageName)
+        public static Language GetLanguage( string languageName )
         {
             try
             {
                 var languageString = languageName;
-                var assembly = Assembly.Load("NClass." + languageString);
+                var assembly = Assembly.Load( "NClass." + languageString );
 
-                foreach (var type in assembly.GetTypes())
+                foreach ( var type in assembly.GetTypes( ) )
                 {
-                    if (type.IsSubclassOf(typeof (Language)))
+                    if ( type.IsSubclassOf( typeof( Language ) ) )
                     {
-                        var languageInstance = type.InvokeMember("Instance",
-                                                                 BindingFlags.Public | BindingFlags.Static
-                                                                 | BindingFlags.GetProperty,
-                                                                 null,
-                                                                 null,
-                                                                 null);
+                        var languageInstance = type.InvokeMember( "Instance", BindingFlags.Public | BindingFlags.Static | BindingFlags.GetProperty, null, null, null );
                         return languageInstance as Language;
                     }
                 }
@@ -99,13 +93,13 @@ namespace NClass.Core
             }
         }
 
-        private static bool Contains(string[] values, string value)
+        private static bool Contains( string[] values, string value )
         {
-            if (values == null)
+            if ( values == null )
                 return false;
 
-            for (var i = 0; i < values.Length; i++)
-                if (values[i] == value)
+            for ( var i = 0; i < values.Length; i++ )
+                if ( values[ i ] == value )
                     return true;
 
             return false;
@@ -118,9 +112,7 @@ namespace NClass.Core
         ///     <paramref name="operation" /> is null.-or-
         ///     <paramref name="newParent" /> is null.
         /// </exception>
-        protected internal abstract Operation Implement(Operation operation,
-                                                        CompositeType newParent,
-                                                        bool explicitly);
+        protected internal abstract Operation Implement( Operation operation, CompositeType newParent, bool explicitly );
 
         /// <exception cref="ArgumentException">
         ///     <paramref name="operation" /> cannot be overridden.
@@ -128,15 +120,15 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="operation" /> is null.
         /// </exception>
-        protected internal abstract Operation Override(Operation operation, CompositeType newParent);
+        protected internal abstract Operation Override( Operation operation, CompositeType newParent );
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        public virtual string GetValidName(string name, bool isGenericName)
+        public virtual string GetValidName( string name, bool isGenericName )
         {
-            if (IsForbiddenName(name))
-                throw new BadSyntaxException(Strings.ErrorForbiddenName);
+            if ( IsForbiddenName( name ) )
+                throw new BadSyntaxException( Strings.ErrorForbiddenName );
 
             return name;
         }
@@ -144,22 +136,19 @@ namespace NClass.Core
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        public virtual string GetValidTypeName(string name)
+        public virtual string GetValidTypeName( string name )
         {
-            if (IsForbiddenTypeName(name))
-                throw new BadSyntaxException(Strings.ErrorForbiddenTypeName);
+            if ( IsForbiddenTypeName( name ) )
+                throw new BadSyntaxException( Strings.ErrorForbiddenTypeName );
 
             return name;
         }
 
-        public virtual ClassModifier TryParseClassModifier(string value)
+        public virtual ClassModifier TryParseClassModifier( string value )
         {
             try
             {
-                return (ClassModifier) Enum.Parse(
-                    typeof (ClassModifier),
-                    value,
-                    true);
+                return ( ClassModifier ) Enum.Parse( typeof( ClassModifier ), value, true );
             }
             catch
             {
@@ -167,13 +156,13 @@ namespace NClass.Core
             }
         }
 
-        public virtual AccessModifier TryParseAccessModifier(string value)
+        public virtual AccessModifier TryParseAccessModifier( string value )
         {
             try
             {
-                if (string.IsNullOrEmpty(value))
+                if ( string.IsNullOrEmpty( value ) )
                     return AccessModifier.Default;
-                return (AccessModifier) Enum.Parse(typeof (AccessModifier), value, true);
+                return ( AccessModifier ) Enum.Parse( typeof( AccessModifier ), value, true );
             }
             catch
             {
@@ -181,18 +170,15 @@ namespace NClass.Core
             }
         }
 
-        public virtual OperationModifier TryParseOperationModifier(string value)
+        public virtual OperationModifier TryParseOperationModifier( string value )
         {
             try
             {
-                if (string.IsNullOrEmpty(value))
+                if ( string.IsNullOrEmpty( value ) )
                 {
                     return OperationModifier.None;
                 }
-                return (OperationModifier) Enum.Parse(
-                    typeof (OperationModifier),
-                    value,
-                    true);
+                return ( OperationModifier ) Enum.Parse( typeof( OperationModifier ), value, true );
             }
             catch
             {
@@ -200,76 +186,76 @@ namespace NClass.Core
             }
         }
 
-        public abstract bool IsValidModifier(FieldModifier modifier);
+        public abstract bool IsValidModifier( FieldModifier modifier );
 
-        public abstract bool IsValidModifier(OperationModifier modifier);
+        public abstract bool IsValidModifier( OperationModifier modifier );
 
-        public abstract bool IsValidModifier(AccessModifier modifier);
+        public abstract bool IsValidModifier( AccessModifier modifier );
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="operation" /> contains invalid modifier combinations.
         /// </exception>
-        protected internal abstract void ValidateOperation(Operation operation);
+        protected internal abstract void ValidateOperation( Operation operation );
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="field" /> contains invalid modifier combinations.
         /// </exception>
-        protected internal abstract void ValidateField(Field field);
+        protected internal abstract void ValidateField( Field field );
 
-        protected internal abstract ClassType CreateClass();
+        protected internal abstract ClassType CreateClass( );
 
         /// <exception cref="InvalidOperationException">
         ///     The language does not support structures.
         /// </exception>
-        protected internal abstract StructureType CreateStructure();
+        protected internal abstract StructureType CreateStructure( );
 
         /// <exception cref="InvalidOperationException">
         ///     The language does not support interfaces.
         /// </exception>
-        protected internal abstract InterfaceType CreateInterface();
+        protected internal abstract InterfaceType CreateInterface( );
 
         /// <exception cref="InvalidOperationException">
         ///     The language does not support enums.
         /// </exception>
-        protected internal abstract EnumType CreateEnum();
+        protected internal abstract EnumType CreateEnum( );
 
         /// <exception cref="InvalidOperationException">
         ///     The language does not support delegates.
         /// </exception>
-        protected internal abstract DelegateType CreateDelegate();
+        protected internal abstract DelegateType CreateDelegate( );
 
-        protected internal abstract ArgumentList CreateParameterCollection();
+        protected internal abstract ArgumentList CreateParameterCollection( );
 
 
-        public abstract string GetAccessString(AccessModifier access, bool forCode);
+        public abstract string GetAccessString( AccessModifier access, bool forCode );
 
-        public abstract string GetFieldModifierString(FieldModifier modifier, bool forCode);
+        public abstract string GetFieldModifierString( FieldModifier modifier, bool forCode );
 
-        public abstract string GetOperationModifierString(OperationModifier modifier, bool forCode);
+        public abstract string GetOperationModifierString( OperationModifier modifier, bool forCode );
 
-        public abstract string GetClassModifierString(ClassModifier modifier, bool forCode);
+        public abstract string GetClassModifierString( ClassModifier modifier, bool forCode );
 
-        public string GetAccessString(AccessModifier access)
+        public string GetAccessString( AccessModifier access )
         {
-            return GetAccessString(access, false);
+            return GetAccessString( access, false );
         }
 
-        public string GetFieldModifierString(FieldModifier modifier)
+        public string GetFieldModifierString( FieldModifier modifier )
         {
-            return GetFieldModifierString(modifier, false);
+            return GetFieldModifierString( modifier, false );
         }
 
-        public string GetOperationModifierString(OperationModifier modifier)
+        public string GetOperationModifierString( OperationModifier modifier )
         {
-            return GetOperationModifierString(modifier, false);
+            return GetOperationModifierString( modifier, false );
         }
 
-        public string GetClassModifierString(ClassModifier modifier)
+        public string GetClassModifierString( ClassModifier modifier )
         {
-            return GetClassModifierString(modifier, false);
+            return GetClassModifierString( modifier, false );
         }
 
-        public override string ToString()
+        public override string ToString( )
         {
             return Name;
         }

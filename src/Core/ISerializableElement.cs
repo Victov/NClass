@@ -26,7 +26,7 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="node" /> is null.
         /// </exception>
-        void Serialize(XmlElement node);
+        void Serialize( XmlElement node );
 
         /// <exception cref="BadSyntaxException">
         ///     An error occured while deserializing.
@@ -37,6 +37,6 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="node" /> is null.
         /// </exception>
-        void Deserialize(XmlElement node);
+        void Deserialize( XmlElement node );
     }
 }

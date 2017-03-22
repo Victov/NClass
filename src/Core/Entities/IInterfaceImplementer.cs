@@ -20,7 +20,7 @@ namespace NClass.Core
 {
     public interface IInterfaceImplementer
     {
-        IEnumerable<InterfaceType> Interfaces { get; }
+        IEnumerable< InterfaceType > Interfaces { get; }
 
         string Name { get; }
 
@@ -28,7 +28,7 @@ namespace NClass.Core
 
         bool ImplementsInterface { get; }
 
-        Operation GetDefinedOperation(Operation operation);
+        Operation GetDefinedOperation( Operation operation );
 
         /// <exception cref="ArgumentException">
         ///     The language of <paramref name="operation" /> does not equal.
@@ -36,7 +36,7 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="operation" /> is null.
         /// </exception>
-        Operation Implement(Operation operation, bool isExplicit);
+        Operation Implement( Operation operation, bool isExplicit );
 
         /// <exception cref="RelationshipException">
         ///     The language of <paramref name="interfaceType" /> does not equal.-or-
@@ -45,8 +45,8 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="interfaceType" /> is null.
         /// </exception>
-        void AddInterface(InterfaceType interfaceType);
+        void AddInterface( InterfaceType interfaceType );
 
-        void RemoveInterface(InterfaceType interfaceType);
+        void RemoveInterface( InterfaceType interfaceType );
     }
 }

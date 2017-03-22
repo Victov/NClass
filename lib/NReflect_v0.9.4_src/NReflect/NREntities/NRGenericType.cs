@@ -22,45 +22,45 @@ using NReflect.NRParameters;
 
 namespace NReflect.NREntities
 {
-  /// <summary>
-  /// Represents a type which can be customized via generics.
-  /// </summary>
-  [Serializable]
-  public abstract class NRGenericType : NRTypeBase, IGeneric
-  {
-    // ========================================================================
-    // Con- / Destruction
-
-    #region === Con- / Destruction
-
     /// <summary>
-    /// Initializes a new instance of <see cref="NRGenericType"/>.
+    /// Represents a type which can be customized via generics.
     /// </summary>
-    protected NRGenericType()
+    [Serializable]
+    public abstract class NRGenericType : NRTypeBase, IGeneric
     {
-      GenericTypes = new List<NRTypeParameter>();
+        // ========================================================================
+        // Con- / Destruction
+
+        #region === Con- / Destruction
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="NRGenericType"/>.
+        /// </summary>
+        protected NRGenericType( )
+        {
+            GenericTypes = new List< NRTypeParameter >( );
+        }
+
+        #endregion
+
+        // ========================================================================
+        // Properties
+
+        #region === Properties
+
+        /// <summary>
+        /// Gets a list containing all type parameters of a type.
+        /// </summary>
+        public List< NRTypeParameter > GenericTypes { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating wether this type is a generic.
+        /// </summary>
+        public bool IsGeneric
+        {
+            get { return GenericTypes.Count > 0; }
+        }
+
+        #endregion
     }
-
-    #endregion
-
-    // ========================================================================
-    // Properties
-
-    #region === Properties
-
-    /// <summary>
-    /// Gets a list containing all type parameters of a type.
-    /// </summary>
-    public List<NRTypeParameter> GenericTypes { get; private set; }
-
-    /// <summary>
-    /// Gets a value indicating wether this type is a generic.
-    /// </summary>
-    public bool IsGeneric
-    {
-      get { return GenericTypes.Count > 0; }
-    }
-
-    #endregion
-  }
 }

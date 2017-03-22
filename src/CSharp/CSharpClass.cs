@@ -22,18 +22,12 @@ namespace NClass.CSharp
 {
     internal sealed class CSharpClass : ClassType
     {
-        internal CSharpClass()
-            : this("NewClass")
-        {
-        }
+        internal CSharpClass( ) : this( "NewClass" ) {}
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        internal CSharpClass(string name)
-            : base(name)
-        {
-        }
+        internal CSharpClass( string name ) : base( name ) {}
 
         /// <exception cref="BadSyntaxException">
         ///     The type visibility is not valid in the current context.
@@ -43,10 +37,7 @@ namespace NClass.CSharp
             get { return base.AccessModifier; }
             set
             {
-                if (IsNested ||
-                    value == AccessModifier.Default ||
-                    value == AccessModifier.Internal ||
-                    value == AccessModifier.Public)
+                if ( IsNested || value == AccessModifier.Default || value == AccessModifier.Internal || value == AccessModifier.Public )
                 {
                     base.AccessModifier = value;
                 }
@@ -62,22 +53,37 @@ namespace NClass.CSharp
         {
             get
             {
-                if (base.BaseClass == null && this != CSharpLanguage.ObjectClass)
+                if ( base.BaseClass == null && this != CSharpLanguage.ObjectClass )
                     return CSharpLanguage.ObjectClass;
                 return base.BaseClass;
             }
             set { base.BaseClass = value; }
         }
 
-        public override AccessModifier DefaultAccess { get { return AccessModifier.Internal; } }
+        public override AccessModifier DefaultAccess
+        {
+            get { return AccessModifier.Internal; }
+        }
 
-        public override AccessModifier DefaultMemberAccess { get { return AccessModifier.Private; } }
+        public override AccessModifier DefaultMemberAccess
+        {
+            get { return AccessModifier.Private; }
+        }
 
-        public override bool SupportsProperties { get { return true; } }
+        public override bool SupportsProperties
+        {
+            get { return true; }
+        }
 
-        public override bool SupportsEvents { get { return true; } }
+        public override bool SupportsEvents
+        {
+            get { return true; }
+        }
 
-        public override bool SupportsDestructors { get { return true; } }
+        public override bool SupportsDestructors
+        {
+            get { return true; }
+        }
 
         /// <exception cref="ArgumentException">
         ///     The <paramref name="value" /> is already a child member of the type.
@@ -92,7 +98,7 @@ namespace NClass.CSharp
                     RaiseChangedEvent = false;
 
                     base.NestingParent = value;
-                    if (NestingParent == null && Access != AccessModifier.Public)
+                    if ( NestingParent == null && Access != AccessModifier.Public )
                         AccessModifier = AccessModifier.Internal;
                 }
                 finally
@@ -102,7 +108,10 @@ namespace NClass.CSharp
             }
         }
 
-        public override Language Language { get { return CSharpLanguage.Instance; } }
+        public override Language Language
+        {
+            get { return CSharpLanguage.Instance; }
+        }
 
         /// <exception cref="RelationshipException">
         ///     The language of <paramref name="interfaceType" /> does not equal.-or-
@@ -111,128 +120,128 @@ namespace NClass.CSharp
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="interfaceType" /> is null.
         /// </exception>
-        public override void AddInterface(InterfaceType interfaceType)
+        public override void AddInterface( InterfaceType interfaceType )
         {
-            if (!(interfaceType is CSharpInterface))
-                throw new RelationshipException(string.Format(Strings.ErrorInterfaceLanguage, "C#"));
+            if ( !( interfaceType is CSharpInterface ) )
+                throw new RelationshipException( string.Format( Strings.ErrorInterfaceLanguage, "C#" ) );
 
-            base.AddInterface(interfaceType);
+            base.AddInterface( interfaceType );
         }
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        public override Field AddField()
+        public override Field AddField( )
         {
-            Field field = new CSharpField(this);
+            Field field = new CSharpField( this );
 
-            AddField(field);
+            AddField( field );
             return field;
         }
 
-        public override Constructor AddConstructor()
+        public override Constructor AddConstructor( )
         {
-            Constructor constructor = new CSharpConstructor(this);
+            Constructor constructor = new CSharpConstructor( this );
 
-            if (Modifier == ClassModifier.Abstract)
+            if ( Modifier == ClassModifier.Abstract )
                 constructor.AccessModifier = AccessModifier.Protected;
-            else if (Modifier != ClassModifier.Static)
+            else if ( Modifier != ClassModifier.Static )
                 constructor.AccessModifier = AccessModifier.Public;
 
-            AddOperation(constructor);
+            AddOperation( constructor );
             return constructor;
         }
 
-        public override Destructor AddDestructor()
+        public override Destructor AddDestructor( )
         {
-            Destructor destructor = new CSharpDestructor(this);
+            Destructor destructor = new CSharpDestructor( this );
 
-            AddOperation(destructor);
+            AddOperation( destructor );
             return destructor;
         }
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        public override Method AddMethod()
+        public override Method AddMethod( )
         {
-            Method method = new CSharpMethod(this);
+            Method method = new CSharpMethod( this );
 
             method.AccessModifier = AccessModifier.Public;
             method.IsStatic = Modifier == ClassModifier.Static;
 
-            AddOperation(method);
+            AddOperation( method );
             return method;
         }
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        public override Property AddProperty()
+        public override Property AddProperty( )
         {
-            Property property = new CSharpProperty(this);
+            Property property = new CSharpProperty( this );
 
             property.AccessModifier = AccessModifier.Public;
             property.IsStatic = Modifier == ClassModifier.Static;
 
-            AddOperation(property);
+            AddOperation( property );
             return property;
         }
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        public override Event AddEvent()
+        public override Event AddEvent( )
         {
-            Event newEvent = new CSharpEvent(this);
+            Event newEvent = new CSharpEvent( this );
 
             newEvent.AccessModifier = AccessModifier.Public;
             newEvent.IsStatic = Modifier == ClassModifier.Static;
 
-            AddOperation(newEvent);
+            AddOperation( newEvent );
             return newEvent;
         }
 
-        public override string GetDeclaration()
+        public override string GetDeclaration( )
         {
-            var builder = new StringBuilder();
+            var builder = new StringBuilder( );
 
-            if (AccessModifier != AccessModifier.Default)
+            if ( AccessModifier != AccessModifier.Default )
             {
-                builder.Append(Language.GetAccessString(AccessModifier, true));
-                builder.Append(" ");
+                builder.Append( Language.GetAccessString( AccessModifier, true ) );
+                builder.Append( " " );
             }
-            if (Modifier != ClassModifier.None)
+            if ( Modifier != ClassModifier.None )
             {
-                builder.Append(Language.GetClassModifierString(Modifier, true));
-                builder.Append(" ");
+                builder.Append( Language.GetClassModifierString( Modifier, true ) );
+                builder.Append( " " );
             }
-            builder.AppendFormat("class {0}", Name);
+            builder.AppendFormat( "class {0}", Name );
 
-            if (HasExplicitBase || InterfaceList.Count > 0)
+            if ( HasExplicitBase || InterfaceList.Count > 0 )
             {
-                builder.Append(" : ");
-                if (HasExplicitBase)
+                builder.Append( " : " );
+                if ( HasExplicitBase )
                 {
-                    builder.Append(BaseClass.Name);
-                    if (InterfaceList.Count > 0)
-                        builder.Append(", ");
+                    builder.Append( BaseClass.Name );
+                    if ( InterfaceList.Count > 0 )
+                        builder.Append( ", " );
                 }
-                for (var i = 0; i < InterfaceList.Count; i++)
+                for ( var i = 0; i < InterfaceList.Count; i++ )
                 {
-                    builder.Append(InterfaceList[i].Name);
-                    if (i < InterfaceList.Count - 1)
-                        builder.Append(", ");
+                    builder.Append( InterfaceList[ i ].Name );
+                    if ( i < InterfaceList.Count - 1 )
+                        builder.Append( ", " );
                 }
             }
 
-            return builder.ToString();
+            return builder.ToString( );
         }
 
-        public override ClassType Clone()
+        public override ClassType Clone( )
         {
-            var newClass = new CSharpClass();
-            newClass.CopyFrom(this);
+            var newClass = new CSharpClass( );
+            newClass.CopyFrom( this );
             return newClass;
         }
     }

@@ -21,7 +21,7 @@ namespace PDFExport
         /// <param name="nclassDocument">The diagram to export to the PDF.</param>
         /// <param name="selectedOnly">True if only the selected elements should be exported.</param>
         /// <param name="padding">The size of the border arround the diagram.</param>
-        public PDFExporter(string fileName, IDocument nclassDocument, bool selectedOnly, Padding padding)
+        public PDFExporter( string fileName, IDocument nclassDocument, bool selectedOnly, Padding padding )
         {
             this.fileName = fileName;
             this.nclassDocument = nclassDocument;
@@ -54,55 +54,52 @@ namespace PDFExport
         ///     given in <see cref="fileName" />. If selectedOnly is true, only the selected
         ///     elements of the diagram get exported.
         /// </summary>
-        public void Export()
+        public void Export( )
         {
-            var document = new PdfDocument();
-            var page = document.AddPage();
-            var diagramSize = nclassDocument.GetPrintingArea(selectedOnly);
-            page.Width = new XUnit(diagramSize.Width, XGraphicsUnit.Presentation) + new XUnit(padding.Right*2);
-            page.Height = new XUnit(diagramSize.Height, XGraphicsUnit.Presentation) + new XUnit(padding.Bottom*2);
+            var document = new PdfDocument( );
+            var page = document.AddPage( );
+            var diagramSize = nclassDocument.GetPrintingArea( selectedOnly );
+            page.Width = new XUnit( diagramSize.Width, XGraphicsUnit.Presentation ) + new XUnit( padding.Right * 2 );
+            page.Height = new XUnit( diagramSize.Height, XGraphicsUnit.Presentation ) + new XUnit( padding.Bottom * 2 );
 
-            var gfx = XGraphics.FromPdfPage(page);
-            var graphics = new PDFGraphics(gfx);
+            var gfx = XGraphics.FromPdfPage( page );
+            var graphics = new PDFGraphics( gfx );
 
             //Translate because of the padding.
-            graphics.TranslateTransform(padding.Left, padding.Top);
+            graphics.TranslateTransform( padding.Left, padding.Top );
 
             //Do some scaling to get from pixels to dots...
-            var gdiGraphics = new Control().CreateGraphics();
-            graphics.ScaleTransform(72.0f/gdiGraphics.DpiX, 72.0f/gdiGraphics.DpiY);
+            var gdiGraphics = new Control( ).CreateGraphics( );
+            graphics.ScaleTransform( 72.0f / gdiGraphics.DpiX, 72.0f / gdiGraphics.DpiY );
             //Fonts are already mesured in dots but the size of them is also scaled by the above
             //transformation. So we have to applay an opposite transformation on the fonts first.
-            graphics.ScaleFont = gdiGraphics.DpiY/72.0f;
+            graphics.ScaleFont = gdiGraphics.DpiY / 72.0f;
             //PDF-Sharp also does the scaling for the images itself. So we have to revert this as
             //we did it for the fonts.
-            graphics.ScaleImage = gdiGraphics.DpiX/72.0f;
+            graphics.ScaleImage = gdiGraphics.DpiX / 72.0f;
 
             //Move everything to the top left corner
-            graphics.TranslateTransform(-diagramSize.X, -diagramSize.Y);
+            graphics.TranslateTransform( -diagramSize.X, -diagramSize.Y );
 
-            graphics.TakeInitialTransform();
+            graphics.TakeInitialTransform( );
 
-            nclassDocument.Print(graphics, selectedOnly, Style.CurrentStyle);
+            nclassDocument.Print( graphics, selectedOnly, Style.CurrentStyle );
 
             //Clean up...
-            while (gfx.GraphicsStateLevel > 0)
+            while ( gfx.GraphicsStateLevel > 0 )
             {
-                gfx.Restore();
+                gfx.Restore( );
             }
 
             document.Options.CompressContentStreams = true;
             try
             {
-                document.Save(fileName);
+                document.Save( fileName );
                 Successful = true;
             }
-            catch (IOException e)
+            catch ( IOException e )
             {
-                MessageBox.Show(string.Format(Strings.Error_CoulNotWritePDF, e.Message),
-                                Strings.ErrorDialog_Title,
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
+                MessageBox.Show( string.Format( Strings.Error_CoulNotWritePDF, e.Message ), Strings.ErrorDialog_Title, MessageBoxButtons.OK, MessageBoxIcon.Error );
             }
         }
 

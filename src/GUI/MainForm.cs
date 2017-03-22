@@ -28,29 +28,29 @@ namespace NClass.GUI
 {
     public sealed partial class MainForm : Form
     {
-        private readonly DocumentManager docManager = new DocumentManager();
+        private readonly DocumentManager docManager = new DocumentManager( );
         private DynamicMenu dynamicMenu;
-        private readonly List<Plugin> plugins = new List<Plugin>();
+        private readonly List< Plugin > plugins = new List< Plugin >( );
         private bool showModelExplorer = true;
         private bool showNavigator = true;
 
-        public MainForm()
+        public MainForm( )
         {
-            InitializeComponent();
+            InitializeComponent( );
 
             tabbedWindow.Canvas.ZoomChanged += canvas_ZoomChanged;
             tabbedWindow.DocumentManager = docManager;
 
-            Workspace.Default.ActiveProjectChanged += delegate { UpdateTitleBar(); };
-            Workspace.Default.ActiveProjectStateChanged += delegate { UpdateTitleBar(); };
+            Workspace.Default.ActiveProjectChanged += delegate { UpdateTitleBar( ); };
+            Workspace.Default.ActiveProjectStateChanged += delegate { UpdateTitleBar( ); };
             Workspace.Default.ProjectAdded += delegate { ShowModelExplorer = true; };
             docManager.ActiveDocumentChanged += docManager_ActiveDocumentChanged;
             modelExplorer.Workspace = Workspace.Default;
             tabbedWindow.DocumentManager = docManager;
             diagramNavigator.DocumentVisualizer = tabbedWindow.Canvas;
 
-            UpdateTexts();
-            UpdateStatusBar();
+            UpdateTexts( );
+            UpdateStatusBar( );
         }
 
         private bool ShowModelExplorer
@@ -60,9 +60,9 @@ namespace NClass.GUI
             {
                 showModelExplorer = value;
 
-                if (!showModelExplorer)
+                if ( !showModelExplorer )
                 {
-                    if (showNavigator)
+                    if ( showNavigator )
                         toolsPanel.Panel1Collapsed = true;
                     else
                         windowClient.Panel2Collapsed = true;
@@ -72,7 +72,7 @@ namespace NClass.GUI
                 {
                     toolsPanel.Panel1Collapsed = false;
                     windowClient.Panel2Collapsed = false;
-                    if (!showNavigator)
+                    if ( !showNavigator )
                         toolsPanel.Panel2Collapsed = true;
                 }
             }
@@ -85,9 +85,9 @@ namespace NClass.GUI
             {
                 showNavigator = value;
 
-                if (!showNavigator)
+                if ( !showNavigator )
                 {
-                    if (showModelExplorer)
+                    if ( showModelExplorer )
                         toolsPanel.Panel2Collapsed = true;
                     else
                         windowClient.Panel2Collapsed = true;
@@ -97,89 +97,80 @@ namespace NClass.GUI
                 {
                     toolsPanel.Panel2Collapsed = false;
                     windowClient.Panel2Collapsed = false;
-                    if (!showModelExplorer)
+                    if ( !showModelExplorer )
                         toolsPanel.Panel1Collapsed = true;
                 }
             }
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private void MainForm_Load( object sender, EventArgs e )
         {
-            LoadPlugins();
-            LoadWindowSettings();
+            LoadPlugins( );
+            LoadWindowSettings( );
         }
 
-        private void LoadPlugins()
+        private void LoadPlugins( )
         {
             try
             {
-                var pluginsPath = Path.Combine(Application.StartupPath, "Plugins");
-                if (!Directory.Exists(pluginsPath))
+                var pluginsPath = Path.Combine( Application.StartupPath, "Plugins" );
+                if ( !Directory.Exists( pluginsPath ) )
                     return;
 
-                var directory = new DirectoryInfo(pluginsPath);
+                var directory = new DirectoryInfo( pluginsPath );
 
-                foreach (var file in directory.GetFiles("*.dll"))
+                foreach ( var file in directory.GetFiles( "*.dll" ) )
                 {
-                    var assembly = Assembly.LoadFile(file.FullName);
-                    LoadPlugin(assembly);
+                    var assembly = Assembly.LoadFile( file.FullName );
+                    LoadPlugin( assembly );
                 }
             }
-            catch (Exception ex)
+            catch ( Exception ex )
             {
-                MessageBox.Show(
-                    string.Format(Strings.ErrorCouldNotLoadPlugins, ex.Message),
-                    Strings.Error,
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                MessageBox.Show( string.Format( Strings.ErrorCouldNotLoadPlugins, ex.Message ), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error );
             }
 
-            if (plugins.Count > 0)
+            if ( plugins.Count > 0 )
             {
                 mnuPlugins.Visible = true;
 
-                foreach (var plugin in plugins)
+                foreach ( var plugin in plugins )
                 {
-                    mnuPlugins.DropDownItems.Add(plugin.MenuItem);
+                    mnuPlugins.DropDownItems.Add( plugin.MenuItem );
                     plugin.MenuItem.Tag = plugin;
                 }
             }
         }
 
-        private void LoadPlugin(Assembly assembly)
+        private void LoadPlugin( Assembly assembly )
         {
             try
             {
-                foreach (var type in assembly.GetTypes())
+                foreach ( var type in assembly.GetTypes( ) )
                 {
-                    if (type.IsSubclassOf(typeof (Plugin)))
+                    if ( type.IsSubclassOf( typeof( Plugin ) ) )
                     {
-                        var environment =
-                            new NClassEnvironment(Workspace.Default, docManager);
-                        var plugin = (Plugin) Activator.CreateInstance(type, environment);
-                        plugins.Add(plugin);
+                        var environment = new NClassEnvironment( Workspace.Default, docManager );
+                        var plugin = ( Plugin ) Activator.CreateInstance( type, environment );
+                        plugins.Add( plugin );
                     }
                 }
             }
-            catch (Exception ex)
+            catch ( Exception ex )
             {
-                MessageBox.Show(
-                    string.Format(Strings.ErrorCouldNotLoadPlugins, assembly.FullName + "\n" + ex.Message),
-                    Strings.Error,
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                MessageBox.Show( string.Format( Strings.ErrorCouldNotLoadPlugins, assembly.FullName + "\n" + ex.Message ), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error );
             }
         }
 
-        private void LoadWindowSettings()
+        private void LoadWindowSettings( )
         {
             // Mono hack because of a .NET/Mono serialization difference of Point and Size classes
-            if (MonoHelper.IsRunningOnMono)
+            if ( MonoHelper.IsRunningOnMono )
                 return;
 
             Location = WindowSettings.Default.WindowPosition;
             Size = WindowSettings.Default.WindowSize;
-            if (WindowSettings.Default.IsWindowMaximized)
+            if ( WindowSettings.Default.IsWindowMaximized )
                 WindowState = FormWindowState.Maximized;
 
             ShowModelExplorer = WindowSettings.Default.ShowModelExplorer;
@@ -188,22 +179,22 @@ namespace NClass.GUI
             toolsPanel.SplitterDistance = WindowSettings.Default.ToolsSplitterDistance;
         }
 
-        private void SaveWindowSettings()
+        private void SaveWindowSettings( )
         {
             // Mono hack because of a .NET/Mono serialization difference of Point and Size classes
-            if (MonoHelper.IsRunningOnMono)
+            if ( MonoHelper.IsRunningOnMono )
                 return;
 
-            if (WindowState == FormWindowState.Maximized)
+            if ( WindowState == FormWindowState.Maximized )
             {
                 WindowSettings.Default.IsWindowMaximized = true;
             }
             else
             {
                 WindowSettings.Default.IsWindowMaximized = false;
-                if (WindowState == FormWindowState.Normal)
+                if ( WindowState == FormWindowState.Normal )
                     WindowSettings.Default.WindowSize = Size;
-                if (WindowState == FormWindowState.Normal)
+                if ( WindowState == FormWindowState.Normal )
                     WindowSettings.Default.WindowPosition = Location;
             }
             WindowSettings.Default.ClientSplitterDistance = windowClient.SplitterDistance;
@@ -211,22 +202,22 @@ namespace NClass.GUI
             WindowSettings.Default.ShowModelExplorer = ShowModelExplorer;
             WindowSettings.Default.ShowNavigator = ShowNavigator;
 
-            WindowSettings.Default.Save();
+            WindowSettings.Default.Save( );
         }
 
-        protected override void OnClosing(CancelEventArgs e)
+        protected override void OnClosing( CancelEventArgs e )
         {
-            base.OnClosing(e);
+            base.OnClosing( e );
 
-            if (!Workspace.Default.SaveAndClose())
+            if ( !Workspace.Default.SaveAndClose( ) )
             {
                 e.Cancel = true;
                 return;
             }
-            SaveWindowSettings();
+            SaveWindowSettings( );
         }
 
-        private void UpdateTexts()
+        private void UpdateTexts( )
         {
             // File menu
             mnuFile.Text = Strings.MenuFile;
@@ -284,13 +275,13 @@ namespace NClass.GUI
             toolAutoZoom.Text = Strings.AutoZoom;
         }
 
-        private void UpdateTitleBar()
+        private void UpdateTitleBar( )
         {
-            if (Workspace.Default.HasActiveProject)
+            if ( Workspace.Default.HasActiveProject )
             {
                 var projectName = Workspace.Default.ActiveProject.Name;
 
-                if (Workspace.Default.ActiveProject.IsDirty)
+                if ( Workspace.Default.ActiveProject.IsDirty )
                     Text = projectName + "* - NClass";
                 else
                     Text = projectName + " - NClass";
@@ -301,48 +292,48 @@ namespace NClass.GUI
             }
         }
 
-        private void UpdateDynamicMenus()
+        private void UpdateDynamicMenus( )
         {
             DynamicMenu newMenu = null;
 
-            if (docManager.HasDocument)
-                newMenu = docManager.ActiveDocument.GetDynamicMenu();
+            if ( docManager.HasDocument )
+                newMenu = docManager.ActiveDocument.GetDynamicMenu( );
 
-            if (newMenu != dynamicMenu)
+            if ( newMenu != dynamicMenu )
             {
-                if (dynamicMenu != null)
+                if ( dynamicMenu != null )
                 {
-                    foreach (var menuItem in dynamicMenu)
+                    foreach ( var menuItem in dynamicMenu )
                     {
-                        MainMenuStrip.Items.Remove(menuItem);
+                        MainMenuStrip.Items.Remove( menuItem );
                     }
-                    var toolStrip = dynamicMenu.GetToolStrip();
-                    if (toolStrip != null)
-                        toolStripContainer.TopToolStripPanel.Controls.Remove(toolStrip);
-                    dynamicMenu.SetReference(null);
+                    var toolStrip = dynamicMenu.GetToolStrip( );
+                    if ( toolStrip != null )
+                        toolStripContainer.TopToolStripPanel.Controls.Remove( toolStrip );
+                    dynamicMenu.SetReference( null );
                 }
-                if (newMenu != null)
+                if ( newMenu != null )
                 {
                     var preferredIndex = newMenu.PreferredIndex;
-                    if (preferredIndex < 0)
+                    if ( preferredIndex < 0 )
                         preferredIndex = 3;
-                    foreach (var menuItem in newMenu)
+                    foreach ( var menuItem in newMenu )
                     {
-                        MainMenuStrip.Items.Insert(preferredIndex++, menuItem);
+                        MainMenuStrip.Items.Insert( preferredIndex++, menuItem );
                     }
-                    var toolStrip = newMenu.GetToolStrip();
-                    if (toolStrip != null)
+                    var toolStrip = newMenu.GetToolStrip( );
+                    if ( toolStrip != null )
                     {
                         toolStrip.Top = standardToolStrip.Top;
                         toolStrip.Left = standardToolStrip.Right;
-                        toolStripContainer.TopToolStripPanel.Controls.Add(toolStrip);
+                        toolStripContainer.TopToolStripPanel.Controls.Add( toolStrip );
                     }
                 }
                 dynamicMenu = newMenu;
             }
         }
 
-        private void UpdateStandardToolStrip()
+        private void UpdateStandardToolStrip( )
         {
             toolNewCodingLanguageDiagram.Enabled = Workspace.Default.HasActiveProject;
             toolSave.Enabled = Workspace.Default.HasActiveProject;
@@ -354,9 +345,9 @@ namespace NClass.GUI
             toolAutoZoom.Enabled = docManager.HasDocument && !docManager.ActiveDocument.IsEmpty;
         }
 
-        private void UpdateClipboardToolBar()
+        private void UpdateClipboardToolBar( )
         {
-            if (docManager.HasDocument)
+            if ( docManager.HasDocument )
             {
                 var document = docManager.ActiveDocument;
                 toolCut.Enabled = document.CanCutToClipboard;
@@ -371,12 +362,12 @@ namespace NClass.GUI
             }
         }
 
-        private void UpdateStatusBar()
+        private void UpdateStatusBar( )
         {
-            if (docManager.HasDocument)
+            if ( docManager.HasDocument )
             {
-                lblStatus.Text = docManager.ActiveDocument.GetStatus();
-                lblLanguage.Text = docManager.ActiveDocument.GetShortDescription();
+                lblStatus.Text = docManager.ActiveDocument.GetStatus( );
+                lblLanguage.Text = docManager.ActiveDocument.GetShortDescription( );
             }
             else
             {
@@ -385,57 +376,56 @@ namespace NClass.GUI
             }
         }
 
-        private void MainForm_DragEnter(object sender, DragEventArgs e)
+        private void MainForm_DragEnter( object sender, DragEventArgs e )
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            if ( e.Data.GetDataPresent( DataFormats.FileDrop ) )
                 e.Effect = DragDropEffects.Copy;
             else
                 e.Effect = DragDropEffects.None;
         }
 
-        private void MainForm_DragDrop(object sender, DragEventArgs e)
+        private void MainForm_DragDrop( object sender, DragEventArgs e )
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            if ( e.Data.GetDataPresent( DataFormats.FileDrop ) )
             {
-                var files = (string[]) e.Data.GetData(DataFormats.FileDrop);
-                foreach (var fileName in files)
+                var files = ( string[] ) e.Data.GetData( DataFormats.FileDrop );
+                foreach ( var fileName in files )
                 {
-                    Workspace.Default.OpenProject(fileName);
+                    Workspace.Default.OpenProject( fileName );
                 }
             }
         }
 
-        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        private void MainForm_KeyDown( object sender, KeyEventArgs e )
         {
-            if (e.Control && e.KeyCode == Keys.Tab)
-                docManager.SwitchDocument();
+            if ( e.Control && e.KeyCode == Keys.Tab )
+                docManager.SwitchDocument( );
         }
 
-        private void MainForm_KeyUp(object sender, KeyEventArgs e)
+        private void MainForm_KeyUp( object sender, KeyEventArgs e )
         {
-            if (docManager.SwitchingTabs && !e.Control)
-                docManager.EndSwitching();
+            if ( docManager.SwitchingTabs && !e.Control )
+                docManager.EndSwitching( );
         }
 
-        private void OpenRecentFile_Click(object sender, EventArgs e)
+        private void OpenRecentFile_Click( object sender, EventArgs e )
         {
-            var index = (int) ((ToolStripItem) sender).Tag;
-            if (index >= 0 && index < Settings.Default.RecentFiles.Count)
+            var index = ( int ) ( ( ToolStripItem ) sender ).Tag;
+            if ( index >= 0 && index < Settings.Default.RecentFiles.Count )
             {
-                var fileName = Settings.Default.RecentFiles[index];
-                Workspace.Default.OpenProject(fileName);
+                var fileName = Settings.Default.RecentFiles[ index ];
+                Workspace.Default.OpenProject( fileName );
             }
         }
 
-        private void docManager_ActiveDocumentChanged(object sender, DocumentEventArgs e)
+        private void docManager_ActiveDocumentChanged( object sender, DocumentEventArgs e )
         {
-            if (docManager.HasDocument)
+            if ( docManager.HasDocument )
             {
                 Workspace.Default.ActiveProject = docManager.ActiveDocument.Project;
                 docManager.ActiveDocument.Modified += ActiveDocument_Modified;
                 docManager.ActiveDocument.StatusChanged += ActiveDocument_StatusChanged;
-                docManager.ActiveDocument.ClipboardAvailabilityChanged +=
-                    ActiveDocument_ClipboardAvailabilityChanged;
+                docManager.ActiveDocument.ClipboardAvailabilityChanged += ActiveDocument_ClipboardAvailabilityChanged;
             }
             else
             {
@@ -443,51 +433,50 @@ namespace NClass.GUI
             }
 
             var oldDocument = e.Document;
-            if (oldDocument != null)
+            if ( oldDocument != null )
             {
                 oldDocument.Modified -= ActiveDocument_Modified;
                 oldDocument.StatusChanged -= ActiveDocument_StatusChanged;
-                oldDocument.ClipboardAvailabilityChanged -=
-                    ActiveDocument_ClipboardAvailabilityChanged;
+                oldDocument.ClipboardAvailabilityChanged -= ActiveDocument_ClipboardAvailabilityChanged;
             }
 
-            UpdateStatusBar();
-            UpdateDynamicMenus();
-            UpdateClipboardToolBar();
-            UpdateStandardToolStrip();
+            UpdateStatusBar( );
+            UpdateDynamicMenus( );
+            UpdateClipboardToolBar( );
+            UpdateStandardToolStrip( );
         }
 
-        private void ActiveDocument_Modified(object sender, EventArgs e)
+        private void ActiveDocument_Modified( object sender, EventArgs e )
         {
             toolAutoZoom.Enabled = docManager.HasDocument && !docManager.ActiveDocument.IsEmpty;
         }
 
-        private void ActiveDocument_StatusChanged(object sender, EventArgs e)
+        private void ActiveDocument_StatusChanged( object sender, EventArgs e )
         {
-            UpdateStatusBar();
+            UpdateStatusBar( );
         }
 
-        private void ActiveDocument_ClipboardAvailabilityChanged(object sender, EventArgs e)
+        private void ActiveDocument_ClipboardAvailabilityChanged( object sender, EventArgs e )
         {
-            UpdateClipboardToolBar();
+            UpdateClipboardToolBar( );
         }
 
-        private void canvas_ZoomChanged(object sender, EventArgs e)
+        private void canvas_ZoomChanged( object sender, EventArgs e )
         {
             toolZoom.ZoomValue = tabbedWindow.Canvas.Zoom;
             toolZoomValue.Text = tabbedWindow.Canvas.ZoomPercentage + "%";
         }
 
-        private void modelExplorer_DocumentOpening(object sender, DocumentEventArgs e)
+        private void modelExplorer_DocumentOpening( object sender, DocumentEventArgs e )
         {
-            docManager.AddOrActivate(e.Document);
+            docManager.AddOrActivate( e.Document );
         }
 
         #region Plugins menu event handlers
 
-        private void mnuPlugins_DropDownOpening(object sender, EventArgs e)
+        private void mnuPlugins_DropDownOpening( object sender, EventArgs e )
         {
-            foreach (ToolStripItem menuItem in mnuPlugins.DropDownItems)
+            foreach ( ToolStripItem menuItem in mnuPlugins.DropDownItems )
             {
                 var plugin = menuItem.Tag as Plugin;
                 menuItem.Enabled = plugin.IsAvailable;
@@ -498,14 +487,14 @@ namespace NClass.GUI
 
         #region File menu event handlers
 
-        private void mnuFile_DropDownOpening(object sender, EventArgs e)
+        private void mnuFile_DropDownOpening( object sender, EventArgs e )
         {
-            if (Workspace.Default.HasActiveProject)
+            if ( Workspace.Default.HasActiveProject )
             {
                 var projectName = Workspace.Default.ActiveProject.Name;
-                mnuSave.Text = string.Format(Strings.MenuSaveProject, projectName);
-                mnuSaveAs.Text = string.Format(Strings.MenuSaveProjectAs, projectName);
-                mnuCloseProject.Text = string.Format(Strings.MenuClose, projectName);
+                mnuSave.Text = string.Format( Strings.MenuSaveProject, projectName );
+                mnuSaveAs.Text = string.Format( Strings.MenuSaveProjectAs, projectName );
+                mnuCloseProject.Text = string.Format( Strings.MenuClose, projectName );
                 mnuSave.Enabled = true;
                 mnuSaveAs.Enabled = true;
                 mnuCloseProject.Enabled = true;
@@ -520,7 +509,7 @@ namespace NClass.GUI
                 mnuCloseProject.Enabled = false;
             }
 
-            if (Workspace.Default.HasProject)
+            if ( Workspace.Default.HasProject )
             {
                 mnuSaveAll.Enabled = true;
                 mnuCloseAllProjects.Enabled = true;
@@ -534,53 +523,53 @@ namespace NClass.GUI
             mnuPrint.Enabled = docManager.HasDocument;
         }
 
-        private void mnuNew_DropDownOpening(object sender, EventArgs e)
+        private void mnuNew_DropDownOpening( object sender, EventArgs e )
         {
             mnuNewCodingLanguageDiagram.Enabled = Workspace.Default.HasActiveProject;
         }
 
-        private void mnuNewProject_Click(object sender, EventArgs e)
+        private void mnuNewProject_Click( object sender, EventArgs e )
         {
-            var project = Workspace.Default.AddEmptyProject();
+            var project = Workspace.Default.AddEmptyProject( );
             Workspace.Default.ActiveProject = project;
         }
 
-        private void mnuNewCodingLanguageDiagram_Click(object sender, EventArgs e)
+        private void mnuNewCodingLanguageDiagram_Click( object sender, EventArgs e )
         {
-            if (Workspace.Default.HasActiveProject)
+            if ( Workspace.Default.HasActiveProject )
             {
-                using (var dialog = new CodingLanguageDialog())
+                using ( var dialog = new CodingLanguageDialog( ) )
                 {
-                    if (dialog.ShowDialog() == DialogResult.OK)
+                    if ( dialog.ShowDialog( ) == DialogResult.OK )
                     {
-                        if (dialog.LanguageSelected == null)
-                            throw new NotSupportedException("No Programming Language instance");
+                        if ( dialog.LanguageSelected == null )
+                            throw new NotSupportedException( "No Programming Language instance" );
 
                         ShowModelExplorer = true;
-                        var diagram = new Diagram(dialog.LanguageSelected);
-                        Workspace.Default.ActiveProject.Add(diagram);
+                        var diagram = new Diagram( dialog.LanguageSelected );
+                        Workspace.Default.ActiveProject.Add( diagram );
                         Settings.Default.DefaultLanguageName = dialog.LanguageSelected.AssemblyName;
                     }
                 }
             }
         }
 
-        private void mnuOpenFile_Click(object sender, EventArgs e)
+        private void mnuOpenFile_Click( object sender, EventArgs e )
         {
-            Workspace.Default.OpenProject();
+            Workspace.Default.OpenProject( );
         }
 
-        private void mnuOpen_DropDownOpening(object sender, EventArgs e)
+        private void mnuOpen_DropDownOpening( object sender, EventArgs e )
         {
-            foreach (ToolStripItem item in mnuOpen.DropDownItems)
+            foreach ( ToolStripItem item in mnuOpen.DropDownItems )
             {
-                if (item.Tag is int)
+                if ( item.Tag is int )
                 {
-                    var index = (int) item.Tag;
+                    var index = ( int ) item.Tag;
 
-                    if (index < Settings.Default.RecentFiles.Count)
+                    if ( index < Settings.Default.RecentFiles.Count )
                     {
-                        item.Text = Settings.Default.RecentFiles[index];
+                        item.Text = Settings.Default.RecentFiles[ index ];
                         item.Visible = true;
                     }
                     else
@@ -593,52 +582,52 @@ namespace NClass.GUI
             sepOpenFile.Visible = Settings.Default.RecentFiles.Count > 0;
         }
 
-        private void mnuSave_Click(object sender, EventArgs e)
+        private void mnuSave_Click( object sender, EventArgs e )
         {
-            Workspace.Default.SaveActiveProject();
+            Workspace.Default.SaveActiveProject( );
         }
 
-        private void mnuSaveAs_Click(object sender, EventArgs e)
+        private void mnuSaveAs_Click( object sender, EventArgs e )
         {
-            Workspace.Default.SaveActiveProjectAs();
+            Workspace.Default.SaveActiveProjectAs( );
         }
 
-        private void mnuSaveAll_Click(object sender, EventArgs e)
+        private void mnuSaveAll_Click( object sender, EventArgs e )
         {
-            Workspace.Default.SaveAllProjects();
+            Workspace.Default.SaveAllProjects( );
         }
 
-        private void mnuPrint_Click(object sender, EventArgs e)
+        private void mnuPrint_Click( object sender, EventArgs e )
         {
-            if (docManager.HasDocument)
+            if ( docManager.HasDocument )
             {
                 IPrintable document = docManager.ActiveDocument;
-                document.ShowPrintDialog();
+                document.ShowPrintDialog( );
             }
         }
 
-        private void mnuCloseProject_Click(object sender, EventArgs e)
+        private void mnuCloseProject_Click( object sender, EventArgs e )
         {
-            Workspace.Default.RemoveActiveProject();
+            Workspace.Default.RemoveActiveProject( );
         }
 
-        private void mnuCloseAllProjects_Click(object sender, EventArgs e)
+        private void mnuCloseAllProjects_Click( object sender, EventArgs e )
         {
-            Workspace.Default.RemoveAll();
+            Workspace.Default.RemoveAll( );
         }
 
-        private void mnuExit_Click(object sender, EventArgs e)
+        private void mnuExit_Click( object sender, EventArgs e )
         {
-            Close();
+            Close( );
         }
 
         #endregion
 
         #region Edit menu event handlers
 
-        private void mnuEdit_DropDownOpening(object sender, EventArgs e)
+        private void mnuEdit_DropDownOpening( object sender, EventArgs e )
         {
-            if (docManager.HasDocument)
+            if ( docManager.HasDocument )
             {
                 var document = docManager.ActiveDocument;
 
@@ -663,7 +652,7 @@ namespace NClass.GUI
             }
         }
 
-        private void mnuEdit_DropDownClosed(object sender, EventArgs e)
+        private void mnuEdit_DropDownClosed( object sender, EventArgs e )
         {
             mnuUndo.Enabled = true;
             mnuRedo.Enabled = true;
@@ -674,61 +663,55 @@ namespace NClass.GUI
             mnuSelectAll.Enabled = true;
         }
 
-        private void mnuUndo_Click(object sender, EventArgs e)
+        private void mnuUndo_Click( object sender, EventArgs e )
         {
             //UNDONE: mnuUndo_Click
-            MessageBox.Show(Strings.NotImplemented,
-                            "Undo",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information);
+            MessageBox.Show( Strings.NotImplemented, "Undo", MessageBoxButtons.OK, MessageBoxIcon.Information );
         }
 
-        private void mnuRedo_Click(object sender, EventArgs e)
+        private void mnuRedo_Click( object sender, EventArgs e )
         {
             //UNDONE: mnuRedo_Click
-            MessageBox.Show(Strings.NotImplemented,
-                            "Redo",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information);
+            MessageBox.Show( Strings.NotImplemented, "Redo", MessageBoxButtons.OK, MessageBoxIcon.Information );
         }
 
-        private void mnuCut_Click(object sender, EventArgs e)
+        private void mnuCut_Click( object sender, EventArgs e )
         {
-            if (docManager.HasDocument)
+            if ( docManager.HasDocument )
             {
-                docManager.ActiveDocument.Cut();
+                docManager.ActiveDocument.Cut( );
             }
         }
 
-        private void mnuCopy_Click(object sender, EventArgs e)
+        private void mnuCopy_Click( object sender, EventArgs e )
         {
-            if (docManager.HasDocument)
+            if ( docManager.HasDocument )
             {
-                docManager.ActiveDocument.Copy();
+                docManager.ActiveDocument.Copy( );
             }
         }
 
-        private void mnuPaste_Click(object sender, EventArgs e)
+        private void mnuPaste_Click( object sender, EventArgs e )
         {
-            if (docManager.HasDocument)
+            if ( docManager.HasDocument )
             {
-                docManager.ActiveDocument.Paste();
+                docManager.ActiveDocument.Paste( );
             }
         }
 
-        private void mnuDelete_Click(object sender, EventArgs e)
+        private void mnuDelete_Click( object sender, EventArgs e )
         {
-            if (docManager.HasDocument)
+            if ( docManager.HasDocument )
             {
-                docManager.ActiveDocument.DeleteSelectedElements();
+                docManager.ActiveDocument.DeleteSelectedElements( );
             }
         }
 
-        private void mnuSelectAll_Click(object sender, EventArgs e)
+        private void mnuSelectAll_Click( object sender, EventArgs e )
         {
-            if (docManager.HasDocument)
+            if ( docManager.HasDocument )
             {
-                docManager.ActiveDocument.SelectAll();
+                docManager.ActiveDocument.SelectAll( );
             }
         }
 
@@ -736,7 +719,7 @@ namespace NClass.GUI
 
         #region View menu event handlers
 
-        private void mnuView_DropDownOpening(object sender, EventArgs e)
+        private void mnuView_DropDownOpening( object sender, EventArgs e )
         {
             mnuZoom.Enabled = docManager.HasDocument;
             mnuAutoZoom.Enabled = docManager.HasDocument && !docManager.ActiveDocument.IsEmpty;
@@ -746,121 +729,118 @@ namespace NClass.GUI
             mnuDiagramNavigator.Checked = ShowNavigator;
         }
 
-        private void mnuZoom10_Click(object sender, EventArgs e)
+        private void mnuZoom10_Click( object sender, EventArgs e )
         {
             tabbedWindow.Canvas.Zoom = 0.1F;
         }
 
-        private void mnuZoom25_Click(object sender, EventArgs e)
+        private void mnuZoom25_Click( object sender, EventArgs e )
         {
             tabbedWindow.Canvas.Zoom = 0.25F;
         }
 
-        private void mnuZoom50_Click(object sender, EventArgs e)
+        private void mnuZoom50_Click( object sender, EventArgs e )
         {
             tabbedWindow.Canvas.Zoom = 0.5F;
         }
 
-        private void mnuZoom100_Click(object sender, EventArgs e)
+        private void mnuZoom100_Click( object sender, EventArgs e )
         {
             tabbedWindow.Canvas.Zoom = 1.0F;
         }
 
-        private void mnuZoom150_Click(object sender, EventArgs e)
+        private void mnuZoom150_Click( object sender, EventArgs e )
         {
             tabbedWindow.Canvas.Zoom = 1.5F;
         }
 
-        private void mnuZoom200_Click(object sender, EventArgs e)
+        private void mnuZoom200_Click( object sender, EventArgs e )
         {
             tabbedWindow.Canvas.Zoom = 2.0F;
         }
 
-        private void mnuZoom400_Click(object sender, EventArgs e)
+        private void mnuZoom400_Click( object sender, EventArgs e )
         {
             tabbedWindow.Canvas.Zoom = 4.0F;
         }
 
-        private void mnuAutoZoom_Click(object sender, EventArgs e)
+        private void mnuAutoZoom_Click( object sender, EventArgs e )
         {
-            tabbedWindow.Canvas.AutoZoom();
+            tabbedWindow.Canvas.AutoZoom( );
         }
 
-        private void mnuModelExplorer_Click(object sender, EventArgs e)
+        private void mnuModelExplorer_Click( object sender, EventArgs e )
         {
             ShowModelExplorer = mnuModelExplorer.Checked;
         }
 
-        private void mnuDiagramNavigator_Click(object sender, EventArgs e)
+        private void mnuDiagramNavigator_Click( object sender, EventArgs e )
         {
             ShowNavigator = mnuDiagramNavigator.Checked;
         }
 
-        private void mnuCloseAllDocuments_Click(object sender, EventArgs e)
+        private void mnuCloseAllDocuments_Click( object sender, EventArgs e )
         {
-            docManager.CloseAll();
+            docManager.CloseAll( );
         }
 
-        private void mnuOptions_Click(object sender, EventArgs e)
+        private void mnuOptions_Click( object sender, EventArgs e )
         {
-            using (var dialog = new OptionsDialog())
+            using ( var dialog = new OptionsDialog( ) )
             {
                 dialog.StyleModified += dialog_StyleChanged;
-                dialog.ShowDialog();
-                if (docManager.HasDocument)
-                    docManager.ActiveDocument.Redraw();
+                dialog.ShowDialog( );
+                if ( docManager.HasDocument )
+                    docManager.ActiveDocument.Redraw( );
             }
         }
 
-        private void dialog_StyleChanged(object sender, EventArgs e)
+        private void dialog_StyleChanged( object sender, EventArgs e )
         {
-            if (docManager.HasDocument)
-                docManager.ActiveDocument.Redraw();
+            if ( docManager.HasDocument )
+                docManager.ActiveDocument.Redraw( );
         }
 
         #endregion
 
         #region Help menu event handlers
 
-        private void mnuContents_Click(object sender, EventArgs e)
+        private void mnuContents_Click( object sender, EventArgs e )
         {
-            MessageBox.Show(Strings.NotImplemented,
-                            "NClass",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information);
+            MessageBox.Show( Strings.NotImplemented, "NClass", MessageBoxButtons.OK, MessageBoxIcon.Information );
         }
 
-        private void mnuCheckForUpdates_Click(object sender, EventArgs e)
+        private void mnuCheckForUpdates_Click( object sender, EventArgs e )
         {
-            UpdatesChecker.CheckForUpdates();
+            UpdatesChecker.CheckForUpdates( );
         }
 
-        private void mnuAbout_Click(object sender, EventArgs e)
+        private void mnuAbout_Click( object sender, EventArgs e )
         {
-            using (var dialog = new AboutDialog())
-                dialog.ShowDialog();
+            using ( var dialog = new AboutDialog( ) )
+                dialog.ShowDialog( );
         }
 
         #endregion
 
         #region Standard toolbar event handlers
 
-        private void toolNew_DropDownOpening(object sender, EventArgs e)
+        private void toolNew_DropDownOpening( object sender, EventArgs e )
         {
             toolNewCodingLanguageDiagram.Enabled = Workspace.Default.HasActiveProject;
         }
 
-        private void toolOpen_DropDownOpening(object sender, EventArgs e)
+        private void toolOpen_DropDownOpening( object sender, EventArgs e )
         {
-            foreach (ToolStripItem item in toolOpen.DropDownItems)
+            foreach ( ToolStripItem item in toolOpen.DropDownItems )
             {
-                if (item.Tag is int)
+                if ( item.Tag is int )
                 {
-                    var index = (int) item.Tag;
+                    var index = ( int ) item.Tag;
 
-                    if (index < Settings.Default.RecentFiles.Count)
+                    if ( index < Settings.Default.RecentFiles.Count )
                     {
-                        item.Text = Settings.Default.RecentFiles[index];
+                        item.Text = Settings.Default.RecentFiles[ index ];
                         item.Visible = true;
                     }
                     else
@@ -871,41 +851,41 @@ namespace NClass.GUI
             }
         }
 
-        private void toolCut_Click(object sender, EventArgs e)
+        private void toolCut_Click( object sender, EventArgs e )
         {
-            if (docManager.HasDocument)
+            if ( docManager.HasDocument )
             {
-                docManager.ActiveDocument.Cut();
+                docManager.ActiveDocument.Cut( );
             }
         }
 
-        private void toolCopy_Click(object sender, EventArgs e)
+        private void toolCopy_Click( object sender, EventArgs e )
         {
-            if (docManager.HasDocument)
+            if ( docManager.HasDocument )
             {
-                docManager.ActiveDocument.Copy();
+                docManager.ActiveDocument.Copy( );
             }
         }
 
-        private void toolPaste_Click(object sender, EventArgs e)
+        private void toolPaste_Click( object sender, EventArgs e )
         {
-            if (docManager.HasDocument)
+            if ( docManager.HasDocument )
             {
-                docManager.ActiveDocument.Paste();
+                docManager.ActiveDocument.Paste( );
             }
         }
 
-        private void toolZoomIn_Click(object sender, EventArgs e)
+        private void toolZoomIn_Click( object sender, EventArgs e )
         {
-            tabbedWindow.Canvas.ZoomIn();
+            tabbedWindow.Canvas.ZoomIn( );
         }
 
-        private void toolZoomOut_Click(object sender, EventArgs e)
+        private void toolZoomOut_Click( object sender, EventArgs e )
         {
-            tabbedWindow.Canvas.ZoomOut();
+            tabbedWindow.Canvas.ZoomOut( );
         }
 
-        private void toolZoom_ZoomValueChanged(object sender, EventArgs e)
+        private void toolZoom_ZoomValueChanged( object sender, EventArgs e )
         {
             tabbedWindow.Canvas.Zoom = toolZoom.ZoomValue;
         }

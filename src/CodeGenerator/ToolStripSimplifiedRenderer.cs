@@ -19,22 +19,20 @@ namespace NClass.CodeGenerator
 {
     public class ToolStripSimplifiedRenderer : ToolStripProfessionalRenderer
     {
-        private ToolStripSimplifiedRenderer()
+        private ToolStripSimplifiedRenderer( ) {}
+
+        public static ToolStripSimplifiedRenderer Default { get; } = new ToolStripSimplifiedRenderer( );
+
+        protected override void OnRenderToolStripBackground( ToolStripRenderEventArgs e )
         {
+            if ( e.ToolStrip is ToolStripDropDown )
+                base.OnRenderToolStripBackground( e );
         }
 
-        public static ToolStripSimplifiedRenderer Default { get; } = new ToolStripSimplifiedRenderer();
-
-        protected override void OnRenderToolStripBackground(ToolStripRenderEventArgs e)
+        protected override void OnRenderToolStripBorder( ToolStripRenderEventArgs e )
         {
-            if (e.ToolStrip is ToolStripDropDown)
-                base.OnRenderToolStripBackground(e);
-        }
-
-        protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
-        {
-            if (e.ToolStrip is ToolStripDropDown)
-                base.OnRenderToolStripBorder(e);
+            if ( e.ToolStrip is ToolStripDropDown )
+                base.OnRenderToolStripBorder( e );
         }
     }
 }

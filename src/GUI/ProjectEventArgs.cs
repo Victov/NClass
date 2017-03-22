@@ -17,11 +17,11 @@ using NClass.Core;
 
 namespace NClass.GUI
 {
-    public delegate void ProjectEventHandler(object sender, ProjectEventArgs e);
+    public delegate void ProjectEventHandler( object sender, ProjectEventArgs e );
 
     public class ProjectEventArgs
     {
-        public ProjectEventArgs(Project project)
+        public ProjectEventArgs( Project project )
         {
             Project = project;
         }

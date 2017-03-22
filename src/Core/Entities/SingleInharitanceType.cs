@@ -24,10 +24,7 @@ namespace NClass.Core
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="name" /> does not fit to the syntax.
         /// </exception>
-        protected SingleInharitanceType(string name)
-            : base(name)
-        {
-        }
+        protected SingleInharitanceType( string name ) : base( name ) {}
 
         /// <exception cref="RelationshipException">
         ///     The base and derived types do not equal.-or-
@@ -35,13 +32,19 @@ namespace NClass.Core
         /// </exception>
         public abstract SingleInharitanceType Base { get; set; }
 
-        public abstract IEnumerable<Operation> OverridableOperations { get; }
+        public abstract IEnumerable< Operation > OverridableOperations { get; }
 
-        protected List<InterfaceType> InterfaceList { get; } = new List<InterfaceType>();
+        protected List< InterfaceType > InterfaceList { get; } = new List< InterfaceType >( );
 
-        public IEnumerable<InterfaceType> Interfaces { get { return InterfaceList; } }
+        public IEnumerable< InterfaceType > Interfaces
+        {
+            get { return InterfaceList; }
+        }
 
-        public bool ImplementsInterface { get { return InterfaceList.Count > 0; } }
+        public bool ImplementsInterface
+        {
+            get { return InterfaceList.Count > 0; }
+        }
 
         /// <exception cref="RelationshipException">
         ///     The language of <paramref name="interfaceType" /> does not equal.-or-
@@ -50,25 +53,25 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="interfaceType" /> is null.
         /// </exception>
-        public virtual void AddInterface(InterfaceType interfaceType)
+        public virtual void AddInterface( InterfaceType interfaceType )
         {
-            if (interfaceType == null)
-                throw new ArgumentNullException("interfaceType");
+            if ( interfaceType == null )
+                throw new ArgumentNullException( "interfaceType" );
 
-            foreach (var implementedInterface in InterfaceList)
+            foreach ( var implementedInterface in InterfaceList )
             {
-                if (interfaceType == implementedInterface)
-                    throw new RelationshipException(Strings.ErrorCannotAddSameInterface);
+                if ( interfaceType == implementedInterface )
+                    throw new RelationshipException( Strings.ErrorCannotAddSameInterface );
             }
 
-            InterfaceList.Add(interfaceType);
-            Changed();
+            InterfaceList.Add( interfaceType );
+            Changed( );
         }
 
-        public void RemoveInterface(InterfaceType interfaceType)
+        public void RemoveInterface( InterfaceType interfaceType )
         {
-            if (InterfaceList.Remove(interfaceType))
-                Changed();
+            if ( InterfaceList.Remove( interfaceType ) )
+                Changed( );
         }
 
         /// <exception cref="ArgumentException">
@@ -77,30 +80,28 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="operation" /> is null.
         /// </exception>
-        public Operation Implement(Operation operation, bool explicitly)
+        public Operation Implement( Operation operation, bool explicitly )
         {
-            if (operation == null)
-                throw new ArgumentNullException("operation");
+            if ( operation == null )
+                throw new ArgumentNullException( "operation" );
 
-            if (operation.Language != Language)
-                throw new ArgumentException(Strings.ErrorLanguagesDoNotEqual);
+            if ( operation.Language != Language )
+                throw new ArgumentException( Strings.ErrorLanguagesDoNotEqual );
 
-            if (!(operation.Parent is InterfaceType))
+            if ( !( operation.Parent is InterfaceType ) )
             {
-                throw new ArgumentException("The operation is not a member of an interface.");
+                throw new ArgumentException( "The operation is not a member of an interface." );
             }
 
-            if (explicitly && !operation.Language.SupportsExplicitImplementation)
+            if ( explicitly && !operation.Language.SupportsExplicitImplementation )
             {
-                throw new ArgumentException(
-                    Strings.ErrorExplicitImplementation,
-                    "explicitly");
+                throw new ArgumentException( Strings.ErrorExplicitImplementation, "explicitly" );
             }
 
-            var newOperation = Language.Implement(operation, this, explicitly);
+            var newOperation = Language.Implement( operation, this, explicitly );
             newOperation.Parent = this;
 
-            AddOperation(newOperation);
+            AddOperation( newOperation );
             return newOperation;
         }
 
@@ -111,17 +112,17 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="operation" /> is null.
         /// </exception>
-        public Operation Override(Operation operation)
+        public Operation Override( Operation operation )
         {
-            if (operation == null)
-                throw new ArgumentNullException("operation");
+            if ( operation == null )
+                throw new ArgumentNullException( "operation" );
 
-            if (operation.Language != Language)
-                throw new ArgumentException(Strings.ErrorLanguagesDoNotEqual);
+            if ( operation.Language != Language )
+                throw new ArgumentException( Strings.ErrorLanguagesDoNotEqual );
 
-            var newOperation = Language.Override(operation, this);
+            var newOperation = Language.Override( operation, this );
 
-            AddOperation(newOperation);
+            AddOperation( newOperation );
             return newOperation;
         }
     }

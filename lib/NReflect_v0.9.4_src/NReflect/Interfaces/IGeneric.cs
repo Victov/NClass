@@ -21,20 +21,20 @@ using NReflect.NRParameters;
 
 namespace NReflect
 {
-  /// <summary>
-  /// Classes implementing this interface can represent a generic
-  /// entity or member.
-  /// </summary>
-  public interface IGeneric
-  {
     /// <summary>
-    /// Gets a list containing all type parameters.
+    /// Classes implementing this interface can represent a generic
+    /// entity or member.
     /// </summary>
-    List<NRTypeParameter> GenericTypes { get; }
+    public interface IGeneric
+    {
+        /// <summary>
+        /// Gets a list containing all type parameters.
+        /// </summary>
+        List< NRTypeParameter > GenericTypes { get; }
 
-    /// <summary>
-    /// Gets a value indicating wether this is generic.
-    /// </summary>
-    bool IsGeneric { get; }
-  }
+        /// <summary>
+        /// Gets a value indicating wether this is generic.
+        /// </summary>
+        bool IsGeneric { get; }
+    }
 }

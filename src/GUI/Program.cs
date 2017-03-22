@@ -28,53 +28,49 @@ namespace NClass.GUI
 {
     internal static class Program
     {
-        public static readonly Version CurrentVersion =
-            Assembly.GetExecutingAssembly().GetName().Version;
+        public static readonly Version CurrentVersion = Assembly.GetExecutingAssembly( ).GetName( ).Version;
 
-        public static readonly string AppDataDirectory =
-            Path.Combine(Environment.GetFolderPath(
-                Environment.SpecialFolder.LocalApplicationData),
-                         "NClass");
+        public static readonly string AppDataDirectory = Path.Combine( Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData ), "NClass" );
 
         /// <summary>
         ///     The main entry point for the application.
         /// </summary>
         [STAThread]
-        private static void Main(string[] args)
+        private static void Main( string[] args )
         {
             // Run program with logger
-            var app = new App();
+            var app = new App( );
             string result;
-            var projectFiles = new List<string>();
+            var projectFiles = new List< string >( );
 
-            for (var i = 0; i < args.Length; i++)
+            for ( var i = 0; i < args.Length; i++ )
             {
-                switch (args[i])
+                switch ( args[ i ] )
                 {
                     case "-projects":
                     case "-p":
-                        result = App.FileExist(i, args.Length, args[i + 1], "-projects");
-                        if (string.IsNullOrWhiteSpace(result) == false)
+                        result = App.FileExist( i, args.Length, args[ i + 1 ], "-projects" );
+                        if ( string.IsNullOrWhiteSpace( result ) == false )
                             return;
 
                         // Do we have other project behind the fist one
-                        for (var j = i + 2; j < args.Length; j++)
+                        for ( var j = i + 2; j < args.Length; j++ )
                         {
                             // If another arg is present
-                            if (args[j].StartsWith("-"))
+                            if ( args[ j ].StartsWith( "-" ) )
                                 break;
 
-                            result = App.FileExist(j, args.Length, args[j], "-projects");
+                            result = App.FileExist( j, args.Length, args[ j ], "-projects" );
 
-                            if (string.IsNullOrWhiteSpace(result) == false)
+                            if ( string.IsNullOrWhiteSpace( result ) == false )
                                 continue;
 
-                            projectFiles.Add(args[j]);
+                            projectFiles.Add( args[ j ] );
                         }
                         break;
                     case "-log_cfg":
                     case "-l":
-                        app.ArgumentLog(i, args.Length, args[i + 1]);
+                        app.ArgumentLog( i, args.Length, args[ i + 1 ] );
                         break;
                 }
             }
@@ -82,90 +78,85 @@ namespace NClass.GUI
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
             Application.ThreadException += ApplicationThreadException;
 
-            app.Start();
-            UpdateSettings();
+            app.Start( );
+            UpdateSettings( );
 
             // Set the user interface language
-            var language = UILanguage.CreateUILanguage(Settings.Default.UILanguage);
-            if (language != null)
+            var language = UILanguage.CreateUILanguage( Settings.Default.UILanguage );
+            if ( language != null )
                 Strings.Culture = language.Culture;
 
             // Some GUI settings
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.DoEvents();
+            Application.EnableVisualStyles( );
+            Application.SetCompatibleTextRenderingDefault( false );
+            Application.DoEvents( );
             ToolStripManager.VisualStylesEnabled = false;
 
             // Launch the application
-            LoadProjects(projectFiles.ToArray());
-            Application.Run(new MainForm());
+            LoadProjects( projectFiles.ToArray( ) );
+            Application.Run( new MainForm( ) );
 
             // Save application settings
-            DiagramEditor.Settings.Default.Save();
-            Settings.Default.Save();
+            DiagramEditor.Settings.Default.Save( );
+            Settings.Default.Save( );
         }
 
-        private static void UpdateSettings()
+        private static void UpdateSettings( )
         {
-            if (Settings.Default.CallUpgrade)
+            if ( Settings.Default.CallUpgrade )
             {
-                Settings.Default.Upgrade();
+                Settings.Default.Upgrade( );
                 Settings.Default.CallUpgrade = false;
             }
 
-            if (Settings.Default.OpenedProjects == null)
-                Settings.Default.OpenedProjects = new StringCollection();
-            if (Settings.Default.RecentFiles == null)
-                Settings.Default.RecentFiles = new StringCollection();
+            if ( Settings.Default.OpenedProjects == null )
+                Settings.Default.OpenedProjects = new StringCollection( );
+            if ( Settings.Default.RecentFiles == null )
+                Settings.Default.RecentFiles = new StringCollection( );
         }
 
-        public static string GetVersionString()
+        public static string GetVersionString( )
         {
-            if (CurrentVersion.Minor == 0)
+            if ( CurrentVersion.Minor == 0 )
             {
-                return string.Format("NClass {0}.0", CurrentVersion.Major);
+                return string.Format( "NClass {0}.0", CurrentVersion.Major );
             }
-            return string.Format("NClass {0}.{1:00}",
-                                 CurrentVersion.Major,
-                                 CurrentVersion.Minor);
+            return string.Format( "NClass {0}.{1:00}", CurrentVersion.Major, CurrentVersion.Minor );
         }
 
-        private static void LoadProjects(string[] args)
+        private static void LoadProjects( string[] args )
         {
-            if (args.Length >= 1)
+            if ( args.Length >= 1 )
             {
-                foreach (var filePath in args)
+                foreach ( var filePath in args )
                 {
-                    Workspace.Default.OpenProject(filePath);
+                    Workspace.Default.OpenProject( filePath );
                 }
             }
             else
             {
-                if (Settings.Default.RememberOpenProjects)
-                    Workspace.Default.Load();
+                if ( Settings.Default.RememberOpenProjects )
+                    Workspace.Default.Load( );
             }
         }
 
         // Crash handling
-        private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private static void CurrentDomainOnUnhandledException( object sender, UnhandledExceptionEventArgs e )
         {
-            ReportCrash((Exception) e.ExceptionObject);
-            Environment.Exit(0);
+            ReportCrash( ( Exception ) e.ExceptionObject );
+            Environment.Exit( 0 );
         }
 
-        private static void ApplicationThreadException(object sender, ThreadExceptionEventArgs e)
+        private static void ApplicationThreadException( object sender, ThreadExceptionEventArgs e )
         {
-            ReportCrash(e.Exception);
+            ReportCrash( e.Exception );
         }
 
-        private static void ReportCrash(Exception exception)
+        private static void ReportCrash( Exception exception )
         {
-            var reportCrash = new ReportCrash
-            {
-                ToEmail = "13300sam@gmail.com"
-            };
+            var reportCrash = new ReportCrash {ToEmail = "13300sam@gmail.com"};
 
-            reportCrash.Send(exception);
+            reportCrash.Send( exception );
         }
     }
 }

@@ -21,71 +21,69 @@ using NReflect.NREntities;
 
 namespace NReflect.NRRelationship
 {
-  /// <summary>
-  /// Represents an nesting relationship between two types.
-  /// </summary>
-  [Serializable]
-  public class NRNesting
-  {
-    // ========================================================================
-    // Con- / Destruction
-
-    #region === Con- / Destruction
-
     /// <summary>
-    /// Initializes a new instance of <see cref="NRNesting"/>.
+    /// Represents an nesting relationship between two types.
     /// </summary>
-    public NRNesting()
+    [Serializable]
+    public class NRNesting
     {
+        // ========================================================================
+        // Con- / Destruction
+
+        #region === Con- / Destruction
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="NRNesting"/>.
+        /// </summary>
+        public NRNesting( ) {}
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="NRNesting"/>.
+        /// </summary>
+        /// <param name="parentType">The parent type of the nesting relationship.</param>
+        /// <param name="innerType">The inner type of the nesting relationship.</param>
+        public NRNesting( NRSingleInheritanceType parentType, NRTypeBase innerType )
+        {
+            ParentType = parentType;
+            InnerType = innerType;
+        }
+
+        #endregion
+
+        // ========================================================================
+        // Properties
+
+        #region === Properties
+
+        /// <summary>
+        /// Gets or sets the parent type of the nesting relationship.
+        /// </summary>
+        public NRSingleInheritanceType ParentType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the inner type of the nesting relationship.
+        /// </summary>
+        public NRTypeBase InnerType { get; set; }
+
+        #endregion
+
+        // ========================================================================
+        // Methods
+
+        #region === Methods
+
+        /// <summary>
+        /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+        /// </returns>
+        /// <filterpriority>2</filterpriority>
+        public override string ToString( )
+        {
+            return ParentType.Name + " (+)--> " + InnerType.Name;
+        }
+
+        #endregion
     }
-
-    /// <summary>
-    /// Initializes a new instance of <see cref="NRNesting"/>.
-    /// </summary>
-    /// <param name="parentType">The parent type of the nesting relationship.</param>
-    /// <param name="innerType">The inner type of the nesting relationship.</param>
-    public NRNesting(NRSingleInheritanceType parentType, NRTypeBase innerType)
-    {
-      ParentType = parentType;
-      InnerType = innerType;
-    }
-
-    #endregion
-
-    // ========================================================================
-    // Properties
-
-    #region === Properties
-
-    /// <summary>
-    /// Gets or sets the parent type of the nesting relationship.
-    /// </summary>
-    public NRSingleInheritanceType ParentType { get; set; }
-
-    /// <summary>
-    /// Gets or sets the inner type of the nesting relationship.
-    /// </summary>
-    public NRTypeBase InnerType { get; set; }
-
-    #endregion
-
-    // ========================================================================
-    // Methods
-
-    #region === Methods
-
-    /// <summary>
-    /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
-    /// </summary>
-    /// <returns>
-    /// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
-    /// </returns>
-    /// <filterpriority>2</filterpriority>
-    public override string ToString()
-    {
-      return ParentType.Name + " (+)--> " + InnerType.Name;
-    }
-
-    #endregion
-  }
 }

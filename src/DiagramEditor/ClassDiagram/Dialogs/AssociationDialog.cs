@@ -33,10 +33,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
         private Direction modifiedDirection;
         private AssociationType modifiedType;
 
-        public AssociationDialog()
+        public AssociationDialog( )
         {
-            InitializeComponent();
-            UpdateTexts();
+            InitializeComponent( );
+            UpdateTexts( );
         }
 
         public AssociationRelationship Association
@@ -44,22 +44,22 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             get { return association; }
             set
             {
-                if (value != null)
+                if ( value != null )
                 {
                     association = value;
-                    UpdateFields();
+                    UpdateFields( );
                 }
             }
         }
 
-        private void UpdateTexts()
+        private void UpdateTexts( )
         {
             Text = Strings.EditAssociation;
             btnOK.Text = Strings.ButtonOK;
             btnCancel.Text = Strings.ButtonCancel;
         }
 
-        private void UpdateFields()
+        private void UpdateFields( )
         {
             modifiedDirection = association.Direction;
             modifiedType = association.AssociationType;
@@ -71,7 +71,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             cboEndMultiplicity.Text = association.EndMultiplicity;
         }
 
-        private void ModifyRelationship()
+        private void ModifyRelationship( )
         {
             association.AssociationType = modifiedType;
             association.Direction = modifiedDirection;
@@ -82,27 +82,27 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             association.EndMultiplicity = cboEndMultiplicity.Text;
         }
 
-        private void picArrow_MouseDown(object sender, MouseEventArgs e)
+        private void picArrow_MouseDown( object sender, MouseEventArgs e )
         {
-            if (e.X <= DiamondWidth)
+            if ( e.X <= DiamondWidth )
             {
-                ChangeType();
-                picArrow.Invalidate();
+                ChangeType( );
+                picArrow.Invalidate( );
             }
-            else if (e.X >= picArrow.Width - ArrowWidth)
+            else if ( e.X >= picArrow.Width - ArrowWidth )
             {
-                ChangeHead();
-                picArrow.Invalidate();
+                ChangeHead( );
+                picArrow.Invalidate( );
             }
         }
 
-        private void ChangeType()
+        private void ChangeType( )
         {
-            if (modifiedType == AssociationType.Association)
+            if ( modifiedType == AssociationType.Association )
             {
                 modifiedType = AssociationType.Aggregation;
             }
-            else if (modifiedType == AssociationType.Aggregation)
+            else if ( modifiedType == AssociationType.Aggregation )
             {
                 modifiedType = AssociationType.Composition;
             }
@@ -112,9 +112,9 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             }
         }
 
-        private void ChangeHead()
+        private void ChangeHead( )
         {
-            if (modifiedDirection == Direction.Bidirectional)
+            if ( modifiedDirection == Direction.Bidirectional )
             {
                 modifiedDirection = Direction.Unidirectional;
             }
@@ -124,51 +124,45 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             }
         }
 
-        private void picArrow_Paint(object sender, PaintEventArgs e)
+        private void picArrow_Paint( object sender, PaintEventArgs e )
         {
             var g = e.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
-            var center = picArrow.Height/2;
+            var center = picArrow.Height / 2;
             var width = picArrow.Width;
 
             // Draw line
-            g.DrawLine(Pens.Black, 0, center, width, center);
+            g.DrawLine( Pens.Black, 0, center, width, center );
 
             // Draw arrow head
-            if (modifiedDirection == Direction.Unidirectional)
+            if ( modifiedDirection == Direction.Unidirectional )
             {
-                g.DrawLine(Pens.Black, width - ArrowWidth, center - ArrowHeight/2, width, center);
-                g.DrawLine(Pens.Black, width - ArrowWidth, center + ArrowHeight/2, width, center);
+                g.DrawLine( Pens.Black, width - ArrowWidth, center - ArrowHeight / 2, width, center );
+                g.DrawLine( Pens.Black, width - ArrowWidth, center + ArrowHeight / 2, width, center );
             }
 
             // Draw start symbol
-            if (modifiedType != AssociationType.Association)
+            if ( modifiedType != AssociationType.Association )
             {
-                Point[] diamondPoints =
-                {
-                    new Point(0, center),
-                    new Point(DiamondWidth/2, center - DiamondHeight/2),
-                    new Point(DiamondWidth, center),
-                    new Point(DiamondWidth/2, center + DiamondHeight/2)
-                };
+                Point[] diamondPoints = {new Point( 0, center ), new Point( DiamondWidth / 2, center - DiamondHeight / 2 ), new Point( DiamondWidth, center ), new Point( DiamondWidth / 2, center + DiamondHeight / 2 )};
 
-                if (modifiedType == AssociationType.Aggregation)
+                if ( modifiedType == AssociationType.Aggregation )
                 {
-                    g.FillPolygon(Brushes.White, diamondPoints);
-                    g.DrawPolygon(Pens.Black, diamondPoints);
+                    g.FillPolygon( Brushes.White, diamondPoints );
+                    g.DrawPolygon( Pens.Black, diamondPoints );
                 }
-                else if (modifiedType == AssociationType.Composition)
+                else if ( modifiedType == AssociationType.Composition )
                 {
-                    g.FillPolygon(Brushes.Black, diamondPoints);
+                    g.FillPolygon( Brushes.Black, diamondPoints );
                 }
             }
         }
 
-        private void btnOK_Click(object sender, EventArgs e)
+        private void btnOK_Click( object sender, EventArgs e )
         {
-            if (association != null)
+            if ( association != null )
             {
-                ModifyRelationship();
+                ModifyRelationship( );
             }
         }
     }

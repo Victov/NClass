@@ -21,20 +21,23 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
 {
     public partial class EditCommentDialog : Form
     {
-        public EditCommentDialog()
+        public EditCommentDialog( )
         {
-            InitializeComponent();
+            InitializeComponent( );
         }
 
-        public EditCommentDialog(string initText)
+        public EditCommentDialog( string initText )
         {
-            InitializeComponent();
+            InitializeComponent( );
             txtInput.Text = initText;
         }
 
-        public string InputText { get { return txtInput.Text; } }
+        public string InputText
+        {
+            get { return txtInput.Text; }
+        }
 
-        private void UpdateTexts()
+        private void UpdateTexts( )
         {
             Text = Strings.EditComment;
             lblEdit.Text = Strings.EditText;
@@ -42,10 +45,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Dialogs
             btnCancel.Text = Strings.ButtonCancel;
         }
 
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoad( EventArgs e )
         {
-            base.OnLoad(e);
-            UpdateTexts();
+            base.OnLoad( e );
+            UpdateTexts( );
         }
     }
 }

@@ -24,53 +24,55 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="structType" /> is null.
         /// </exception>
-        internal StructureShape(StructureType structure)
-            : base(structure)
+        internal StructureShape( StructureType structure ) : base( structure )
         {
             StructureType = structure;
-            UpdateMinSize();
+            UpdateMinSize( );
         }
 
-        public override CompositeType CompositeType { get { return StructureType; } }
+        public override CompositeType CompositeType
+        {
+            get { return StructureType; }
+        }
 
         public StructureType StructureType { get; }
 
-        protected override bool CloneEntity(Diagram diagram)
+        protected override bool CloneEntity( Diagram diagram )
         {
-            return diagram.InsertStructure(StructureType.Clone());
+            return diagram.InsertStructure( StructureType.Clone( ) );
         }
 
-        protected override Color GetBackgroundColor(Style style)
+        protected override Color GetBackgroundColor( Style style )
         {
             return style.StructureBackgroundColor;
         }
 
-        protected override Color GetBorderColor(Style style)
+        protected override Color GetBorderColor( Style style )
         {
             return style.StructureBorderColor;
         }
 
-        protected override int GetBorderWidth(Style style)
+        protected override int GetBorderWidth( Style style )
         {
             return style.StructureBorderWidth;
         }
 
-        protected override bool IsBorderDashed(Style style)
+        protected override bool IsBorderDashed( Style style )
         {
             return style.IsStructureBorderDashed;
         }
 
-        protected override Color GetHeaderColor(Style style)
+        protected override Color GetHeaderColor( Style style )
         {
             return style.StructureHeaderColor;
         }
 
-        protected override int GetRoundingSize(Style style)
+        protected override int GetRoundingSize( Style style )
         {
             return style.StructureRoundingSize;
         }
 
-        protected override GradientStyle GetGradientHeaderStyle(Style style)
+        protected override GradientStyle GetGradientHeaderStyle( Style style )
         {
             return style.StructureGradientHeaderStyle;
         }

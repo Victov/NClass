@@ -24,10 +24,7 @@ namespace NClass.Java
         ///     The <paramref name="name" /> or <paramref name="type" />
         ///     does not fit to the syntax.
         /// </exception>
-        internal JavaParameter(string name, string type)
-            : base(name, type, ParameterModifier.In, null)
-        {
-        }
+        internal JavaParameter( string name, string type ) : base( name, type, ParameterModifier.In, null ) {}
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="value" /> does not fit to the syntax.
@@ -37,10 +34,9 @@ namespace NClass.Java
             get { return base.Type; }
             protected set
             {
-                if (value == "void")
+                if ( value == "void" )
                 {
-                    throw new BadSyntaxException(
-                        Strings.ErrorInvalidParameterDeclaration);
+                    throw new BadSyntaxException( Strings.ErrorInvalidParameterDeclaration );
                 }
                 base.Type = value;
             }
@@ -51,21 +47,24 @@ namespace NClass.Java
             get { return null; }
             protected set
             {
-                if (value != null)
-                    throw new BadSyntaxException(Strings.ErrorInvalidParameterDeclaration);
+                if ( value != null )
+                    throw new BadSyntaxException( Strings.ErrorInvalidParameterDeclaration );
             }
         }
 
-        public override Language Language { get { return JavaLanguage.Instance; } }
+        public override Language Language
+        {
+            get { return JavaLanguage.Instance; }
+        }
 
-        public override string GetDeclaration()
+        public override string GetDeclaration( )
         {
             return Type + " " + Name;
         }
 
-        public override Parameter Clone()
+        public override Parameter Clone( )
         {
-            return new JavaParameter(Name, Type);
+            return new JavaParameter( Name, Type );
         }
     }
 }

@@ -21,14 +21,14 @@ using NReflect.NRAttributes;
 
 namespace NReflect
 {
-  /// <summary>
-  /// Classes implementing this interface can have a list of attributes.
-  /// </summary>
-  public interface IAttributable
-  {
     /// <summary>
-    /// Gets a list of attributes.
+    /// Classes implementing this interface can have a list of attributes.
     /// </summary>
-    List<NRAttribute> Attributes { get; }
-  }
+    public interface IAttributable
+    {
+        /// <summary>
+        /// Gets a list of attributes.
+        /// </summary>
+        List< NRAttribute > Attributes { get; }
+    }
 }

@@ -9,11 +9,11 @@ namespace NClass.Core
     //TODO: átdolgozni
     public class Model : IProjectItem
     {
-        private readonly List<IEntity> entities = new List<IEntity>();
+        private readonly List< IEntity > entities = new List< IEntity >( );
         private string name;
-        private readonly List<Relationship> relationships = new List<Relationship>();
+        private readonly List< Relationship > relationships = new List< Relationship >( );
 
-        protected Model()
+        protected Model( )
         {
             name = Strings.Untitled;
             Language = null;
@@ -22,10 +22,7 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="language" /> is null.
         /// </exception>
-        public Model(Language language)
-            : this(null, language)
-        {
-        }
+        public Model( Language language ) : this( null, language ) {}
 
         /// <exception cref="ArgumentException">
         ///     <paramref name="name" /> cannot be empty string.
@@ -33,12 +30,12 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="language" /> is null.
         /// </exception>
-        public Model(string name, Language language)
+        public Model( string name, Language language )
         {
-            if (language == null)
-                throw new ArgumentNullException("language");
-            if (name != null && name.Length == 0)
-                throw new ArgumentException("Name cannot empty string.");
+            if ( language == null )
+                throw new ArgumentNullException( "language" );
+            if ( name != null && name.Length == 0 )
+                throw new ArgumentException( "Name cannot empty string." );
 
             this.name = name;
             Language = language;
@@ -48,11 +45,20 @@ namespace NClass.Core
 
         protected bool Loading { get; private set; }
 
-        public bool IsEmpty { get { return entities.Count == 0 && relationships.Count == 0; } }
+        public bool IsEmpty
+        {
+            get { return entities.Count == 0 && relationships.Count == 0; }
+        }
 
-        public IEnumerable<IEntity> Entities { get { return entities; } }
+        public IEnumerable< IEntity > Entities
+        {
+            get { return entities; }
+        }
 
-        public IEnumerable<Relationship> Relationships { get { return relationships; } }
+        public IEnumerable< Relationship > Relationships
+        {
+            get { return relationships; }
+        }
 
         public event EventHandler Modified;
         public event EventHandler Renamed;
@@ -62,46 +68,49 @@ namespace NClass.Core
         {
             get
             {
-                if (name == null)
+                if ( name == null )
                     return Strings.Untitled;
                 return name;
             }
             set
             {
-                if (name != value && value != null)
+                if ( name != value && value != null )
                 {
                     name = value;
-                    OnRenamed(EventArgs.Empty);
-                    OnModified(EventArgs.Empty);
+                    OnRenamed( EventArgs.Empty );
+                    OnModified( EventArgs.Empty );
                 }
             }
         }
 
         public Project Project { get; set; } = null;
 
-        public bool IsUntitled { get { return name == null; } }
+        public bool IsUntitled
+        {
+            get { return name == null; }
+        }
 
         public bool IsDirty { get; private set; }
 
-        void IModifiable.Clean()
+        void IModifiable.Clean( )
         {
             IsDirty = false;
             //TODO: tagokat is tisztítani!
         }
 
-        void IProjectItem.Close()
+        void IProjectItem.Close( )
         {
-            OnClosing(EventArgs.Empty);
+            OnClosing( EventArgs.Empty );
         }
 
-        void IProjectItem.Serialize(XmlElement node)
+        void IProjectItem.Serialize( XmlElement node )
         {
-            Serialize(node);
+            Serialize( node );
         }
 
-        void IProjectItem.Deserialize(XmlElement node)
+        void IProjectItem.Deserialize( XmlElement node )
         {
-            Deserialize(node);
+            Deserialize( node );
         }
 
         public event EntityEventHandler EntityAdded;
@@ -111,35 +120,35 @@ namespace NClass.Core
         public event SerializeEventHandler Serializing;
         public event SerializeEventHandler Deserializing;
 
-        private void ElementChanged(object sender, EventArgs e)
+        private void ElementChanged( object sender, EventArgs e )
         {
-            OnModified(e);
+            OnModified( e );
         }
 
-        private void AddEntity(IEntity entity)
+        private void AddEntity( IEntity entity )
         {
-            entities.Add(entity);
+            entities.Add( entity );
             entity.Modified += ElementChanged;
-            OnEntityAdded(new EntityEventArgs(entity));
+            OnEntityAdded( new EntityEventArgs( entity ) );
         }
 
-        public ClassType AddClass()
+        public ClassType AddClass( )
         {
-            var newClass = Language.CreateClass();
-            AddClass(newClass);
+            var newClass = Language.CreateClass( );
+            AddClass( newClass );
             return newClass;
         }
 
-        protected virtual void AddClass(ClassType newClass)
+        protected virtual void AddClass( ClassType newClass )
         {
-            AddEntity(newClass);
+            AddEntity( newClass );
         }
 
-        public bool InsertClass(ClassType newClass)
+        public bool InsertClass( ClassType newClass )
         {
-            if (newClass != null && !entities.Contains(newClass) && newClass.Language == Language)
+            if ( newClass != null && !entities.Contains( newClass ) && newClass.Language == Language )
             {
-                AddClass(newClass);
+                AddClass( newClass );
                 return true;
             }
             return false;
@@ -148,70 +157,67 @@ namespace NClass.Core
         /// <exception cref="InvalidOperationException">
         ///     The language does not support structures.
         /// </exception>
-        public StructureType AddStructure()
+        public StructureType AddStructure( )
         {
-            var structure = Language.CreateStructure();
-            AddStructure(structure);
+            var structure = Language.CreateStructure( );
+            AddStructure( structure );
             return structure;
         }
 
-        protected virtual void AddStructure(StructureType structure)
+        protected virtual void AddStructure( StructureType structure )
         {
-            AddEntity(structure);
+            AddEntity( structure );
         }
 
-        public bool InsertStructure(StructureType structure)
+        public bool InsertStructure( StructureType structure )
         {
-            if (structure != null && !entities.Contains(structure) &&
-                structure.Language == Language)
+            if ( structure != null && !entities.Contains( structure ) && structure.Language == Language )
             {
-                AddStructure(structure);
+                AddStructure( structure );
                 return true;
             }
             return false;
         }
 
-        public InterfaceType AddInterface()
+        public InterfaceType AddInterface( )
         {
-            var newInterface = Language.CreateInterface();
-            AddInterface(newInterface);
+            var newInterface = Language.CreateInterface( );
+            AddInterface( newInterface );
             return newInterface;
         }
 
-        protected virtual void AddInterface(InterfaceType newInterface)
+        protected virtual void AddInterface( InterfaceType newInterface )
         {
-            AddEntity(newInterface);
+            AddEntity( newInterface );
         }
 
-        public bool InsertInterface(InterfaceType newInterface)
+        public bool InsertInterface( InterfaceType newInterface )
         {
-            if (newInterface != null && !entities.Contains(newInterface) &&
-                newInterface.Language == Language)
+            if ( newInterface != null && !entities.Contains( newInterface ) && newInterface.Language == Language )
             {
-                AddInterface(newInterface);
+                AddInterface( newInterface );
                 return true;
             }
             return false;
         }
 
-        public EnumType AddEnum()
+        public EnumType AddEnum( )
         {
-            var newEnum = Language.CreateEnum();
-            AddEnum(newEnum);
+            var newEnum = Language.CreateEnum( );
+            AddEnum( newEnum );
             return newEnum;
         }
 
-        protected virtual void AddEnum(EnumType newEnum)
+        protected virtual void AddEnum( EnumType newEnum )
         {
-            AddEntity(newEnum);
+            AddEntity( newEnum );
         }
 
-        public bool InsertEnum(EnumType newEnum)
+        public bool InsertEnum( EnumType newEnum )
         {
-            if (newEnum != null && !entities.Contains(newEnum) &&
-                newEnum.Language == Language)
+            if ( newEnum != null && !entities.Contains( newEnum ) && newEnum.Language == Language )
             {
-                AddEnum(newEnum);
+                AddEnum( newEnum );
                 return true;
             }
             return false;
@@ -220,79 +226,77 @@ namespace NClass.Core
         /// <exception cref="InvalidOperationException">
         ///     The language does not support delegates.
         /// </exception>
-        public DelegateType AddDelegate()
+        public DelegateType AddDelegate( )
         {
-            var newDelegate = Language.CreateDelegate();
-            AddDelegate(newDelegate);
+            var newDelegate = Language.CreateDelegate( );
+            AddDelegate( newDelegate );
             return newDelegate;
         }
 
-        protected virtual void AddDelegate(DelegateType newDelegate)
+        protected virtual void AddDelegate( DelegateType newDelegate )
         {
-            AddEntity(newDelegate);
+            AddEntity( newDelegate );
         }
 
-        public bool InsertDelegate(DelegateType newDelegate)
+        public bool InsertDelegate( DelegateType newDelegate )
         {
-            if (newDelegate != null && !entities.Contains(newDelegate) &&
-                newDelegate.Language == Language)
+            if ( newDelegate != null && !entities.Contains( newDelegate ) && newDelegate.Language == Language )
             {
-                AddDelegate(newDelegate);
+                AddDelegate( newDelegate );
                 return true;
             }
             return false;
         }
 
-        public Comment AddComment()
+        public Comment AddComment( )
         {
-            var comment = new Comment();
-            AddComment(comment);
+            var comment = new Comment( );
+            AddComment( comment );
             return comment;
         }
 
-        protected virtual void AddComment(Comment comment)
+        protected virtual void AddComment( Comment comment )
         {
-            AddEntity(comment);
+            AddEntity( comment );
         }
 
-        public bool InsertComment(Comment comment)
+        public bool InsertComment( Comment comment )
         {
-            if (comment != null && !entities.Contains(comment))
+            if ( comment != null && !entities.Contains( comment ) )
             {
-                AddComment(comment);
+                AddComment( comment );
                 return true;
             }
             return false;
         }
 
-        private void AddRelationship(Relationship relationship)
+        private void AddRelationship( Relationship relationship )
         {
-            relationships.Add(relationship);
+            relationships.Add( relationship );
             relationship.Modified += ElementChanged;
-            OnRelationAdded(new RelationshipEventArgs(relationship));
+            OnRelationAdded( new RelationshipEventArgs( relationship ) );
         }
 
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="first" /> or <paramref name="second" /> is null.
         /// </exception>
-        public AssociationRelationship AddAssociation(TypeBase first, TypeBase second)
+        public AssociationRelationship AddAssociation( TypeBase first, TypeBase second )
         {
-            var association = new AssociationRelationship(first, second);
-            AddAssociation(association);
+            var association = new AssociationRelationship( first, second );
+            AddAssociation( association );
             return association;
         }
 
-        protected virtual void AddAssociation(AssociationRelationship association)
+        protected virtual void AddAssociation( AssociationRelationship association )
         {
-            AddRelationship(association);
+            AddRelationship( association );
         }
 
-        public bool InsertAssociation(AssociationRelationship associaton)
+        public bool InsertAssociation( AssociationRelationship associaton )
         {
-            if (associaton != null && !relationships.Contains(associaton) &&
-                entities.Contains(associaton.First) && entities.Contains(associaton.Second))
+            if ( associaton != null && !relationships.Contains( associaton ) && entities.Contains( associaton.First ) && entities.Contains( associaton.Second ) )
             {
-                AddAssociation(associaton);
+                AddAssociation( associaton );
                 return true;
             }
             return false;
@@ -301,28 +305,22 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="first" /> or <paramref name="second" /> is null.
         /// </exception>
-        public AssociationRelationship AddComposition(TypeBase first, TypeBase second)
+        public AssociationRelationship AddComposition( TypeBase first, TypeBase second )
         {
-            var composition = new AssociationRelationship(
-                first,
-                second,
-                AssociationType.Composition);
+            var composition = new AssociationRelationship( first, second, AssociationType.Composition );
 
-            AddAssociation(composition);
+            AddAssociation( composition );
             return composition;
         }
 
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="first" /> or <paramref name="second" /> is null.
         /// </exception>
-        public AssociationRelationship AddAggregation(TypeBase first, TypeBase second)
+        public AssociationRelationship AddAggregation( TypeBase first, TypeBase second )
         {
-            var aggregation = new AssociationRelationship(
-                first,
-                second,
-                AssociationType.Aggregation);
+            var aggregation = new AssociationRelationship( first, second, AssociationType.Aggregation );
 
-            AddAssociation(aggregation);
+            AddAssociation( aggregation );
             return aggregation;
         }
 
@@ -332,27 +330,24 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="derivedType" /> or <paramref name="baseType" /> is null.
         /// </exception>
-        public GeneralizationRelationship AddGeneralization(CompositeType derivedType,
-                                                            CompositeType baseType)
+        public GeneralizationRelationship AddGeneralization( CompositeType derivedType, CompositeType baseType )
         {
-            var generalization =
-                new GeneralizationRelationship(derivedType, baseType);
+            var generalization = new GeneralizationRelationship( derivedType, baseType );
 
-            AddGeneralization(generalization);
+            AddGeneralization( generalization );
             return generalization;
         }
 
-        protected virtual void AddGeneralization(GeneralizationRelationship generalization)
+        protected virtual void AddGeneralization( GeneralizationRelationship generalization )
         {
-            AddRelationship(generalization);
+            AddRelationship( generalization );
         }
 
-        public bool InsertGeneralization(GeneralizationRelationship generalization)
+        public bool InsertGeneralization( GeneralizationRelationship generalization )
         {
-            if (generalization != null && !relationships.Contains(generalization) &&
-                entities.Contains(generalization.First) && entities.Contains(generalization.Second))
+            if ( generalization != null && !relationships.Contains( generalization ) && entities.Contains( generalization.First ) && entities.Contains( generalization.Second ) )
             {
-                AddGeneralization(generalization);
+                AddGeneralization( generalization );
                 return true;
             }
             return false;
@@ -364,28 +359,24 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="implementer" /> or <paramref name="baseType" /> is null.
         /// </exception>
-        public RealizationRelationship AddRealization(TypeBase implementer,
-                                                      InterfaceType baseType)
+        public RealizationRelationship AddRealization( TypeBase implementer, InterfaceType baseType )
         {
-            var realization = new RealizationRelationship(
-                implementer,
-                baseType);
+            var realization = new RealizationRelationship( implementer, baseType );
 
-            AddRealization(realization);
+            AddRealization( realization );
             return realization;
         }
 
-        protected virtual void AddRealization(RealizationRelationship realization)
+        protected virtual void AddRealization( RealizationRelationship realization )
         {
-            AddRelationship(realization);
+            AddRelationship( realization );
         }
 
-        public bool InsertRealization(RealizationRelationship realization)
+        public bool InsertRealization( RealizationRelationship realization )
         {
-            if (realization != null && !relationships.Contains(realization) &&
-                entities.Contains(realization.First) && entities.Contains(realization.Second))
+            if ( realization != null && !relationships.Contains( realization ) && entities.Contains( realization.First ) && entities.Contains( realization.Second ) )
             {
-                AddRealization(realization);
+                AddRealization( realization );
                 return true;
             }
             return false;
@@ -394,25 +385,24 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="first" /> or <paramref name="second" /> is null.
         /// </exception>
-        public DependencyRelationship AddDependency(TypeBase first, TypeBase second)
+        public DependencyRelationship AddDependency( TypeBase first, TypeBase second )
         {
-            var dependency = new DependencyRelationship(first, second);
+            var dependency = new DependencyRelationship( first, second );
 
-            AddDependency(dependency);
+            AddDependency( dependency );
             return dependency;
         }
 
-        protected virtual void AddDependency(DependencyRelationship dependency)
+        protected virtual void AddDependency( DependencyRelationship dependency )
         {
-            AddRelationship(dependency);
+            AddRelationship( dependency );
         }
 
-        public bool InsertDependency(DependencyRelationship dependency)
+        public bool InsertDependency( DependencyRelationship dependency )
         {
-            if (dependency != null && !relationships.Contains(dependency) &&
-                entities.Contains(dependency.First) && entities.Contains(dependency.Second))
+            if ( dependency != null && !relationships.Contains( dependency ) && entities.Contains( dependency.First ) && entities.Contains( dependency.Second ) )
             {
-                AddDependency(dependency);
+                AddDependency( dependency );
                 return true;
             }
             return false;
@@ -424,25 +414,24 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="parentType" /> or <paramref name="innerType" /> is null.
         /// </exception>
-        public NestingRelationship AddNesting(CompositeType parentType, TypeBase innerType)
+        public NestingRelationship AddNesting( CompositeType parentType, TypeBase innerType )
         {
-            var nesting = new NestingRelationship(parentType, innerType);
+            var nesting = new NestingRelationship( parentType, innerType );
 
-            AddNesting(nesting);
+            AddNesting( nesting );
             return nesting;
         }
 
-        protected virtual void AddNesting(NestingRelationship nesting)
+        protected virtual void AddNesting( NestingRelationship nesting )
         {
-            AddRelationship(nesting);
+            AddRelationship( nesting );
         }
 
-        public bool InsertNesting(NestingRelationship nesting)
+        public bool InsertNesting( NestingRelationship nesting )
         {
-            if (nesting != null && !relationships.Contains(nesting) &&
-                entities.Contains(nesting.First) && entities.Contains(nesting.Second))
+            if ( nesting != null && !relationships.Contains( nesting ) && entities.Contains( nesting.First ) && entities.Contains( nesting.Second ) )
             {
-                AddNesting(nesting);
+                AddNesting( nesting );
                 return true;
             }
             return false;
@@ -451,86 +440,85 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="comment" /> or <paramref name="entity" /> is null.
         /// </exception>
-        public virtual CommentRelationship AddCommentRelationship(Comment comment, IEntity entity)
+        public virtual CommentRelationship AddCommentRelationship( Comment comment, IEntity entity )
         {
-            var commentRelationship = new CommentRelationship(comment, entity);
+            var commentRelationship = new CommentRelationship( comment, entity );
 
-            AddCommentRelationship(commentRelationship);
+            AddCommentRelationship( commentRelationship );
             return commentRelationship;
         }
 
-        protected virtual void AddCommentRelationship(CommentRelationship commentRelationship)
+        protected virtual void AddCommentRelationship( CommentRelationship commentRelationship )
         {
-            AddRelationship(commentRelationship);
+            AddRelationship( commentRelationship );
         }
 
-        public bool InsertCommentRelationship(CommentRelationship commentRelationship)
+        public bool InsertCommentRelationship( CommentRelationship commentRelationship )
         {
-            if (commentRelationship != null && !relationships.Contains(commentRelationship) &&
-                entities.Contains(commentRelationship.First) && entities.Contains(commentRelationship.Second))
+            if ( commentRelationship != null && !relationships.Contains( commentRelationship ) && entities.Contains( commentRelationship.First ) && entities.Contains( commentRelationship.Second ) )
             {
-                AddCommentRelationship(commentRelationship);
+                AddCommentRelationship( commentRelationship );
                 return true;
             }
             return false;
         }
 
-        public void RemoveEntity(IEntity entity)
+        public void RemoveEntity( IEntity entity )
         {
-            if (entities.Remove(entity))
+            if ( entities.Remove( entity ) )
             {
                 entity.Modified -= ElementChanged;
-                RemoveRelationships(entity);
-                OnEntityRemoved(new EntityEventArgs(entity));
+                RemoveRelationships( entity );
+                OnEntityRemoved( new EntityEventArgs( entity ) );
             }
         }
 
-        private void RemoveRelationships(IEntity entity)
+        private void RemoveRelationships( IEntity entity )
         {
-            for (var i = 0; i < relationships.Count; i++)
+            for ( var i = 0; i < relationships.Count; i++ )
             {
-                var relationship = relationships[i];
-                if (relationship.First == entity || relationship.Second == entity)
+                var relationship = relationships[ i ];
+                if ( relationship.First == entity || relationship.Second == entity )
                 {
-                    relationship.Detach();
+                    relationship.Detach( );
                     relationship.Modified -= ElementChanged;
-                    relationships.RemoveAt(i--);
-                    OnRelationRemoved(new RelationshipEventArgs(relationship));
+                    relationships.RemoveAt( i-- );
+                    OnRelationRemoved( new RelationshipEventArgs( relationship ) );
                 }
             }
         }
 
-        public void RemoveRelationship(Relationship relationship)
+        public void RemoveRelationship( Relationship relationship )
         {
-            if (relationships.Contains(relationship))
+            if ( relationships.Contains( relationship ) )
             {
-                relationship.Detach();
+                relationship.Detach( );
                 relationship.Modified -= ElementChanged;
-                relationships.Remove(relationship);
-                OnRelationRemoved(new RelationshipEventArgs(relationship));
+                relationships.Remove( relationship );
+                OnRelationRemoved( new RelationshipEventArgs( relationship ) );
             }
         }
 
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="node" /> is null.
         /// </exception>
-        private void Serialize(XmlElement node)
+        private void Serialize( XmlElement node )
         {
-            if (node == null)
-                throw new ArgumentNullException("root");
+            if ( node == null )
+                throw new ArgumentNullException( "root" );
 
-            var nameElement = node.OwnerDocument.CreateElement("Name");
+            var nameElement = node.OwnerDocument.CreateElement( "Name" );
             nameElement.InnerText = Name;
-            node.AppendChild(nameElement);
+            node.AppendChild( nameElement );
 
-            var languageElement = node.OwnerDocument.CreateElement("Language");
+            var languageElement = node.OwnerDocument.CreateElement( "Language" );
             languageElement.InnerText = Language.AssemblyName;
-            node.AppendChild(languageElement);
+            node.AppendChild( languageElement );
 
-            SaveEntitites(node);
-            SaveRelationships(node);
+            SaveEntitites( node );
+            SaveRelationships( node );
 
-            OnSerializing(new SerializeEventArgs(node));
+            OnSerializing( new SerializeEventArgs( node ) );
         }
 
         /// <exception cref="InvalidDataException">
@@ -539,36 +527,36 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="node" /> is null.
         /// </exception>
-        private void Deserialize(XmlElement node)
+        private void Deserialize( XmlElement node )
         {
-            if (node == null)
-                throw new ArgumentNullException("root");
+            if ( node == null )
+                throw new ArgumentNullException( "root" );
             Loading = true;
 
-            var nameElement = node["Name"];
-            if (nameElement == null || nameElement.InnerText == "")
+            var nameElement = node[ "Name" ];
+            if ( nameElement == null || nameElement.InnerText == "" )
                 name = null;
             else
                 name = nameElement.InnerText;
 
-            var languageElement = node["Language"];
+            var languageElement = node[ "Language" ];
             try
             {
-                var language = Language.GetLanguage(languageElement.InnerText);
-                if (language == null)
-                    throw new InvalidDataException("Invalid project language.");
+                var language = Language.GetLanguage( languageElement.InnerText );
+                if ( language == null )
+                    throw new InvalidDataException( "Invalid project language." );
 
                 Language = language;
             }
-            catch (Exception ex)
+            catch ( Exception ex )
             {
-                throw new InvalidDataException("Invalid project language.", ex);
+                throw new InvalidDataException( "Invalid project language.", ex );
             }
 
-            LoadEntitites(node);
-            LoadRelationships(node);
+            LoadEntitites( node );
+            LoadRelationships( node );
 
-            OnDeserializing(new SerializeEventArgs(node));
+            OnDeserializing( new SerializeEventArgs( node ) );
             Loading = false;
         }
 
@@ -578,61 +566,61 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="root" /> is null.
         /// </exception>
-        private void LoadEntitites(XmlNode root)
+        private void LoadEntitites( XmlNode root )
         {
-            if (root == null)
-                throw new ArgumentNullException("root");
+            if ( root == null )
+                throw new ArgumentNullException( "root" );
 
-            var nodeList = root.SelectNodes("Entities/Entity");
+            var nodeList = root.SelectNodes( "Entities/Entity" );
 
-            foreach (XmlElement node in nodeList)
+            foreach ( XmlElement node in nodeList )
             {
                 try
                 {
-                    var type = node.GetAttribute("type");
+                    var type = node.GetAttribute( "type" );
 
-                    var entity = GetEntity(type);
-                    entity.Deserialize(node);
+                    var entity = GetEntity( type );
+                    entity.Deserialize( node );
                 }
-                catch (BadSyntaxException ex)
+                catch ( BadSyntaxException ex )
                 {
-                    throw new InvalidDataException("Invalid entity.", ex);
+                    throw new InvalidDataException( "Invalid entity.", ex );
                 }
             }
         }
 
-        private IEntity GetEntity(string type)
+        private IEntity GetEntity( string type )
         {
-            switch (type)
+            switch ( type )
             {
                 case "Class":
                 case "CSharpClass": // Old file format
                 case "JavaClass": // Old file format
-                    return AddClass();
+                    return AddClass( );
 
                 case "Structure":
                 case "StructType": // Old file format
-                    return AddStructure();
+                    return AddStructure( );
 
                 case "Interface":
                 case "CSharpInterface": // Old file format
                 case "JavaInterface": // Old file format
-                    return AddInterface();
+                    return AddInterface( );
 
                 case "Enum":
                 case "CSharpEnum": // Old file format
                 case "JavaEnum": // Old file format
-                    return AddEnum();
+                    return AddEnum( );
 
                 case "Delegate":
                 case "DelegateType": // Old file format
-                    return AddDelegate();
+                    return AddDelegate( );
 
                 case "Comment":
-                    return AddComment();
+                    return AddComment( );
 
                 default:
-                    throw new InvalidDataException("Invalid entity type: " + type);
+                    throw new InvalidDataException( "Invalid entity type: " + type );
             }
         }
 
@@ -642,83 +630,77 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="root" /> is null.
         /// </exception>
-        private void LoadRelationships(XmlNode root)
+        private void LoadRelationships( XmlNode root )
         {
-            if (root == null)
-                throw new ArgumentNullException("root");
+            if ( root == null )
+                throw new ArgumentNullException( "root" );
 
-            var nodeList = root.SelectNodes(
-                "Relationships/Relationship|Relations/Relation"); // old file format
+            var nodeList = root.SelectNodes( "Relationships/Relationship|Relations/Relation" ); // old file format
 
-            foreach (XmlElement node in nodeList)
+            foreach ( XmlElement node in nodeList )
             {
-                var type = node.GetAttribute("type");
-                var firstString = node.GetAttribute("first");
-                var secondString = node.GetAttribute("second");
+                var type = node.GetAttribute( "type" );
+                var firstString = node.GetAttribute( "first" );
+                var secondString = node.GetAttribute( "second" );
                 int firstIndex, secondIndex;
 
-                if (!int.TryParse(firstString, out firstIndex) ||
-                    !int.TryParse(secondString, out secondIndex))
+                if ( !int.TryParse( firstString, out firstIndex ) || !int.TryParse( secondString, out secondIndex ) )
                 {
-                    throw new InvalidDataException(Strings.ErrorCorruptSaveFormat);
+                    throw new InvalidDataException( Strings.ErrorCorruptSaveFormat );
                 }
-                if (firstIndex < 0 || firstIndex >= entities.Count ||
-                    secondIndex < 0 || secondIndex >= entities.Count)
+                if ( firstIndex < 0 || firstIndex >= entities.Count || secondIndex < 0 || secondIndex >= entities.Count )
                 {
-                    throw new InvalidDataException(Strings.ErrorCorruptSaveFormat);
+                    throw new InvalidDataException( Strings.ErrorCorruptSaveFormat );
                 }
 
                 try
                 {
-                    var first = entities[firstIndex];
-                    var second = entities[secondIndex];
+                    var first = entities[ firstIndex ];
+                    var second = entities[ secondIndex ];
                     Relationship relationship;
 
-                    switch (type)
+                    switch ( type )
                     {
                         case "Association":
-                            relationship = AddAssociation(first as TypeBase, second as TypeBase);
+                            relationship = AddAssociation( first as TypeBase, second as TypeBase );
                             break;
 
                         case "Generalization":
-                            relationship = AddGeneralization(
-                                first as CompositeType,
-                                second as CompositeType);
+                            relationship = AddGeneralization( first as CompositeType, second as CompositeType );
                             break;
 
                         case "Realization":
-                            relationship = AddRealization(first as TypeBase, second as InterfaceType);
+                            relationship = AddRealization( first as TypeBase, second as InterfaceType );
                             break;
 
                         case "Dependency":
-                            relationship = AddDependency(first as TypeBase, second as TypeBase);
+                            relationship = AddDependency( first as TypeBase, second as TypeBase );
                             break;
 
                         case "Nesting":
-                            relationship = AddNesting(first as CompositeType, second as TypeBase);
+                            relationship = AddNesting( first as CompositeType, second as TypeBase );
                             break;
 
                         case "Comment":
                         case "CommentRelationship": // Old file format
-                            if (first is Comment)
-                                relationship = AddCommentRelationship(first as Comment, second);
+                            if ( first is Comment )
+                                relationship = AddCommentRelationship( first as Comment, second );
                             else
-                                relationship = AddCommentRelationship(second as Comment, first);
+                                relationship = AddCommentRelationship( second as Comment, first );
                             break;
 
                         default:
-                            throw new InvalidDataException(
-                                Strings.ErrorCorruptSaveFormat);
+                            throw new InvalidDataException( Strings.ErrorCorruptSaveFormat );
                     }
-                    relationship.Deserialize(node);
+                    relationship.Deserialize( node );
                 }
-                catch (ArgumentNullException ex)
+                catch ( ArgumentNullException ex )
                 {
-                    throw new InvalidDataException("Invalid relationship.", ex);
+                    throw new InvalidDataException( "Invalid relationship.", ex );
                 }
-                catch (RelationshipException ex)
+                catch ( RelationshipException ex )
                 {
-                    throw new InvalidDataException("Invalid relationship.", ex);
+                    throw new InvalidDataException( "Invalid relationship.", ex );
                 }
             }
         }
@@ -726,113 +708,113 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="node" /> is null.
         /// </exception>
-        private void SaveEntitites(XmlElement node)
+        private void SaveEntitites( XmlElement node )
         {
-            if (node == null)
-                throw new ArgumentNullException("root");
+            if ( node == null )
+                throw new ArgumentNullException( "root" );
 
-            var entitiesChild = node.OwnerDocument.CreateElement("Entities");
+            var entitiesChild = node.OwnerDocument.CreateElement( "Entities" );
 
-            foreach (var entity in entities)
+            foreach ( var entity in entities )
             {
-                var child = node.OwnerDocument.CreateElement("Entity");
+                var child = node.OwnerDocument.CreateElement( "Entity" );
 
-                entity.Serialize(child);
-                child.SetAttribute("type", entity.EntityType.ToString());
-                entitiesChild.AppendChild(child);
+                entity.Serialize( child );
+                child.SetAttribute( "type", entity.EntityType.ToString( ) );
+                entitiesChild.AppendChild( child );
             }
-            node.AppendChild(entitiesChild);
+            node.AppendChild( entitiesChild );
         }
 
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="root" /> is null.
         /// </exception>
-        private void SaveRelationships(XmlNode root)
+        private void SaveRelationships( XmlNode root )
         {
-            if (root == null)
-                throw new ArgumentNullException("root");
+            if ( root == null )
+                throw new ArgumentNullException( "root" );
 
-            var relationsChild = root.OwnerDocument.CreateElement("Relationships");
+            var relationsChild = root.OwnerDocument.CreateElement( "Relationships" );
 
-            foreach (var relationship in relationships)
+            foreach ( var relationship in relationships )
             {
-                var child = root.OwnerDocument.CreateElement("Relationship");
+                var child = root.OwnerDocument.CreateElement( "Relationship" );
 
-                var firstIndex = entities.IndexOf(relationship.First);
-                var secondIndex = entities.IndexOf(relationship.Second);
+                var firstIndex = entities.IndexOf( relationship.First );
+                var secondIndex = entities.IndexOf( relationship.Second );
 
-                relationship.Serialize(child);
-                child.SetAttribute("type", relationship.RelationshipType.ToString());
-                child.SetAttribute("first", firstIndex.ToString());
-                child.SetAttribute("second", secondIndex.ToString());
-                relationsChild.AppendChild(child);
+                relationship.Serialize( child );
+                child.SetAttribute( "type", relationship.RelationshipType.ToString( ) );
+                child.SetAttribute( "first", firstIndex.ToString( ) );
+                child.SetAttribute( "second", secondIndex.ToString( ) );
+                relationsChild.AppendChild( child );
             }
-            root.AppendChild(relationsChild);
+            root.AppendChild( relationsChild );
         }
 
-        protected virtual void OnEntityAdded(EntityEventArgs e)
+        protected virtual void OnEntityAdded( EntityEventArgs e )
         {
-            if (EntityAdded != null)
-                EntityAdded(this, e);
-            OnModified(EventArgs.Empty);
+            if ( EntityAdded != null )
+                EntityAdded( this, e );
+            OnModified( EventArgs.Empty );
         }
 
-        protected virtual void OnEntityRemoved(EntityEventArgs e)
+        protected virtual void OnEntityRemoved( EntityEventArgs e )
         {
-            if (EntityRemoved != null)
-                EntityRemoved(this, e);
-            OnModified(EventArgs.Empty);
+            if ( EntityRemoved != null )
+                EntityRemoved( this, e );
+            OnModified( EventArgs.Empty );
         }
 
-        protected virtual void OnRelationAdded(RelationshipEventArgs e)
+        protected virtual void OnRelationAdded( RelationshipEventArgs e )
         {
-            if (RelationAdded != null)
-                RelationAdded(this, e);
-            OnModified(EventArgs.Empty);
+            if ( RelationAdded != null )
+                RelationAdded( this, e );
+            OnModified( EventArgs.Empty );
         }
 
-        protected virtual void OnRelationRemoved(RelationshipEventArgs e)
+        protected virtual void OnRelationRemoved( RelationshipEventArgs e )
         {
-            if (RelationRemoved != null)
-                RelationRemoved(this, e);
-            OnModified(EventArgs.Empty);
+            if ( RelationRemoved != null )
+                RelationRemoved( this, e );
+            OnModified( EventArgs.Empty );
         }
 
-        protected virtual void OnSerializing(SerializeEventArgs e)
+        protected virtual void OnSerializing( SerializeEventArgs e )
         {
-            if (Serializing != null)
-                Serializing(this, e);
+            if ( Serializing != null )
+                Serializing( this, e );
         }
 
-        protected virtual void OnDeserializing(SerializeEventArgs e)
+        protected virtual void OnDeserializing( SerializeEventArgs e )
         {
-            if (Deserializing != null)
-                Deserializing(this, e);
-            OnModified(EventArgs.Empty);
+            if ( Deserializing != null )
+                Deserializing( this, e );
+            OnModified( EventArgs.Empty );
         }
 
-        protected virtual void OnModified(EventArgs e)
+        protected virtual void OnModified( EventArgs e )
         {
             IsDirty = true;
-            if (Modified != null)
-                Modified(this, e);
+            if ( Modified != null )
+                Modified( this, e );
         }
 
-        protected virtual void OnRenamed(EventArgs e)
+        protected virtual void OnRenamed( EventArgs e )
         {
-            if (Renamed != null)
-                Renamed(this, e);
+            if ( Renamed != null )
+                Renamed( this, e );
         }
 
-        protected virtual void OnClosing(EventArgs e)
+        protected virtual void OnClosing( EventArgs e )
         {
-            if (Closing != null)
-                Closing(this, e);
+            if ( Closing != null )
+                Closing( this, e );
         }
 
-        public override string ToString()
+        public override string ToString( )
         {
-            if (IsDirty)
+            if ( IsDirty )
                 return Name + "*";
             return Name;
         }

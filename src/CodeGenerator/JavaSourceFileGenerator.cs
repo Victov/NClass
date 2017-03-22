@@ -23,139 +23,132 @@ namespace NClass.CodeGenerator
         /// <exception cref="NullReferenceException">
         ///     <paramref name="type" /> is null.
         /// </exception>
-        public JavaSourceFileGenerator(TypeBase type,
-                                       string rootNamespace,
-                                       bool sort_using,
-                                       bool generate_document_comment,
-                                       string compagny_name,
-                                       string copyright_header,
-                                       string author)
-            : base(type, rootNamespace, sort_using, generate_document_comment, compagny_name, copyright_header, author)
+        public JavaSourceFileGenerator( TypeBase type, string rootNamespace, bool sort_using, bool generate_document_comment, string compagny_name, string copyright_header, string author ) : base( type, rootNamespace, sort_using, generate_document_comment, compagny_name, copyright_header, author ) {}
+
+        protected override string Extension
         {
+            get { return ".java"; }
         }
 
-        protected override string Extension { get { return ".java"; } }
-
-        protected override void WriteFileContent(string fileName)
+        protected override void WriteFileContent( string fileName )
         {
-            WritePackageDeclaration();
-            WriteImportList();
-            WriteType(Type);
+            WritePackageDeclaration( );
+            WriteImportList( );
+            WriteType( Type );
         }
 
-        private void WritePackageDeclaration()
+        private void WritePackageDeclaration( )
         {
-            WriteLine("package " + RootNamespace + ";");
-            AddBlankLine();
+            WriteLine( "package " + RootNamespace + ";" );
+            AddBlankLine( );
         }
 
-        private void WriteImportList()
+        private void WriteImportList( )
         {
             var importList = Settings.Default.JavaImportList;
-            foreach (var importElement in importList)
-                WriteLine("import " + importElement + ";");
+            foreach ( var importElement in importList )
+                WriteLine( "import " + importElement + ";" );
 
-            if (importList.Count > 0)
-                AddBlankLine();
+            if ( importList.Count > 0 )
+                AddBlankLine( );
         }
 
-        private void WriteType(TypeBase type)
+        private void WriteType( TypeBase type )
         {
-            if (type is CompositeType)
-                WriteCompositeType((CompositeType) type);
-            else if (type is EnumType)
-                WriteEnum((EnumType) type);
+            if ( type is CompositeType )
+                WriteCompositeType( ( CompositeType ) type );
+            else if ( type is EnumType )
+                WriteEnum( ( EnumType ) type );
         }
 
-        private void WriteCompositeType(CompositeType type)
+        private void WriteCompositeType( CompositeType type )
         {
             // Writing type declaration
-            WriteLine(type.GetDeclaration() + " {");
-            AddBlankLine();
+            WriteLine( type.GetDeclaration( ) + " {" );
+            AddBlankLine( );
             IndentLevel++;
 
-            if (type is ClassType)
+            if ( type is ClassType )
             {
-                foreach (var nestedType in ((ClassType) type).NestedChilds)
+                foreach ( var nestedType in ( ( ClassType ) type ).NestedChilds )
                 {
-                    WriteType(nestedType);
-                    AddBlankLine();
+                    WriteType( nestedType );
+                    AddBlankLine( );
                 }
             }
 
-            if (type.FieldCount > 0)
+            if ( type.FieldCount > 0 )
             {
-                foreach (var field in type.Fields)
-                    WriteField(field);
-                AddBlankLine();
+                foreach ( var field in type.Fields )
+                    WriteField( field );
+                AddBlankLine( );
             }
 
-            if (type.OperationCount > 0)
+            if ( type.OperationCount > 0 )
             {
-                foreach (Method method in type.Operations)
+                foreach ( Method method in type.Operations )
                 {
-                    WriteMethod(method);
-                    AddBlankLine();
+                    WriteMethod( method );
+                    AddBlankLine( );
                 }
             }
 
             // Writing closing bracket of the type block
             IndentLevel--;
-            WriteLine("}");
+            WriteLine( "}" );
         }
 
-        private void WriteEnum(EnumType _enum)
+        private void WriteEnum( EnumType _enum )
         {
             // Writing type declaration
-            WriteLine(_enum.GetDeclaration() + " {");
-            AddBlankLine();
+            WriteLine( _enum.GetDeclaration( ) + " {" );
+            AddBlankLine( );
             IndentLevel++;
 
             var valuesRemained = _enum.ValueCount;
-            foreach (var value in _enum.Values)
+            foreach ( var value in _enum.Values )
             {
-                if (--valuesRemained > 0)
-                    WriteLine(value.GetDeclaration() + ",");
+                if ( --valuesRemained > 0 )
+                    WriteLine( value.GetDeclaration( ) + "," );
                 else
-                    WriteLine(value.GetDeclaration());
+                    WriteLine( value.GetDeclaration( ) );
             }
 
             // Writing closing bracket of the type block
             IndentLevel--;
-            WriteLine("}");
+            WriteLine( "}" );
         }
 
-        private void WriteField(Field field)
+        private void WriteField( Field field )
         {
-            WriteLine(field.GetDeclaration());
+            WriteLine( field.GetDeclaration( ) );
         }
 
-        private void WriteMethod(Method method)
+        private void WriteMethod( Method method )
         {
-            if (method.HasBody)
+            if ( method.HasBody )
             {
-                WriteLine(method.GetDeclaration() + " {");
+                WriteLine( method.GetDeclaration( ) + " {" );
                 IndentLevel++;
-                WriteNotImplementedString();
+                WriteNotImplementedString( );
                 IndentLevel--;
-                WriteLine("}");
+                WriteLine( "}" );
             }
             else
             {
-                WriteLine(method.GetDeclaration());
+                WriteLine( method.GetDeclaration( ) );
             }
         }
 
-        private void WriteNotImplementedString()
+        private void WriteNotImplementedString( )
         {
-            if (Settings.Default.UseNotImplementedExceptions)
+            if ( Settings.Default.UseNotImplementedExceptions )
             {
-                WriteLine("throw new UnsupportedOperationException(" +
-                          "\"The method is not implemented yet.\");");
+                WriteLine( "throw new UnsupportedOperationException(" + "\"The method is not implemented yet.\");" );
             }
             else
             {
-                AddBlankLine(true);
+                AddBlankLine( true );
             }
         }
     }

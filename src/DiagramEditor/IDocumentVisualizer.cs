@@ -35,14 +35,14 @@ namespace NClass.DiagramEditor
         event EventHandler VisibleAreaChanged;
 
 
-        void ChangeZoom(bool enlarge);
+        void ChangeZoom( bool enlarge );
 
-        void ChangeZoom(float zoom);
+        void ChangeZoom( float zoom );
 
-        void AutoZoom();
+        void AutoZoom( );
 
-        void AutoZoom(bool selectedOnly);
+        void AutoZoom( bool selectedOnly );
 
-        void DrawDocument(Graphics g);
+        void DrawDocument( Graphics g );
     }
 }

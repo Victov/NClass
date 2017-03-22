@@ -32,15 +32,15 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         private const int DefaultWidth = 160;
         private const int DefaultHeight = 75;
 
-        private static readonly CommentEditor editor = new CommentEditor();
-        private static readonly Pen borderPen = new Pen(Color.Black);
-        private static readonly SolidBrush backgroundBrush = new SolidBrush(Color.White);
-        private static readonly SolidBrush textBrush = new SolidBrush(Color.Black);
-        private static readonly StringFormat format = new StringFormat(StringFormat.GenericTypographic);
+        private static readonly CommentEditor editor = new CommentEditor( );
+        private static readonly Pen borderPen = new Pen( Color.Black );
+        private static readonly SolidBrush backgroundBrush = new SolidBrush( Color.White );
+        private static readonly SolidBrush textBrush = new SolidBrush( Color.Black );
+        private static readonly StringFormat format = new StringFormat( StringFormat.GenericTypographic );
 
         private bool editorShowed;
 
-        static CommentShape()
+        static CommentShape( )
         {
             format.Trimming = StringTrimming.EllipsisWord;
             format.FormatFlags = StringFormatFlags.LineLimit;
@@ -49,194 +49,194 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="comment" /> is null.
         /// </exception>
-        internal CommentShape(Comment comment)
-            : base(comment)
+        internal CommentShape( Comment comment ) : base( comment )
         {
             Comment = comment;
         }
 
-        public override IEntity Entity { get { return Comment; } }
+        public override IEntity Entity
+        {
+            get { return Comment; }
+        }
 
         public Comment Comment { get; }
 
-        public string Text { get { return Comment.Text; } set { Comment.Text = value; } }
-
-        protected override Size DefaultSize { get { return new Size(DefaultWidth, DefaultHeight); } }
-
-        protected override bool CloneEntity(Diagram diagram)
+        public string Text
         {
-            return diagram.InsertComment(Comment.Clone());
+            get { return Comment.Text; }
+            set { Comment.Text = value; }
         }
 
-        public static Rectangle GetOutline(Style style)
+        protected override Size DefaultSize
         {
-            return new Rectangle(0, 0, DefaultWidth, DefaultHeight);
+            get { return new Size( DefaultWidth, DefaultHeight ); }
         }
 
-        protected override int GetBorderWidth(Style style)
+        protected override bool CloneEntity( Diagram diagram )
+        {
+            return diagram.InsertComment( Comment.Clone( ) );
+        }
+
+        public static Rectangle GetOutline( Style style )
+        {
+            return new Rectangle( 0, 0, DefaultWidth, DefaultHeight );
+        }
+
+        protected override int GetBorderWidth( Style style )
         {
             return style.CommentBorderWidth;
         }
 
-        internal Rectangle GetTextRectangle()
+        internal Rectangle GetTextRectangle( )
         {
-            return new Rectangle(
-                Left + PaddingSize,
-                Top + PaddingSize,
-                Width - 2*PaddingSize,
-                Height - 2*PaddingSize
-                );
+            return new Rectangle( Left + PaddingSize, Top + PaddingSize, Width - 2 * PaddingSize, Height - 2 * PaddingSize );
         }
 
-        protected override void OnMove(MoveEventArgs e)
+        protected override void OnMove( MoveEventArgs e )
         {
-            base.OnMove(e);
-            HideEditor();
+            base.OnMove( e );
+            HideEditor( );
         }
 
-        protected override void OnResize(ResizeEventArgs e)
+        protected override void OnResize( ResizeEventArgs e )
         {
-            base.OnResize(e);
-            if (editorShowed)
+            base.OnResize( e );
+            if ( editorShowed )
             {
-                editor.Relocate(this);
-                if (!editor.Focused)
-                    editor.Focus();
+                editor.Relocate( this );
+                if ( !editor.Focused )
+                    editor.Focus( );
             }
         }
 
-        protected override void OnMouseDown(AbsoluteMouseEventArgs e)
+        protected override void OnMouseDown( AbsoluteMouseEventArgs e )
         {
-            if (e.Button == MouseButtons.Left)
+            if ( e.Button == MouseButtons.Left )
             {
                 IsActive = true;
             }
-            base.OnMouseDown(e);
+            base.OnMouseDown( e );
         }
 
-        protected override void OnDoubleClick(AbsoluteMouseEventArgs e)
+        protected override void OnDoubleClick( AbsoluteMouseEventArgs e )
         {
-            if (Contains(e.Location) && e.Button == MouseButtons.Left)
-                ShowEditor();
+            if ( Contains( e.Location ) && e.Button == MouseButtons.Left )
+                ShowEditor( );
         }
 
-        protected internal override void ShowEditor()
+        protected internal override void ShowEditor( )
         {
-            if (!editorShowed)
+            if ( !editorShowed )
             {
-                editor.Relocate(this);
-                editor.Init(this);
-                ShowWindow(editor);
-                editor.Focus();
+                editor.Relocate( this );
+                editor.Init( this );
+                ShowWindow( editor );
+                editor.Focus( );
                 editorShowed = true;
             }
         }
 
-        protected internal override void HideEditor()
+        protected internal override void HideEditor( )
         {
-            if (editorShowed)
+            if ( editorShowed )
             {
-                HideWindow(editor);
+                HideWindow( editor );
                 editorShowed = false;
             }
         }
 
-        protected internal override void MoveWindow()
+        protected internal override void MoveWindow( )
         {
-            HideEditor();
+            HideEditor( );
         }
 
-        internal void EditText()
+        internal void EditText( )
         {
-            using (var dialog = new EditCommentDialog(Text))
+            using ( var dialog = new EditCommentDialog( Text ) )
             {
-                if (dialog.ShowDialog() == DialogResult.OK)
+                if ( dialog.ShowDialog( ) == DialogResult.OK )
                     Text = dialog.InputText;
             }
         }
 
-        protected internal override IEnumerable<ToolStripItem> GetContextMenuItems(Diagram diagram)
+        protected internal override IEnumerable< ToolStripItem > GetContextMenuItems( Diagram diagram )
         {
-            return CommentShapeContextMenu.Default.GetMenuItems(diagram);
+            return CommentShapeContextMenu.Default.GetMenuItems( diagram );
         }
 
-        private void DrawSurface(IGraphics g, bool onScreen, Style style)
+        private void DrawSurface( IGraphics g, bool onScreen, Style style )
         {
             // Update graphical objects
             backgroundBrush.Color = style.CommentBackColor;
             borderPen.Color = style.CommentBorderColor;
             borderPen.Width = style.CommentBorderWidth;
-            if (style.IsCommentBorderDashed)
+            if ( style.IsCommentBorderDashed )
                 borderPen.DashPattern = borderDashPattern;
             else
                 borderPen.DashStyle = DashStyle.Solid;
 
             // Create shape pattern
-            var path = new GraphicsPath();
-            path.AddLine(Left, Top, Right - PaddingSize, Top);
-            path.AddLine(Right, Top + PaddingSize, Right, Bottom);
-            path.AddLine(Right, Bottom, Left, Bottom);
-            path.CloseFigure();
+            var path = new GraphicsPath( );
+            path.AddLine( Left, Top, Right - PaddingSize, Top );
+            path.AddLine( Right, Top + PaddingSize, Right, Bottom );
+            path.AddLine( Right, Bottom, Left, Bottom );
+            path.CloseFigure( );
 
             // Draw shadow first
-            if ((!onScreen || !IsSelected) && !style.ShadowOffset.IsEmpty)
+            if ( ( !onScreen || !IsSelected ) && !style.ShadowOffset.IsEmpty )
             {
                 shadowBrush.Color = style.ShadowColor;
-                g.TranslateTransform(style.ShadowOffset.Width, style.ShadowOffset.Height);
-                g.FillPath(shadowBrush, path);
-                g.TranslateTransform(-style.ShadowOffset.Width, -style.ShadowOffset.Height);
+                g.TranslateTransform( style.ShadowOffset.Width, style.ShadowOffset.Height );
+                g.FillPath( shadowBrush, path );
+                g.TranslateTransform( -style.ShadowOffset.Width, -style.ShadowOffset.Height );
             }
 
             // Draw borders & background
-            g.FillPath(backgroundBrush, path);
-            g.DrawPath(borderPen, path);
+            g.FillPath( backgroundBrush, path );
+            g.DrawPath( borderPen, path );
 
             // Draw earmark
-            path.Reset();
-            path.AddLine(Right - PaddingSize, Top, Right - PaddingSize, Top + PaddingSize);
-            path.AddLine(Right - PaddingSize, Top + PaddingSize, Right, Top + PaddingSize);
-            g.DrawPath(borderPen, path);
+            path.Reset( );
+            path.AddLine( Right - PaddingSize, Top, Right - PaddingSize, Top + PaddingSize );
+            path.AddLine( Right - PaddingSize, Top + PaddingSize, Right, Top + PaddingSize );
+            g.DrawPath( borderPen, path );
 
-            path.Dispose();
+            path.Dispose( );
         }
 
-        private void DrawText(IGraphics g, bool onScreen, Style style)
+        private void DrawText( IGraphics g, bool onScreen, Style style )
         {
-            var textBounds = GetTextRectangle();
+            var textBounds = GetTextRectangle( );
 
-            if (string.IsNullOrEmpty(Text) && onScreen)
+            if ( string.IsNullOrEmpty( Text ) && onScreen )
             {
-                textBrush.Color = Color.FromArgb(128, style.CommentTextColor);
-                g.DrawString(Strings.DoubleClickToEdit,
-                             style.CommentFont,
-                             textBrush,
-                             textBounds,
-                             format);
+                textBrush.Color = Color.FromArgb( 128, style.CommentTextColor );
+                g.DrawString( Strings.DoubleClickToEdit, style.CommentFont, textBrush, textBounds, format );
             }
             else
             {
                 textBrush.Color = style.CommentTextColor;
-                g.DrawString(Text, style.CommentFont, textBrush, textBounds, format);
+                g.DrawString( Text, style.CommentFont, textBrush, textBounds, format );
             }
         }
 
-        public override void Draw(IGraphics g, bool onScreen, Style style)
+        public override void Draw( IGraphics g, bool onScreen, Style style )
         {
-            DrawSurface(g, onScreen, style);
-            DrawText(g, onScreen, style);
+            DrawSurface( g, onScreen, style );
+            DrawText( g, onScreen, style );
         }
 
-        protected override float GetRequiredWidth(Graphics g, Style style)
+        protected override float GetRequiredWidth( Graphics g, Style style )
         {
             return Width;
         }
 
-        protected override int GetRequiredHeight()
+        protected override int GetRequiredHeight( )
         {
             return Height;
         }
 
-        public override string ToString()
+        public override string ToString( )
         {
             return Strings.Comment;
         }

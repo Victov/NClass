@@ -15,11 +15,11 @@
 
 namespace NClass.Core
 {
-    public delegate void ProjectItemEventHandler(object sender, ProjectItemEventArgs e);
+    public delegate void ProjectItemEventHandler( object sender, ProjectItemEventArgs e );
 
     public class ProjectItemEventArgs
     {
-        public ProjectItemEventArgs(IProjectItem projectItem)
+        public ProjectItemEventArgs( IProjectItem projectItem )
         {
             ProjectItem = projectItem;
         }

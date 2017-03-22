@@ -20,23 +20,12 @@ namespace NClass.Core
 {
     public class BadSyntaxException : Exception
     {
-        public BadSyntaxException()
-        {
-        }
+        public BadSyntaxException( ) {}
 
-        public BadSyntaxException(string message)
-            : base(message)
-        {
-        }
+        public BadSyntaxException( string message ) : base( message ) {}
 
-        public BadSyntaxException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
+        public BadSyntaxException( string message, Exception innerException ) : base( message, innerException ) {}
 
-        protected BadSyntaxException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
+        protected BadSyntaxException( SerializationInfo info, StreamingContext context ) : base( info, context ) {}
     }
 }

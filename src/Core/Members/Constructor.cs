@@ -26,19 +26,22 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="parent" /> is null.
         /// </exception>
-        protected Constructor(CompositeType parent)
-            : base(null, parent)
-        {
-        }
+        protected Constructor( CompositeType parent ) : base( null, parent ) {}
 
-        public sealed override MemberType MemberType { get { return MemberType.Constructor; } }
+        public sealed override MemberType MemberType
+        {
+            get { return MemberType.Constructor; }
+        }
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="value" /> does not fit to the syntax.
         /// </exception>
         public abstract override string Name { get; set; }
 
-        public sealed override bool IsNameReadonly { get { return true; } }
+        public sealed override bool IsNameReadonly
+        {
+            get { return true; }
+        }
 
         /// <exception cref="BadSyntaxException">
         ///     The <paramref name="value" /> does not fit to the syntax.
@@ -48,8 +51,8 @@ namespace NClass.Core
             get { return null; }
             set
             {
-                if (!string.IsNullOrEmpty(value))
-                    throw new BadSyntaxException(Strings.ErrorCannotSetType);
+                if ( !string.IsNullOrEmpty( value ) )
+                    throw new BadSyntaxException( Strings.ErrorCannotSetType );
             }
         }
 
@@ -61,8 +64,8 @@ namespace NClass.Core
             get { return base.IsHider; }
             set
             {
-                if (value)
-                    throw new BadSyntaxException(Strings.ErrorCannotSetModifier);
+                if ( value )
+                    throw new BadSyntaxException( Strings.ErrorCannotSetModifier );
             }
         }
 
@@ -74,8 +77,8 @@ namespace NClass.Core
             get { return base.IsVirtual; }
             set
             {
-                if (value)
-                    throw new BadSyntaxException(Strings.ErrorCannotSetModifier);
+                if ( value )
+                    throw new BadSyntaxException( Strings.ErrorCannotSetModifier );
             }
         }
 
@@ -87,8 +90,8 @@ namespace NClass.Core
             get { return base.IsAbstract; }
             set
             {
-                if (value)
-                    throw new BadSyntaxException(Strings.ErrorCannotSetModifier);
+                if ( value )
+                    throw new BadSyntaxException( Strings.ErrorCannotSetModifier );
             }
         }
 
@@ -100,17 +103,29 @@ namespace NClass.Core
             get { return base.IsOverride; }
             set
             {
-                if (value)
-                    throw new BadSyntaxException(Strings.ErrorCannotSetModifier);
+                if ( value )
+                    throw new BadSyntaxException( Strings.ErrorCannotSetModifier );
             }
         }
 
-        public sealed override bool IsTypeReadonly { get { return true; } }
+        public sealed override bool IsTypeReadonly
+        {
+            get { return true; }
+        }
 
-        protected sealed override string DefaultType { get { return null; } }
+        protected sealed override string DefaultType
+        {
+            get { return null; }
+        }
 
-        public sealed override bool Overridable { get { return false; } }
+        public sealed override bool Overridable
+        {
+            get { return false; }
+        }
 
-        public sealed override bool IsOperator { get { return false; } }
+        public sealed override bool IsOperator
+        {
+            get { return false; }
+        }
     }
 }

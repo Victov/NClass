@@ -31,17 +31,17 @@ namespace NClass.Core
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="parent" /> is null.
         /// </exception>
-        protected Field(string name, CompositeType parent)
-            : base(name, parent)
-        {
-        }
+        protected Field( string name, CompositeType parent ) : base( name, parent ) {}
 
-        public sealed override MemberType MemberType { get { return MemberType.Field; } }
+        public sealed override MemberType MemberType
+        {
+            get { return MemberType.Field; }
+        }
 
         public override string Name
         {
             get { return base.Name; }
-            set { ValidName = Language.GetValidName(value, false); }
+            set { ValidName = Language.GetValidName( value, false ); }
         }
 
         /// <exception cref="BadSyntaxException">
@@ -52,7 +52,7 @@ namespace NClass.Core
             get { return base.AccessModifier; }
             set
             {
-                if (value == AccessModifier)
+                if ( value == AccessModifier )
                     return;
 
                 var previousAccess = base.AccessModifier;
@@ -62,7 +62,7 @@ namespace NClass.Core
                     RaiseChangedEvent = false;
 
                     base.AccessModifier = value;
-                    Language.ValidateField(this);
+                    Language.ValidateField( this );
                 }
                 catch
                 {
@@ -78,29 +78,32 @@ namespace NClass.Core
 
         public FieldModifier Modifier { get; private set; } = FieldModifier.None;
 
-        public sealed override bool IsModifierless { get { return Modifier == FieldModifier.None; } }
+        public sealed override bool IsModifierless
+        {
+            get { return Modifier == FieldModifier.None; }
+        }
 
         /// <exception cref="BadSyntaxException">
         ///     Cannot set static modifier.
         /// </exception>
         public override bool IsStatic
         {
-            get { return (Modifier & FieldModifier.Static) != 0; }
+            get { return ( Modifier & FieldModifier.Static ) != 0; }
             set
             {
-                if (value == IsStatic)
+                if ( value == IsStatic )
                     return;
 
                 var previousModifier = Modifier;
 
                 try
                 {
-                    if (value)
+                    if ( value )
                         Modifier |= FieldModifier.Static;
                     else
                         Modifier &= ~FieldModifier.Static;
-                    Language.ValidateField(this);
-                    Changed();
+                    Language.ValidateField( this );
+                    Changed( );
                 }
                 catch
                 {
@@ -115,22 +118,22 @@ namespace NClass.Core
         /// </exception>
         public override bool IsHider
         {
-            get { return (Modifier & FieldModifier.Hider) != 0; }
+            get { return ( Modifier & FieldModifier.Hider ) != 0; }
             set
             {
-                if (value == IsHider)
+                if ( value == IsHider )
                     return;
 
                 var previousModifier = Modifier;
 
                 try
                 {
-                    if (value)
+                    if ( value )
                         Modifier |= FieldModifier.Hider;
                     else
                         Modifier &= ~FieldModifier.Hider;
-                    Language.ValidateField(this);
-                    Changed();
+                    Language.ValidateField( this );
+                    Changed( );
                 }
                 catch
                 {
@@ -145,22 +148,22 @@ namespace NClass.Core
         /// </exception>
         public virtual bool IsReadonly
         {
-            get { return (Modifier & FieldModifier.Readonly) != 0; }
+            get { return ( Modifier & FieldModifier.Readonly ) != 0; }
             set
             {
-                if (value == IsReadonly)
+                if ( value == IsReadonly )
                     return;
 
                 var previousModifier = Modifier;
 
                 try
                 {
-                    if (value)
+                    if ( value )
                         Modifier |= FieldModifier.Readonly;
                     else
                         Modifier &= ~FieldModifier.Readonly;
-                    Language.ValidateField(this);
-                    Changed();
+                    Language.ValidateField( this );
+                    Changed( );
                 }
                 catch
                 {
@@ -175,22 +178,22 @@ namespace NClass.Core
         /// </exception>
         public virtual bool IsConstant
         {
-            get { return (Modifier & FieldModifier.Constant) != 0; }
+            get { return ( Modifier & FieldModifier.Constant ) != 0; }
             set
             {
-                if (value == IsConstant)
+                if ( value == IsConstant )
                     return;
 
                 var previousModifier = Modifier;
 
                 try
                 {
-                    if (value)
+                    if ( value )
                         Modifier |= FieldModifier.Constant;
                     else
                         Modifier &= ~FieldModifier.Constant;
-                    Language.ValidateField(this);
-                    Changed();
+                    Language.ValidateField( this );
+                    Changed( );
                 }
                 catch
                 {
@@ -205,22 +208,22 @@ namespace NClass.Core
         /// </exception>
         public virtual bool IsVolatile
         {
-            get { return (Modifier & FieldModifier.Volatile) != 0; }
+            get { return ( Modifier & FieldModifier.Volatile ) != 0; }
             set
             {
-                if (value == IsVolatile)
+                if ( value == IsVolatile )
                     return;
 
                 var previousModifier = Modifier;
 
                 try
                 {
-                    if (value)
+                    if ( value )
                         Modifier |= FieldModifier.Volatile;
                     else
                         Modifier &= ~FieldModifier.Volatile;
-                    Language.ValidateField(this);
-                    Changed();
+                    Language.ValidateField( this );
+                    Changed( );
                 }
                 catch
                 {
@@ -235,51 +238,50 @@ namespace NClass.Core
             get { return initialValue; }
             set
             {
-                if (initialValue != value &&
-                    (!string.IsNullOrEmpty(value) || !string.IsNullOrEmpty(initialValue)))
+                if ( initialValue != value && ( !string.IsNullOrEmpty( value ) || !string.IsNullOrEmpty( initialValue ) ) )
                 {
                     initialValue = value;
-                    Changed();
+                    Changed( );
                 }
             }
         }
 
-        public bool HasInitialValue { get { return !string.IsNullOrEmpty(InitialValue); } }
-
-        public virtual void ClearModifiers()
+        public bool HasInitialValue
         {
-            if (Modifier != FieldModifier.None)
+            get { return !string.IsNullOrEmpty( InitialValue ); }
+        }
+
+        public virtual void ClearModifiers( )
+        {
+            if ( Modifier != FieldModifier.None )
             {
                 Modifier = FieldModifier.None;
-                Changed();
+                Changed( );
             }
         }
 
-        public sealed override string GetUmlDescription(bool getType,
-                                                        bool getParameters,
-                                                        bool getParameterNames,
-                                                        bool getInitValue)
+        public sealed override string GetUmlDescription( bool getType, bool getParameters, bool getParameterNames, bool getInitValue )
         {
-            var builder = new StringBuilder(50);
+            var builder = new StringBuilder( 50 );
 
-            builder.Append(Name);
-            if (getType)
-                builder.AppendFormat(": {0}", Type);
-            if (getInitValue && HasInitialValue)
-                builder.AppendFormat(" = {0}", InitialValue);
+            builder.Append( Name );
+            if ( getType )
+                builder.AppendFormat( ": {0}", Type );
+            if ( getInitValue && HasInitialValue )
+                builder.AppendFormat( " = {0}", InitialValue );
 
-            return builder.ToString();
+            return builder.ToString( );
         }
 
-        protected override void CopyFrom(Member member)
+        protected override void CopyFrom( Member member )
         {
-            base.CopyFrom(member);
+            base.CopyFrom( member );
 
-            var field = (Field) member;
+            var field = ( Field ) member;
             Modifier = field.Modifier;
             initialValue = field.initialValue;
         }
 
-        protected internal abstract Field Clone(CompositeType newParent);
+        protected internal abstract Field Clone( CompositeType newParent );
     }
 }
