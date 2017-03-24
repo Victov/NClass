@@ -52,7 +52,7 @@ namespace NClass.DiagramEditor.ClassDiagram.Editors
             Diagram diagram = shape.Diagram;
             if ( diagram != null )
             {
-                Rectangle absolute = shape.BorderRectangle;
+                Rectangle absolute = new Rectangle(shape.Left, shape.Top, shape.Width, 30);
                 // The following lines are required because of a .NET bug:
                 // http://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=380085
                 if ( !MonoHelper.IsRunningOnMono )

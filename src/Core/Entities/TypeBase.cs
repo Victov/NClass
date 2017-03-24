@@ -242,6 +242,10 @@ namespace NClass.Core
             accessChild = node["Namespace"];
             if ( accessChild != null )
                 ParentNamespaceName = accessChild.InnerText;
+            else
+            {
+                ParentNamespaceName = "";
+            }
 
             RaiseChangedEvent = true;
             OnDeserializing( new SerializeEventArgs( node ) );

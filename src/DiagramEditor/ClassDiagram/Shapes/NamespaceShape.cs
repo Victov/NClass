@@ -38,10 +38,10 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
 
         public override void Draw( IGraphics g, bool onScreen, Style style )
         {
-            g.DrawString( this.Namespace.Name, style.NameFont, Brushes.DarkBlue, this.Location );
-            if(IsSelected)g.DrawString( "Drag here", style.NameFont, Brushes.DarkBlue, new PointF(this.Right - 80, this.Top));
-            g.DrawLine( new Pen( Color.DarkBlue, 1 ), this.Location.X, this.Location.Y + 15, this.Location.X + this.Size.Width, this.Location.Y + 15 );
-            g.DrawRectangle( new Pen( Color.DarkBlue, 2 ), new Rectangle(Location, Size) );
+            g.DrawString( this.Namespace.Name, style.NameFont, Brushes.CadetBlue, this.Location );
+            if(IsSelected)g.DrawString( "Drag here", style.NameFont, Brushes.CadetBlue, new PointF(this.Right - 80, this.Top));
+            g.DrawLine( new Pen( Color.CadetBlue, 1 ), this.Location.X, this.Location.Y + 15, this.Location.X + this.Size.Width, this.Location.Y + 15 );
+            g.DrawRectangle( new Pen( Color.CadetBlue, 1 ), new Rectangle(Location, Size) );
         }
 
         internal override void MousePressed( AbsoluteMouseEventArgs e )
@@ -57,6 +57,12 @@ namespace NClass.DiagramEditor.ClassDiagram.Shapes
             return 
                 ( ( Math.Abs( point.X - this.Left ) < margin || Math.Abs( point.X - this.Right ) < margin ) ) ||
                 ( ( Math.Abs( point.Y - this.Top) < topMargin|| Math.Abs( point.Y - this.Bottom) < margin ) );
+        }
+
+        protected override void OnMove(MoveEventArgs e)
+        {
+            base.OnMove(e);
+            HideEditor();
         }
 
         protected override void OnResize(ResizeEventArgs e)
